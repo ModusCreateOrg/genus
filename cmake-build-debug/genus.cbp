@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="genus"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="genus">
+				<Option output="/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/genus" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/local/include/SDL2"/>
+					<Add directory="/Users/mschwartz/github/ModusCreateOrg/genus/creative-engine/src"/>
+					<Add directory="/Users/mschwartz/github/ModusCreateOrg/genus/Resources"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 genus"/>
+					<CompileFile command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="genus/fast">
+				<Option output="/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/genus" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/local/include/SDL2"/>
+					<Add directory="/Users/mschwartz/github/ModusCreateOrg/genus/creative-engine/src"/>
+					<Add directory="/Users/mschwartz/github/ModusCreateOrg/genus/Resources"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.1.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 genus/fast"/>
+					<CompileFile command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j20 -f &quot;/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/mschwartz/github/ModusCreateOrg/genus/README.md">
+			<Option target="genus"/>
+		</Unit>
+		<Unit filename="/Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug/LIB">
+			<Option target="genus"/>
+		</Unit>
+		<Unit filename="/Users/mschwartz/github/ModusCreateOrg/genus/src/GGameEngine.cpp">
+			<Option target="genus"/>
+		</Unit>
+		<Unit filename="/Users/mschwartz/github/ModusCreateOrg/genus/src/GGameEngine.h">
+			<Option target="genus"/>
+		</Unit>
+		<Unit filename="/Users/mschwartz/github/ModusCreateOrg/genus/src/GPlayfield.cpp">
+			<Option target="genus"/>
+		</Unit>
+		<Unit filename="/Users/mschwartz/github/ModusCreateOrg/genus/src/GPlayfield.h">
+			<Option target="genus"/>
+		</Unit>
+		<Unit filename="/Users/mschwartz/github/ModusCreateOrg/genus/src/main.cpp">
+			<Option target="genus"/>
+		</Unit>
+		<Unit filename="/Users/mschwartz/github/ModusCreateOrg/genus/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
