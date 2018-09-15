@@ -1,5 +1,0 @@
-"/Users/mschwartz/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/182.4323.58/CLion.app/Contents/bin/cmake/mac/bin/cmake" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/mschwartz/github/ModusCreateOrg/genus
-THERE
--- Configuring done
--- Generating done
--- Build files have been written to: /Users/mschwartz/github/ModusCreateOrg/genus/cmake-build-debug
