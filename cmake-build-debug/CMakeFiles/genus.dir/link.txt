@@ -1,1 +1,0 @@
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -Wno-implicit-exception-spec-mismatch -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/genus.dir/src/main.cpp.o CMakeFiles/genus.dir/src/GPlayfield.cpp.o CMakeFiles/genus.dir/src/GGameEngine.cpp.o  -o genus 
