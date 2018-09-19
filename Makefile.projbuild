@@ -1,0 +1,5 @@
+a a a a ll:
+	cd creative-engine/tools && make
+	cd src && ../creative-engine/tools/rcomp Resources.r
+
+

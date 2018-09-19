@@ -77,3 +77,7 @@ wp-content/plugins/hello.php
 creative-engine
 clion-log.txt
 cmake-build-debug
+build
+src/Resources.bin
+src/Resources.h
+
