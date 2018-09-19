@@ -1,0 +1,4 @@
+Resources.bin: FORCE
+	cd creative-engine/tools && make
+	cd src && ../creative-engine/tools/rcomp Resources.r
+
