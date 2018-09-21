@@ -91,12 +91,13 @@ public:
 BViewPort *viewPort;
 
 extern "C" void app_main() {
+  display.Init();
   resourceManager.LoadBitmap(PLAYERNEW_BMP, PLAYER_SLOT, IMAGE_32x32);
   BBitmap *b = resourceManager.GetBitmap(PLAYER_SLOT);
   display.SetPalette(b);
   resourceManager.LoadBitmap(BKG3_BMP, BKG_SLOT, IMAGE_ENTIRE);
   b = resourceManager.GetBitmap(BKG_SLOT);
-//  display.SetPalette(b);
+// //  display.SetPalette(b);
 
   viewPort = new BViewPort();
   viewPort->Offset(50, 0);
@@ -113,6 +114,7 @@ extern "C" void app_main() {
   TUint32 next = now + 1000 / FRAMERATE;
 
   TBool done = EFalse;
+  printf("Entering MAIN LOOP ************ \n");
   while (!done) {
     while (now < next) now = Milliseconds();
     next = next + 1000 / FRAMERATE;
