@@ -91,6 +91,7 @@ public:
 BViewPort *viewPort;
 
 extern "C" void app_main() {
+  display.Init();
   resourceManager.LoadBitmap(PLAYERNEW_BMP, PLAYER_SLOT, IMAGE_32x32);
   BBitmap *b = resourceManager.GetBitmap(PLAYER_SLOT);
   display.SetPalette(b);
