@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+
 #ifndef __XTENSA__
 
 #include "SDL2/SDL.h"
@@ -92,6 +93,8 @@ BViewPort *viewPort;
 
 extern "C" void app_main() {
   display.Init();
+  soundPlayer.Init();
+
   resourceManager.LoadBitmap(PLAYERNEW_BMP, PLAYER_SLOT, IMAGE_32x32);
   BBitmap *b = resourceManager.GetBitmap(PLAYER_SLOT);
   display.SetPalette(b);
@@ -115,6 +118,8 @@ extern "C" void app_main() {
 
   TBool done = EFalse;
 
+  soundPlayer.PlayMusic(0);
+
   while (!done) {
     while (now < next) now = Milliseconds();
     next = next + 1000 / FRAMERATE;
@@ -122,6 +127,10 @@ extern "C" void app_main() {
     display.Update();
     if (controls.WasPressed(BUTTONQ)) {
       done = true;
+    }
+
+    if (controls.WasPressed()) {
+      
     }
   }
 
