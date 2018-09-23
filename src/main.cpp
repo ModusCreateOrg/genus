@@ -114,6 +114,7 @@ extern "C" void app_main() {
   TUint32 next = now + 1000 / FRAMERATE;
 
   TBool done = EFalse;
+
   while (!done) {
     while (now < next) now = Milliseconds();
     next = next + 1000 / FRAMERATE;
