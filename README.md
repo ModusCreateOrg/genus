@@ -11,8 +11,13 @@ Thus you will need to fork and clone this and the creative-engine repos AT THE S
 ```
 $ ls ~/github
 genus/  creative-engine/
+```
 
-``` 
+In genus/ you will need to create a soft link"
+```
+$ cd genus
+$ ln -s ../creative-engine .
+```
 
 
 Read about [GitHub workflow](https://github.com/ModusCreateOrg/creative-engine) at the creative-engine repo.
