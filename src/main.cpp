@@ -91,6 +91,11 @@ public:
 
 BViewPort *viewPort;
 
+int maxSongs = 3,
+    currentSong = 0,
+    maxSfx = 9,
+    currentSfx = 0;
+
 extern "C" void app_main() {
   display.Init();
   soundPlayer.Init();
@@ -118,7 +123,7 @@ extern "C" void app_main() {
 
   TBool done = EFalse;
 
-  soundPlayer.PlayMusic(0);
+  soundPlayer.PlayMusic(currentSong);
 
   while (!done) {
     while (now < next) now = Milliseconds();
@@ -129,8 +134,20 @@ extern "C" void app_main() {
       done = true;
     }
 
-    if (controls.WasPressed()) {
-      
+    if (controls.WasPressed(BUTTONA)) {
+      currentSong++;
+      if (currentSong > maxSongs) {
+        currentSong = 0;
+      }
+      soundPlayer.PlayMusic(currentSong);
+    }
+
+    if (controls.WasPressed(BUTTONB)) {
+      soundPlayer.PlaySound(currentSfx, 0, false);
+      currentSfx++;
+      if (currentSfx > maxSfx) {
+        currentSfx = 0;
+      }
     }
   }
 
