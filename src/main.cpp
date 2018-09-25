@@ -64,20 +64,14 @@ public:
 
 class GDemoProcess2 : public BProcess {
 public:
-  GDemoProcess2() : BProcess(PTYPE_USER) {
-    mSprite = new BSprite(0, PLAYER_SLOT, 3);
-    mSprite->x = mSprite->y = 100;
+  GDemoProcess2(TInt x, TInt y, TInt i) : BProcess(PTYPE_USER) {
+    mSprite = new BSprite(0, PLAYER_SLOT, i);
+    mSprite->x = x;
+    mSprite->y = y;
     gameEngine->AddSprite(mSprite);
   }
 
   TBool RunBefore() {
-    if (controls.WasPressed(BUTTON1)) {
-      mSprite->flags ^= SFLAG_FLIP;
-    }
-    if (controls.WasPressed(BUTTON2)) {
-      mSprite->flags ^= SFLAG_FLOP;
-
-    }
     return ETrue;
   }
 
@@ -92,7 +86,7 @@ BViewPort *viewPort;
 
 extern "C" void app_main() {
   display.Init();
-  resourceManager.LoadBitmap(PLAYERNEW_BMP, PLAYER_SLOT, IMAGE_32x32);
+  resourceManager.LoadBitmap(PLAYERNEW_BMP, PLAYER_SLOT, IMAGE_16x16);
   BBitmap *b = resourceManager.GetBitmap(PLAYER_SLOT);
   display.SetPalette(b);
   resourceManager.LoadBitmap(BKG3_BMP, BKG_SLOT, IMAGE_ENTIRE);
@@ -105,10 +99,14 @@ extern "C" void app_main() {
 
   gameEngine = new GGameEngine(viewPort);
 
-  auto *p = new GDemoProcess();
-  gameEngine->AddProcess(p);
-  auto *p2 = new GDemoProcess2();
-  gameEngine->AddProcess(p2);
+  // auto *p = new GDemoProcess();
+  // gameEngine->AddProcess(p);
+  for (TInt x = 0; x < 16; x++) {
+    for (TInt y = 0; y < 16; y++) {
+      auto *p2 = new GDemoProcess2(x*16, y*16, (x + y + 1) % 2 == 0 ? 1 : 0);
+      gameEngine->AddProcess(p2);
+    }
+  }
 
   TUint32 now  = Milliseconds();
   TUint32 next = now + 1000 / FRAMERATE;
