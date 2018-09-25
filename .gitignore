@@ -80,4 +80,5 @@ cmake-build-debug
 build
 src/Resources.bin
 src/Resources.h
-
+sdkconfig
+sdkconfig.old

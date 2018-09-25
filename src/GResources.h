@@ -9,5 +9,8 @@
 
 #define BKG_SLOT 0
 #define PLAYER_SLOT 1
+#define PLAYER_LEVEL 0
+#define PLAYER_DOWN 1
+#define PLAYER_UP 2
 
 #endif //GAME_ENGINE_GREOURCES_H
