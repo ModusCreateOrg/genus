@@ -89,21 +89,24 @@ extern "C" void app_main() {
   resourceManager.LoadBitmap(PLAYERNEW_BMP, PLAYER_SLOT, IMAGE_16x16);
   BBitmap *b = resourceManager.GetBitmap(PLAYER_SLOT);
   display.SetPalette(b);
-  resourceManager.LoadBitmap(BKG3_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  b = resourceManager.GetBitmap(BKG_SLOT);
+  // resourceManager.LoadBitmap(BKG3_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  // b = resourceManager.GetBitmap(BKG_SLOT);
 //  display.SetPalette(b);
 
   viewPort = new BViewPort();
-  viewPort->Offset(50, 0);
-  viewPort->SetRect(b->Dimensions());
+  viewPort->Offset(32, 32);
+
+  TRect clipRect;
+  clipRect.Set(0, 0, 288, 210);
+  viewPort->SetRect(clipRect);
 
   gameEngine = new GGameEngine(viewPort);
 
   // auto *p = new GDemoProcess();
   // gameEngine->AddProcess(p);
-  for (TInt x = 0; x < 16; x++) {
-    for (TInt y = 0; y < 16; y++) {
-      auto *p2 = new GDemoProcess2(x*16, y*16, (x + y + 1) % 2 == 0 ? 1 : 0);
+  for (TInt x = 0; x < 14; x++) {
+    for (TInt y = 0; y < 14; y++) {
+      auto *p2 = new GDemoProcess2(x*16 + 2*x, y*16 +2*y, (x + y + 1) % 2 == 0 ? 1 : 0);
       gameEngine->AddProcess(p2);
     }
   }
