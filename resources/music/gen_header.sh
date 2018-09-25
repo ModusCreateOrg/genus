@@ -39,7 +39,7 @@ echo "#endif" >> ${header_file}
 # for i in `ls *.wav`; do
 #     i=`echo $i | sed -e "s/\./_/g"`
 #     echo "xmp_smix_load_sample_from_memory(ctx, $x, (void *)_${i}_start, _${i}_start - _${i}_end);";
-#     x=`echo $x + 1 | bc`;
+#     x=$((x + 1));
 # done
 
 
