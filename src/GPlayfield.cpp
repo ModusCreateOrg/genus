@@ -18,7 +18,6 @@ GPlayfield::GPlayfield(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
 
 void GPlayfield::Render() {
   BViewPort *vp = mGameEngine->GetViewPort();
-  mDisplay->renderBitmap->Dump();
   mDisplay->renderBitmap->Clear(2);
   mDisplay->renderBitmap->DrawSprite(vp, BKG_SLOT, 0, TInt(vp->mOffsetX) + 0, TInt(vp->mOffsetY + 0));
 }
