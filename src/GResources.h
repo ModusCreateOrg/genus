@@ -7,7 +7,11 @@
 
 #include "Resources.h"
 
+// BBitmap
 #define BKG_SLOT 0
 #define PLAYER_SLOT 1
+
+// BRaw
+#define README_SLOT 0
 
 #endif //GAME_ENGINE_GREOURCES_H
