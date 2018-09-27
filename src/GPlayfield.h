@@ -1,12 +1,9 @@
-//
-// Created by Michael Schwartz on 9/5/18.
-//
-
 #ifndef GAME_ENGINE_GPLAYFIELD_H
 #define GAME_ENGINE_GPLAYFIELD_H
 
 #include <BPlayfield.h>
 #include <BBitmap.h>
+#include <BFont.h>
 
 class GGameEngine;
 
@@ -18,6 +15,7 @@ public:
 protected:
   GGameEngine *mGameEngine;
   BBitmap *mBitmap;
+  BFont *mFont;
 };
 
 
