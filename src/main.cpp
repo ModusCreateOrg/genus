@@ -92,20 +92,22 @@ BViewPort *viewPort;
 extern "C" void app_main() {
   display.Init();
 
-  resourceManager.LoadRaw(README_MD, README_SLOT);
-  BRaw *r = resourceManager.GetRaw(README_SLOT);
+  gResourceManager.LoadRaw(README_MD, README_SLOT);
+  BRaw *r = gResourceManager.GetRaw(README_SLOT);
   printf("README size: %d\n", r->mSize);
   printf("mData\n%.150s\n", (char *)r->mData);
 
-  resourceManager.LoadBitmap(PLAYERNEW_BMP, PLAYER_SLOT, IMAGE_32x32);
-  BBitmap *b = resourceManager.GetBitmap(PLAYER_SLOT);
+  // TODO: this belongs in GGameEngine
+  gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
+  gResourceManager.LoadBitmap(PLAYERNEW_BMP, PLAYER_SLOT, IMAGE_32x32);
+  BBitmap *b = gResourceManager.GetBitmap(PLAYER_SLOT);
   display.SetPalette(b);
-  resourceManager.LoadBitmap(BKG3_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  b = resourceManager.GetBitmap(BKG_SLOT);
+  gResourceManager.LoadBitmap(BKG3_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  b = gResourceManager.GetBitmap(BKG_SLOT);
 //  display.SetPalette(b);
 
   viewPort = new BViewPort();
-  viewPort->Offset(50, 0);
+  viewPort->Offset(50, 50);
   viewPort->SetRect(b->Dimensions());
 
   gameEngine = new GGameEngine(viewPort);
