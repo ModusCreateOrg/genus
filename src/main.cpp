@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-
 #ifndef __XTENSA__
 
 #include "SDL2/SDL.h"
@@ -21,23 +20,23 @@ class GDemoProcess : public BProcess {
 public:
   GDemoProcess() : BProcess(PTYPE_USER) {
     mPropToggle = EFalse;
-    mSprite = new BSprite(0, PLAYER_SLOT, 0);
+    mSprite     = new BSprite(0, PLAYER_SLOT, 0);
     mSprite->x = mSprite->y = 0;
     gameEngine->AddSprite(mSprite);
   }
 
   TBool RunBefore() {
-    mBitmap = display.displayBitmap;
-    if(mPropToggle) {
-      mBitmap->SetColor(200, 151, 151, 151);
-      mBitmap->SetColor(201, 238, 238, 238);
-      mBitmap->SetColor(202, 255, 0, 0);
-      mBitmap->SetColor(203, 255, 255, 0);
+    BBitmap *bm = display.displayBitmap;
+    if (mPropToggle) {
+      bm->SetColor(200, 151, 151, 151);
+      bm->SetColor(201, 238, 238, 238);
+      bm->SetColor(202, 255, 0, 0);
+      bm->SetColor(203, 255, 255, 0);
     } else {
-      mBitmap->SetColor(200, 238, 238, 238);
-      mBitmap->SetColor(201, 151, 151, 151);
-      mBitmap->SetColor(202, 255, 255, 0);
-      mBitmap->SetColor(203, 255, 0, 0);
+      bm->SetColor(200, 238, 238, 238);
+      bm->SetColor(201, 151, 151, 151);
+      bm->SetColor(202, 255, 255, 0);
+      bm->SetColor(203, 255, 0, 0);
     }
     mPropToggle = !mPropToggle;
     if (controls.WasPressed(JOYLEFT)) {
@@ -57,8 +56,7 @@ public:
     return ETrue;
   }
 
-  BBitmap *mBitmap;
-  TBool mPropToggle;
+  TBool   mPropToggle;
   BSprite *mSprite;
 };
 
@@ -91,14 +89,13 @@ public:
 
 BViewPort *viewPort;
 
-int maxSongs = 3,
-    currentSong = 0,
-    maxSfx = 9,
-    currentSfx = 0;
-
 extern "C" void app_main() {
   display.Init();
-  soundPlayer.Init();
+
+  resourceManager.LoadRaw(README_MD, README_SLOT);
+  BRaw *r = resourceManager.GetRaw(README_SLOT);
+  printf("README size: %d\n", r->mSize);
+  printf("mData\n%.150s\n", (char *)r->mData);
 
   resourceManager.LoadBitmap(PLAYERNEW_BMP, PLAYER_SLOT, IMAGE_32x32);
   BBitmap *b = resourceManager.GetBitmap(PLAYER_SLOT);
@@ -123,8 +120,6 @@ extern "C" void app_main() {
 
   TBool done = EFalse;
 
-  soundPlayer.PlayMusic(currentSong);
-
   while (!done) {
     while (now < next) now = Milliseconds();
     next = next + 1000 / FRAMERATE;
@@ -132,22 +127,6 @@ extern "C" void app_main() {
     display.Update();
     if (controls.WasPressed(BUTTONQ)) {
       done = true;
-    }
-
-    if (controls.WasPressed(BUTTONA)) {
-      currentSong++;
-      if (currentSong > maxSongs) {
-        currentSong = 0;
-      }
-      soundPlayer.PlayMusic(currentSong);
-    }
-
-    if (controls.WasPressed(BUTTONB)) {
-      soundPlayer.PlaySound(currentSfx, 0, false);
-      currentSfx++;
-      if (currentSfx > maxSfx) {
-        currentSfx = 0;
-      }
     }
   }
 

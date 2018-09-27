@@ -11,10 +11,15 @@ Thus you will need to fork and clone this and the creative-engine repos AT THE S
 ```
 $ ls ~/github
 genus/  creative-engine/
+```
 
-``` 
+In genus/ you will need to create a soft link"
+```
+$ cd genus
+$ ln -s ../creative-engine .
+```
 
-
+## Git Workflow
 Read about [GitHub workflow](https://github.com/ModusCreateOrg/creative-engine) at the creative-engine repo.
 
 The gist is that we fork the main repos and work in our private forks.  We push to our forks.  We create Pull Requests against the main repos.
