@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-source ../env.sh
+MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"; fi
+
+source "$MY_DIR/../env.sh"
 
 (cd $GENUS_ROOT; git checkout master)
 (cd $GENUS_ROOT; git pull upstream master)
