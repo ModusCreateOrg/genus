@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-source ../env.sh
+MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
+
+source "$MY_DIR/../env.sh"
 
 if [ "$#" -ne 1 ]; then
     echo "The branchname is missing!"
