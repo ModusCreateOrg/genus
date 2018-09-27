@@ -7,6 +7,7 @@ source "$MY_DIR/../env.sh"
 if [ "$#" -ne 1 ]; then
     echo "The branchname is missing!"
     echo "Usage: genus-new-branch.sh <branchname>"
+    exit
 fi
 
 (cd $GENUS_ROOT; git checkout master)
