@@ -92,6 +92,8 @@ BViewPort *viewPort;
 extern "C" void app_main() {
   display.Init();
 
+  SeedRandom(time(0));
+
   gResourceManager.LoadRaw(README_MD, README_SLOT);
   BRaw *r = gResourceManager.GetRaw(README_SLOT);
   printf("README size: %d\n", r->mSize);
@@ -125,6 +127,7 @@ extern "C" void app_main() {
   while (!done) {
     while (now < next) now = Milliseconds();
     next = next + 1000 / FRAMERATE;
+    Random();
     gameEngine->GameLoop();
     display.Update();
     if (controls.WasPressed(BUTTONQ)) {
