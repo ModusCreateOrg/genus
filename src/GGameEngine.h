@@ -6,6 +6,7 @@
 #define GAME_ENGINE_GGAMEENGINE_H
 
 #include "BGameEngine.h"
+#include "../resources/music/Music.h"
 #include <Display.h>
 
 class GPlayfield;
