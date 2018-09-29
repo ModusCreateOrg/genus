@@ -69,7 +69,7 @@ add_executable(genus
         src/main.cpp
         src/GPlayfield.cpp
         src/GGameEngine.cpp
-        README.md)
+        README.md creative-engine/src/BFont.cpp creative-engine/src/BFont.h)
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 #target_link_libraries(${GAME_ENGINE})
 

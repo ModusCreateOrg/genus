@@ -7,6 +7,7 @@ PATH ../resources # path to resource files
 
 BITMAP bkg3.bmp
 BITMAP playernew.bmp
+BITMAP charset.bmp
 
 # .-=[  MUSIC  ]=-.
 PATH ../resources/Music
