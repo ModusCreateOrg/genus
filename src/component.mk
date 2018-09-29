@@ -14,11 +14,11 @@ COMPONENT_PRIV_INCLUDEDIRS=../creative-engine/src
 COMPONENT_EMBED_FILES := Resources.bin
 
 
-WAVFILES = $(shell ls ${PROJECT_PATH}/resources/sound_effects/*.wav)
+#WAVFILES = $(shell ls ${PROJECT_PATH}/resources/sound_effects/*.wav)
 # $(info    WAVFILES is ${WAVFILES})
-COMPONENT_EMBED_FILES += ${WAVFILES}
+#COMPONENT_EMBED_FILES += ${WAVFILES}
 
-SFXFILES = $(shell ls ${PROJECT_PATH}/resources/music/*.xm)
-COMPONENT_EMBED_FILES += ${SFXFILES}
+#SFXFILES = $(shell ls ${PROJECT_PATH}/resources/music/*.xm)
+#COMPONENT_EMBED_FILES += ${SFXFILES}
 
-$(info COMPONENT_EMBED_FILES is ${COMPONENT_EMBED_FILES})
+#$(info COMPONENT_EMBED_FILES is ${COMPONENT_EMBED_FILES})

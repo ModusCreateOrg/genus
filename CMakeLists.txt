@@ -40,10 +40,32 @@ add_custom_command(OUTPUT Resources.bin
 file(GLOB_RECURSE LIB RELATIVE ${CMAKE_SOURCE_DIR} "creative-engine/src/*.cpp")
 
 
+# LibXMP
+add_compile_definitions(LIBXMP_CORE_PLAYER=true)
+add_compile_definitions(LIBXMP_CORE_DISABLE_IT=true)
+
+include_directories(
+    ${CMAKE_SOURCE_DIR}
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/prowizard"
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders"
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp"
+)
+
+
+file(GLOB LIBXMP_SRC
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/*.h"
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/*.c"
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/*.h"
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/*.c"
+)
+
+
+
 add_executable(genus
         rcomp
         Resources.bin
         ${LIB}
+        ${LIBXMP_SRC}
         src/main.cpp
         src/GPlayfield.cpp
         src/GGameEngine.cpp

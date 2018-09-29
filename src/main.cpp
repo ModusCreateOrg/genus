@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+
+//#define __XTENSA__
 #ifndef __XTENSA__
 
 #include "SDL2/SDL.h"
@@ -89,8 +91,25 @@ public:
 
 BViewPort *viewPort;
 
+uint8_t currentSong = 0,
+        maxSongs = 3,
+        currentSfx = 0,
+        maxSfx = 9;
+
+bool muted = false;
+
+#define SONG_SLOT 0
+
 extern "C" void app_main() {
   display.Init();
+  soundPlayer.Init();
+
+  resourceManager.LoadRaw(STAGE_2_XM, SONG_SLOT);
+  BRaw *music = resourceManager.GetRaw(README_SLOT);
+//  printf("README size: %d\n", music->mSize);
+//  printf("mData\n%.150s\n", (char *)music->mData);
+  soundPlayer.PlayMusic(music);
+
 
   resourceManager.LoadRaw(README_MD, README_SLOT);
   BRaw *r = resourceManager.GetRaw(README_SLOT);
@@ -103,6 +122,8 @@ extern "C" void app_main() {
   resourceManager.LoadBitmap(BKG3_BMP, BKG_SLOT, IMAGE_ENTIRE);
   b = resourceManager.GetBitmap(BKG_SLOT);
 //  display.SetPalette(b);
+
+
 
   viewPort = new BViewPort();
   viewPort->Offset(50, 0);
@@ -128,8 +149,32 @@ extern "C" void app_main() {
     if (controls.WasPressed(BUTTONQ)) {
       done = true;
     }
-  }
 
+    if (controls.WasPressed(BUTTONA)) {
+      if (currentSong > maxSongs) {
+        currentSong = 0;
+      }
+//      soundPlayer.PlayMusic(currentSong);
+      currentSong++;
+
+
+    }
+
+    if (controls.WasPressed(BUTTON3)) {
+      soundPlayer.MuteMusic(muted = !muted);
+    }
+
+    if (controls.WasPressed(BUTTONB)) {
+      printf("BUTTON 3\n"); fflush(stdout);
+      if (currentSfx > maxSfx) {
+        currentSfx = 0;
+      }
+      soundPlayer.PlaySound(currentSfx, 0);
+      currentSfx++;
+    }
+
+
+  }
   printf("Exiting\n");
 }
 
