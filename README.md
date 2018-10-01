@@ -4,19 +4,30 @@
 
 ## Repository set up for development
 
-This repo and the creative-engine repo work together.  A soft link to creative-engine is automatically created by cmake or make.
+This repo and the [creative-engine](https://github.com/ModusCreateOrg/creative-engine) repo work together.  A soft link to `creative-engine` is automatically created by cmake or make.
 
-Thus you will need to fork and clone this and the creative-engine repos AT THE SAME LEVEL:
+Thus you will need to fork and clone this and the `creative-engine` repos AT THE SAME LEVEL:
 
 ```
 $ ls ~/github
 genus/  creative-engine/
 ```
 
-In genus/ you will need to create a soft link"
+In `genus/` you will need to create a soft link:
 ```
-$ cd genus
-$ ln -s ../creative-engine .
+cd genus
+ln -s ../creative-engine .
+```
+
+### Mac OS X
+
+On Mac OS X, ensure you have first [installed Homebrew](https://brew.sh/). Then you can then install the dependencies from `brew` and build the software as follows:
+```
+brew bundle install
+mkdir build
+cd build
+cmake ..
+make
 ```
 
 ## Git Workflow
