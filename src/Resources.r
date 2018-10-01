@@ -1,10 +1,10 @@
 # Resource source file
-PATH ..
-
-RAW README.md
-
 PATH ../resources # path to resource files
 
-BITMAP bkg3.bmp
-BITMAP playernew.bmp
+BITMAP splash.bmp
 BITMAP charset.bmp
+BITMAP level1_sprites.bmp
+BITMAP level1_bkg1.bmp
+BITMAP level1_bkg1.bmp
+BITMAP level1_bkg1.bmp
+
