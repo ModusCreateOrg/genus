@@ -21,14 +21,11 @@ ln -s ../creative-engine .
 
 ### Mac OS X
 
-On Mac OS X, ensure you have first [installed Homebrew](https://brew.sh/). Then you can then install the dependencies from `brew` and build and the software as follows:
+On Mac OS X, install XCode and then run `scripts/build.sh`. This will ensure you have Homebrew installed, and build the code in the `build` directory.
+
+You can then run the application with this command:
 ```
-brew bundle install
-mkdir build
-cd build
-cmake ..
-make
-./genus
+build/genus
 ```
 
 ## Git Workflow
