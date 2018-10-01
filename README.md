@@ -21,13 +21,14 @@ ln -s ../creative-engine .
 
 ### Mac OS X
 
-On Mac OS X, ensure you have first [installed Homebrew](https://brew.sh/). Then you can then install the dependencies from `brew` and build the software as follows:
+On Mac OS X, ensure you have first [installed Homebrew](https://brew.sh/). Then you can then install the dependencies from `brew` and build and the software as follows:
 ```
 brew bundle install
 mkdir build
 cd build
 cmake ..
 make
+./genus
 ```
 
 ## Git Workflow
