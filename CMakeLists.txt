@@ -31,7 +31,7 @@ add_custom_command(OUTPUT rcomp
 add_custom_command(OUTPUT Resources.bin
         #        COMMAND ls ${RCOMP}
         COMMAND @echo
-        COMMAND ${RCOMP} ${CMAKE_CURRENT_SOURCE_DIR}/src/Resources.r
+        COMMAND cd ${CMAKE_SOURCE_DIR}/src && ${RCOMP} Resources.r
         OUTPUTS Resources.bin
         DEPENDS rcomp
         COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR} ")
@@ -45,7 +45,7 @@ add_compile_definitions(LIBXMP_CORE_PLAYER=true)
 add_compile_definitions(LIBXMP_CORE_DISABLE_IT=true)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/src
     "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/prowizard"
     "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders"
     "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp"
