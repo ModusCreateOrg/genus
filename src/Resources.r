@@ -10,7 +10,7 @@ BITMAP playernew.bmp
 BITMAP charset.bmp
 
 # .-=[  MUSIC  ]=-.
-PATH ../resources/Music
+PATH ../resources/music
 
 RAW Stage_2.xm
 RAW Stage_3.xm
