@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+######################### Debugging and Directory Scaffolding #########
+
 # Set bash unofficial strict mode http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 IFS=$'\n\t'
@@ -17,7 +19,11 @@ export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BASE_DIR="$DIR/.."
 BUILD_DIR="$BASE_DIR/build"
+TOP_DIR="$BASE_DIR/.."
+CREATIVE_ENGINE_DIR="$TOP_DIR/creative-engine"
 
+
+######################### Function definitions ########################
 
 function ensure_xcode_installed {
 #Ensure XCode full version is installed and configured, 
@@ -52,15 +58,33 @@ function ensure_arch_devtools_installed {
     sudo pacman -S sdl2 sdl2_image
 }
 
-cd "$BASE_DIR"
+function ensure_creative_engine {
+    if [[ ! -d "$CREATIVE_ENGINE_DIR" ]]; then
+        git clone https://github.com/ModusCreateOrg/creative-engine.git "$CREATIVE_ENGINE_DIR"
+    fi
+}
+
+function build {
+    cd "$BASE_DIR"
+    rm -f creative-engine
+    ln -s ../creative-engine . 
+    mkdir -p "$BUILD_DIR"
+    cd "$BUILD_DIR"
+    cmake ..
+    make
+}
+
+######################### Main build ##################################
 
 # Thanks Stack Overflow https://stackoverflow.com/a/17072017
-if [ "$(uname)" == "Darwin" ]; then
+OS="$(uname)"
+if [ "$OS" == "Darwin" ]; then
 	ensure_xcode_installed
 	ensure_homebrew_installed
     # Install homebrew packages
+    cd "$BASE_DIR"
     brew bundle install
-elif [ "$(uname -s | cut -c1-5)" == "Linux" ]; then
+elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
     if [[ -n "$(which apt-get)" ]]; then
         ensure_debian_devtools_installed
@@ -70,20 +94,17 @@ elif [ "$(uname -s | cut -c1-5)" == "Linux" ]; then
         echo "Only debian/ubuntu and arch Linux are supported targets, sorry."
         exit 1
     fi
-elif [ "$(uname -s | cut -c1-10)" == "MINGW32_NT" ]; then
+elif [ "$(cut -c1-10 <<<"$OS")" == "MINGW32_NT" ]; then
 	echo "32 bit Windows not supported"
 	exit 1
-elif [ "$(uname -s | cut -c1-10)" == "MINGW64_NT" ]; then
+elif [ "$(cut -c1-10 <<<"$OS")" == "MINGW64_NT" ]; then
 	echo "64 bit Windows not supported"
 	exit 1
 else
-	echo 'Unsupported operating system "'"$(uname)"'"'
+	echo 'Unsupported operating system "'"$OS"'"'
 	exit 1
 fi
 
-ln -f -s ../creative-engine . 
-mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-cmake ..
-make
+ensure_creative_engine
+build
 
