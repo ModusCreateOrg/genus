@@ -21,73 +21,30 @@ BASE_DIR="$DIR/.."
 BUILD_DIR="$BASE_DIR/build"
 TOP_DIR="$BASE_DIR/.."
 CREATIVE_ENGINE_DIR="$TOP_DIR/creative-engine"
-
-######################### Function definitions ########################
-
-function ensure_xcode_installed {
-    #Ensure XCode full version is installed and configured, 
-    #as xcodebuild gets invoked later in the build, and it will fail otherwise
-    if [[ -z "$(which xcodebuild)" ]] || ! xcodebuild --help >/dev/null 2>&1; then
-        cat 1>&2 <<EOF
-Please install XCode from the App Store.
-You will need the full version, not just the command line tools.
-If you already have XCode installed, you may need to issue this command
-to let the tools find the right developer directory:
-    sudo xcode-select -r
-See https://github.com/nodejs/node-gyp/issues/569
-EOF
-        exit 1
-    fi
-}
-
-function ensure_homebrew_installed {
-    #Ensure homebrew is installed
-    if [[ -z "$(which brew)" ]]; then
-      echo "No homebrew found - installing Homebrew from https://brew.sh"
-      /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    fi
-}
-
-function ensure_debian_devtools_installed {
-    sudo apt-get -qq update
-    sudo apt-get -qq install build-essential git cmake libsdl2-dev libsdl2-image-dev
-}
-
-function ensure_arch_devtools_installed {
-    sudo pacman -Sqyyu --noconfirm base-devel libglvnd sdl2 sdl2_image cmake
-}
-
-function ensure_creative_engine {
-    if [[ ! -d "$CREATIVE_ENGINE_DIR" ]]; then
-        git clone https://github.com/ModusCreateOrg/creative-engine.git "$CREATIVE_ENGINE_DIR"
-    fi
-}
-
-function build {
-    cd "$BASE_DIR"
-    rm -f creative-engine
-    ln -s ../creative-engine . 
-    mkdir -p "$BUILD_DIR"
-    cd "$BUILD_DIR"
-    cmake ..
-    make
-}
+export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
+#shellcheck disable=SC1090
+. "$DIR/common.sh"
 
 ######################### Main build ##################################
 
 op=${1:-}
+SKIP_TOOLS_INSTALL=false
+SUDO="sudo"
 
 case "$op" in
     clean)
-        cd "$CREATIVE_ENGINE_DIR"
-        git clean -fdx
-        rm -rf "$BASE_DIR/build"
+        clean
+        ;;
+    docker-build)
+        SKIP_TOOLS_INSTALL=true
         ;;
 esac
 
 # Thanks Stack Overflow https://stackoverflow.com/a/17072017
 OS="$(uname)"
-if [ "$OS" == "Darwin" ]; then
+if "$SKIP_TOOLS_INSTALL"; then
+    echo "Skipping tools install"
+elif [ "$OS" == "Darwin" ]; then
     ensure_xcode_installed
     ensure_homebrew_installed
     # Install homebrew packages
