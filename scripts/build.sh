@@ -26,10 +26,10 @@ CREATIVE_ENGINE_DIR="$TOP_DIR/creative-engine"
 ######################### Function definitions ########################
 
 function ensure_xcode_installed {
-#Ensure XCode full version is installed and configured, 
-#as xcodebuild gets invoked later in the build, and it will fail otherwise
-	if [[ -z "$(which xcodebuild)" ]] || ! xcodebuild --help >/dev/null 2>&1; then
-	    cat 1>&2 <<EOF
+    #Ensure XCode full version is installed and configured, 
+    #as xcodebuild gets invoked later in the build, and it will fail otherwise
+    if [[ -z "$(which xcodebuild)" ]] || ! xcodebuild --help >/dev/null 2>&1; then
+        cat 1>&2 <<EOF
 Please install XCode from the App Store.
 You will need the full version, not just the command line tools.
 If you already have XCode installed, you may need to issue this command
@@ -42,11 +42,11 @@ EOF
 }
 
 function ensure_homebrew_installed {
-	#Ensure homebrew is installed
-	if [[ -z "$(which brew)" ]]; then
-	  echo "No homebrew found - installing Homebrew from https://brew.sh"
-	  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	fi
+    #Ensure homebrew is installed
+    if [[ -z "$(which brew)" ]]; then
+      echo "No homebrew found - installing Homebrew from https://brew.sh"
+      /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    fi
 }
 
 function ensure_debian_devtools_installed {
@@ -55,7 +55,7 @@ function ensure_debian_devtools_installed {
 }
 
 function ensure_arch_devtools_installed {
-    sudo pacman -S sdl2 sdl2_image
+    sudo pacman -Sqyyu --noconfirm base-devel libglvnd sdl2 sdl2_image cmake
 }
 
 function ensure_creative_engine {
@@ -79,30 +79,30 @@ function build {
 # Thanks Stack Overflow https://stackoverflow.com/a/17072017
 OS="$(uname)"
 if [ "$OS" == "Darwin" ]; then
-	ensure_xcode_installed
-	ensure_homebrew_installed
+    ensure_xcode_installed
+    ensure_homebrew_installed
     # Install homebrew packages
     cd "$BASE_DIR"
     brew bundle install
 elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
-    if [[ -n "$(which apt-get)" ]]; then
+    if [[ -n "$(which apt-get 2>/dev/null)" ]]; then
         ensure_debian_devtools_installed
-    elif [[ -n "$(which pacman)" ]]; then
+    elif [[ -n "$(which pacman 2>/dev/null)" ]]; then
         ensure_arch_devtools_installed
     else
         echo "Only debian/ubuntu and arch Linux are supported targets, sorry."
         exit 1
     fi
 elif [ "$(cut -c1-10 <<<"$OS")" == "MINGW32_NT" ]; then
-	echo "32 bit Windows not supported"
-	exit 1
+    echo "32 bit Windows not supported"
+    exit 1
 elif [ "$(cut -c1-10 <<<"$OS")" == "MINGW64_NT" ]; then
-	echo "64 bit Windows not supported"
-	exit 1
+    echo "64 bit Windows not supported"
+    exit 1
 else
-	echo 'Unsupported operating system "'"$OS"'"'
-	exit 1
+    echo 'Unsupported operating system "'"$OS"'"'
+    exit 1
 fi
 
 ensure_creative_engine
