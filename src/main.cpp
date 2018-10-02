@@ -5,7 +5,7 @@
 #ifndef __XTENSA__
 
 #include "SDL2/SDL.h"
-
+#include <stdio.h>
 #endif
 
 const int FRAMERATE = 30;
@@ -94,24 +94,82 @@ uint8_t currentSong = 0,
 
 bool muted = false;
 
-#define SONG_SLOT 0
 
 extern "C" void app_main() {
-  SeedRandom(time(ENull));
+//  SeedRandom(time(ENull));
   display.Init();
   soundPlayer.Init();
 
-  resourceManager.LoadRaw(STAGE_2_XM, SONG_SLOT);
-  BRaw *music = resourceManager.GetRaw(README_SLOT);
-//  printf("README size: %d\n", music->mSize);
-//  printf("mData\n%.150s\n", (char *)music->mData);
+  gResourceManager.LoadRaw(STAGE_2_XM, SONG_SLOT);
+  BRaw *music = gResourceManager.GetRaw(SONG_SLOT);
   soundPlayer.PlayMusic(music);
 
 
-  gResourceManager.LoadRaw(README_MD, README_SLOT);
-  BRaw *r = gResourceManager.GetRaw(README_SLOT);
-  printf("README size: %d\n", r->mSize);
-  printf("mData\n%.150s\n", (char *) r->mData);
+  gResourceManager.LoadRaw(SFX_BOSS_EXPLODE_WAV, 99);
+  BRaw *effect = gResourceManager.GetRaw(SONG_SLOT);
+  soundPlayer.LoadEffect(effect, 0, 0);
+
+  gResourceManager.LoadRaw(SFX_ENEMY_EXPLODE_WAV, 99);
+  effect = gResourceManager.GetRaw(SONG_SLOT);
+  soundPlayer.LoadEffect(effect, 1, 0);
+
+  gResourceManager.LoadRaw(SFX_ENEMY_FLYBY_WAV, 99);
+  effect = gResourceManager.GetRaw(SONG_SLOT);
+  soundPlayer.LoadEffect(effect, 2, 0);
+
+  gResourceManager.LoadRaw(SFX_ENEMY_SHOOT_WAV, 99);
+  effect = gResourceManager.GetRaw(SONG_SLOT);
+  soundPlayer.LoadEffect(effect, 3, 0);
+
+  gResourceManager.LoadRaw(SFX_NEXT_ATTRACT_CHAR_WAV, 99);
+  effect = gResourceManager.GetRaw(SONG_SLOT);
+  soundPlayer.LoadEffect(effect, 4, 0);
+
+  gResourceManager.LoadRaw(SFX_NEXT_ATTRACT_CHAR_WAV, 99);
+  effect = gResourceManager.GetRaw(SONG_SLOT);
+  soundPlayer.LoadEffect(effect, 5, 0);
+
+  gResourceManager.LoadRaw(SFX_NEXT_ATTRACT_SCREEN_WAV, 99);
+  effect = gResourceManager.GetRaw(SONG_SLOT);
+  soundPlayer.LoadEffect(effect, 6, 0);
+
+  gResourceManager.LoadRaw(SFX_PLAYER_HIT_WAV, 99);
+  effect = gResourceManager.GetRaw(SONG_SLOT);
+  soundPlayer.LoadEffect(effect, 7, 0);
+
+  gResourceManager.LoadRaw(SFX_PLAYER_SHOOT_WAV, 99);
+  effect = gResourceManager.GetRaw(SONG_SLOT);
+  soundPlayer.LoadEffect(effect, 8, 0);
+
+
+//  printf("README size: %d\n", music->mSize);
+//  printf("mData\n%.150s\n", (char *)music->mData);
+
+//  printf("FILE SIZE = %i\n", music->mSize);
+//
+//  printf("%s\n", music->mData);
+//
+//  uint8_t *ptr = music->mData;
+//
+//  for (int i = 0; i < 8; i++) {
+//    printf("%02X|\t", i);
+//    for (int z = 1; z < 17; z++) {
+//      printf("%02X", *ptr++);
+//      if (z % 4 == 0) {
+//        printf(" ");
+//      }
+//    }
+//
+//    printf("\n");
+//  }
+
+
+
+//
+//  gResourceManager.LoadRaw(README_MD, README_SLOT);
+//  BRaw *r = gResourceManager.GetRaw(README_SLOT);
+//  printf("README size: %d\n", r->mSize);
+//  printf("mData\n%.150s\n", (char *) r->mData);
 
   // TODO: this belongs in GGameEngine
   gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
@@ -139,7 +197,7 @@ extern "C" void app_main() {
 
   while (!done) {
 #ifndef __XTENSA__
-    printf("%d %f\n", Random(10, 20), RandomFloat());
+//    printf("%d %f\n", Random(10, 20), RandomFloat());
 #endif
     Random(); // ranndomize
     gameEngine->GameLoop();
@@ -149,21 +207,22 @@ extern "C" void app_main() {
     }
 
     if (controls.WasPressed(BUTTONA)) {
+      printf("BUTTONA\n");
       if (currentSong > maxSongs) {
         currentSong = 0;
       }
 //      soundPlayer.PlayMusic(currentSong);
       currentSong++;
-
-
     }
 
     if (controls.WasPressed(BUTTON3)) {
+      printf("BUTTON3\n");
       soundPlayer.MuteMusic(muted = !muted);
+      printf("Muting ");
     }
 
     if (controls.WasPressed(BUTTONB)) {
-      printf("BUTTON 3\n"); fflush(stdout);
+      printf("BUTTON B\n"); fflush(stdout);
       if (currentSfx > maxSfx) {
         currentSfx = 0;
       }

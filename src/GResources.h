@@ -13,6 +13,7 @@
 #define FONT_SLOT 2
 
 // BRaw
-#define README_SLOT 0
+#define README_SLOT 3
+#define SONG_SLOT 4
 
 #endif //GAME_ENGINE_GREOURCES_H
