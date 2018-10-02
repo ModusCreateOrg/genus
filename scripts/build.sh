@@ -75,6 +75,16 @@ function build {
 
 ######################### Main build ##################################
 
+op=${1:-}
+
+case "$op" in
+    clean)
+        cd "$CREATIVE_ENGINE_DIR"
+        git clean -fdx
+        rm -rf "$BASE_DIR/build"
+        ;;
+esac
+
 # Thanks Stack Overflow https://stackoverflow.com/a/17072017
 OS="$(uname)"
 if [ "$OS" == "Darwin" ]; then
@@ -106,37 +116,3 @@ fi
 
 ensure_creative_engine
 build
-=======
-	#Ensure homebrew is installed
-	if [[ -z "$(which brew)" ]]; then
-	  echo "No homebrew found - installing Homebrew from https://brew.sh"
-	  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	fi
-}
-
-
-cd "$BASE_DIR"
-
-# Thanks Stack Overflow https://stackoverflow.com/a/17072017
-if [ "$(uname)" == "Darwin" ]; then
-    ensure_xcode_installed
-	  ensure_homebrew_installed
-    # Install homebrew packages
-    brew bundle install
-elif [ "$(uname -s | cut -c 5)" == "Linux" ]; then
-    # Do something under GNU/Linux platform
-	  echo "Linux not supported"
-	  exit 1
-elif [ "$(uname -s | cut -c 10)" == "MINGW32_NT" ]; then
-	  echo "32 bit Windows not supported"
-	  exit 1
-elif [ "$(uname -s | cut -c 10)" == "MINGW64_NT" ]; then
-	  echo "64 bit Windows not supported"
-	  exit 1
-fi
-
-ln -F -s ../creative-engine . 
-mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-cmake ..
-make
