@@ -20,19 +20,28 @@ Alternatively you may use the [CLion IDE](https://www.jetbrains.com/clion/) to d
 
 ## Repository set up for development
 
-This repo and the creative-engine repo work together. The build scripts (`scripts/build.sh`, `cmake` or `make`) will automatically create a soft link to creative-engine.
+This repo and the [creative-engine](https://github.com/ModusCreateOrg/creative-engine) repo work together. The build scripts (`scripts/build.sh`, `cmake` or `make`) will automatically create a soft link to creative-engine.
 
-Thus you will need to fork and clone this and the creative-engine repos AT THE SAME LEVEL:
+Thus you will need to fork and clone this and the `creative-engine` repos AT THE SAME LEVEL:
 
 ```
 $ ls ~/github
 genus/  creative-engine/
 ```
 
-In `genus/` you will need to create a soft link"
+In `genus/` you will need to create a soft link:
 ```
-$ cd genus
-$ ln -s ../creative-engine .
+cd genus
+ln -s ../creative-engine .
+```
+
+### Mac OS X
+
+On Mac OS X, install XCode and then run `scripts/build.sh`. This will ensure you have Homebrew installed, and build the code in the `build` directory.
+
+You can then run the application with this command:
+```
+build/genus
 ```
 
 ## Git Workflow
