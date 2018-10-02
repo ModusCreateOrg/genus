@@ -2,10 +2,13 @@
 
 
 //#define __XTENSA__
-#ifndef __XTENSA__
+#ifdef __XTENSA__
+#include "freeRTOS/task.h"
+#else
 
 #include "SDL2/SDL.h"
 #include <stdio.h>
+
 #endif
 
 const int FRAMERATE = 30;
@@ -87,89 +90,20 @@ public:
 
 BViewPort *viewPort;
 
-uint8_t currentSong = 0,
-        maxSongs = 3,
-        currentSfx = 0,
-        maxSfx = 9;
+uint8_t currentSfx = 0,
+        maxSfx = 8;
 
 bool muted = false;
 
-
+TInt32 frame = 0;
 extern "C" void app_main() {
 //  SeedRandom(time(ENull));
   display.Init();
-  soundPlayer.Init();
+  soundPlayer.Init(4, 9);
 
-  gResourceManager.LoadRaw(STAGE_2_XM, SONG_SLOT);
-  BRaw *music = gResourceManager.GetRaw(SONG_SLOT);
-  soundPlayer.PlayMusic(music);
+  //Have to seed LibXMP with an empty so we can get the engine running
+  soundPlayer.PlayMusic(EMPTYSONG_XM);
 
-
-  gResourceManager.LoadRaw(SFX_BOSS_EXPLODE_WAV, 99);
-  BRaw *effect = gResourceManager.GetRaw(SONG_SLOT);
-  soundPlayer.LoadEffect(effect, 0, 0);
-
-  gResourceManager.LoadRaw(SFX_ENEMY_EXPLODE_WAV, 99);
-  effect = gResourceManager.GetRaw(SONG_SLOT);
-  soundPlayer.LoadEffect(effect, 1, 0);
-
-  gResourceManager.LoadRaw(SFX_ENEMY_FLYBY_WAV, 99);
-  effect = gResourceManager.GetRaw(SONG_SLOT);
-  soundPlayer.LoadEffect(effect, 2, 0);
-
-  gResourceManager.LoadRaw(SFX_ENEMY_SHOOT_WAV, 99);
-  effect = gResourceManager.GetRaw(SONG_SLOT);
-  soundPlayer.LoadEffect(effect, 3, 0);
-
-  gResourceManager.LoadRaw(SFX_NEXT_ATTRACT_CHAR_WAV, 99);
-  effect = gResourceManager.GetRaw(SONG_SLOT);
-  soundPlayer.LoadEffect(effect, 4, 0);
-
-  gResourceManager.LoadRaw(SFX_NEXT_ATTRACT_CHAR_WAV, 99);
-  effect = gResourceManager.GetRaw(SONG_SLOT);
-  soundPlayer.LoadEffect(effect, 5, 0);
-
-  gResourceManager.LoadRaw(SFX_NEXT_ATTRACT_SCREEN_WAV, 99);
-  effect = gResourceManager.GetRaw(SONG_SLOT);
-  soundPlayer.LoadEffect(effect, 6, 0);
-
-  gResourceManager.LoadRaw(SFX_PLAYER_HIT_WAV, 99);
-  effect = gResourceManager.GetRaw(SONG_SLOT);
-  soundPlayer.LoadEffect(effect, 7, 0);
-
-  gResourceManager.LoadRaw(SFX_PLAYER_SHOOT_WAV, 99);
-  effect = gResourceManager.GetRaw(SONG_SLOT);
-  soundPlayer.LoadEffect(effect, 8, 0);
-
-
-//  printf("README size: %d\n", music->mSize);
-//  printf("mData\n%.150s\n", (char *)music->mData);
-
-//  printf("FILE SIZE = %i\n", music->mSize);
-//
-//  printf("%s\n", music->mData);
-//
-//  uint8_t *ptr = music->mData;
-//
-//  for (int i = 0; i < 8; i++) {
-//    printf("%02X|\t", i);
-//    for (int z = 1; z < 17; z++) {
-//      printf("%02X", *ptr++);
-//      if (z % 4 == 0) {
-//        printf(" ");
-//      }
-//    }
-//
-//    printf("\n");
-//  }
-
-
-
-//
-//  gResourceManager.LoadRaw(README_MD, README_SLOT);
-//  BRaw *r = gResourceManager.GetRaw(README_SLOT);
-//  printf("README size: %d\n", r->mSize);
-//  printf("mData\n%.150s\n", (char *) r->mData);
 
   // TODO: this belongs in GGameEngine
   gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
@@ -196,10 +130,8 @@ extern "C" void app_main() {
   TBool done = EFalse;
 
   while (!done) {
-#ifndef __XTENSA__
-//    printf("%d %f\n", Random(10, 20), RandomFloat());
-#endif
-    Random(); // ranndomize
+
+    Random(); // randomize
     gameEngine->GameLoop();
     display.Update();
     if (controls.WasPressed(BUTTONQ)) {
@@ -207,19 +139,30 @@ extern "C" void app_main() {
     }
 
     if (controls.WasPressed(BUTTONA)) {
-      printf("BUTTONA\n");
-      if (currentSong > maxSongs) {
-        currentSong = 0;
-      }
-//      soundPlayer.PlayMusic(currentSong);
-      currentSong++;
+      printf("BUTTON A\n");
+      soundPlayer.PlayMusic(STAGE_5_XM);
     }
 
     if (controls.WasPressed(BUTTON3)) {
-      printf("BUTTON3\n");
+      printf("MENU BUTTON\n");
       soundPlayer.MuteMusic(muted = !muted);
-      printf("Muting ");
+      printf("Muting %i\n", muted);
     }
+
+
+    frame++;
+    if (frame % 30 == 0) {
+      if (currentSfx > maxSfx) {
+        currentSfx = 0;
+      }
+      soundPlayer.PlaySound(currentSfx, 0);
+      currentSfx++;
+    }
+
+    if (frame == 200) {
+      soundPlayer.PlayMusic(STAGE_2_XM);
+    }
+
 
     if (controls.WasPressed(BUTTONB)) {
       printf("BUTTON B\n"); fflush(stdout);

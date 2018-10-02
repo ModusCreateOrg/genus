@@ -7,6 +7,7 @@
 
 #include "BGameEngine.h"
 #include <Display.h>
+#include "GSoundPlayer.h"
 
 class GPlayfield;
 

@@ -12,6 +12,7 @@ BITMAP charset.bmp
 # .-=[  MUSIC  ]=-.
 PATH ../resources/music
 
+RAW EmptySong.xm
 RAW Stage_2.xm
 RAW Stage_3.xm
 RAW Stage_4.xm
