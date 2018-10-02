@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+######################### Debugging and Directory Scaffolding #########
+
 # Set bash unofficial strict mode http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 IFS=$'\n\t'
@@ -17,56 +19,57 @@ export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BASE_DIR="$DIR/.."
 BUILD_DIR="$BASE_DIR/build"
+TOP_DIR="$BASE_DIR/.."
+CREATIVE_ENGINE_DIR="$TOP_DIR/creative-engine"
+export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
+#shellcheck disable=SC1090
+. "$DIR/common.sh"
 
+######################### Main build ##################################
 
-function ensure_xcode_installed {
-#Ensure XCode full version is installed and configured, 
-#as xcodebuild gets invoked later in the build, and it will fail otherwise
-	if [[ -z "$(which xcodebuild)" ]] || ! xcodebuild --help >/dev/null 2>&1; then
-	    cat 1>&2 <<EOF
-Please install XCode from the App Store.
-You will need the full version, not just the command line tools.
-If you already have XCode installed, you may need to issue this command
-to let the tools find the right developer directory:
-    sudo xcode-select -r
-See https://github.com/nodejs/node-gyp/issues/569
-EOF
-        exit 1
-    fi
-}
+op=${1:-}
+SKIP_TOOLS_INSTALL=false
+SUDO="sudo"
 
-function ensure_homebrew_installed {
-	#Ensure homebrew is installed
-	if [[ -z "$(which brew)" ]]; then
-	  echo "No homebrew found - installing Homebrew from https://brew.sh"
-	  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	fi
-}
-
-
-cd "$BASE_DIR"
+case "$op" in
+    clean)
+        clean
+        ;;
+    docker-build)
+        SKIP_TOOLS_INSTALL=true
+        ;;
+esac
 
 # Thanks Stack Overflow https://stackoverflow.com/a/17072017
-if [ "$(uname)" == "Darwin" ]; then
-	ensure_xcode_installed
-	ensure_homebrew_installed
+OS="$(uname)"
+if "$SKIP_TOOLS_INSTALL"; then
+    echo "Skipping tools install"
+elif [ "$OS" == "Darwin" ]; then
+    ensure_xcode_installed
+    ensure_homebrew_installed
     # Install homebrew packages
+    cd "$BASE_DIR"
     brew bundle install
-elif [ "$(uname -s | cut -c 5)" == "Linux" ]; then
+elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
-	echo "Linux not supported"
-	exit 1
-elif [ "$(uname -s | cut -c 10)" == "MINGW32_NT" ]; then
-	echo "32 bit Windows not supported"
-	exit 1
-elif [ "$(uname -s | cut -c 10)" == "MINGW64_NT" ]; then
-	echo "64 bit Windows not supported"
-	exit 1
+    if [[ -n "$(which apt-get 2>/dev/null)" ]]; then
+        ensure_debian_devtools_installed
+    elif [[ -n "$(which pacman 2>/dev/null)" ]]; then
+        ensure_arch_devtools_installed
+    else
+        echo "Only debian/ubuntu and arch Linux are supported targets, sorry."
+        exit 1
+    fi
+elif [ "$(cut -c1-10 <<<"$OS")" == "MINGW32_NT" ]; then
+    echo "32 bit Windows not supported"
+    exit 1
+elif [ "$(cut -c1-10 <<<"$OS")" == "MINGW64_NT" ]; then
+    echo "64 bit Windows not supported"
+    exit 1
+else
+    echo 'Unsupported operating system "'"$OS"'"'
+    exit 1
 fi
 
-ln -F -s ../creative-engine . 
-mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-cmake ..
-make
-
+ensure_creative_engine
+build

@@ -2,9 +2,25 @@
 
 [![Modus Create](./images/modus.logo.svg)](https://moduscreate.com)
 
+## Quick Start
+
+On macOS or Ubuntu 16.04, with git installed, run:
+
+    git clone https://github.com/ModusCreateOrg/genus.git # Clone src
+    genus/scripts/build.sh                                # Build it
+    genus/build/genus                                     # Run genus
+
+Once this is built, you can make changes to the sources and rebuild with just these commands:
+
+    cd genus/build
+    cmake ..        # only needed if you change CMakeLists.txt
+    make
+
+Alternatively you may use the [CLion IDE](https://www.jetbrains.com/clion/) to develop the project and run the builds.
+
 ## Repository set up for development
 
-This repo and the [creative-engine](https://github.com/ModusCreateOrg/creative-engine) repo work together.  A soft link to `creative-engine` is automatically created by cmake or make.
+This repo and the [creative-engine](https://github.com/ModusCreateOrg/creative-engine) repo work together. The build scripts (`scripts/build.sh`, `cmake` or `make`) will automatically create a soft link to creative-engine.
 
 Thus you will need to fork and clone this and the `creative-engine` repos AT THE SAME LEVEL:
 
