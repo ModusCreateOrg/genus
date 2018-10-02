@@ -83,19 +83,16 @@ extern "C" void app_main() {
   SeedRandom(time(ENull));
   display.Init();
 
-  gResourceManager.LoadRaw(README_MD, README_SLOT);
-  BRaw *r = gResourceManager.GetRaw(README_SLOT);
-  printf("README size: %d\n", r->mSize);
-  printf("mData\n%.150s\n", (char *) r->mData);
+//  gResourceManager.LoadRaw(README_MD, README_SLOT);
+//  BRaw *r = gResourceManager.GetRaw(README_SLOT);
+//  printf("README size: %d\n", r->mSize);
+//  printf("mData\n%.150s\n", (char *) r->mData);
 
   // TODO: this belongs in GGameEngine
   gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
-  gResourceManager.LoadBitmap(PLAYERNEW_BMP, PLAYER_SLOT, IMAGE_32x32);
-  BBitmap *b = gResourceManager.GetBitmap(PLAYER_SLOT);
+  gResourceManager.LoadBitmap(SPLASH1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  BBitmap *b = gResourceManager.GetBitmap(BKG_SLOT);
   display.SetPalette(b);
-  gResourceManager.LoadBitmap(BKG3_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  b = gResourceManager.GetBitmap(BKG_SLOT);
-//  display.SetPalette(b);
 
   viewPort = new BViewPort();
   viewPort->Offset(50, 50);
