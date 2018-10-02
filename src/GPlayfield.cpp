@@ -6,7 +6,7 @@
 
 GPlayfield::GPlayfield(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
   mGameEngine = aGameEngine;
-  mDisplay = &display;
+  mDisplay = &gDisplay;
   mFont = new BFont(FONT_SLOT);
 //  gResourceManager.LoadBitmap(BKG7_BMP, BKG_SLOT, IMAGE_ENTIRE);
 //  mBitmap = gResourceManager.GetBitmap(BKG_SLOT);
