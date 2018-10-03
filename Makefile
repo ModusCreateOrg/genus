@@ -12,4 +12,12 @@ resources: rcomp FORCE
 	echo "Compiling resources"
 	cd src && ../creative-engine/tools/rcomp Resources.r
 
+docs:
+	cd doxygen && doxygen Doxyfile.in
+
+clean-docs:
+	rm -rf docs
+	
 FORCE:
+
+

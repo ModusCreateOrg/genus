@@ -4,21 +4,46 @@
 
 [![Build Status](https://ci.moduscreate.com/buildStatus/icon?job=ModusCreateOrg/genus/master&build=1)](https://ci.moduscreate.com/job/ModusCreateOrg/job/genus/job/master/1/)
 
+## Quick Start
+
+On macOS or Ubuntu 16.04, with git installed, run:
+
+    git clone https://github.com/ModusCreateOrg/genus.git # Clone src
+    genus/scripts/build.sh                                # Build it
+    genus/build/genus                                     # Run genus
+
+Once this is built, you can make changes to the sources and rebuild with just these commands:
+
+    cd genus/build
+    cmake ..        # only needed if you change CMakeLists.txt
+    make
+
+Alternatively you may use the [CLion IDE](https://www.jetbrains.com/clion/) to develop the project and run the builds.
+
 ## Repository set up for development
 
-This repo and the creative-engine repo work together.  A soft link to creative-engine is automatically created by cmake or make.
+This repo and the [creative-engine](https://github.com/ModusCreateOrg/creative-engine) repo work together. The build scripts (`scripts/build.sh`, `cmake` or `make`) will automatically create a soft link to creative-engine.
 
-Thus you will need to fork and clone this and the creative-engine repos AT THE SAME LEVEL:
+Thus you will need to fork and clone this and the `creative-engine` repos AT THE SAME LEVEL:
 
 ```
 $ ls ~/github
 genus/  creative-engine/
 ```
 
-In genus/ you will need to create a soft link"
+In `genus/` you will need to create a soft link:
 ```
-$ cd genus
-$ ln -s ../creative-engine .
+cd genus
+ln -s ../creative-engine .
+```
+
+### Mac OS X
+
+On Mac OS X, install XCode and then run `scripts/build.sh`. This will ensure you have Homebrew installed, and build the code in the `build` directory.
+
+You can then run the application with this command:
+```
+build/genus
 ```
 
 ## Git Workflow
