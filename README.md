@@ -2,6 +2,8 @@
 
 [![Modus Create](./images/modus.logo.svg)](https://moduscreate.com)
 
+[![Build Status](https://ci.moduscreate.com/buildStatus/icon?job=ModusCreateOrg/genus/master&build=1)](https://ci.moduscreate.com/job/ModusCreateOrg/job/genus/job/master/1/)
+
 ## Quick Start
 
 On macOS or Ubuntu 16.04, with git installed, run:
