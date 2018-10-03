@@ -3,10 +3,13 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Clean') {
             steps {
-                // checkout scm
                 sh 'git clean -fdx'
+            }
+        }
+        stage('Checkout Libs') {
+            steps {
                 dir('creative-engine') {
                    git branch: 'master', url: 'git@github.com:ModusCreateOrg/creative-engine'
                 }
