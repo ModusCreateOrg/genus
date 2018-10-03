@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh "scripts/build-docker.sh"
+                sh "scripts/docker-build.sh"
             }
         }
     }
