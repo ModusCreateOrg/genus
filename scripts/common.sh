@@ -45,10 +45,15 @@ function ensure_creative_engine {
 
 function build {
     cd "$BASE_DIR" || exit 1
-    rm -f creative-engine
-    ln -s ../creative-engine . 
+    if [[ ! -d creative-engine ]]; then
+        rm -f creative-engine
+        ln -s ../creative-engine . 
+    fi
     mkdir -p "$BUILD_DIR"
     cd "$BUILD_DIR" || exit 1
+    pwd
+    ls -l
+    ls -l ..
     cmake ..
     make
 }

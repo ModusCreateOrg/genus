@@ -36,7 +36,7 @@ add_custom_command(OUTPUT Resources.bin
         DEPENDS rcomp
         COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR} ")
 
-# gather creagive-engine sources
+# gather creative-engine sources
 file(GLOB_RECURSE LIB RELATIVE ${CMAKE_SOURCE_DIR} "creative-engine/src/*.cpp")
 
 
