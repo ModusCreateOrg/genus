@@ -13,7 +13,7 @@ resources: rcomp FORCE
 	cd src && ../creative-engine/tools/rcomp Resources.r
 
 docs:
-	cd doxygen && doxygen Doxyfile.in
+	(cd doxygen && ./build.sh)
 
 clean-docs:
 	rm -rf docs
