@@ -28,9 +28,11 @@ export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
 
 function finish {
     # Your cleanup code here
-    cd "$BASE_DIR"
-    rm -rf creative-engine
-    ln -s "$CREATIVE_ENGINE_DIR" creative-engine
+    if [[ -d "$CREATIVE_ENGINE_DIR" ]]; then
+        cd "$BASE_DIR"
+        rm -rf creative-engine
+        ln -s "$CREATIVE_ENGINE_DIR" creative-engine
+    fi
 }
 trap finish EXIT
 
@@ -39,10 +41,8 @@ cd "$BASE_DIR"
 # the whole repo here instead. Fix it up in the exit trap. Ugh.
 if [[ -L creative-engine ]]; then
     rm -f creative-engine
-elif [[ -d creative-engine ]]; then
-    rm -rf creative-engine
+    cp -a "$CREATIVE_ENGINE_DIR" .
 fi
-cp -a "$CREATIVE_ENGINE_DIR" .
 #shellcheck disable=SC2086,SC2048
 docker build . -t genus -f "$DIR/Dockerfile"
 
