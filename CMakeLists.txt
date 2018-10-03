@@ -48,7 +48,7 @@ add_executable(genus
         src/main.cpp
         src/GPlayfield.cpp
         src/GGameEngine.cpp
-        README.md creative-engine/src/BFont.cpp creative-engine/src/BFont.h src/GSplashState.cpp src/GSplashState.h src/GMainMenuState.cpp src/GMainMenuState.h src/GGameState.cpp src/GGameState.h src/GGameOverState.cpp src/GGameOverState.h src/GEnterHighScoreState.cpp src/GEnterHighScoreState.h src/GHighScoresState.cpp src/GHighScoresState.h)
+        README.md creative-engine/src/BFont.cpp creative-engine/src/BFont.h src/GSplashState.cpp src/GSplashState.h src/GMainMenuState.cpp src/GMainMenuState.h src/GGameState.cpp src/GGameState.h src/GGameOverState.cpp src/GGameOverState.h src/GEnterHighScoreState.cpp src/GEnterHighScoreState.h src/GHighScoresState.cpp src/GHighScoresState.h src/GMainOptionsState.cpp src/GMainOptionsState.h src/GCreditsState.cpp src/GCreditsState.h)
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 #target_link_libraries(${GAME_ENGINE})
 

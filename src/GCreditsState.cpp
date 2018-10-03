@@ -1,8 +1,8 @@
 #include "Game.h"
 
-class GMainMenuProcess : public BProcess {
+class GCreditsProcess : public BProcess {
 public:
-  GMainMenuProcess() : BProcess() {}
+  GCreditsProcess() : BProcess() {}
 
 public:
   TBool RunBefore() {
@@ -11,7 +11,7 @@ public:
 
   TBool RunAfter() {
     if (gControls.WasPressed(BUTTON_START)) {
-      gGameEngine->SetState(GAME_STATE_GAME);
+      gGameEngine->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;
     }
     else if (gControls.WasPressed(BUTTON_MENU)) {
@@ -22,18 +22,20 @@ public:
   }
 };
 
-GMainMenuState::GMainMenuState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
-  gResourceManager.LoadBitmap(MAIN_MENU1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+GCreditsState::GCreditsState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
+  gResourceManager.LoadBitmap(CREDITS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
   gDisplay.SetPalette(mBackground);
-  auto *p = new GMainMenuProcess();
+  auto *p = new GCreditsProcess();
   aGameEngine->AddProcess(p);
 }
 
-GMainMenuState::~GMainMenuState() {
+GCreditsState::~GCreditsState() {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
 }
 
-void GMainMenuState::Render() {
+void GCreditsState::Render() {
   gDisplay.renderBitmap->CopyPixels(mBackground);
 }
+
+

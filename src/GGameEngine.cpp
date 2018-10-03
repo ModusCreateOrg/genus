@@ -42,8 +42,18 @@ TInt GGameEngine::SetState(TInt aNewState) {
       Reset();
       mPlayfield = new GHighScoresState(this);
       break;
+    case GAME_STATE_MAIN_OPTIONS:
+      Reset();
+      mPlayfield = new GMainOptionsState(this);
+      break;
+    case GAME_STATE_CREDITS:
+      Reset();
+      mPlayfield = new GCreditsState(this);
+      break;
     default:
       return oldState;
   }
+  // reset dKeys so next state doesn't react to any keys already pressed
+  gControls.dKeys = 0;
   return oldState;
 }

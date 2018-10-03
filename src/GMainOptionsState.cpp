@@ -1,8 +1,8 @@
 #include "Game.h"
 
-class GMainMenuProcess : public BProcess {
+class GMainOptionsProcess : public BProcess {
 public:
-  GMainMenuProcess() : BProcess() {}
+  GMainOptionsProcess() : BProcess() {}
 
 public:
   TBool RunBefore() {
@@ -11,29 +11,30 @@ public:
 
   TBool RunAfter() {
     if (gControls.WasPressed(BUTTON_START)) {
-      gGameEngine->SetState(GAME_STATE_GAME);
+      gGameEngine->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;
     }
     else if (gControls.WasPressed(BUTTON_MENU)) {
-      gGameEngine->SetState(GAME_STATE_MAIN_OPTIONS);
+      gGameEngine->SetState(GAME_STATE_CREDITS);
       return EFalse;
     }
     return ETrue;
   }
 };
 
-GMainMenuState::GMainMenuState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
-  gResourceManager.LoadBitmap(MAIN_MENU1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+GMainOptionsState::GMainOptionsState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
+  gResourceManager.LoadBitmap(MAIN_OPTIONS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
   gDisplay.SetPalette(mBackground);
-  auto *p = new GMainMenuProcess();
+  auto *p = new GMainOptionsProcess();
   aGameEngine->AddProcess(p);
 }
 
-GMainMenuState::~GMainMenuState() {
+GMainOptionsState::~GMainOptionsState() {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
 }
 
-void GMainMenuState::Render() {
+void GMainOptionsState::Render() {
   gDisplay.renderBitmap->CopyPixels(mBackground);
 }
+
