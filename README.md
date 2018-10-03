@@ -2,6 +2,8 @@
 
 [![Modus Create](./images/modus.logo.svg)](https://moduscreate.com)
 
+[![Build Status](https://ci.moduscreate.com/buildStatus/icon?job=ModusCreateOrg/genus/master&build=1)](https://ci.moduscreate.com/job/ModusCreateOrg/job/genus/job/master/1/)
+
 ## Repository set up for development
 
 This repo and the creative-engine repo work together.  A soft link to creative-engine is automatically created by cmake or make.
