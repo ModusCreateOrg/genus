@@ -7,7 +7,7 @@ pipeline {
             steps {
                 checkout scm
                 sh 'git clean -fdx'
-				dir('creative-engine') {
+                dir('creative-engine') {
                    git branch: 'master', url: 'git@github.com:ModusCreateOrg/creative-engine'
                 }
             }
