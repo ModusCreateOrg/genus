@@ -11,7 +11,7 @@ extern "C" void app_main() {
   gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
 
   gViewPort = new BViewPort();
-  gViewPort->Offset(50, 50);
+  gViewPort->Offset(0, 0);
   gViewPort->SetRect(TRect(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1));
 
   gGameEngine = new GGameEngine();
