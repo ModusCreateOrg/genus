@@ -101,9 +101,6 @@ public:
   }
 
   virtual ~GGameProcess() {
-    gGameEngine->RemoveSprite(mSprite);
-    delete mSprite;
-    mSprite = ENull;
   }
 
 public:
@@ -126,6 +123,21 @@ public:
       Hold();
     }
     if (gControls.WasPressed(BUTTON_START)) {
+      gGameEngine->RemoveSprite(mSprite);
+      delete mSprite;
+      mSprite = ENull;
+
+      gGameEngine->RemoveSprite(mHoldSprite);
+      delete mHoldSprite;
+      mHoldSprite = ENull;
+
+      gGameEngine->RemoveSprite(mNextSprite1);
+      delete mNextSprite1;
+      mNextSprite1 = ENull;
+
+      gGameEngine->RemoveSprite(mNextSprite2);
+      delete mNextSprite2;
+      mNextSprite2 = ENull;
       gGameEngine->SetState(GAME_STATE_GAMEOVER);
       return EFalse;
     }
