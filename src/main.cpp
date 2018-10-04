@@ -4,7 +4,7 @@ BViewPort   *gViewPort;
 GGameEngine *gGameEngine;
 
 extern "C" void app_main() {
-  SeedRandom(time(ENull));
+  SeedRandom(300);
   gDisplay.Init();
 
   // TODO: this belongs in GGameEngine
