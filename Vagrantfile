@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# This Vagrantfile is here to make it easier to test the build scripts with
+# a variety of operating systems, including Ubuntu 18.04 and Arch linux.
+
 box = ENV["BOX"] || "bento/ubuntu-18.04"
 # To build with arch linux, run:
 #      BOX=archlinux/archlinux vagrant up
