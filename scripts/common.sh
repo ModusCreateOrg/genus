@@ -32,14 +32,16 @@ function ensure_cmake {
     local version
     local build
     local tmpdir
+    local cmake
     version=3.12
     build=3
     tmpdir=$(mktemp -d)
+    cmake="cmake-$version.$build-Linux-x86_64"
     cd "$tmpdir" || exit 1
-    curl -sSO "https://cmake.org/files/v$version/cmake-$version.$build-Linux-x86_64.sh"
+    curl -sSO "https://cmake.org/files/v$version/$cmake.sh"
     $SUDO mkdir /opt/cmake
-    yes | $SUDO sh "cmake-$version.$build-Linux-x86_64.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
-    $SUDO ln -s "/opt/cmake/cmake-$version.$build-Linux-x86_64/bin/cmake" /usr/local/bin/cmake
+    yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
+    $SUDO ln -s "/opt/cmake/$cmake/bin/cmake" /usr/local/bin/cmake
     rm -rf "$tmpdir"
 }
 
