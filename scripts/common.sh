@@ -30,7 +30,21 @@ function ensure_homebrew_installed {
 
 function ensure_debian_devtools_installed {
     $SUDO apt-get -qq update
-    $SUDO apt-get -qq install build-essential git cmake libsdl2-dev libsdl2-image-dev
+    $SUDO apt-get -qq install build-essential git libsdl2-dev libsdl2-image-dev curl
+    # Ubuntu 16.04 has an old cmake (3.9) so install a newer one from binaries from cmake
+    # Adapted from https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line
+    local version
+    local build
+    local tmpdir
+    version=3.12
+    build=3
+    tmpdir=$(mktemp -d)
+    cd "$tmpdir" || exit 1
+    curl -sSO "https://cmake.org/files/v$version/cmake-$version.$build-Linux-x86_64.sh"
+    $SUDO mkdir /opt/cmake
+    yes | $SUDO sh "cmake-$version.$build-Linux-x86_64.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
+    $SUDO ln -s "/opt/cmake/cmake-$version.$build-Linux-x86_64/bin/cmake" /usr/local/bin/cmake
+    rm -rf "$tmpdir"
 }
 
 function ensure_arch_devtools_installed {
