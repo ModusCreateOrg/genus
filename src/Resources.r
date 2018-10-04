@@ -1,13 +1,20 @@
 # Resource source file
-PATH ..
-
-RAW README.md
-
 PATH ../resources # path to resource files
 
-BITMAP bkg3.bmp
-BITMAP playernew.bmp
+BITMAP splash1.bmp
+BITMAP credits1.bmp
+BITMAP enter_initials1.bmp
+BITMAP game_over1.bmp
+BITMAP high_scores1.bmp
+BITMAP main_menu1.bmp
+BITMAP main_options1.bmp
+
 BITMAP charset.bmp
+BITMAP level1_sprites.bmp
+BITMAP level1_bkg1.bmp
+BITMAP level1_bkg2.bmp
+BITMAP level2_bkg1.bmp
+
 
 # .-=[  MUSIC  ]=-.
 PATH ../resources/music
@@ -30,3 +37,4 @@ RAW SFX_next_attract_screen.wav
 RAW SFX_player_hit.wav
 RAW SFX_player_shoot.wav
 RAW SFX_speed_boost.wav
+=======

@@ -6,7 +6,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-implicit-exception-spec-mismatch")
 set(CMAKE_VERBOSE_MAKEFILE ON)
 # resource compiler
 set(RCOMP "${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/tools/rcomp")
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/src ${CMAKE_BINARY_DIR} /usr/local/include)
+
+INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/src ${CMAKE_BINARY_DIR} /usr/local/include)
 
 # external libraries
 INCLUDE(FindPkgConfig)
@@ -31,19 +32,17 @@ add_custom_command(OUTPUT rcomp
 add_custom_command(OUTPUT Resources.bin
         #        COMMAND ls ${RCOMP}
         COMMAND @echo
-        COMMAND cd ${CMAKE_SOURCE_DIR}/src && ${RCOMP} Resources.r
+        COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/src && ${RCOMP} Resources.r
         OUTPUTS Resources.bin
         DEPENDS rcomp
         COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR} ")
 
-# gather creagive-engine sources
+# gather creative-engine s\ources
 file(GLOB_RECURSE LIB RELATIVE ${CMAKE_SOURCE_DIR} "creative-engine/src/*.cpp")
-
 
 # LibXMP
 add_compile_definitions(LIBXMP_CORE_PLAYER=true)
 add_compile_definitions(LIBXMP_CORE_DISABLE_IT=true)
-
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
     "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/prowizard"
@@ -60,7 +59,6 @@ file(GLOB LIBXMP_SRC
 )
 
 
-
 add_executable(genus
         rcomp
         Resources.bin
@@ -69,7 +67,28 @@ add_executable(genus
         src/main.cpp
         src/GPlayfield.cpp
         src/GGameEngine.cpp
-        README.md creative-engine/src/BFont.cpp creative-engine/src/BFont.h src/GSoundPlayer.cpp src/GSoundPlayer.h)
+        README.md
+        creative-engine/src/BFont.cpp
+        creative-engine/src/BFont.h
+        src/GSplashState.cpp
+        src/GSplashState.h
+        src/GMainMenuState.cpp
+        src/GMainMenuState.h
+        src/GGameState.cpp
+        src/GGameState.h
+        src/GGameOverState.cpp
+        src/GGameOverState.h
+        src/GEnterHighScoreState.cpp
+        src/GEnterHighScoreState.h
+        src/GHighScoresState.cpp
+        src/GHighScoresState.h
+        src/GMainOptionsState.cpp
+        src/GMainOptionsState.h
+        src/GCreditsState.cpp
+        src/GCreditsState.h
+        src/GSoundPlayer.cpp
+        src/GSoundPlayer.h
+        )
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 #target_link_libraries(${GAME_ENGINE})
 

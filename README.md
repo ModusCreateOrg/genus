@@ -2,6 +2,8 @@
 
 [![Modus Create](./images/modus.logo.svg)](https://moduscreate.com)
 
+[![Build Status](https://ci.moduscreate.com/buildStatus/icon?job=ModusCreateOrg/genus/master&build=1)](https://ci.moduscreate.com/job/ModusCreateOrg/job/genus/job/master/1/)
+
 ## Quick Start
 
 On macOS or Ubuntu 16.04, with git installed, run:
@@ -18,6 +20,12 @@ Once this is built, you can make changes to the sources and rebuild with just th
 
 Alternatively you may use the [CLion IDE](https://www.jetbrains.com/clion/) to develop the project and run the builds.
 
+Run this in the project root to build the documentation:
+
+    make docs
+
+View the [documentation](docs/html/index.html) after it is built.
+ 
 ## Repository set up for development
 
 This repo and the [creative-engine](https://github.com/ModusCreateOrg/creative-engine) repo work together. The build scripts (`scripts/build.sh`, `cmake` or `make`) will automatically create a soft link to creative-engine.

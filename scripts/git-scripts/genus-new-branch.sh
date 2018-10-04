@@ -10,6 +10,6 @@ if [ "$#" -ne 1 ]; then
     exit
 fi
 
-(cd $GENUS_ROOT; git checkout master)
-(cd $GENUS_ROOT; git pull upstream master)
-(cd $GENUS_ROOT; git checkout -b $1)
+(cd $GENUS_ROOT && git checkout master)
+(cd $GENUS_ROOT && git pull upstream master)
+(cd $GENUS_ROOT && git checkout -b $1)

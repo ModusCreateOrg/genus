@@ -9,8 +9,9 @@
 
 // BBitmap
 #define BKG_SLOT 0
-#define PLAYER_SLOT 1
-#define FONT_SLOT 2
+#define BKG2_SLOT 1
+#define PLAYER_SLOT 2
+#define FONT_SLOT 3
 
 // BRaw
 #define README_SLOT 3
