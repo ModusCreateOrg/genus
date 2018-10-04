@@ -29,6 +29,7 @@ function ensure_homebrew_installed {
 }
 
 function ensure_cmake {
+    # Adapted from https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line
     local version
     local build
     local tmpdir
@@ -48,13 +49,13 @@ function ensure_cmake {
 function ensure_debian_devtools_installed {
     $SUDO apt-get -qq update
     $SUDO apt-get -qq install build-essential git libsdl2-dev libsdl2-image-dev curl
-    # Ubuntu 16.04 has an old cmake (3.9) so install a newer one from binaries from cmake
-    # Adapted from https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line
+    # Ubuntu 18.04 has an old cmake (3.9) so install a newer one from binaries from cmake
     ensure_cmake
 }
 
 function ensure_arch_devtools_installed {
     $SUDO pacman -Sqyyu --noconfirm base-devel libglvnd sdl2 sdl2_image curl
+    # Use same version of cmake as for ubuntu
     ensure_cmake
 }
 
