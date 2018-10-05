@@ -42,6 +42,7 @@ function ensure_cmake {
     curl -sSO "https://cmake.org/files/v$version/$cmake.sh"
     $SUDO mkdir /opt/cmake
     yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
+    $SUDO rm -f /usr/local/bin/cmake
     $SUDO ln -s "/opt/cmake/$cmake/bin/cmake" /usr/local/bin/cmake
     rm -rf "$tmpdir"
 }
