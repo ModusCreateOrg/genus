@@ -31,6 +31,8 @@ public:
   TInt16 mCurrentSongLoaded;
   TUint8 mNumberFxChannels;
   TUint8 mNumberFxSlots;
+  TInt mRowNumber;
+  TInt mPatternNumber;
 
 public:
   void Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots);

@@ -33,17 +33,15 @@ GSoundPlayer soundPlayer;
 #ifdef __XTENSA__
 
 #define SAMPLE_RATE (22050)
-#define TIMER_LENGTH 50
-#define AUDIO_BUFF_SIZE 12
 
 #else
 
 #define SAMPLE_RATE (44100)
-#define TIMER_LENGTH 50
-#define AUDIO_BUFF_SIZE 12
 
 #endif
 
+#define TIMER_LENGTH 50
+#define AUDIO_BUFF_SIZE 12
 
 xmp_context xmpContext;
 
@@ -59,6 +57,8 @@ GSoundPlayer::GSoundPlayer() {
   mEffectsVolume = 16;
   mMuted = false;
   mAudioPaused = false;
+  mRowNumber = 0;
+  mPatternNumber = 0;
 }
 
 GSoundPlayer::~GSoundPlayer() {
@@ -74,6 +74,15 @@ bool WARNED_OF_PLAY_BUFFER = false;
 static void fillBuffer(void *audioBuffer, size_t length) {
   if (musicFileLoaded && ! soundPlayer.mAudioPaused) {
     int result = xmp_play_buffer(xmpContext, audioBuffer, length, 0);
+
+    struct xmp_frame_info frameInfo;
+
+    xmp_get_frame_info(xmpContext, &frameInfo);
+
+    soundPlayer.mRowNumber = frameInfo.row + 1;
+    soundPlayer.mPatternNumber = frameInfo.pattern;
+
+//    printf("Pattern :%i | Row : %i | buffLen : %i \n", soundPlayer.mPatternNumber, soundPlayer.mRowNumber, length);
 
     if (result != 0) {
       if (!WARNED_OF_PLAY_BUFFER) {
