@@ -22,6 +22,11 @@ TUint8 currentSfx = 0,
 bool muted = false;
 
 TInt32 frame = 0;
+/** @file
+ * \brief Main entry point for game engine.
+ *
+ * Initializes the engine and runs the main event loop.
+ */
 extern "C" void app_main() {
   SeedRandom(time(ENull));
   gDisplay.Init();
