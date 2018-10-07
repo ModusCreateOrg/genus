@@ -3,6 +3,11 @@
 BViewPort   *gViewPort;
 GGameEngine *gGameEngine;
 
+/** @file
+ * \brief Main entry point for game engine.
+ *
+ * Initializes the engine and runs the main event loop.
+ */
 extern "C" void app_main() {
   SeedRandom(time(ENull));
   gDisplay.Init();
