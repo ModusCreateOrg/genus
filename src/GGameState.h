@@ -3,18 +3,29 @@
 
 #include "Game.h"
 
-// number of rows and columns in the game board
-static const TInt GAMEBOARD_ROWS = 11;
-static const TInt GAMEBOARD_COLS = 8;
+// number of rows and columns in the visible game board
+static const TInt VISIBLE_BOARD_ROWS = 12;
+static const TInt VISIBLE_BOARD_COLS = 10;
+// number of rows and columns in the game board (visible and hidden)
+static const TInt BOARD_ROWS         = (VISIBLE_BOARD_ROWS + 8);
+static const TInt BOARD_COLS         = (VISIBLE_BOARD_COLS + 8);
+static const TInt BOARD_X_MAX        = (BOARD_COLS - VISIBLE_BOARD_COLS);
+static const TInt BOARD_Y_MAX        = (BOARD_ROWS - VISIBLE_BOARD_ROWS);
 
-static const TInt BOARDX = ((320 - (GAMEBOARD_COLS*16)) / 2);
-static const TInt BOARDY = (240 - 16 - (GAMEBOARD_ROWS*16));
-static const TFloat PLAYERX = BOARDX + 48;
-static const TFloat PLAYERY = BOARDY - 32;
-static const TFloat PLAYERX_MIN = PLAYERX;
-static const TFloat PLAYERX_MAX = PLAYERX + (GAMEBOARD_COLS-2)*16;
+// screen coordinates
+static const TInt BOARD_X = ((320 - (VISIBLE_BOARD_COLS * 16)) / 2);
+static const TInt BOARD_Y = (240 - 16 - (VISIBLE_BOARD_ROWS * 16));
+
+static const TFloat PLAYER_X     = BOARD_X + 48;
+static const TFloat PLAYER_Y     = BOARD_Y; //  - 32;
+static const TFloat PLAYER_X_MIN = BOARD_X;
+static const TFloat PLAYER_X_MAX = BOARD_X + (VISIBLE_BOARD_COLS - 2) * 16;
+static const TFloat PLAYER_Y_MIN = BOARD_Y;
+static const TFloat PLAYER_Y_MAX = BOARD_Y + (VISIBLE_BOARD_ROWS - 2) * 16;
 
 class GPlayerSprite;
+
+class GGameProcess;
 
 class GGameState : public BPlayfield {
 public:
@@ -31,16 +42,41 @@ protected:
   BBitmap *mBackground1, *mBackground2;
   BBitmap *mCurrentBackground;
   TInt    mAnimationTimer;
+protected:
+  GGameProcess *mGameProcess;
 
 public:
-  TInt mLevel;
-  TBCD mScore;
-  TInt mBeat;
-  TInt mTimer;
-  TInt8 mGameBoard[GAMEBOARD_ROWS][GAMEBOARD_COLS];
+  TInt   mLevel;
+  TBCD   mScore;
+  TInt   mBoardX, mBoardY;  // scroll position of board
+  TUint8 mGameBoard[BOARD_ROWS][BOARD_COLS];
 public:
   void Clear();
+
   void LoadLevel();
+
+protected:
+  TUint8 GetBlock(TInt aRow, TInt aCol) {
+    TUint8 b = mGameBoard[aRow][aCol];
+    if (b != 255) {
+      b &= ~8;
+    }
+    return b;
+  }
+
+  TBool GetQuad(TInt aRow, TInt aCol, TUint8 *aQuad) {
+    aQuad[0] = GetBlock(aRow, aCol);
+    aQuad[1] = GetBlock(aRow, aCol+1);
+    aQuad[2] = GetBlock(aRow+1, aCol);
+    aQuad[3] = GetBlock(aRow+1, aCol+1);
+    if (aQuad[0] == 255 || aQuad[1] == 255 || aQuad[2] == 255 || aQuad[3] == 255) {
+      return EFalse;
+    }
+    return aQuad[0] == aQuad[1] && aQuad[1] == aQuad[2] && aQuad[2] == aQuad[3];
+  }
+
+public:
+  void Combine();
 
 };
 
