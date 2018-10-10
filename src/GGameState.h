@@ -4,16 +4,20 @@
 #include "Game.h"
 
 // number of rows and columns in the visible game board
-static const TInt VISIBLE_BOARD_ROWS = 12;
-static const TInt VISIBLE_BOARD_COLS = 10;
+static const TInt VISIBLE_BOARD_ROWS = 13;
+static const TInt VISIBLE_BOARD_COLS = 19;
 // number of rows and columns in the game board (visible and hidden)
-static const TInt BOARD_ROWS         = (VISIBLE_BOARD_ROWS + 8);
-static const TInt BOARD_COLS         = (VISIBLE_BOARD_COLS + 8);
+static const TInt BOARD_ROWS         = (VISIBLE_BOARD_ROWS);
+static const TInt BOARD_COLS         = (VISIBLE_BOARD_COLS);
+//static const TInt BOARD_ROWS         = (VISIBLE_BOARD_ROWS + 8);
+//static const TInt BOARD_COLS         = (VISIBLE_BOARD_COLS + 8);
 static const TInt BOARD_X_MAX        = (BOARD_COLS - VISIBLE_BOARD_COLS);
 static const TInt BOARD_Y_MAX        = (BOARD_ROWS - VISIBLE_BOARD_ROWS);
 
 // screen coordinates
-static const TInt BOARD_X = ((320 - (VISIBLE_BOARD_COLS * 16)) / 2);
+//static const TInt BOARD_X = ((320 - (VISIBLE_BOARD_COLS * 16)) / 2);
+//static const TInt BOARD_Y = (240 - 16 - (VISIBLE_BOARD_ROWS * 16));
+static const TInt BOARD_X = 8;
 static const TInt BOARD_Y = (240 - 16 - (VISIBLE_BOARD_ROWS * 16));
 
 static const TFloat PLAYER_X     = BOARD_X + 48;

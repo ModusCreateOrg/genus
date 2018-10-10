@@ -104,13 +104,13 @@ public:
     mNextSprite1 = new GPlayerSprite();
     mNextSprite1->x = 32;
     mNextSprite1->y = PLAYER_Y;
-    gGameEngine->AddSprite(mNextSprite1);
+//    gGameEngine->AddSprite(mNextSprite1);
 
     //
     mNextSprite2 = new GPlayerSprite();
     mNextSprite2->x = 32;
     mNextSprite2->y = PLAYER_Y + 48;
-    gGameEngine->AddSprite(mNextSprite2);
+//    gGameEngine->AddSprite(mNextSprite2);
   }
 
   virtual ~GGameProcess() {
