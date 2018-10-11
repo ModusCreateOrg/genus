@@ -3,8 +3,10 @@
 static const TInt ANIMATE_TIME = 3;
 static const TInt BLINK_TIME   = 2;
 
-static const TInt PLAYERSTATE_CONTROL = 0,
-                  PLAYERSTATE_FALL    = 1;
+static const TInt PLAYERSTATE_CONTROL  = 0,
+                  PLAYERSTATE_GAMEOVER = 1;
+
+static const TUint8 GRID_COLOR = 253;
 
 class GPlayerSprite : public BSprite {
 public:
@@ -44,7 +46,7 @@ public:
     mBlocks[1] = save;
   }
 
-  void Animate() {
+  void Animate() override {
     mBlinkTimer--;
     if (mBlinkTimer < 0) {
       mBlinkTimer = BLINK_TIME;
@@ -100,17 +102,6 @@ public:
 
     mSprite = new GPlayerSprite();
     gGameEngine->AddSprite(mSprite);
-    //
-    mNextSprite1 = new GPlayerSprite();
-    mNextSprite1->x = 32;
-    mNextSprite1->y = PLAYER_Y;
-//    gGameEngine->AddSprite(mNextSprite1);
-
-    //
-    mNextSprite2 = new GPlayerSprite();
-    mNextSprite2->x = 32;
-    mNextSprite2->y = PLAYER_Y + 48;
-//    gGameEngine->AddSprite(mNextSprite2);
   }
 
   virtual ~GGameProcess() {
@@ -136,7 +127,6 @@ public:
 
     if (mGameState->mGameBoard[row][col] != 255 || mGameState->mGameBoard[row][col + 1] != 255 ||
         mGameState->mGameBoard[row + 1][col] != 255 || mGameState->mGameBoard[row + 1][col + 1] != 255) {
-      // TODO: Jay - make a "cant do that!" sound here
       return EFalse;
     }
     return ETrue;
@@ -158,6 +148,18 @@ public:
     mSprite->Randomize();
   }
 
+  TBool StateGameOver() {
+    mSprite->flags &= ~SFLAG_RENDER;
+    if (gControls.WasPressed(BUTTON_START)) {
+      gGameEngine->RemoveSprite(mSprite);
+      delete mSprite;
+      mSprite = ENull;
+
+      gGameEngine->SetState(GAME_STATE_GAMEOVER);
+      return EFalse;
+    }
+
+  }
 
   void StateControl() {
     if (gControls.WasPressed(BUTTONA)) {
@@ -191,6 +193,10 @@ public:
     } else if (gControls.WasPressed(BUTTON_SELECT)) {
       Drop();
       mGameState->Combine();
+      if (mGameState->IsGameOver()) {
+        mState = PLAYERSTATE_GAMEOVER;
+        mGameState->mGameOver = ETrue;
+      }
     }
     mBlinkTimer--;
     if (mBlinkTimer < 0) {
@@ -201,7 +207,6 @@ public:
     } else if (CanDrop()) {
       mSprite->flags |= SFLAG_RENDER;
     }
-
   }
 
   TBool RunAfter() {
@@ -209,27 +214,11 @@ public:
       case PLAYERSTATE_CONTROL:
         StateControl();
         break;
-      case PLAYERSTATE_FALL:
-        StateControl();
-        break;
+      case PLAYERSTATE_GAMEOVER:
+        return StateGameOver();
       default:
         Panic("Invalid mState in RunAfter\n");
         break;
-    }
-    if (gControls.WasPressed(BUTTON_START)) {
-      gGameEngine->RemoveSprite(mSprite);
-      delete mSprite;
-      mSprite = ENull;
-
-      gGameEngine->RemoveSprite(mNextSprite1);
-      delete mNextSprite1;
-      mNextSprite1 = ENull;
-
-      gGameEngine->RemoveSprite(mNextSprite2);
-      delete mNextSprite2;
-      mNextSprite2 = ENull;
-      gGameEngine->SetState(GAME_STATE_GAMEOVER);
-      return EFalse;
     }
     return ETrue;
   }
@@ -246,7 +235,7 @@ GGameState::GGameState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
   mAnimationTimer = ANIMATE_TIME;
   mGameEngine     = aGameEngine;
   mLevel          = 1;
-
+  mGameOver       = EFalse;
   LoadLevel();
 }
 
@@ -268,6 +257,8 @@ void GGameState::LoadLevel() {
   mBackground2       = gResourceManager.GetBitmap(BKG2_SLOT);
   mCurrentBackground = mBackground1;
 
+  mBackground1->SetColor(GRID_COLOR, 255, 255, 255);
+  mBackground2->SetColor(GRID_COLOR, 255, 255, 255);
 //  gDisplay.SetPalette(gResourceManager.GetBitmap(PLAYER_SLOT));
   gDisplay.SetPalette(mBackground1);
   mGameProcess = new GGameProcess(this);
@@ -276,6 +267,18 @@ void GGameState::LoadLevel() {
   mBoardX = mBoardY = 0;
 
   Clear();
+
+  // draw grid on backgrounds
+  for (TInt row = 0; row < VISIBLE_BOARD_ROWS + 1; row++) {
+    mBackground1->DrawFastHLine(ENull, BOARD_X, BOARD_Y + row * 16, VISIBLE_BOARD_COLS * 16, GRID_COLOR);
+    mBackground2->DrawFastHLine(ENull, BOARD_X, BOARD_Y + row * 16, VISIBLE_BOARD_COLS * 16, GRID_COLOR);
+  }
+  for (TInt col = 0; col < VISIBLE_BOARD_COLS + 1; col++) {
+    mBackground1->DrawFastVLine(ENull, BOARD_X + col * 16, BOARD_Y, VISIBLE_BOARD_ROWS * 16, GRID_COLOR);
+    mBackground2->DrawFastVLine(ENull, BOARD_X + col * 16, BOARD_Y, VISIBLE_BOARD_ROWS * 16, GRID_COLOR);
+  }
+
+  mTextColor = 0;
 }
 
 void GGameState::Clear() {
@@ -291,13 +294,17 @@ void GGameState::Animate() {
     mCurrentBackground = mCurrentBackground == mBackground1 ? mBackground2 : mBackground1;
     mAnimationTimer    = ANIMATE_TIME;
   }
+
+  mTextColor += 1;
+  mTextColor %= 64;
+  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 }
 
 void GGameState::Combine() {
-  TInt      accumulated_score = 0;
-  TUint8    quad[4];
+  TUint32 accumulated_score = 0;
+  TUint8  quad[4];
 
-  for (TInt row   = 0; row < BOARD_ROWS - 1; row++) {
+  for (TInt row = 0; row < BOARD_ROWS - 1; row++) {
     for (TInt col = 0; col < BOARD_COLS - 1; col++) {
       if (!GetQuad(row, col, quad)) {
         continue;
@@ -307,34 +314,49 @@ void GGameState::Combine() {
       }
 
       mGameBoard[row][col] |= 8;
-      mGameBoard[row][col+1] |= 8;
+      mGameBoard[row][col + 1] |= 8;
       mGameBoard[row + 1][col] |= 8;
-      mGameBoard[row+1][col+1] |= 8;
-      TInt score = 1;
+      mGameBoard[row + 1][col + 1] |= 8;
+      TInt      score  = 1;
       // look right
-      for (TInt right=col+1; right<BOARD_COLS; right++) {
+      for (TInt right  = col + 1; right < BOARD_COLS; right++) {
         if (!GetQuad(row, right, quad)) {
           break;
         }
         mGameBoard[row][right] |= 8;
-        mGameBoard[row+1][right] |= 8;
+        mGameBoard[row + 1][right] |= 8;
         score *= 2;
-        printf("COMBINED RIGHT\n");
       }
       // look down
-      for (TInt bottom=row+1; bottom<BOARD_ROWS; bottom++) {
+      for (TInt bottom = row + 1; bottom < BOARD_ROWS; bottom++) {
         if (!GetQuad(bottom, col, quad)) {
           break;
         }
         mGameBoard[bottom][col] |= 8;
-        mGameBoard[bottom+1][col] |= 8;
+        mGameBoard[bottom + 1][col] |= 8;
         score *= 2;
-        printf("COMBINED DOWN\n");
       }
       accumulated_score += score;
     }
   }
+  mPoints += accumulated_score;
+  mLastScore.FromUint32(0);
+  TBCD p;
+  p.FromUint32(accumulated_score);
+  mScore.Add(p);
   printf("Score: %d\n", accumulated_score);
+}
+
+TBool GGameState::IsGameOver() {
+  for (TInt row = 0; row < BOARD_ROWS - 1; row++) {
+    for (TInt col = 0; col < BOARD_COLS - 1; col++) {
+      if (mGameBoard[row][col] == 255 && mGameBoard[row][col + 1] == 255 && mGameBoard[row + 1][col] == 255 &&
+          mGameBoard[row + 1][col + 1] == 255) {
+        return EFalse;
+      }
+    }
+  }
+  return ETrue;
 }
 
 void GGameState::Render() {
@@ -364,34 +386,46 @@ void GGameState::Render() {
       bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + i * 16, BOARD_Y - 16);
     }
   }
-  for (TInt i = 0, j = mBoardY; i < VISIBLE_BOARD_ROWS; i++, j++) {
-    if (j & 1) {
-      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X - 16, BOARD_Y + i * 16);
-      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X + VISIBLE_BOARD_COLS * 16, BOARD_Y + i * 16);
-    } else {
-      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X - 16, BOARD_Y + i * 16);
-      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + VISIBLE_BOARD_COLS * 16, BOARD_Y + i * 16);
-    }
-  }
 #endif
+  for (TInt i = 0, j = mBoardY; i < VISIBLE_BOARD_ROWS; i++, j++) {
+//    if (j & 1) {
+//      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X - 16, BOARD_Y + i * 16);
+//      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X + VISIBLE_BOARD_COLS * 16, BOARD_Y + i * 16);
+//    } else {
+//      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X - 16, BOARD_Y + i * 16);
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + VISIBLE_BOARD_COLS * 16, BOARD_Y + i * 16);
+//    }
+  }
 
   // Score
 //  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, SCREEN_WIDTH - 40 - 8, 8);
 //  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, SCREEN_WIDTH - 40 + 8, 8);
 //  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 2, SCREEN_WIDTH - 40 + 24, 8);
 //  y = 8 + 16;
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, 8, 4);
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, 24, 4);
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 2, 40, 4);
+  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, 8, 0);
+  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, 24, 0);
+  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 2, 40, 0);
   TInt      x = 56;
   for (TInt i = 0; i < 7; i++) {
     TInt v = (mScore.mValue >> ((7 - i) * 4)) & 0x0f;
-    if (v) {
-      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 4);
-    }
+//    if (v) {
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 0);
+//    }
     x += 8;
   }
   TInt      v = mScore.mValue & 0x0f;
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 4);
+  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 0);
+
+  if (mGameOver) {
+    x = BOARD_X + VISIBLE_BOARD_COLS*16+32;
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER,  x, BOARD_Y);
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER+1,  x+16, BOARD_Y);
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER+2,  x+32, BOARD_Y);
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER+3,  x+48, BOARD_Y);
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER2, x, BOARD_Y + 16);
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER2+1, x+16, BOARD_Y + 16);
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER2+2, x+32, BOARD_Y + 16);
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER2+3, x+48, BOARD_Y + 16);
+  }
 }
 
