@@ -376,19 +376,22 @@ void GGameState::Render() {
 #endif
 
   // Score
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, SCREEN_WIDTH - 40 - 8, 8);
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, SCREEN_WIDTH - 40 + 8, 8);
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 2, SCREEN_WIDTH - 40 + 24, 8);
-  y = 8 + 16;
-  TInt      x = (SCREEN_WIDTH - 8) - 8 * 16;
+//  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, SCREEN_WIDTH - 40 - 8, 8);
+//  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, SCREEN_WIDTH - 40 + 8, 8);
+//  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 2, SCREEN_WIDTH - 40 + 24, 8);
+//  y = 8 + 16;
+  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, 8, 4);
+  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, 24, 4);
+  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 2, 40, 4);
+  TInt      x = 56;
   for (TInt i = 0; i < 7; i++) {
     TInt v = (mScore.mValue >> ((7 - i) * 4)) & 0x0f;
     if (v) {
-      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, y);
+      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 4);
     }
-    x += 16;
+    x += 8;
   }
   TInt      v = mScore.mValue & 0x0f;
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, y);
+  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 4);
 }
 
