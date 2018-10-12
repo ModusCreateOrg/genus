@@ -9,14 +9,14 @@ GGameEngine *gGameEngine;
  * Initializes the engine and runs the main event loop.
  */
 extern "C" void app_main() {
-  SeedRandom(time(ENull));
+  SeedRandom(300);
   gDisplay.Init();
 
   // TODO: this belongs in GGameEngine
   gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
 
   gViewPort = new BViewPort();
-  gViewPort->Offset(50, 50);
+  gViewPort->Offset(0, 0);
   gViewPort->SetRect(TRect(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1));
 
   gGameEngine = new GGameEngine();
