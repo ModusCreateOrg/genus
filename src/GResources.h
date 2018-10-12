@@ -16,6 +16,9 @@ static const TUint16 IMG_BLOCK2 = 1;
 static const TUint16 IMG_BLOCK3 = 2;
 static const TUint16 IMG_BLOCK4 = 3;
 
+static const TUint16 IMG_BGTILE1 = 6;
+static const TUint16 IMG_BGTILE2= 7;
+
 static const TUint16 IMG_BLOCK1x = 8;
 static const TUint16 IMG_BLOCK2x = 9;
 static const TUint16 IMG_BLOCK3x = 10;
@@ -26,6 +29,9 @@ static const TUint16 IMG_GAMEOVER2 = 24;
 
 static const TUint16 IMG_BEAT_OFF = 48;
 static const TUint16 IMG_BEAT_ON  = 49;
+
+static const TUint16 IMG_FRAMEL = 56;
+static const TUint16 IMG_FRAMER = 57;
 
 static const TUint16 IMG_NUM0  = 64;
 static const TUint16 IMG_NUM1  = 65;

@@ -44,9 +44,7 @@ public:
   void Animate() override;
 
 protected:
-  BBitmap *mBackground1, *mBackground2;
-  BBitmap *mCurrentBackground;
-  TInt    mAnimationTimer;
+  BBitmap *mBackground;
   TUint8  mTextColor;
 protected:
   GGameProcess *mGameProcess;
