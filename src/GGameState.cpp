@@ -7,7 +7,8 @@
 #define RENDER_CHECKERBOARD
 //#undef RENDER_CHECKERBOARD
 
-static const TInt ANIMATE_TIME = 3;
+static const TInt REPEAT_TIME  = 1,
+                  REPEAT_DELAY = REPEAT_TIME + 2;
 static const TInt BLINK_TIME   = 2;
 
 static const TInt PLAYERSTATE_CONTROL  = 0,
@@ -18,7 +19,8 @@ static const TUint8 GRID_COLOR = 253;
 class GPlayerSprite : public BSprite {
 public:
   GPlayerSprite() : BSprite(0, PLAYER_SLOT) {
-    this->flags = SFLAG_RENDER;
+    this->flags     = SFLAG_RENDER;
+    this->mGameOver = EFalse;
     Randomize();
   }
 
@@ -61,6 +63,9 @@ public:
   }
 
   TBool Render(BViewPort *aVP) override {
+    if (mGameOver) {
+      return ETrue;
+    }
     BBitmap *bm = gDisplay.renderBitmap;
     TInt    xx  = TInt(x + .5);
     TInt    yy  = TInt(y + .5);
@@ -102,6 +107,7 @@ public:
 public:
   TInt   mBlinkTimer;
   TUint8 mBlocks[4];
+  TBool  mGameOver;
 };;
 
 class GGameProcess : public BProcess {
@@ -160,6 +166,7 @@ public:
   }
 
   TBool StateGameOver() {
+    mSprite->mGameOver = ETrue;
     mSprite->flags &= ~SFLAG_RENDER;
     if (gControls.WasPressed(BUTTON_START)) {
       gGameEngine->RemoveSprite(mSprite);
@@ -172,34 +179,46 @@ public:
     return ETrue;
   }
 
+  // slow down repeat button press
+  TBool TimedControl(TUint16 aButton) {
+    if (gControls.WasPressed(aButton)) {
+      mRepeatTimer = REPEAT_DELAY;
+      return ETrue;
+    } else if (mRepeatTimer < 1) {
+      return gControls.IsPressed(aButton);
+    }
+    return EFalse;
+  }
+
   void StateControl() {
+    mRepeatTimer--;
     if (gControls.WasPressed(BUTTONA)) {
       mSprite->RotateLeft();
     } else if (gControls.WasPressed(BUTTONB)) {
       mSprite->RotateRight();
-    } else if (gControls.IsPressed(JOYLEFT)) {
+    } else if (TimedControl(JOYLEFT)) {
       mSprite->x -= 16;
       if (mSprite->x < PLAYER_X_MIN) {
         mSprite->x          = PLAYER_X_MIN;
         mGameState->mBoardX = MAX(mGameState->mBoardX - 1, 0);
       }
-    } else if (gControls.IsPressed(JOYRIGHT)) {
+    } else if (TimedControl(JOYRIGHT)) {
       mSprite->x += 16;
       if (mSprite->x > PLAYER_X_MAX) {
         mSprite->x          = PLAYER_X_MAX;
         mGameState->mBoardX = MIN(mGameState->mBoardX + 1, BOARD_X_MAX);
       }
-    } else if (gControls.IsPressed(JOYDOWN)) {
-      mSprite->y += 16;
-      if (mSprite->y > PLAYER_Y_MAX) {
-        mSprite->y          = PLAYER_Y_MAX;
-        mGameState->mBoardY = MIN(mGameState->mBoardY + 1, BOARD_Y_MAX);
-      }
-    } else if (gControls.IsPressed(JOYUP)) {
+    } else if (TimedControl(JOYUP)) {
       mSprite->y -= 16;
       if (mSprite->y < PLAYER_Y_MIN) {
         mSprite->y          = PLAYER_Y_MIN;
         mGameState->mBoardY = MAX(mGameState->mBoardY - 1, 0);
+      }
+    } else if (TimedControl(JOYDOWN)) {
+      mSprite->y += 16;
+      if (mSprite->y > PLAYER_Y_MAX) {
+        mSprite->y          = PLAYER_Y_MAX;
+        mGameState->mBoardY = MIN(mGameState->mBoardY + 1, BOARD_Y_MAX);
       }
     } else if (gControls.WasPressed(BUTTON_SELECT)) {
       Drop();
@@ -208,6 +227,9 @@ public:
         mState = PLAYERSTATE_GAMEOVER;
         mGameState->mGameOver = ETrue;
       }
+    }
+    if (mRepeatTimer < 1) {
+      mRepeatTimer = 3;
     }
     mBlinkTimer--;
     if (mBlinkTimer < 0) {
@@ -235,6 +257,7 @@ public:
   }
 
   TInt          mState;
+  TInt          mRepeatTimer;
   TInt          mBlinkTimer;
   GPlayerSprite *mSprite;
   GGameState    *mGameState;
@@ -373,10 +396,9 @@ void GGameState::Render() {
         bm->DrawSprite(gViewPort, PLAYER_SLOT, v, x + col * 16, y + row * 16);
       }
 #ifdef RENDER_CHECKERBOARD
-      else if (row & 1 ){
+      else if (row & 1) {
         bm->DrawSprite(gViewPort, PLAYER_SLOT, col & 1 ? IMG_BGTILE1 : IMG_BGTILE2, x + col * 16, y + row * 16);
-      }
-      else {
+      } else {
         bm->DrawSprite(gViewPort, PLAYER_SLOT, col & 1 ? IMG_BGTILE2 : IMG_BGTILE1, x + col * 16, y + row * 16);
       }
 #endif
