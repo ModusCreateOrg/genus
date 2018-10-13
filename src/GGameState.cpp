@@ -110,15 +110,34 @@ public:
   TBool  mGameOver;
 };;
 
+
+/// GEN-8 ///
+
+static const ANIMSCRIPT gen8Script[] = {
+        ANULL(60),
+        ALABEL,
+        AFLIP(30, 0),
+        AFLOP(30, 1),
+        ALOOP,
+        AEND   // Good form :)
+};
+
 class GGameProcess : public BProcess {
 public:
   GGameProcess(GGameState *aGameState) : BProcess() {
     mGameState  = aGameState;
     mState      = PLAYERSTATE_CONTROL;
     mBlinkTimer = BLINK_TIME;
-
     mSprite = new GPlayerSprite();
     gGameEngine->AddSprite(mSprite);
+
+    BAnimSprite *gen8Sprite = new BAnimSprite(0, PLAYER_SLOT);
+    gen8Sprite->x = 180;
+    gen8Sprite->y = 15;
+    gen8Sprite->StartAnimation(gen8Script);
+    gGameEngine->AddSprite(gen8Sprite);
+
+
   }
 
   virtual ~GGameProcess() {
