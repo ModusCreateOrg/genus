@@ -149,10 +149,10 @@ public:
     return ETrue;
   }
 
-  void Drop() {
+  TBool Drop() {
     if (!CanDrop()) {
       // TODO: Jay - make a "cant do that!" sound here
-      return;
+      return EFalse;
     }
 
     TInt row = BoardRow(),
@@ -163,6 +163,7 @@ public:
     mGameState->mGameBoard[row + 1][col]     = mSprite->mBlocks[2];
     mGameState->mGameBoard[row + 1][col + 1] = mSprite->mBlocks[3];
     mSprite->Randomize();
+    return ETrue;
   }
 
   TBool StateGameOver() {
@@ -221,8 +222,9 @@ public:
         mGameState->mBoardY = MIN(mGameState->mBoardY + 1, BOARD_Y_MAX);
       }
     } else if (gControls.WasPressed(BUTTON_SELECT)) {
-      Drop();
-      mGameState->Combine();
+      if (Drop()) {
+        mGameState->Combine();
+      }
       if (mGameState->IsGameOver()) {
         mState = PLAYERSTATE_GAMEOVER;
         mGameState->mGameOver = ETrue;
