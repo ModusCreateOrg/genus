@@ -53,8 +53,6 @@ add_executable(genus
 
 # make genus.app
 if(APPLE)
-        set(CMAKE_MACOSX_RPATH 1)
-        set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}")
         SET_TARGET_PROPERTIES(genus PROPERTIES MACOSX_BUNDLE TRUE)
         INSTALL(TARGETS genus DESTINATION ".")
 endif(APPLE)

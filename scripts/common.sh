@@ -91,9 +91,20 @@ function copy_sdl2_libs_to_app {
     if [ "$OS" == "Darwin" ]; then
         export OSX_APP_DIR="$BASE_DIR/build/genus.app/Contents/MacOS"
         if [ -d $OSX_APP_DIR ]; then
-            cp /usr/local/opt/sdl2/lib/libSDL2-*.dylib $OSX_APP_DIR
-            cp /usr/local/opt/sdl2_image/lib/libSDL2_image-*.dylib $OSX_APP_DIR
-            chmod 644 $OSX_APP_DIR/*.dylib
+        	mkdir -p $OSX_APP_DIR/libs
+            cp /usr/local/opt/sdl2/lib/libSDL2-*.dylib $OSX_APP_DIR/libs/
+            cp /usr/local/opt/sdl2_image/lib/libSDL2_image-*.dylib $OSX_APP_DIR/libs/
+            chmod 755 $OSX_APP_DIR/libs/*
+            mv $OSX_APP_DIR/genus $OSX_APP_DIR/genus.bin
+            tee $OSX_APP_DIR/genus <<-"EOF"
+				#!/usr/bin/env bash
+				MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
+				export DYLD_LIBRARY_PATH=$MY_DIR/libs
+				echo $DYLD_LIBRARY_PATH
+				$MY_DIR/genus.bin
+				EOF
+            chmod 755 $BASE_DIR/build/genus.app/Contents/MacOS/genus  
+
         fi
     fi
 }
