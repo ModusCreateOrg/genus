@@ -87,3 +87,14 @@ function clean {
     rm -rf "$BASE_DIR/build"
 }
 
+function copy_sdl2_libs_to_app {
+    if [ "$OS" == "Darwin" ]; then
+        export OSX_APP_DIR="$BASE_DIR/build/genus.app/Contents/MacOS"
+        if [ -d $OSX_APP_DIR ]; then
+            cp /usr/local/opt/sdl2/lib/libSDL2-*.dylib $OSX_APP_DIR
+            cp /usr/local/opt/sdl2_image/lib/libSDL2_image-*.dylib $OSX_APP_DIR
+            chmod 644 $OSX_APP_DIR/*.dylib
+        fi
+    fi
+}
+
