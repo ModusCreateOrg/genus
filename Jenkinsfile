@@ -17,7 +17,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh "scripts/docker-build.sh"
+                OS="$(uname)"
+                if [ "$OS" == "Darwin" ]; then
+                    sh "scripts/build.sh"
+                elif
+                    sh "scripts/docker-build.sh"
+                fi
             }
         }
     }
