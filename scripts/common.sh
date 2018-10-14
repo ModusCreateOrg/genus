@@ -149,7 +149,7 @@ function copy_sdl2_libs_to_app {
             tee $OSX_APP_DIR/genus <<-"EOF"
 				#!/usr/bin/env bash
 				MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
-				$MY_DIR/genus.bin
+				(cd $MY_DIR && ./genus.bin)
 				EOF
             chmod 755 $BASE_DIR/build/genus.app/Contents/MacOS/genus  
 
