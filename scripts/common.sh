@@ -87,20 +87,68 @@ function clean {
     rm -rf "$BASE_DIR/build"
 }
 
+# TODO: Use otool -L and some foo to find the dependencies
+#		The sentinel is "/usr/local/opt"
 function copy_sdl2_libs_to_app {
     if [ "$OS" == "Darwin" ]; then
         export OSX_APP_DIR="$BASE_DIR/build/genus.app/Contents/MacOS"
         if [ -d $OSX_APP_DIR ]; then
+        	rm -rf $OSX_APP_DIR/libs
         	mkdir -p $OSX_APP_DIR/libs
-            cp /usr/local/opt/sdl2/lib/libSDL2-*.dylib $OSX_APP_DIR/libs/
-            cp /usr/local/opt/sdl2_image/lib/libSDL2_image-*.dylib $OSX_APP_DIR/libs/
+
+            cp /usr/local/opt/sdl2/lib/libSDL2.dylib $OSX_APP_DIR/libs/
+            cp /usr/local/opt/sdl2_image/lib/libSDL2_image.dylib $OSX_APP_DIR/libs/
+            cp /usr/local/opt/libpng/lib/libpng.dylib $OSX_APP_DIR/libs/
+            cp /usr/local/opt/jpeg/lib/libjpeg.dylib $OSX_APP_DIR/libs/
+            cp /usr/local/opt/libtiff/lib/libtiff.dylib $OSX_APP_DIR/libs/
+            cp /usr/local/opt/webp/lib/libwebp.dylib $OSX_APP_DIR/libs/
             chmod 755 $OSX_APP_DIR/libs/*
+         
+            # FIX Genus
+            install_name_tool -change \
+            	/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
+             	./libs/libSDL2.dylib \
+             	$OSX_APP_DIR/genus
+            install_name_tool -change \
+            	/usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib \
+            	./libs/libSDL2_image.dylib \
+            	$OSX_APP_DIR/genus
+            
+            # FIX SDL2_image
+            install_name_tool -change \
+            	/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
+            	./libs/libSDL2.dylib \
+            	$OSX_APP_DIR/libs/libSDL2_image.dylib
+            install_name_tool -change \
+            	/usr/local/opt/libpng/lib/libpng16.16.dylib \
+            	./libs/libpng.dylib \
+            	$OSX_APP_DIR/libs/libSDL2_image.dylib
+           	install_name_tool -change \
+            	/usr/local/opt/jpeg/lib/libjpeg.9.dylib \
+            	./libs/libjpeg.dylib \
+            	$OSX_APP_DIR/libs/libSDL2_image.dylib
+            install_name_tool -change \
+            	/usr/local/opt/libtiff/lib/libtiff.5.dylib \
+            	./libs/libtiff.dylib \
+            	$OSX_APP_DIR/libs/libSDL2_image.dylib
+            install_name_tool -change \
+            	/usr/local/opt/webp/lib/libwebp.7.dylib \
+            	./libs/libwebp.dylib \
+            	$OSX_APP_DIR/libs/libSDL2_image.dylib
+
+            # FIX TIFF
+            install_name_tool -change \
+            	/usr/local/opt/jpeg/lib/libjpeg.9.dylib \
+            	./libs/libjpeg.dylib \
+            	$OSX_APP_DIR/libs/libtiff.dylib
+
+
+
+            # CREATE WRAPPER
             mv $OSX_APP_DIR/genus $OSX_APP_DIR/genus.bin
             tee $OSX_APP_DIR/genus <<-"EOF"
 				#!/usr/bin/env bash
 				MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
-				export DYLD_LIBRARY_PATH=$MY_DIR/libs
-				echo $DYLD_LIBRARY_PATH
 				$MY_DIR/genus.bin
 				EOF
             chmod 755 $BASE_DIR/build/genus.app/Contents/MacOS/genus  
