@@ -27,6 +27,7 @@ public:
 
 protected:
   TInt mState;
+  TInt mLevel;
 };
 
 #endif //GAME_ENGINE_GGAMEENGINE_H
