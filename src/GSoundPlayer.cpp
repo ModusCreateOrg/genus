@@ -28,6 +28,7 @@ GSoundPlayer soundPlayer;
 
 #endif
 
+#define SONG_SLOT (99)
 
 
 #ifdef __XTENSA__
