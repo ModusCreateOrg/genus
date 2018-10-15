@@ -58,37 +58,15 @@ file(GLOB LIBXMP_SRC
     "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/*.c"
 )
 
+file(GLOB GENUS_SRC "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
 add_executable(genus
-        rcomp
         Resources.bin
         ${CREATIVE_ENGINE}
         ${LIBXMP_SRC}
-        src/main.cpp
-        src/GPlayfield.cpp
-        src/GGameEngine.cpp
-        README.md
-        creative-engine/src/BFont.cpp
-        creative-engine/src/BFont.h
-        src/GSplashState.cpp
-        src/GSplashState.h
-        src/GMainMenuState.cpp
-        src/GMainMenuState.h
-        src/GGameState.cpp
-        src/GGameState.h
-        src/GGameOverState.cpp
-        src/GGameOverState.h
-        src/GEnterHighScoreState.cpp
-        src/GEnterHighScoreState.h
-        src/GHighScoresState.cpp
-        src/GHighScoresState.h
-        src/GMainOptionsState.cpp
-        src/GMainOptionsState.h
-        src/GCreditsState.cpp
-        src/GCreditsState.h
-        src/GSoundPlayer.cpp
-        src/GSoundPlayer.h
+        ${GENUS_SRC}
         )
+
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 #target_link_libraries(${GAME_ENGINE})
 
