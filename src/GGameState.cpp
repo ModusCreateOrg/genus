@@ -385,6 +385,8 @@ TBool GGameState::IsGameOver() {
 }
 
 void GGameState::Render() {
+  gSoundPlayer.PlayMusic(STAGE_2_XM);
+
   gDisplay.renderBitmap->CopyPixels(mBackground);
   BBitmap *bm = gDisplay.renderBitmap;
 

@@ -84,6 +84,6 @@ public:
 };
 
 
-extern GSoundPlayer soundPlayer;
+extern GSoundPlayer gSoundPlayer;
 
 #endif //GSOUNDPLAYER_H

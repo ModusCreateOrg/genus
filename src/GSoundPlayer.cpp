@@ -6,7 +6,7 @@
 #include "GResources.h"
 
 
-GSoundPlayer soundPlayer;
+GSoundPlayer gSoundPlayer;
 
 #include "libxmp/xmp.h"
 
@@ -28,7 +28,6 @@ GSoundPlayer soundPlayer;
 
 #endif
 
-#define SONG_SLOT (99)
 
 
 #ifdef __XTENSA__
@@ -73,17 +72,11 @@ GSoundPlayer::~GSoundPlayer() {
 bool WARNED_OF_PLAY_BUFFER = false;
 
 static void fillBuffer(void *audioBuffer, size_t length) {
-  if (musicFileLoaded && ! soundPlayer.mAudioPaused) {
+  if (musicFileLoaded && ! gSoundPlayer.mAudioPaused) {
     int result = xmp_play_buffer(xmpContext, audioBuffer, length, 0);
 
     struct xmp_frame_info frameInfo;
 
-    xmp_get_frame_info(xmpContext, &frameInfo);
-
-    soundPlayer.mRowNumber = frameInfo.row + 1;
-    soundPlayer.mPatternNumber = frameInfo.pattern;
-
-//    printf("Pattern :%i | Row : %i | buffLen : %i \n", soundPlayer.mPatternNumber, soundPlayer.mRowNumber, length);
 
     if (result != 0) {
       if (!WARNED_OF_PLAY_BUFFER) {
@@ -176,7 +169,7 @@ void loadEffects() {
   };
 
   for (uint8_t i = 0; i < 9; i++) {
-    soundPlayer.LoadEffect(effectsList[i], i);
+    gSoundPlayer.LoadEffect(effectsList[i], i);
   }
 
 }
@@ -186,10 +179,14 @@ bool SMIX_INITIALIZED = false;
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 
-
+  if (aResourceId == mCurrentSongLoaded) {
+    return false;
+  }
 #ifndef __XTENSA__
 //  SDL_PauseAudio(1);
 #endif
+  printf("PlayMusic(%i);\n", aResourceId); fflush(stdout);
+
   audio.Mute(true);
   musicFileLoaded = false;
   MuteMusic(ETrue);
@@ -197,7 +194,6 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 
   xmp_stop_module(xmpContext);
 
-//  printf("PlayMusic(%i);\n", aResourceId);
   gResourceManager.LoadRaw(aResourceId, SONG_SLOT);
   BRaw *song = gResourceManager.GetRaw(SONG_SLOT);
 
@@ -241,52 +237,6 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
   return ETrue;
 }
 
-//
-//TBool GSoundPlayer::PlayMusic(int8_t aSongId, TBool aLoop) {
-//  printf("GSoundPlayer::%s %i\n", __func__, aSongId); fflush(stdout);
-//  if (aSongId == -1) {
-//    current_song = -1;
-//    return EFalse;
-//  }
-//
-//  if (current_song != aSongId) {
-//    current_song = -1;
-//    musicFileLoaded = false;
-//    audio.MuteMusic(ETrue);
-//
-//    xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, 0);
-//
-//    int loadResult = loadSong(aSongId);
-//
-//    if (loadResult < 0) {
-//      // printf("Could not open song %i! %i\n", tempSongId, loadResult);
-//      // Sometimes XMP fails for no obvious reason. Try one more time for good measure.
-//      loadResult = loadSong(aSongId);
-//    }
-//
-//    if (loadResult == 0) {
-//      musicFileLoaded = true;
-//    }
-//
-//    if (!musicFileLoaded) {
-//      printf("MUSIC LOADING FAILED!\n"); fflush(stdout);
-//      return EFalse;
-//    }
-//
-//    xmp_start_player(xmpContext, SAMPLE_RATE, 0);
-//    xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, mMusicVolume);
-//    xmp_set_player(xmpContext, XMP_PLAYER_MIX, 0);
-//
-//
-//    audio.MuteMusic(EFalse);
-//    current_song = aSongId;
-//    printf("current_song = %i\n", current_song); fflush(stdout);
-//
-//    return ETrue;
-//  }
-//
-//  return EFalse;
-//}
 
 TUint8 sfxChannel = 0;
 
