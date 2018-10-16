@@ -21,20 +21,12 @@ BITMAP level2_bkg1.bmp
 PATH ../resources/music
 
 RAW EmptySong.xm
-RAW Stage_2.xm
-RAW Stage_3.xm
-RAW Stage_4.xm
-RAW Stage_5.xm
+RAW Song0.s3m
+RAW Song1.s3m
+RAW Song2.xm
 
 # .-=[ Sound Effects ]=-.
 PATH ../resources/sound_effects
 
-RAW SFX_boss_explode.wav
-RAW SFX_enemy_explode.wav
-RAW SFX_enemy_flyby.wav
-RAW SFX_enemy_shoot.wav
-RAW SFX_next_attract_char.wav
-RAW SFX_next_attract_screen.wav
-RAW SFX_player_hit.wav
-RAW SFX_player_shoot.wav
-RAW SFX_speed_boost.wav
+RAW SFX_move_block.wav
+RAW SFX_drop_block.wav

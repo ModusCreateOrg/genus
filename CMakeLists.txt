@@ -45,7 +45,7 @@ add_compile_definitions(LIBXMP_CORE_PLAYER=true)
 add_compile_definitions(LIBXMP_CORE_DISABLE_IT=true)
 include_directories(
     ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/prowizard
+    ${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/prowizarde
     ${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders
     ${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp
 )

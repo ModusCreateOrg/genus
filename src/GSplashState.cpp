@@ -34,5 +34,6 @@ GSplashState::~GSplashState() {
 }
 
 void GSplashState::Render() {
+  gSoundPlayer.PlayMusic(SONG1_S3M);
   gDisplay.renderBitmap->CopyPixels(mBakcground);
 }

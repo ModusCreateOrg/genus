@@ -53,8 +53,8 @@ static int loadSong(BRaw *aSong);
 GSoundPlayer::GSoundPlayer() {
   xmpContext = xmp_create_context();
 
-  mMusicVolume = 16;
-  mEffectsVolume = 16;
+  mMusicVolume = 48;
+  mEffectsVolume = 48;
   mMuted = false;
   mAudioPaused = false;
   mRowNumber = 0;
@@ -75,7 +75,7 @@ static void fillBuffer(void *audioBuffer, size_t length) {
   if (musicFileLoaded && ! gSoundPlayer.mAudioPaused) {
     int result = xmp_play_buffer(xmpContext, audioBuffer, length, 0);
 
-    struct xmp_frame_info frameInfo;
+//    struct xmp_frame_info frameInfo;
 
 
     if (result != 0) {
@@ -157,18 +157,11 @@ TBool GSoundPlayer::LoadEffect(TUint16 aResourceId, TUint8 aSlotNumber) {
 void loadEffects() {
 
   const uint16_t effectsList[] = {
-    SFX_BOSS_EXPLODE_WAV,
-    SFX_ENEMY_EXPLODE_WAV,
-    SFX_ENEMY_FLYBY_WAV,
-    SFX_ENEMY_SHOOT_WAV,
-    SFX_NEXT_ATTRACT_CHAR_WAV,
-    SFX_NEXT_ATTRACT_SCREEN_WAV,
-    SFX_PLAYER_HIT_WAV,
-    SFX_PLAYER_SHOOT_WAV,
-    SFX_SPEED_BOOST_WAV,
+    SFX_DROP_BLOCK_WAV,
+    SFX_MOVE_BLOCK_WAV,
   };
 
-  for (uint8_t i = 0; i < 9; i++) {
+  for (uint8_t i = 0; i < 2; i++) {
     gSoundPlayer.LoadEffect(effectsList[i], i);
   }
 
@@ -223,7 +216,7 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 
   xmp_start_player(xmpContext, SAMPLE_RATE, 0);
   xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, mMusicVolume);
-  xmp_set_player(xmpContext, XMP_PLAYER_SMIX_VOLUME, 64); //Volume is governed globally via mEffectsVolume
+  xmp_set_player(xmpContext, XMP_PLAYER_SMIX_VOLUME, mEffectsVolume); //Volume is governed globally via mEffectsVolume
   xmp_set_player(xmpContext, XMP_PLAYER_MIX, 0);
 
 
