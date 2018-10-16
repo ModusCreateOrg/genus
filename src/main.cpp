@@ -11,7 +11,7 @@ GGameEngine *gGameEngine;
 extern "C" void app_main() {
   SeedRandom(300);
   gDisplay.Init();
-  gSoundPlayer.Init(3, 2);
+  gSoundPlayer.Init(3, 5);
 
   // TODO: this belongs in GGameEngine
   gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);

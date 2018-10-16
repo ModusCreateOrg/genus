@@ -41,7 +41,7 @@ GSoundPlayer gSoundPlayer;
 #endif
 
 #define TIMER_LENGTH 50
-#define AUDIO_BUFF_SIZE 12
+#define AUDIO_BUFF_SIZE 500
 
 xmp_context xmpContext;
 
@@ -53,12 +53,10 @@ static int loadSong(BRaw *aSong);
 GSoundPlayer::GSoundPlayer() {
   xmpContext = xmp_create_context();
 
-  mMusicVolume = 48;
+  mMusicVolume = 12;
   mEffectsVolume = 48;
   mMuted = false;
   mAudioPaused = false;
-  mRowNumber = 0;
-  mPatternNumber = 0;
 }
 
 GSoundPlayer::~GSoundPlayer() {
@@ -72,6 +70,7 @@ GSoundPlayer::~GSoundPlayer() {
 bool WARNED_OF_PLAY_BUFFER = false;
 
 static void fillBuffer(void *audioBuffer, size_t length) {
+//  printf("length = %i\n", length);fflush(stdout);
   if (musicFileLoaded && ! gSoundPlayer.mAudioPaused) {
     int result = xmp_play_buffer(xmpContext, audioBuffer, length, 0);
 
@@ -157,11 +156,14 @@ TBool GSoundPlayer::LoadEffect(TUint16 aResourceId, TUint8 aSlotNumber) {
 void loadEffects() {
 
   const uint16_t effectsList[] = {
-    SFX_DROP_BLOCK_WAV,
+    SFX_GOOD_DROP_BLOCK_WAV,
+    SFX_BAD_DROP_BLOCK_WAV,
     SFX_MOVE_BLOCK_WAV,
+    SFX_ROTATE_BLOCK_LEFT_WAV,
+    SFX_ROTATE_BLOCK_RIGHT_WAV
   };
 
-  for (uint8_t i = 0; i < 2; i++) {
+  for (uint8_t i = 0; i < 5; i++) {
     gSoundPlayer.LoadEffect(effectsList[i], i);
   }
 
@@ -176,7 +178,7 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
     return false;
   }
 #ifndef __XTENSA__
-//  SDL_PauseAudio(1);
+  SDL_PauseAudio(1);
 #endif
   printf("PlayMusic(%i);\n", aResourceId); fflush(stdout);
 
@@ -225,7 +227,7 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
   audio.Mute(false);
 
 #ifndef __XTENSA__
-//  SDL_PauseAudio(0);
+  SDL_PauseAudio(0);
 #endif
   return ETrue;
 }
@@ -306,6 +308,7 @@ TBool GSoundPlayer::SetEffectsVolume(TFloat aPercent) {
 
 TBool GSoundPlayer::PlaySound(TInt aSoundNumber, TInt aPriority, TBool aLoop) {
   //Todo: priority?
+  printf("%i\n", aSoundNumber); fflush(stdout);
   if (! musicFileLoaded) {
     printf("No Music file loaded\n");
     return false;
@@ -314,7 +317,7 @@ TBool GSoundPlayer::PlaySound(TInt aSoundNumber, TInt aPriority, TBool aLoop) {
   xmp_smix_play_sample(xmpContext, aSoundNumber, 60, mEffectsVolume, sfxChannel);
 
   sfxChannel++;
-  if (sfxChannel >= 3) {
+  if (sfxChannel >= 2) {
     sfxChannel = 0;
   }
   return true;

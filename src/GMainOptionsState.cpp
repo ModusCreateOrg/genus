@@ -35,7 +35,7 @@ GMainOptionsState::~GMainOptionsState() {
 }
 
 void GMainOptionsState::Render() {
-  gSoundPlayer.PlayMusic(SONG1_S3M);
+  gSoundPlayer.PlayMusic(SONG0_XM);
   gDisplay.renderBitmap->CopyPixels(mBackground);
 }
 

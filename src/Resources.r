@@ -21,12 +21,16 @@ BITMAP level2_bkg1.bmp
 PATH ../resources/music
 
 RAW EmptySong.xm
-RAW Song0.s3m
+RAW Song0.xm
 RAW Song1.s3m
 RAW Song2.xm
 
 # .-=[ Sound Effects ]=-.
 PATH ../resources/sound_effects
 
+RAW SFX_rotate_block_right.wav
+RAW SFX_rotate_block_left.wav
+RAW SFX_good_drop_block.wav
+RAW SFX_bad_drop_block.wav
 RAW SFX_move_block.wav
-RAW SFX_drop_block.wav
+
