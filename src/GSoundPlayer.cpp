@@ -33,15 +33,14 @@ GSoundPlayer gSoundPlayer;
 #ifdef __XTENSA__
 
 #define SAMPLE_RATE (22050)
-
+#define AUDIO_BUFF_SIZE 12
 #else
 
 #define SAMPLE_RATE (44100)
 
 #endif
 
-#define TIMER_LENGTH 50
-#define AUDIO_BUFF_SIZE 500
+
 
 xmp_context xmpContext;
 
@@ -103,6 +102,7 @@ static void fillBuffer(void *audioBuffer, size_t length) {
 
 // ESP32 style timer
 static void timerCallback(void *arg) {
+//  printf("AUDIO_BUFF_SIZE %i\n", AUDIO_BUFF_SIZE); fflush(stdout);
   fillBuffer(audio.mAudioBuffer, AUDIO_BUFF_SIZE);
   // Need to submit to the audio driver.
   audio.Submit(audio.mAudioBuffer, AUDIO_BUFF_SIZE >> 2);
@@ -121,13 +121,12 @@ static void timerCallback(void *udata, Uint8 *audioBuffer, int length) {
 void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
   audio.Init(&timerCallback);
 
-
+  PlayMusic(EMPTYSONG_XM);
 
   #ifndef __XTENSA__
   // Kick off SDL audio engine
   SDL_PauseAudio(0);
   #endif
-
 
   mNumberFxChannels = aNumberFxChannels;
   mNumberFxSlots = aNumberFxSlots;
@@ -165,7 +164,7 @@ void loadEffects() {
   };
 
   for (uint8_t i = 0; i < 6; i++) {
-    printf("loadEffect(%i)\n", i);
+//    printf("loadEffect(%i)\n", i);
     gSoundPlayer.LoadEffect(effectsList[i], i);
   }
 
@@ -248,7 +247,7 @@ TBool GSoundPlayer::SetEffectsVolume(TFloat aPercent) {
 
 TBool GSoundPlayer::PlaySound(TInt aSoundNumber, TInt aPriority, TBool aLoop) {
   //Todo: priority?
-  printf("%i\n", aSoundNumber); fflush(stdout);
+  printf("SFX: %i\n", aSoundNumber); fflush(stdout);
   if (! musicFileLoaded) {
     printf("No Music file loaded\n");
     return false;
@@ -265,7 +264,6 @@ TBool GSoundPlayer::PlaySound(TInt aSoundNumber, TInt aPriority, TBool aLoop) {
 
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
-
   if (aResourceId == mCurrentSongLoaded) {
     return false;
   }
@@ -275,8 +273,10 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 
 #ifndef __XTENSA__
   SDL_PauseAudio(1);
-  SDL_Delay(100);
+  SDL_Delay(100); // Give the sound engine an opportunity to pause the thread
 #endif
+
+//  if (xmpConte)
   xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, 0);
   audio.Mute(true);
   musicFileLoaded = false;

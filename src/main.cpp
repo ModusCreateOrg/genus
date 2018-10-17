@@ -13,6 +13,7 @@ extern "C" void app_main() {
   gDisplay.Init();
   gSoundPlayer.Init(3, 6);
 
+
   // TODO: this belongs in GGameEngine
   gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
 

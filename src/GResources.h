@@ -49,6 +49,6 @@ static const TUint16 IMG_LEVEL = 80; // LEVEL is 32 wide
 
 static const TUint8 COLOR_TEXT = 252;
 static const TUint8 COLOR_GAMEOVER = 253;
-static const TUint8 SONG_SLOT = 255;
+static const TUint8 SONG_SLOT = 90;
 
 #endif //GRESOURCES_H
