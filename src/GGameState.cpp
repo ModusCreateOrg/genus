@@ -367,14 +367,21 @@ void GGameState::Combine() {
         score *= 2;
       }
       accumulated_score += score;
+
     }
   }
   mPoints += accumulated_score;
+
+  if (accumulated_score > 0) {
+    gSoundPlayer.PlaySound(5,0,EFalse);
+  }
+
   mLastScore.FromUint32(0);
   TBCD p;
   p.FromUint32(accumulated_score);
   mScore.Add(p);
   printf("Score: %d\n", accumulated_score);
+
 }
 
 TBool GGameState::IsGameOver() {

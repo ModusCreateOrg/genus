@@ -53,8 +53,8 @@ static int loadSong(BRaw *aSong);
 GSoundPlayer::GSoundPlayer() {
   xmpContext = xmp_create_context();
 
-  mMusicVolume = 12;
-  mEffectsVolume = 48;
+  mMusicVolume = 48;
+  mEffectsVolume = 96;
   mMuted = false;
   mAudioPaused = false;
 }
@@ -160,77 +160,17 @@ void loadEffects() {
     SFX_BAD_DROP_BLOCK_WAV,
     SFX_MOVE_BLOCK_WAV,
     SFX_ROTATE_BLOCK_LEFT_WAV,
-    SFX_ROTATE_BLOCK_RIGHT_WAV
+    SFX_ROTATE_BLOCK_RIGHT_WAV,
+    SFX_SCORE_COMBO_WAV
   };
 
-  for (uint8_t i = 0; i < 5; i++) {
+  for (uint8_t i = 0; i < 6; i++) {
+    printf("loadEffect(%i)\n", i);
     gSoundPlayer.LoadEffect(effectsList[i], i);
   }
 
 }
 
-
-bool SMIX_INITIALIZED = false;
-
-TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
-
-  if (aResourceId == mCurrentSongLoaded) {
-    return false;
-  }
-#ifndef __XTENSA__
-  SDL_PauseAudio(1);
-#endif
-  printf("PlayMusic(%i);\n", aResourceId); fflush(stdout);
-
-  audio.Mute(true);
-  musicFileLoaded = false;
-  MuteMusic(ETrue);
-  PauseMusic(true);
-
-  xmp_stop_module(xmpContext);
-
-  gResourceManager.LoadRaw(aResourceId, SONG_SLOT);
-  BRaw *song = gResourceManager.GetRaw(SONG_SLOT);
-
-  xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, 0);
-
-  int loadResult = loadSong(song);
-  if (loadResult < 0) {
-    // Sometimes XMP fails for no obvious reason. Try one more time for good measure.
-    loadResult = loadSong(song);
-  }
-
-  if (loadResult == 0) {
-    musicFileLoaded = true;
-    mCurrentSongLoaded = aResourceId;
-  }
-
-  gResourceManager.ReleaseRawSlot(SONG_SLOT);
-
-  if (!musicFileLoaded) {
-    printf("MUSIC LOADING FAILED!\n"); fflush(stdout);
-    return EFalse;
-  }
-
-  // Every time a new song is loaded, we must load sound effects too!
-  xmp_start_smix(xmpContext, mNumberFxChannels, mNumberFxSlots);
-  loadEffects();
-
-  xmp_start_player(xmpContext, SAMPLE_RATE, 0);
-  xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, mMusicVolume);
-  xmp_set_player(xmpContext, XMP_PLAYER_SMIX_VOLUME, mEffectsVolume); //Volume is governed globally via mEffectsVolume
-  xmp_set_player(xmpContext, XMP_PLAYER_MIX, 0);
-
-
-  MuteMusic(EFalse);
-  PauseMusic(false);
-  audio.Mute(false);
-
-#ifndef __XTENSA__
-  SDL_PauseAudio(0);
-#endif
-  return ETrue;
-}
 
 
 TUint8 sfxChannel = 0;
@@ -321,4 +261,67 @@ TBool GSoundPlayer::PlaySound(TInt aSoundNumber, TInt aPriority, TBool aLoop) {
     sfxChannel = 0;
   }
   return true;
+}
+
+
+TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
+
+  if (aResourceId == mCurrentSongLoaded) {
+    return false;
+  }
+
+  PauseMusic(true);
+  printf("PlayMusic(%i);\n", aResourceId); fflush(stdout);
+
+#ifndef __XTENSA__
+  SDL_PauseAudio(1);
+  SDL_Delay(100);
+#endif
+  audio.Mute(true);
+  musicFileLoaded = false;
+  MuteMusic(ETrue);
+
+  xmp_stop_module(xmpContext);
+
+  gResourceManager.LoadRaw(aResourceId, SONG_SLOT);
+  BRaw *song = gResourceManager.GetRaw(SONG_SLOT);
+
+  xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, 0);
+
+  int loadResult = loadSong(song);
+  if (loadResult < 0) {
+    // Sometimes XMP fails for no obvious reason. Try one more time for good measure.
+    loadResult = loadSong(song);
+  }
+
+  if (loadResult == 0) {
+    musicFileLoaded = true;
+    mCurrentSongLoaded = aResourceId;
+  }
+
+  gResourceManager.ReleaseRawSlot(SONG_SLOT);
+
+  if (!musicFileLoaded) {
+    printf("MUSIC LOADING FAILED!\n"); fflush(stdout);
+    return EFalse;
+  }
+
+  // Every time a new song is loaded, we must load sound effects too!
+  xmp_start_smix(xmpContext, mNumberFxChannels, mNumberFxSlots);
+  loadEffects();
+
+  xmp_start_player(xmpContext, SAMPLE_RATE, 0);
+  xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, mMusicVolume);
+  xmp_set_player(xmpContext, XMP_PLAYER_SMIX_VOLUME, mEffectsVolume); //Volume is governed globally via mEffectsVolume
+  xmp_set_player(xmpContext, XMP_PLAYER_MIX, 0);
+
+
+  MuteMusic(EFalse);
+  PauseMusic(false);
+  audio.Mute(false);
+
+#ifndef __XTENSA__
+  SDL_PauseAudio(0);
+#endif
+  return ETrue;
 }
