@@ -277,6 +277,7 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
   SDL_PauseAudio(1);
   SDL_Delay(100);
 #endif
+  xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, 0);
   audio.Mute(true);
   musicFileLoaded = false;
   MuteMusic(ETrue);
@@ -286,7 +287,6 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
   gResourceManager.LoadRaw(aResourceId, SONG_SLOT);
   BRaw *song = gResourceManager.GetRaw(SONG_SLOT);
 
-  xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, 0);
 
   int loadResult = loadSong(song);
   if (loadResult < 0) {
