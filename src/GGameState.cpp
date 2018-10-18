@@ -44,6 +44,7 @@ public:
     mBlocks[1] = mBlocks[3];
     mBlocks[3] = mBlocks[2];
     mBlocks[2] = save;
+    gSoundPlayer.PlaySound(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/4, 0, EFalse);
   }
 
   void RotateRight() {
@@ -53,6 +54,7 @@ public:
     mBlocks[2] = mBlocks[3];
     mBlocks[3] = mBlocks[1];
     mBlocks[1] = save;
+    gSoundPlayer.PlaySound(/*SFX_ROTATE_BLOCK_LEFT_WAV*/3, 0, EFalse);
   }
 
   void Animate() override {
@@ -152,6 +154,7 @@ public:
   TBool Drop() {
     if (!CanDrop()) {
       // TODO: Jay - make a "cant do that!" sound here
+      gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
       return EFalse;
     }
 
@@ -163,6 +166,8 @@ public:
     mGameState->mGameBoard[row + 1][col]     = mSprite->mBlocks[2];
     mGameState->mGameBoard[row + 1][col + 1] = mSprite->mBlocks[3];
     mSprite->Randomize();
+
+    gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
     return ETrue;
   }
 
@@ -362,14 +367,21 @@ void GGameState::Combine() {
         score *= 2;
       }
       accumulated_score += score;
+
     }
   }
   mPoints += accumulated_score;
+
+  if (accumulated_score > 0) {
+    gSoundPlayer.PlaySound(5,0,EFalse);
+  }
+
   mLastScore.FromUint32(0);
   TBCD p;
   p.FromUint32(accumulated_score);
   mScore.Add(p);
   printf("Score: %d\n", accumulated_score);
+
 }
 
 TBool GGameState::IsGameOver() {
@@ -385,6 +397,8 @@ TBool GGameState::IsGameOver() {
 }
 
 void GGameState::Render() {
+  gSoundPlayer.PlayMusic(SONG1_S3M);
+
   gDisplay.renderBitmap->CopyPixels(mBackground);
   BBitmap *bm = gDisplay.renderBitmap;
 
