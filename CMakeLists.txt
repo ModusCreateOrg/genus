@@ -37,36 +37,18 @@ add_custom_command(OUTPUT Resources.bin
         DEPENDS rcomp
         COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR} ")
 
-# gather creative-engine s\ources
-file(GLOB_RECURSE CREATIVE_ENGINE RELATIVE ${CMAKE_SOURCE_DIR} "creative-engine/src/*.cpp")
+# gather creative-engine sources
+file(GLOB_RECURSE LIB RELATIVE ${CMAKE_SOURCE_DIR} "creative-engine/src/*.cpp")
 
-# LibXMP
-add_compile_definitions(LIBXMP_CORE_PLAYER=true)
-add_compile_definitions(LIBXMP_CORE_DISABLE_IT=true)
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/prowizarde
-    ${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders
-    ${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp
-)
-
-
-file(GLOB LIBXMP_SRC
-    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/*.h"
-    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/*.c"
-    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/*.h"
-    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/*.c"
-)
-
-file(GLOB GENUS_SRC "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
 add_executable(genus
+        rcomp
         Resources.bin
-        ${CREATIVE_ENGINE}
-        ${LIBXMP_SRC}
-        ${GENUS_SRC}
-        )
-
+        ${LIB}
+        src/main.cpp
+        src/GPlayfield.cpp
+        src/GGameEngine.cpp
+        README.md creative-engine/src/BFont.cpp creative-engine/src/BFont.h src/GSplashState.cpp src/GSplashState.h src/GMainMenuState.cpp src/GMainMenuState.h src/GGameState.cpp src/GGameState.h src/GGameOverState.cpp src/GGameOverState.h src/GEnterHighScoreState.cpp src/GEnterHighScoreState.h src/GHighScoresState.cpp src/GHighScoresState.h src/GMainOptionsState.cpp src/GMainOptionsState.h src/GCreditsState.cpp src/GCreditsState.h)
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 #target_link_libraries(${GAME_ENGINE})
 
