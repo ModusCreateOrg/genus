@@ -1,0 +1,4 @@
+sudo: enabled
+os: osx
+language: cpp
+install: ./scripts/build.sh 

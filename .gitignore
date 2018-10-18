@@ -2,6 +2,9 @@
 .*
 ~*
 
+# Include the Travis build config
+!.travis.yml
+
 # ignore node/grunt dependency directories
 node_modules/
 
