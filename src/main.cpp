@@ -11,6 +11,8 @@ GGameEngine *gGameEngine;
 extern "C" void app_main() {
   SeedRandom(300);
   gDisplay.Init();
+  gSoundPlayer.Init(3, 6);
+
 
   // TODO: this belongs in GGameEngine
   gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
@@ -24,7 +26,7 @@ extern "C" void app_main() {
   TBool done = EFalse;
 
   while (!done) {
-    Random(); // ranndomize
+    Random(); // randomize
     gGameEngine->GameLoop();
     gDisplay.Update();
     if (gControls.WasPressed(BUTTONQ)) {
