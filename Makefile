@@ -1,7 +1,7 @@
 # ESP-IDF Makefile for game project
 
 PROJECT_NAME=Genus
-EXTRA_COMPONENT_DIRS=creative-engine src
+EXTRA_COMPONENT_DIRS=${PROJECT_PATH}/creative-engine ${PROJECT_PATH}/src ${PROJECT_PATH}/src/GameState
 include $(IDF_PATH)/make/project.mk
 
 rcomp: FORCE

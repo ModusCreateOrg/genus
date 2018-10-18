@@ -2,6 +2,7 @@
 #define GENUS_GGAMESTATE_H
 
 #include "Game.h"
+#include "GGameProcess.h"
 
 // number of rows and columns in the visible game board
 static const TInt VISIBLE_BOARD_ROWS = 12;
@@ -27,10 +28,6 @@ static const TFloat PLAYER_X_MIN = BOARD_X;
 static const TFloat PLAYER_X_MAX = BOARD_X + (VISIBLE_BOARD_COLS - 2) * 16;
 static const TFloat PLAYER_Y_MIN = BOARD_Y;
 static const TFloat PLAYER_Y_MAX = BOARD_Y + (VISIBLE_BOARD_ROWS - 2) * 16;
-
-class GPlayerSprite;
-
-class GGameProcess;
 
 class GGameState : public BPlayfield {
 public:
@@ -83,6 +80,8 @@ protected:
 
 public:
   void Combine();
+
+  void CountScore();
 
   TBool IsGameOver();
 

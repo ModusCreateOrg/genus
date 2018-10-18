@@ -14,7 +14,7 @@
 // GGameEngine states
 #include "GSplashState.h"
 #include "GMainMenuState.h"
-#include "GGameState.h"
+#include "GameState/GGameState.h"
 #include "GGameOverState.h"
 #include "GEnterHighScoreState.h"
 #include "GHighScoresState.h"
