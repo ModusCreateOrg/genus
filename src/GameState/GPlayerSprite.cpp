@@ -29,6 +29,7 @@ void GPlayerSprite::RotateLeft() {
   mBlocks[1] = mBlocks[3];
   mBlocks[3] = mBlocks[2];
   mBlocks[2] = save;
+  gSoundPlayer.PlaySound(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/4, 0, EFalse);
 }
 
 void GPlayerSprite::RotateRight() {
@@ -38,6 +39,7 @@ void GPlayerSprite::RotateRight() {
   mBlocks[2] = mBlocks[3];
   mBlocks[3] = mBlocks[1];
   mBlocks[1] = save;
+  gSoundPlayer.PlaySound(/*SFX_ROTATE_BLOCK_LEFT_WAV*/3, 0, EFalse);
 }
 
 void GPlayerSprite::Animate() {

@@ -147,6 +147,7 @@ void GGameProcess::StateControl() {
       if (Drop()) {
         mGameState->Combine();
       }
+      gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
       if (mGameState->IsGameOver()) {
         mState = PLAYERSTATE_GAMEOVER;
         mGameState->mGameOver = ETrue;
@@ -154,6 +155,7 @@ void GGameProcess::StateControl() {
     }
     else {
       // TODO: Jay - make a "cant do that!" sound here
+      gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
     }
   }
   if (mRepeatTimer < 1) {

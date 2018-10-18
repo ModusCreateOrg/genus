@@ -1,7 +1,6 @@
 #include "Game.h"
 #include "GGameProcess.h"
 
-
 // options
 // comment out the undefs to enable the option
 #define RENDER_GRID
@@ -98,15 +97,20 @@ void GGameState::CountScore() {
         score *= 2;
       }
       accumulated_score += score;
+
     }
   }
   mPoints += accumulated_score;
+
+  if (accumulated_score > 0) {
+    gSoundPlayer.PlaySound(5,0,EFalse);
+  }
+
   mLastScore.FromUint32(0);
   TBCD p;
   p.FromUint32(accumulated_score);
   mScore.Add(p);
   printf("Score: %d\n", accumulated_score);
-
 }
 
 void GGameState::Combine() {
@@ -158,6 +162,8 @@ TBool GGameState::IsGameOver() {
 }
 
 void GGameState::Render() {
+  gSoundPlayer.PlayMusic(SONG1_S3M);
+
   gDisplay.renderBitmap->CopyPixels(mBackground);
   BBitmap *bm = gDisplay.renderBitmap;
 

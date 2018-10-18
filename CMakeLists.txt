@@ -37,18 +37,39 @@ add_custom_command(OUTPUT Resources.bin
         DEPENDS rcomp
         COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR} ")
 
-# gather creative-engine sources
-file(GLOB_RECURSE LIB RELATIVE ${CMAKE_SOURCE_DIR} "creative-engine/src/*.cpp")
+# gather creative-engine s\ources
+file(GLOB_RECURSE CREATIVE_ENGINE RELATIVE ${CMAKE_SOURCE_DIR} "creative-engine/src/*.cpp")
 
 # gather game sources
 file(GLOB_RECURSE SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 
+# LibXMP
+add_compile_definitions(LIBXMP_CORE_PLAYER=true)
+add_compile_definitions(LIBXMP_CORE_DISABLE_IT=true)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/prowizarde
+    ${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders
+    ${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp
+)
+
+
+file(GLOB LIBXMP_SRC
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/*.h"
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/loaders/*.c"
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/*.h"
+    "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/*.c"
+)
+file(GLOB_RECURSE GENUS_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
+#file(GLOB GENUS_SRC "${CMAKE_SOURCE_DIR}/src/*.cpp")
+
 add_executable(genus
-        rcomp
         Resources.bin
-        ${LIB}
-        ${SRC}
+        ${LIBXMP_SRC}
+        ${CREATIVE_ENGINE}
+        ${GENUS_SRC}
         )
+
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 #target_link_libraries(${GAME_ENGINE})
 

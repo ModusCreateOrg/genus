@@ -3,6 +3,7 @@
 
 #include <BGameEngine.h>
 #include <Display.h>
+#include "GSoundPlayer.h"
 
 static const TInt GAME_STATE_SPLASH          = 0,
                   GAME_STATE_MAIN_MENU       = 1,
