@@ -50,6 +50,10 @@ elif [ "$OS" == "Darwin" ]; then
     # Install homebrew packages
     cd "$BASE_DIR"
     brew bundle install
+    brew install doxygen
+    brew install imagemagick
+    brew install SDL2
+    brew install SDL2_image
 elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
     if [[ -n "$(which apt-get 2>/dev/null)" ]]; then
@@ -73,3 +77,7 @@ fi
 
 ensure_creative_engine
 build
+copy_sdl2_libs_to_app
+
+
+
