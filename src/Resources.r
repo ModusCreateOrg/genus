@@ -16,21 +16,3 @@ BITMAP level1_bkg1.bmp
 BITMAP level1_bkg2.bmp
 BITMAP level2_bkg1.bmp
 
-
-# .-=[  MUSIC  ]=-.
-PATH ../resources/music
-
-RAW EmptySong.xm
-RAW Song0.xm
-RAW Song1.s3m
-RAW Song2.xm
-
-# .-=[ Sound Effects ]=-.
-PATH ../resources/sound_effects
-
-RAW SFX_rotate_block_right.wav
-RAW SFX_rotate_block_left.wav
-RAW SFX_good_drop_block.wav
-RAW SFX_bad_drop_block.wav
-RAW SFX_move_block.wav
-RAW SFX_score_combo.wav

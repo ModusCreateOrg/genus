@@ -6,8 +6,6 @@
 #include <time.h>
 
 #include <GameEngine.h>
-#include "GSoundPlayer.h"
-#include "Resources.h"
 
 // Game specific includes
 #include "GResources.h"
