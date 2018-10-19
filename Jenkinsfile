@@ -21,7 +21,7 @@ pipeline {
                    OS="$(uname)"
                    if [ "$OS" == "Darwin" ]; then
                       scripts/build.sh
-                   elif
+                   else
                       scripts/docker-build.sh
                    fi
                    '''
