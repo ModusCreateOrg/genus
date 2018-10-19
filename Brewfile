@@ -1,5 +1,5 @@
 tap "homebrew/cask"
-brew "cmake@3.123"
+brew "cmake"
 brew "sdl2"
 brew "sdl2_image"
 brew "doxygen"
