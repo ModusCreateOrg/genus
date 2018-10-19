@@ -70,6 +70,17 @@ add_executable(genus
         ${GENUS_SRC}
         )
 
+# make genus.app
+if(APPLE)
+        SET_TARGET_PROPERTIES(genus PROPERTIES MACOSX_BUNDLE TRUE)
+        INSTALL(TARGETS genus DESTINATION ".")
+endif(APPLE)
+
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 #target_link_libraries(${GAME_ENGINE})
+
+
+
+
+
 
