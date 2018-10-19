@@ -11,11 +11,12 @@ static const TInt REPEAT_TIME  = 1,
 
 GGameProcess::GGameProcess(GGameState *aGameState) : BProcess() {
   mGameState  = aGameState;
+  mGameBoard  = &mGameState->mGameBoard;
   mState      = PLAYERSTATE_CONTROL;
   mBlinkTimer = BLINK_TIME;
 
   mSprite = new GPlayerSprite();
-  gGameEngine->AddSprite(mSprite);
+  aGameState->AddSprite(mSprite);
 }
 
 GGameProcess::~GGameProcess() {
@@ -26,12 +27,12 @@ TBool GGameProcess::RunBefore() {
 }
 
 TInt GGameProcess::BoardRow() {
-  return mGameState->mBoardY + TInt(mSprite->y - BOARD_Y) / 16;
+  return mGameBoard->mBoardY + TInt(mSprite->y - BOARD_Y) / 16;
 
 }
 
 TInt GGameProcess::BoardCol() {
-  return mGameState->mBoardX + TInt(mSprite->x - BOARD_X) / 16;
+  return mGameBoard->mBoardX + TInt(mSprite->x - BOARD_X) / 16;
 }
 
 //
@@ -39,8 +40,8 @@ TBool GGameProcess::CanDrop() {
   TInt row = BoardRow(),
        col = BoardCol();
 
-  if (mGameState->mGameBoard[row][col] != 255 || mGameState->mGameBoard[row][col + 1] != 255 ||
-      mGameState->mGameBoard[row + 1][col] != 255 || mGameState->mGameBoard[row + 1][col + 1] != 255) {
+  if (mGameBoard->mGameBoard[row][col] != 255 || mGameBoard->mGameBoard[row][col + 1] != 255 ||
+      mGameBoard->mGameBoard[row + 1][col] != 255 || mGameBoard->mGameBoard[row + 1][col + 1] != 255) {
     return EFalse;
   }
   return ETrue;
@@ -48,43 +49,19 @@ TBool GGameProcess::CanDrop() {
 
 // returns ETrue if drop added to or created at least one 2x2 same blocks
 TBool GGameProcess::Drop() {
-  const TInt row = BoardRow(),
-             col = BoardCol();
+  const TInt   row = BoardRow(),
+               col = BoardCol();
+  const TUint8 *b  = mSprite->mBlocks;
 
-  TUint8 (*p)[BOARD_ROWS][BOARD_COLS] = &mGameState->mGameBoard;
-  (*p)[row][col] = mSprite->mBlocks[0];
-  (*p)[row][col+1] = mSprite->mBlocks[1];
-  (*p)[row+1][col] = mSprite->mBlocks[2];
-  (*p)[row+1][col+1] = mSprite->mBlocks[3];
+  TUint8 (*p)[BOARD_ROWS][BOARD_COLS] = &mGameBoard->mGameBoard;
+  (*p)[row][col]         = b[0];
+  (*p)[row][col + 1]     = b[1];
+  (*p)[row + 1][col]     = b[2];
+  (*p)[row + 1][col + 1] = b[3];
 
   mSprite->Randomize();
 
-  // check up
-  if (row > 0) {
-    if ((*p)[row-1][col] == (*p)[row][col] && (*p)[row-1][col+1] == (*p)[row][col+1]) {
-      return ETrue;
-    }
-  }
-  // check left
-  if (col > 0) {
-    if ((*p)[row][col-1] == (*p)[row][col] && (*p)[row+1][col-1] == (*p)[row+1][col]) {
-      return ETrue;
-    }
-  }
-  // check down
-  if (row < BOARD_ROWS-1) {
-    if ((*p)[row+1][col] == (*p)[row][col] && (*p)[row+1][col+1] == (*p)[row][col+1]) {
-      return ETrue;
-    }
-  }
-  // check right
-  if (col < BOARD_COLS-1) {
-    if ((*p)[row][col+1] == (*p)[row][col] && (*p)[row+1][col+1] == (*p)[row+1][col]) {
-      return ETrue;
-    }
-  }
-
-  return EFalse;
+  return mGameBoard->Combine();
 }
 
 TBool GGameProcess::StateGameOver() {
@@ -95,7 +72,7 @@ TBool GGameProcess::StateGameOver() {
     delete mSprite;
     mSprite = ENull;
 
-    gGameEngine->SetState(GAME_STATE_GAMEOVER);
+    gGame->SetState(GAME_STATE_GAMEOVER);
     return EFalse;
   }
   return ETrue;
@@ -122,38 +99,46 @@ void GGameProcess::StateControl() {
     mSprite->x -= 16;
     if (mSprite->x < PLAYER_X_MIN) {
       mSprite->x          = PLAYER_X_MIN;
-      mGameState->mBoardX = MAX(mGameState->mBoardX - 1, 0);
+      mGameBoard->mBoardX = MAX(mGameBoard->mBoardX - 1, 0);
     }
   } else if (TimedControl(JOYRIGHT)) {
     mSprite->x += 16;
     if (mSprite->x > PLAYER_X_MAX) {
       mSprite->x          = PLAYER_X_MAX;
-      mGameState->mBoardX = MIN(mGameState->mBoardX + 1, BOARD_X_MAX);
+      mGameBoard->mBoardX = MIN(mGameBoard->mBoardX + 1, BOARD_X_MAX);
     }
   } else if (TimedControl(JOYUP)) {
     mSprite->y -= 16;
     if (mSprite->y < PLAYER_Y_MIN) {
       mSprite->y          = PLAYER_Y_MIN;
-      mGameState->mBoardY = MAX(mGameState->mBoardY - 1, 0);
+      mGameBoard->mBoardY = MAX(mGameBoard->mBoardY - 1, 0);
     }
   } else if (TimedControl(JOYDOWN)) {
     mSprite->y += 16;
     if (mSprite->y > PLAYER_Y_MAX) {
       mSprite->y          = PLAYER_Y_MAX;
-      mGameState->mBoardY = MIN(mGameState->mBoardY + 1, BOARD_Y_MAX);
+      mGameBoard->mBoardY = MIN(mGameBoard->mBoardY + 1, BOARD_Y_MAX);
     }
   } else if (gControls.WasPressed(BUTTON_SELECT)) {
     if (CanDrop()) {
       if (Drop()) {
-        mGameState->Combine();
+        printf("Drop true\n");
+        TUint32 score = mGameBoard->CountScore();
+        // move this logic to GGameState...
+
+        if (score > 0) {
+          gSoundPlayer.PlaySound(5,0,EFalse);
+        }
+
+        TBCD p;
+        mGameState->mScore.Add(p);
       }
       gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
-      if (mGameState->IsGameOver()) {
+      if (mGameBoard->IsGameOver()) {
         mState = PLAYERSTATE_GAMEOVER;
         mGameState->mGameOver = ETrue;
       }
-    }
-    else {
+    } else {
       // TODO: Jay - make a "cant do that!" sound here
       gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
     }

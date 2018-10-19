@@ -11,26 +11,39 @@ public:
 
   TBool RunAfter() {
     if (gControls.WasPressed(BUTTON_START)) {
-      gGameEngine->SetState(GAME_STATE_HIGH_SCORES);
+      gGame->SetState(GAME_STATE_HIGH_SCORES);
       return EFalse;
     }
     return ETrue;
   }
 };
 
-GEnterHighScoreState::GEnterHighScoreState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
-  gResourceManager.LoadBitmap(ENTER_INITIALS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  gDisplay.SetPalette(mBackground);
+class GEnterHighScorePlayfield : public BPlayfield {
+public:
+  GEnterHighScorePlayfield() {
+    gResourceManager.LoadBitmap(ENTER_INITIALS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+    mBackground = gResourceManager.GetBitmap(BKG_SLOT);
+    gDisplay.SetPalette(mBackground);
+  }
+  ~GEnterHighScorePlayfield() {
+    gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  }
+public:
+  void Render() {
+    gDisplay.renderBitmap->CopyPixels(mBackground);
+  }
+
+public:
+  BBitmap *mBackground;
+};
+
+GEnterHighScoreState::GEnterHighScoreState() : BGameEngine(gViewPort) {
+  mPlayfield = new GEnterHighScorePlayfield();
   auto *p = new GEnterHighScoreProcess();
-  aGameEngine->AddProcess(p);
+  AddProcess(p);
 }
 
 GEnterHighScoreState::~GEnterHighScoreState() {
-  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-}
-
-void GEnterHighScoreState::Render() {
-  gDisplay.renderBitmap->CopyPixels(mBackground);
+  // delete mPlayfield;
 }
 

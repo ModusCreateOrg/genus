@@ -11,31 +11,44 @@ public:
 
   TBool RunAfter() {
     if (gControls.WasPressed(BUTTON_START)) {
-      gGameEngine->SetState(GAME_STATE_MAIN_MENU);
+      gGame->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;
     }
     else if (gControls.WasPressed(BUTTON_MENU)) {
-      gGameEngine->SetState(GAME_STATE_CREDITS);
+      gGame->SetState(GAME_STATE_CREDITS);
       return EFalse;
     }
     return ETrue;
   }
 };
 
-GMainOptionsState::GMainOptionsState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
-  gResourceManager.LoadBitmap(MAIN_OPTIONS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  gDisplay.SetPalette(mBackground);
+class GMainOptionsPlayfield : public BPlayfield {
+public:
+  GMainOptionsPlayfield() {
+    gResourceManager.LoadBitmap(MAIN_OPTIONS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+    mBackground = gResourceManager.GetBitmap(BKG_SLOT);
+    gDisplay.SetPalette(mBackground);
+  }
+  virtual ~GMainOptionsPlayfield() {
+
+  }
+public:
+  void Render() {
+    gDisplay.renderBitmap->CopyPixels(mBackground);
+  }
+public:
+  BBitmap *mBackground;
+};
+
+GMainOptionsState::GMainOptionsState() : BGameEngine(gViewPort) {
+  mPlayfield = new GMainOptionsPlayfield();
   auto *p = new GMainOptionsProcess();
-  aGameEngine->AddProcess(p);
+  AddProcess(p);
+  gSoundPlayer.PlayMusic(SONG0_XM);
 }
 
 GMainOptionsState::~GMainOptionsState() {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
 }
 
-void GMainOptionsState::Render() {
-  gSoundPlayer.PlayMusic(SONG0_XM);
-  gDisplay.renderBitmap->CopyPixels(mBackground);
-}
 

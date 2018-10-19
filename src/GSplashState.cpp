@@ -13,7 +13,7 @@ public:
 
   TBool RunAfter() {
     if (gControls.WasPressed(BUTTON_ANY) || --mTimer <= 0) {
-      gGameEngine->SetState(GAME_STATE_MAIN_MENU);
+      gGame->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;
     }
     return ETrue;
@@ -21,19 +21,33 @@ public:
   TInt mTimer;
 };
 
-GSplashState::GSplashState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
-  gResourceManager.LoadBitmap(SPLASH1_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  mBakcground = gResourceManager.GetBitmap(BKG_SLOT);
-  gDisplay.SetPalette(mBakcground);
+class GSplashPlayfield : public BPlayfield {
+public:
+  GSplashPlayfield() {
+    gResourceManager.LoadBitmap(SPLASH1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+    mBackground = gResourceManager.GetBitmap(BKG_SLOT);
+    gDisplay.SetPalette(mBackground);
+  }
+
+  virtual ~GSplashPlayfield() {
+    gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  }
+
+  void Render() {
+    gSoundPlayer.PlayMusic(SONG0_XM);
+    gDisplay.renderBitmap->CopyPixels(mBackground);
+  }
+public:
+  BBitmap *mBackground;
+};
+
+GSplashState::GSplashState() : BGameEngine(gViewPort) {
+  mPlayfield = new GSplashPlayfield();
   auto *p = new GSplashProcess();
-  aGameEngine->AddProcess(p);
+  AddProcess(p);
 }
 
 GSplashState::~GSplashState() {
-  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+//  delete mPlayfield;
 }
 
-void GSplashState::Render() {
-  gSoundPlayer.PlayMusic(SONG0_XM);
-  gDisplay.renderBitmap->CopyPixels(mBakcground);
-}

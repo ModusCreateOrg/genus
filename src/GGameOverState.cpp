@@ -11,26 +11,42 @@ public:
 
   TBool RunAfter() {
     if (gControls.WasPressed(BUTTON_START)) {
-      gGameEngine->SetState(GAME_STATE_ENTER_HIGHSCORE);
+      gGame->SetState(GAME_STATE_ENTER_HIGHSCORE);
       return EFalse;
     }
     return ETrue;
   }
 };
 
-GGameOverState::GGameOverState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
-  gResourceManager.LoadBitmap(GAME_OVER1_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  gDisplay.SetPalette(mBackground);
+class GGameOverPlayfield : public BPlayfield {
+public:
+  GGameOverPlayfield() {
+    gResourceManager.LoadBitmap(GAME_OVER1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+    mBackground = gResourceManager.GetBitmap(BKG_SLOT);
+    gDisplay.SetPalette(mBackground);
+  }
+
+  virtual ~GGameOverPlayfield() {
+    gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  }
+
+public:
+  void Render() {
+    gDisplay.renderBitmap->CopyPixels(mBackground);
+  }
+
+public:
+  BBitmap *mBackground;
+};
+
+GGameOverState::GGameOverState() : BGameEngine(gViewPort) {
+  mPlayfield = new GGameOverPlayfield();
   auto *p = new GGameOverProcess();
-  aGameEngine->AddProcess(p);
+  AddProcess(p);
 }
 
 GGameOverState::~GGameOverState() {
-  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+//  delete mPlayfield;
 }
 
-void GGameOverState::Render() {
-  gDisplay.renderBitmap->CopyPixels(mBackground);
-}
 

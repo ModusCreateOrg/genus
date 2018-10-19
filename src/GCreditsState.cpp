@@ -11,31 +11,46 @@ public:
 
   TBool RunAfter() {
     if (gControls.WasPressed(BUTTON_START)) {
-      gGameEngine->SetState(GAME_STATE_MAIN_MENU);
+      gGame->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;
     }
     else if (gControls.WasPressed(BUTTON_MENU)) {
-      gGameEngine->SetState(GAME_STATE_MAIN_OPTIONS);
+      gGame->SetState(GAME_STATE_MAIN_OPTIONS);
       return EFalse;
     }
     return ETrue;
   }
 };
 
-GCreditsState::GCreditsState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
-  gResourceManager.LoadBitmap(CREDITS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  gDisplay.SetPalette(mBackground);
+class GCreditsPlayfield : public BPlayfield {
+public:
+  GCreditsPlayfield() {
+    gResourceManager.LoadBitmap(CREDITS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+    mBackground = gResourceManager.GetBitmap(BKG_SLOT);
+    gDisplay.SetPalette(mBackground);
+  }
+
+  virtual ~GCreditsPlayfield() {
+    gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  }
+
+public:
+  void Render() {
+    gDisplay.renderBitmap->CopyPixels(mBackground);
+  }
+
+public:
+  BBitmap *mBackground;
+};
+
+GCreditsState::GCreditsState() : BGameEngine(gViewPort) {
+  mPlayfield = new GCreditsPlayfield();
   auto *p = new GCreditsProcess();
-  aGameEngine->AddProcess(p);
+  AddProcess(p);
 }
 
 GCreditsState::~GCreditsState() {
-  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-}
-
-void GCreditsState::Render() {
-  gDisplay.renderBitmap->CopyPixels(mBackground);
+//  delete mPlayfield;
 }
 
 

@@ -3,6 +3,7 @@
 
 #include <BProcess.h>
 //#include "GGameState.h"
+#include "GGameBoard.h"
 #include "GPlayerSprite.h"
 
 class GGameState;
@@ -37,6 +38,7 @@ public:
   TInt          mBlinkTimer;
   GPlayerSprite *mSprite;
   GGameState    *mGameState;
+  GGameBoard    *mGameBoard;
   GPlayerSprite *mNextSprite1;
   GPlayerSprite *mNextSprite2;
 };

@@ -2,12 +2,11 @@
 #define GENUS_GGAMEOVERSTATE_H
 
 
-#include <BPlayfield.h>
-#include "GGameEngine.h"
+#include <BGameEngine.h>
 
-class GGameOverState : public BPlayfield {
+class GGameOverState : public BGameEngine {
 public:
-  GGameOverState(GGameEngine *aGameEngine);
+  GGameOverState();
 
   virtual ~GGameOverState();
 

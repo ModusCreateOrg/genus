@@ -68,7 +68,7 @@ add_executable(genus
         ${LIBXMP_SRC}
         ${CREATIVE_ENGINE}
         ${GENUS_SRC}
-        )
+        src/GGame.cpp src/GGame.h creative-engine/src/BApplication.cpp creative-engine/src/BApplication.h src/GameState/GGameBoard.cpp src/GameState/GGameBoard.h)
 
 # make genus.app
 if(APPLE)

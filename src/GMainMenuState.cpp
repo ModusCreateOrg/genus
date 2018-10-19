@@ -11,29 +11,45 @@ public:
 
   TBool RunAfter() {
     if (gControls.WasPressed(BUTTON_START)) {
-      gGameEngine->SetState(GAME_STATE_GAME);
+      gGame->SetState(GAME_STATE_GAME);
       return EFalse;
     }
     else if (gControls.WasPressed(BUTTON_MENU)) {
-      gGameEngine->SetState(GAME_STATE_MAIN_OPTIONS);
+      gGame->SetState(GAME_STATE_MAIN_OPTIONS);
       return EFalse;
     }
     return ETrue;
   }
 };
 
-GMainMenuState::GMainMenuState(GGameEngine *aGameEngine) : BPlayfield(aGameEngine) {
-  gResourceManager.LoadBitmap(MAIN_MENU1_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  gDisplay.SetPalette(mBackground);
+class GMainMenuPlayfield : public BPlayfield {
+public:
+  GMainMenuPlayfield() {
+    gResourceManager.LoadBitmap(MAIN_MENU1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+    mBackground = gResourceManager.GetBitmap(BKG_SLOT);
+    gDisplay.SetPalette(mBackground);
+  }
+  virtual ~GMainMenuPlayfield() {
+    gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  }
+
+public:
+  void Render() {
+    gDisplay.renderBitmap->CopyPixels(mBackground);
+  }
+
+public:
+  BBitmap *mBackground;
+
+};
+
+GMainMenuState::GMainMenuState() : BGameEngine(gViewPort) {
+  mPlayfield = new GMainMenuPlayfield();
   auto *p = new GMainMenuProcess();
-  aGameEngine->AddProcess(p);
+  AddProcess(p);
 }
 
 GMainMenuState::~GMainMenuState() {
-  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  // delete mPlayfield
 }
 
-void GMainMenuState::Render() {
-  gDisplay.renderBitmap->CopyPixels(mBackground);
-}
