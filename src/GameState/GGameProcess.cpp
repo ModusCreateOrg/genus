@@ -124,13 +124,12 @@ void GGameProcess::StateControl() {
       if (Drop()) {
         printf("Drop true\n");
         TUint32 score = mGameBoard->CountScore();
-        // move this logic to GGameState...
-
         if (score > 0) {
           gSoundPlayer.PlaySound(5,0,EFalse);
         }
 
         TBCD p;
+        p.FromUint32(score);
         mGameState->mScore.Add(p);
       }
       gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);

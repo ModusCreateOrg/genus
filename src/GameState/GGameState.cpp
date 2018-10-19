@@ -55,16 +55,13 @@ public:
   }
 #endif
     // Score
-//  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, SCREEN_WIDTH - 40 - 8, 8);
-//  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, SCREEN_WIDTH - 40 + 8, 8);
-//  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 2, SCREEN_WIDTH - 40 + 24, 8);
-//  y = 8 + 16;
     bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, 8, 0);
     bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, 24, 0);
     bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 2, 40, 0);
     TInt      x = 56;
     for (TInt i = 0; i < 7; i++) {
       TInt v = (mGameEngine->mScore.mValue >> ((7 - i) * 4)) & 0x0f;
+      // commented out to show lead zeros
 //    if (v) {
       bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 0);
 //    }
