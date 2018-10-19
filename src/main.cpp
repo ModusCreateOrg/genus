@@ -23,14 +23,19 @@ extern "C" void app_main() {
 
   gGameEngine = new GGameEngine();
 
-  TBool done = EFalse;
+  TBool muted = EFalse;
 
+  TBool done = EFalse;
   while (!done) {
     Random(); // randomize
     gGameEngine->GameLoop();
     gDisplay.Update();
     if (gControls.WasPressed(BUTTONQ)) {
       done = true;
+    }
+    if (gControls.WasPressed(BUTTON2)) {
+      muted = !muted;
+      gSoundPlayer.MuteMusic(muted);
     }
   }
 

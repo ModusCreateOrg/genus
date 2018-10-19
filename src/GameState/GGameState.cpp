@@ -27,12 +27,15 @@ void GGameState::LoadLevel() {
     case 1:
     default:
       gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-      gResourceManager.LoadBitmap(LEVEL1_BKGNEW_BMP, BKG_SLOT, IMAGE_ENTIRE);
+      gResourceManager.LoadBitmap(LEVEL1_BKG1A_BMP, BKG_SLOT, IMAGE_ENTIRE);
       break;
   }
+  BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
+
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  mBackground->SetColor(GRID_COLOR, 255, 255, 255);
-  gDisplay.SetPalette(mBackground);
+  gDisplay.SetPalette(mBackground, 0, 128);
+  gDisplay.SetPalette(playerBitmap, 128, 128);
+  gDisplay.SetColor(GRID_COLOR, 255, 255, 255);
 
   mGameProcess = new GGameProcess(this);
   mGameEngine->AddProcess((BProcess *) mGameProcess);
@@ -187,17 +190,19 @@ void GGameState::Render() {
   }
 
 #if 0
-  // render the red circles/dots at the bottom
+  // render the red circles/dots at the top
   for (TInt i = 0, j = mBoardX; i < VISIBLE_BOARD_COLS; i++, j++) {
-    if (j & 1) {
-      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X + i * 16, SCREEN_HEIGHT - 16);
-      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X + i * 16, BOARD_Y - 16);
-    } else {
-      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + i * 16, SCREEN_HEIGHT - 16);
-      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + i * 16, BOARD_Y - 16);
-    }
+    bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + i*16, BOARD_Y - 16);
+//    if (j & 1) {
+//      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X + i * 16, SCREEN_HEIGHT - 16);
+//      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X + i * 16, BOARD_Y - 16);
+//    } else {
+//      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + i * 16, SCREEN_HEIGHT - 16);
+//      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + i * 16, BOARD_Y - 16);
+//    }
   }
 #endif
+#if 0
   for (TInt i = 0, j = mBoardY; i < VISIBLE_BOARD_ROWS; i++, j++) {
 //    if (j & 1) {
 //      bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X - 16, BOARD_Y + i * 16);
@@ -207,7 +212,7 @@ void GGameState::Render() {
     bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + VISIBLE_BOARD_COLS * 16, BOARD_Y + i * 16);
 //    }
   }
-
+#endif
   // Score
 //  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, SCREEN_WIDTH - 40 - 8, 8);
 //  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, SCREEN_WIDTH - 40 + 8, 8);
@@ -226,6 +231,16 @@ void GGameState::Render() {
   }
   TInt      v = mScore.mValue & 0x0f;
   bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 0);
+
+  // render timer
+  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_TIME, 16, 14);
+  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_TIME + 1, 16+16, 14);
+  bm->DrawFastHLine(gViewPort, BOARD_X+48, BOARD_Y-20, BOARD_COLS * 12, COLOR_TIMERBORDER);
+  bm->DrawFastHLine(gViewPort, BOARD_X+48, BOARD_Y-8, BOARD_COLS * 12, COLOR_TIMERBORDER);
+
+  for (TInt y = 0; y<9; y++) {
+    bm->DrawFastHLine(gViewPort, BOARD_X+48, BOARD_Y-18+y, BOARD_COLS*12, COLOR_TIMERINNER);
+  }
 
   if (mGameOver) {
     x = BOARD_X + VISIBLE_BOARD_COLS * 16 + 32;
