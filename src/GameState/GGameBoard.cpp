@@ -67,13 +67,13 @@ void GGameBoard::Render() {
     for (TInt col = 0; col < VISIBLE_BOARD_COLS; col++) {
       TUint8 v = mGameBoard[mBoardY + row][mBoardX + col];
       if (v != 255) {
-        bm->DrawSprite(gViewPort, PLAYER_SLOT, v, x + col * 16, y + row * 16);
+        BSprite::DrawSprite(gViewPort, PLAYER_SLOT, v, x + col * 16, y + row * 16);
       }
 #ifdef RENDER_CHECKERBOARD
       else if (row & 1) {
-        bm->DrawSprite(gViewPort, PLAYER_SLOT, col & 1 ? IMG_BGTILE1 : IMG_BGTILE2, x + col * 16, y + row * 16);
+        BSprite::DrawSprite(gViewPort, PLAYER_SLOT, col & 1 ? IMG_BGTILE1 : IMG_BGTILE2, x + col * 16, y + row * 16);
       } else {
-        bm->DrawSprite(gViewPort, PLAYER_SLOT, col & 1 ? IMG_BGTILE2 : IMG_BGTILE1, x + col * 16, y + row * 16);
+        BSprite::DrawSprite(gViewPort, PLAYER_SLOT, col & 1 ? IMG_BGTILE2 : IMG_BGTILE1, x + col * 16, y + row * 16);
       }
 #endif
     }

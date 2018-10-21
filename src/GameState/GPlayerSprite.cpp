@@ -58,16 +58,16 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
   TInt    yy  = TInt(y + .5);
 
   if (flags & SFLAG_RENDER) {
-    bm->DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[0], xx, yy);
-    bm->DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[1], xx + 16, yy);
-    bm->DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[2], xx, yy + 16);
-    bm->DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[3], xx + 16, yy + 16);
+    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[0], xx, yy);
+    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[1], xx + 16, yy);
+    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[2], xx, yy + 16);
+    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[3], xx + 16, yy + 16);
   }
   // frame
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy);
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy);
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy + 16, SFLAG_FLOP);
-  bm->DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy + 16, SFLAG_FLOP);
+  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy);
+  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy);
+  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy + 16, SFLAG_FLOP);
+  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy + 16, SFLAG_FLOP);
   return ETrue;
 }
 
