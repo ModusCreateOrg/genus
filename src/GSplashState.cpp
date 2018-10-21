@@ -2,7 +2,7 @@
 
 class GSplashProcess : public BProcess {
 public:
-  GSplashProcess() : BProcess(PTYPE_SYSTEM) {
+  GSplashProcess() : BProcess() {
     mTimer = 30*6;
   }
 
