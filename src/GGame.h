@@ -20,10 +20,11 @@ public:
 public:
   void Run();
 public:
-  TInt SetState(TInt aNewState);
+  void SetState(TInt aNewState);
 
 protected:
   TInt mState;
+  TInt mNextState;
 };
 
 extern GGame *gGame;
