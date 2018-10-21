@@ -17,7 +17,7 @@ GGameBoard::GGameBoard() {
 void GGameBoard::Clear() {
   for (TInt row = 0; row < BOARD_ROWS; row++) {
     for (TInt col = 0; col < BOARD_COLS; col++) {
-      mGameBoard[row][col] = 255;
+      mBoard[row][col] = 255;
     }
   }
 }
@@ -65,7 +65,7 @@ void GGameBoard::Render() {
   for (TInt row = 0; row < VISIBLE_BOARD_ROWS; row++) {
     TInt      x   = BOARD_X;
     for (TInt col = 0; col < VISIBLE_BOARD_COLS; col++) {
-      TUint8 v = mGameBoard[mBoardY + row][mBoardX + col];
+      TUint8 v = mBoard[mBoardY + row][mBoardX + col];
       if (v != 255) {
         BSprite::DrawSprite(gViewPort, PLAYER_SLOT, v, x + col * 16, y + row * 16);
       }
@@ -84,9 +84,9 @@ void GGameBoard::Render() {
 // mark a block as matched (e.g. turn from blue/pink to blue/pink with black center
 // returns EFalse if the block was already black center
 TBool GGameBoard::Mark(TInt aRow, TInt aCol) {
-  TUint8 v = mGameBoard[aRow][aCol];
-  mGameBoard[aRow][aCol] |= 8;
-  return mGameBoard[aRow][aCol] != v;
+  TUint8 v = mBoard[aRow][aCol];
+  mBoard[aRow][aCol] |= 8;
+  return mBoard[aRow][aCol] != v;
 }
 
 TBool GGameBoard::Combine() {
@@ -131,8 +131,8 @@ TBool GGameBoard::Combine() {
 TBool GGameBoard::IsGameOver() {
   for (TInt row = 0; row < BOARD_ROWS - 1; row++) {
     for (TInt col = 0; col < BOARD_COLS - 1; col++) {
-      if (mGameBoard[row][col] == 255 && mGameBoard[row][col + 1] == 255 && mGameBoard[row + 1][col] == 255 &&
-          mGameBoard[row + 1][col + 1] == 255) {
+      if (mBoard[row][col] == 255 && mBoard[row][col + 1] == 255 && mBoard[row + 1][col] == 255 &&
+          mBoard[row + 1][col + 1] == 255) {
         return EFalse;
       }
     }

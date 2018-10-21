@@ -3,16 +3,19 @@
 
 static const TInt BLINK_TIME = 2;
 
-static const TInt PLAYERSTATE_CONTROL  = 0,
-                  PLAYERSTATE_GAMEOVER = 1;
+enum {
+    PLAYERSTATE_CONTROL,
+    PLAYERSTATE_REMOVEBLOCKS,
+    PLAYERSTATE_GAMEOVER
+};
 
-static const TInt REPEAT_TIME  = 1,
-                  REPEAT_DELAY = REPEAT_TIME + 2;
+static const TInt REPEAT_TIME = 1,
+    REPEAT_DELAY = REPEAT_TIME + 2;
 
 GGameProcess::GGameProcess(GGameState *aGameState) : BProcess() {
-  mGameState  = aGameState;
-  mGameBoard  = &mGameState->mGameBoard;
-  mState      = PLAYERSTATE_CONTROL;
+  mGameState = aGameState;
+  mGameBoard = &mGameState->mGameBoard;
+  mState = PLAYERSTATE_CONTROL;
   mBlinkTimer = BLINK_TIME;
 
   mSprite = new GPlayerSprite();
@@ -38,10 +41,10 @@ TInt GGameProcess::BoardCol() {
 //
 TBool GGameProcess::CanDrop() {
   TInt row = BoardRow(),
-       col = BoardCol();
+      col = BoardCol();
 
-  if (mGameBoard->mGameBoard[row][col] != 255 || mGameBoard->mGameBoard[row][col + 1] != 255 ||
-      mGameBoard->mGameBoard[row + 1][col] != 255 || mGameBoard->mGameBoard[row + 1][col + 1] != 255) {
+  if (mGameBoard->mBoard[row][col] != 255 || mGameBoard->mBoard[row][col + 1] != 255 ||
+      mGameBoard->mBoard[row + 1][col] != 255 || mGameBoard->mBoard[row + 1][col + 1] != 255) {
     return EFalse;
   }
   return ETrue;
@@ -49,14 +52,14 @@ TBool GGameProcess::CanDrop() {
 
 // returns ETrue if drop added to or created at least one 2x2 same blocks
 TBool GGameProcess::Drop() {
-  const TInt   row = BoardRow(),
-               col = BoardCol();
-  const TUint8 *b  = mSprite->mBlocks;
+  const TInt row = BoardRow(),
+      col = BoardCol();
+  const TUint8 *b = mSprite->mBlocks;
 
-  TUint8 (*p)[BOARD_ROWS][BOARD_COLS] = &mGameBoard->mGameBoard;
-  (*p)[row][col]         = b[0];
-  (*p)[row][col + 1]     = b[1];
-  (*p)[row + 1][col]     = b[2];
+  TUint8 (*p)[BOARD_ROWS][BOARD_COLS] = &mGameBoard->mBoard;
+  (*p)[row][col] = b[0];
+  (*p)[row][col + 1] = b[1];
+  (*p)[row + 1][col] = b[2];
   (*p)[row + 1][col + 1] = b[3];
 
   mSprite->Randomize();
@@ -89,7 +92,7 @@ TBool GGameProcess::TimedControl(TUint16 aButton) {
   return EFalse;
 }
 
-void GGameProcess::StateControl() {
+TBool GGameProcess::StateControl() {
   mRepeatTimer--;
   if (gControls.WasPressed(BUTTONA)) {
     mSprite->RotateLeft();
@@ -98,34 +101,38 @@ void GGameProcess::StateControl() {
   } else if (TimedControl(JOYLEFT)) {
     mSprite->x -= 16;
     if (mSprite->x < PLAYER_X_MIN) {
-      mSprite->x          = PLAYER_X_MIN;
+      mSprite->x = PLAYER_X_MIN;
       mGameBoard->mBoardX = MAX(mGameBoard->mBoardX - 1, 0);
     }
   } else if (TimedControl(JOYRIGHT)) {
     mSprite->x += 16;
     if (mSprite->x > PLAYER_X_MAX) {
-      mSprite->x          = PLAYER_X_MAX;
+      mSprite->x = PLAYER_X_MAX;
       mGameBoard->mBoardX = MIN(mGameBoard->mBoardX + 1, BOARD_X_MAX);
     }
   } else if (TimedControl(JOYUP)) {
     mSprite->y -= 16;
     if (mSprite->y < PLAYER_Y_MIN) {
-      mSprite->y          = PLAYER_Y_MIN;
+      mSprite->y = PLAYER_Y_MIN;
       mGameBoard->mBoardY = MAX(mGameBoard->mBoardY - 1, 0);
     }
   } else if (TimedControl(JOYDOWN)) {
     mSprite->y += 16;
     if (mSprite->y > PLAYER_Y_MAX) {
-      mSprite->y          = PLAYER_Y_MAX;
+      mSprite->y = PLAYER_Y_MAX;
       mGameBoard->mBoardY = MIN(mGameBoard->mBoardY + 1, BOARD_Y_MAX);
     }
   } else if (gControls.WasPressed(BUTTON_SELECT)) {
     if (CanDrop()) {
       if (Drop()) {
-        printf("Drop true\n");
+        // start bonus timer, if not already started
+        if (mGameState->mBonusTimer >= 0) {
+
+        }
+        mGameState->StartBonusTimer();
         TUint32 score = mGameBoard->CountScore();
         if (score > 0) {
-          gSoundPlayer.PlaySound(5,0,EFalse);
+          gSoundPlayer.PlaySound(5, 0, EFalse);
         }
 
         TBCD p;
@@ -138,7 +145,7 @@ void GGameProcess::StateControl() {
         mGameState->mGameOver = ETrue;
       }
     } else {
-      // TODO: Jay - make a "cant do that!" sound here
+      // can't drop sound:
       gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
     }
   }
@@ -154,18 +161,64 @@ void GGameProcess::StateControl() {
   } else if (CanDrop()) {
     mSprite->flags |= SFLAG_RENDER;
   }
+  return ETrue;
+}
+
+TBool GGameProcess::StateRemoveBlocks() {
+  if (mRemoveTimer--) {
+    return ETrue;
+  }
+  mRemoveTimer = 30/4;        // 1/4 second
+
+  while (mRemoveRow < BOARD_ROWS) {
+    if (mRemoveCol >= BOARD_COLS) {
+      mRemoveCol = 0;
+      mRemoveRow++;
+      if (mRemoveRow >= BOARD_ROWS) {
+        // all done, game resumes
+        mState = PLAYERSTATE_CONTROL;
+        mSprite->flags |= SFLAG_RENDER;
+        break;
+      }
+    }
+    TUint8 v = mGameBoard->mBoard[mRemoveRow][mRemoveCol];
+    if (v != 255) {
+      if (mGameBoard->mBoard[mRemoveRow][mRemoveCol] & 8) {
+        TBCD add;
+        add.FromUint32(mRemoveScore);
+        mGameState->mScore.Add(add);
+        // TODO: Jay, add a sound here for the score incrementing as we remove blocks
+        // sound lasts roughly 1/4 second
+        mRemoveScore *= 2;
+        // remove the block
+        mGameBoard->mBoard[mRemoveRow][mRemoveCol] = 255;
+        mRemoveCol++;
+        break;
+      }
+    }
+    mRemoveCol++;
+  }
+  return ETrue;
+}
+
+void GGameProcess::RemoveBlocks() {
+  mState = PLAYERSTATE_REMOVEBLOCKS;
+  mRemoveRow = mRemoveCol = 0;
+  mRemoveScore = 1;
+  mRemoveTimer = 1;
+  mSprite->flags &= ~SFLAG_RENDER;
 }
 
 TBool GGameProcess::RunAfter() {
   switch (mState) {
     case PLAYERSTATE_CONTROL:
-      StateControl();
-      break;
+      return StateControl();
+    case PLAYERSTATE_REMOVEBLOCKS:
+      return StateRemoveBlocks();
     case PLAYERSTATE_GAMEOVER:
       return StateGameOver();
     default:
       Panic("Invalid mState in RunAfter\n");
-      break;
   }
   return ETrue;
 }
