@@ -2,12 +2,10 @@
 
 
 PROJECT_NAME=Genus
+EXTRA_COMPONENT_DIRS=${PROJECT_PATH}/creative-engine ${PROJECT_PATH}/src ${PROJECT_PATH}/src/GameState
 
 # COMPONENT_PATH=./src
 
-
-
-EXTRA_COMPONENT_DIRS=creative-engine src 
 
 include $(IDF_PATH)/make/project.mk
 

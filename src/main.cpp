@@ -1,7 +1,9 @@
 #include "Game.h"
 
 BViewPort   *gViewPort;
-GGameEngine *gGameEngine;
+BGameEngine *gGameEngine;
+
+GGame *gGame;
 
 /** @file
  * \brief Main entry point for game engine.
@@ -9,31 +11,8 @@ GGameEngine *gGameEngine;
  * Initializes the engine and runs the main event loop.
  */
 extern "C" void app_main() {
-  SeedRandom(300);
-  gDisplay.Init();
-  gSoundPlayer.Init(3, 6);
-
-
-  // TODO: this belongs in GGameEngine
-  gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
-
-  gViewPort = new BViewPort();
-  gViewPort->Offset(0, 0);
-  gViewPort->SetRect(TRect(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1));
-
-  gGameEngine = new GGameEngine();
-
-  TBool done = EFalse;
-
-  while (!done) {
-    Random(); // randomize
-    gGameEngine->GameLoop();
-    gDisplay.Update();
-    if (gControls.WasPressed(BUTTONQ)) {
-      done = true;
-    }
-  }
-
+  gGame = new GGame();
+  gGame->Run();
   printf("Exiting\n");
 }
 

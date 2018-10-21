@@ -6,9 +6,9 @@
 COMPONENT_NAME = Genus
 
 #ADD_COMPONENT_INCLUDEDIRS=./src ./src/foo
-COMPONENT_ADD_INCLUDEDIRS=src 
+COMPONENT_ADD_INCLUDEDIRS=src
 #ADD_COMPONENT_INCLUDEDIRS=foo
-COMPONENT_PRIV_INCLUDEDIRS=../creative-engine/src
+COMPONENT_PRIV_INCLUDEDIRS=../creative-engine/src ../src/GameState ../src
 #COMPONENT_SRCDIRS:=./creative-engine/src .
 
 COMPONENT_EMBED_FILES := Resources.bin

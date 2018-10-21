@@ -1,12 +1,11 @@
 #ifndef GENUS_GCREDITSSTATE_H
 #define GENUS_GCREDITSSTATE_H
 
-#include <BPlayfield.h>
-#include "GGameEngine.h"
+#include <BGameEngine.h>
 
-class GCreditsState : public BPlayfield {
+class GCreditsState : public BGameEngine {
 public:
-  GCreditsState(GGameEngine *aGameEngine);
+  GCreditsState();
 
   virtual ~GCreditsState();
 

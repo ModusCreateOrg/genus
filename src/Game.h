@@ -5,18 +5,18 @@
 #include <unistd.h>
 #include <time.h>
 
-#include <GameEngine.h>
+#include <CreativeEngine.h>
 #include "GSoundPlayer.h"
 #include "Resources.h"
 
 // Game specific includes
 #include "GResources.h"
-#include "GGameEngine.h"
+#include "GGame.h"
 
 // GGameEngine states
 #include "GSplashState.h"
 #include "GMainMenuState.h"
-#include "GGameState.h"
+#include "GameState/GGameState.h"
 #include "GGameOverState.h"
 #include "GEnterHighScoreState.h"
 #include "GHighScoresState.h"
@@ -24,6 +24,6 @@
 #include "GCreditsState.h"
 
 extern BViewPort   *gViewPort;
-extern GGameEngine *gGameEngine;
+extern BGameEngine *gGameEngine;
 
 #endif

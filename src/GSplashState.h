@@ -2,19 +2,12 @@
 #define GENUS_GSPLASH_H
 
 #include <BPlayfield.h>
-#include "GGameEngine.h"
 
-class GSplashState : public BPlayfield {
+class GSplashState : public BGameEngine {
 public:
-  GSplashState(GGameEngine *aGameEngine);
+  GSplashState();
 
   virtual ~GSplashState();
-
-public:
-  void Render();
-
-protected:
-  BBitmap *mBakcground;
 };
 
 

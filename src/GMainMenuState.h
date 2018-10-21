@@ -2,19 +2,12 @@
 #define GENUS_GMAINMENUSTATE_H
 
 #include <BPlayfield.h>
-#include "GGameEngine.h"
 
-class GMainMenuState : public BPlayfield {
+class GMainMenuState : public BGameEngine {
 public:
-  GMainMenuState(GGameEngine *aGameEngine);
+  GMainMenuState();
 
   virtual ~GMainMenuState();
-
-public:
-  void Render();
-
-protected:
-  BBitmap *mBackground;
 };
 
 #endif //GENUS_GMAINMENUSTATE_H

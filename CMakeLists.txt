@@ -40,6 +40,9 @@ add_custom_command(OUTPUT Resources.bin
 # gather creative-engine s\ources
 file(GLOB_RECURSE CREATIVE_ENGINE RELATIVE ${CMAKE_SOURCE_DIR} "creative-engine/src/*.cpp")
 
+# gather game sources
+file(GLOB_RECURSE SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
+
 # LibXMP
 add_compile_definitions(LIBXMP_CORE_PLAYER=true)
 add_compile_definitions(LIBXMP_CORE_DISABLE_IT=true)
@@ -57,13 +60,13 @@ file(GLOB LIBXMP_SRC
     "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/*.h"
     "${CMAKE_SOURCE_DIR}/creative-engine/src/libxmp/*.c"
 )
-
-file(GLOB GENUS_SRC "${CMAKE_SOURCE_DIR}/src/*.cpp")
+file(GLOB_RECURSE GENUS_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
+#file(GLOB GENUS_SRC "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
 add_executable(genus
         Resources.bin
-        ${CREATIVE_ENGINE}
         ${LIBXMP_SRC}
+        ${CREATIVE_ENGINE}
         ${GENUS_SRC}
         )
 

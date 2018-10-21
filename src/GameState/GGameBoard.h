@@ -1,7 +1,7 @@
-#ifndef GENUS_GGAMESTATE_H
-#define GENUS_GGAMESTATE_H
+#ifndef GENUS_GGAMEBOARD_H
+#define GENUS_GGAMEBOARD_H
 
-#include "Game.h"
+#include <CreativeEngine.h>
 
 // number of rows and columns in the visible game board
 static const TInt VISIBLE_BOARD_ROWS = 12;
@@ -21,47 +21,19 @@ static const TInt BOARD_X = 8;
 static const TInt BOARD_Y = (240 - 12 - (VISIBLE_BOARD_ROWS * 16));
 //static const TInt BOARD_Y = (240 - 16 - (VISIBLE_BOARD_ROWS * 16));
 
-static const TFloat PLAYER_X     = BOARD_X + 48;
-static const TFloat PLAYER_Y     = BOARD_Y; //  - 32;
-static const TFloat PLAYER_X_MIN = BOARD_X;
-static const TFloat PLAYER_X_MAX = BOARD_X + (VISIBLE_BOARD_COLS - 2) * 16;
-static const TFloat PLAYER_Y_MIN = BOARD_Y;
-static const TFloat PLAYER_Y_MAX = BOARD_Y + (VISIBLE_BOARD_ROWS - 2) * 16;
-
-class GPlayerSprite;
-
-class GGameProcess;
-
-class GGameState : public BPlayfield {
+class GGameBoard : public BBase {
 public:
-  GGameState(GGameEngine *aGameEngine);
+  GGameBoard();
 
-  virtual ~GGameState();
-
-public:
-  void Render() override;
-
-  void Animate() override;
-
-protected:
-  BBitmap *mBackground;
-  TUint8  mTextColor;
-protected:
-  GGameProcess *mGameProcess;
-
-public:
-  TBool   mGameOver;
-  TInt    mLevel;
-  TBCD    mScore, mLastScore;
-  TUint32 mPoints;
-  TInt    mBoardX, mBoardY;  // scroll position of board
-  TUint8  mGameBoard[BOARD_ROWS][BOARD_COLS];
 public:
   void Clear();
-
-  void LoadLevel();
+  void Render();
 
 protected:
+  // mark a block as matched (e.g. turn from blue/pink to blue/pink with black center
+  // returns EFalse if the block was already black center
+  TBool Mark(TInt aRow, TInt aCol);
+
   TUint8 GetBlock(TInt aRow, TInt aCol) {
     TUint8 b = mGameBoard[aRow][aCol];
     if (b != 255) {
@@ -82,10 +54,17 @@ protected:
   }
 
 public:
-  void Combine();
+  TBool Combine();
+
+  TUint32 CountScore();
 
   TBool IsGameOver();
 
+public:
+  TInt    mBoardX, mBoardY;  // scroll position of board
+
+  TUint8  mGameBoard[BOARD_ROWS][BOARD_COLS];
 };
 
-#endif //GENUS_GGAMESTATE_H
+
+#endif //GENUS_GGAMEBOARD_H
