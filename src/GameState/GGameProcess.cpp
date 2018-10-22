@@ -189,7 +189,7 @@ TBool GGameProcess::StateRemoveBlocks() {
         mGameState->mScore.Add(add);
         // TODO: Jay, add a sound here for the score incrementing as we remove blocks
         // sound lasts roughly 1/4 second
-        mRemoveScore *= 2;
+        mRemoveScore++;
         // remove the block
         mGameBoard->mBoard[mRemoveRow][mRemoveCol] = 255;
         mRemoveCol++;

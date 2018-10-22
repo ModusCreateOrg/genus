@@ -39,6 +39,8 @@ public:
     TInt mBonusTimer;
     // override BGameEngine PreRender() so we can manage timers
     void PreRender();
+    // override PostRender() to draw the scores, etc.
+    void PostRender();
 public:
     void Clear();
 

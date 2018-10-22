@@ -5,7 +5,7 @@
 
 // number of rows and columns in the visible game board
 static const TInt VISIBLE_BOARD_ROWS = 12;
-static const TInt VISIBLE_BOARD_COLS = 12;
+static const TInt VISIBLE_BOARD_COLS = 18;
 // number of rows and columns in the game board (visible and hidden)
 static const TInt BOARD_ROWS         = (VISIBLE_BOARD_ROWS);
 static const TInt BOARD_COLS         = (VISIBLE_BOARD_COLS);
@@ -17,7 +17,7 @@ static const TInt BOARD_Y_MAX        = (BOARD_ROWS - VISIBLE_BOARD_ROWS);
 // screen coordinates
 //static const TInt BOARD_X = ((320 - (VISIBLE_BOARD_COLS * 16)) / 2);
 //static const TInt BOARD_Y = (240 - 16 - (VISIBLE_BOARD_ROWS * 16));
-static const TInt BOARD_X = 8;
+static const TInt BOARD_X = 16;
 static const TInt BOARD_Y = (240 - 12 - (VISIBLE_BOARD_ROWS * 16));
 //static const TInt BOARD_Y = (240 - 16 - (VISIBLE_BOARD_ROWS * 16));
 
