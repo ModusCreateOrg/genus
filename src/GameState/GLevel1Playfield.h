@@ -3,12 +3,10 @@
 
 #include "GGameState.h"
 
-class GGamePlayfield : public BPlayfield {
+class GLevel1Playfield : public BPlayfield {
 public:
-    GGamePlayfield(GGameState *aGameEngine);
-    ~GGamePlayfield() {
-
-    }
+    GLevel1Playfield(GGameState *aGameEngine);
+    ~GLevel1Playfield();
 
 public:
     void Animate();
