@@ -35,7 +35,7 @@ protected:
   TBool Mark(TInt aRow, TInt aCol);
 
   TUint8 GetBlock(TInt aRow, TInt aCol) {
-    TUint8 b = mGameBoard[aRow][aCol];
+    TUint8 b = mBoard[aRow][aCol];
     if (b != 255) {
       b &= ~8;
     }
@@ -63,7 +63,7 @@ public:
 public:
   TInt    mBoardX, mBoardY;  // scroll position of board
 
-  TUint8  mGameBoard[BOARD_ROWS][BOARD_COLS];
+  TUint8  mBoard[BOARD_ROWS][BOARD_COLS];
 };
 
 

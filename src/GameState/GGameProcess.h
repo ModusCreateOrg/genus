@@ -2,7 +2,6 @@
 #define GENUS_GGAMEPROCESS_H
 
 #include <BProcess.h>
-//#include "GGameState.h"
 #include "GGameBoard.h"
 #include "GPlayerSprite.h"
 
@@ -10,37 +9,48 @@ class GGameState;
 
 class GGameProcess : public BProcess {
 public:
-  GGameProcess(GGameState *aGameState);
+    GGameProcess(GGameState *aGameState);
 
-  virtual ~GGameProcess();
+    virtual ~GGameProcess();
 
-  TInt BoardRow();
+    TInt BoardRow();
 
-  TInt BoardCol();
-
-  TBool CanDrop();
-
-  TBool Drop();
-
-  TBool StateGameOver();
-
-  TBool TimedControl(TUint16 aButton);
-
-  void StateControl();
-
-  TBool RunBefore();
-
-  TBool RunAfter();
+    TInt BoardCol();
 
 public:
-  TInt          mState;
-  TInt          mRepeatTimer;
-  TInt          mBlinkTimer;
-  GPlayerSprite *mSprite;
-  GGameState    *mGameState;
-  GGameBoard    *mGameBoard;
-  GPlayerSprite *mNextSprite1;
-  GPlayerSprite *mNextSprite2;
+    TBool TimedControl(TUint16 aButton);
+
+    TBool CanDrop();
+
+    TBool Drop();
+
+public:
+    TBool StateGameOver();
+
+    TBool StateControl();
+
+    TBool StateRemoveBlocks();
+
+public:
+    void RemoveBlocks();
+
+public:
+    TBool RunBefore();
+
+    TBool RunAfter();
+
+public:
+    TInt mState;
+    TInt mRepeatTimer;
+    TInt mBlinkTimer;
+public:
+    GPlayerSprite *mSprite;
+    GGameState *mGameState;
+    GGameBoard *mGameBoard;
+public:
+    TInt mRemoveRow, mRemoveCol;
+    TInt mRemoveTimer;
+    TUint32 mRemoveScore;
 };
 
 #endif //GENUS_GGAMEPROCESS_H
