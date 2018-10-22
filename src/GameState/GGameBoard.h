@@ -5,7 +5,7 @@
 
 // number of rows and columns in the visible game board
 static const TInt VISIBLE_BOARD_ROWS = 12;
-static const TInt VISIBLE_BOARD_COLS = 18;
+static const TInt VISIBLE_BOARD_COLS = 12;
 // number of rows and columns in the game board (visible and hidden)
 static const TInt BOARD_ROWS         = (VISIBLE_BOARD_ROWS);
 static const TInt BOARD_COLS         = (VISIBLE_BOARD_COLS);

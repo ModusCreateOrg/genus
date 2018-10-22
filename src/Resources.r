@@ -17,13 +17,19 @@ BITMAP level1_bkg1.bmp
 BITMAP level1_bkg2.bmp
 BITMAP level2_bkg1.bmp
 
+PATH ../resources/backgrounds/under_water
+
+BITMAP under_water.bmp
+BITMAP under_water_small.bmp
+
+
 # .-=[  MUSIC  ]=-.
 PATH ../resources/music
 
 RAW EmptySong.xm
 RAW Song0.xm
 RAW Song1.s3m
-RAW Song2.xm
+#RAW Song2.xm
 
 # .-=[ Sound Effects ]=-.
 PATH ../resources/sound_effects

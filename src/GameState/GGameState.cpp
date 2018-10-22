@@ -35,9 +35,12 @@ void GGameState::LoadLevel() {
     case 1:
     default:
       gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-      gResourceManager.LoadBitmap(LEVEL1_BKG1A_BMP, BKG_SLOT, IMAGE_ENTIRE);
+      gResourceManager.LoadBitmap(UNDER_WATER_BMP, BKG_SLOT, IMAGE_ENTIRE);
+//      gResourceManager.LoadBitmap(UNDER_WATER_SMALL_BMP, BKG_SLOT, IMAGE_ENTIRE);
       delete mPlayfield;
       mPlayfield = new GLevel1Playfield(this);
+
+      gSoundPlayer.PlayMusic(SONG1_S3M);
       break;
   }
   BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
