@@ -11,16 +11,15 @@
 #include "freertos/FreeRTOS.h"
 #endif
 
-//static int8_t xOffset[320], yOffset[240];
-//static int8_t xComp[320], yComp[240];
-
 //int8_t *xOffset;
-int8_t *yOffset;
-int8_t *xComp;
+
 //int8_t *yComp;
 
 
 GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
+  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+  gResourceManager.LoadBitmap(UNDER_WATER_BMP, BKG_SLOT, IMAGE_ENTIRE);
+
   mGameEngine = aGameEngine;
   mTextColor = 0;
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
@@ -28,14 +27,18 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
 
 
 //  xOffset = (int8_t *)AllocMem(320, MEMF_SLOW);
-  xComp   = (int8_t *)AllocMem(320, MEMF_SLOW);
-  yOffset = (int8_t *)AllocMem(240, MEMF_SLOW);
+  mXComp   = (int8_t *)AllocMem(320, MEMF_SLOW);
+  mYOffset = (int8_t *)AllocMem(240, MEMF_SLOW);
 //  yComp   = (int8_t *)AllocMem(240, MEMF_SLOW);
 
 }
 
 GLevel1Playfield::~GLevel1Playfield()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
+
+  delete mYOffset;
+  delete mXComp;
 }
 
 void GLevel1Playfield::Animate() {
@@ -47,11 +50,11 @@ void GLevel1Playfield::Animate() {
   mFrame++;
   for (int x = 0; x < 320; x++) {
 //    xOffset[x] = sin(mFrame * 0.15 + x * 0.06) * 4;
-    xComp[x] = sin(mFrame * 0.11 + x * 0.12) * 3;
+    mXComp[x] = sin(mFrame * 0.11 + x * 0.12) * 3.0f;
   }
 
   for (int y = 0; y < 240; y++) {
-    yOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 2;
+    mYOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 2.0f;
 //    yComp[y] = sin(mFrame * 0.07 + y * 0.15) * 4;
   }
 
@@ -68,13 +71,13 @@ void GLevel1Playfield::Render() {
 
 //  memset(mBackground->mPixels, 0, 320 * 240);
   int srcIndex = 8,
-      destIndex = 0;
+          destIndex = 0;
 
   for (uint8_t y = 0; y < 240; y++) {
     for (int x = 0; x < 320; x++) {
 
 //      dest[destIndex] = src[srcIndex];
-      dest[destIndex] = src[srcIndex + yOffset[y] + xComp[x]];
+      dest[destIndex] = src[srcIndex + mYOffset[y] + mXComp[x]];
 
       srcIndex++;
       destIndex++;
@@ -85,4 +88,3 @@ void GLevel1Playfield::Render() {
 
   mGameEngine->mGameBoard.Render();
 }
-

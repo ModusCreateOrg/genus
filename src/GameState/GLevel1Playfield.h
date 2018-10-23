@@ -14,6 +14,10 @@ public:
 public:
     GGameState *mGameEngine;
     BBitmap *mBackground;
+//    TInt8 *mYOffset;
+//    TInt8 *mXComp;
+   int8_t *mYOffset;
+   int8_t *mXComp;
     TInt64 mFrame;
     TUint8 mTextColor;
 };
