@@ -14,10 +14,10 @@
 //static int8_t xOffset[320], yOffset[240];
 //static int8_t xComp[320], yComp[240];
 
-int8_t *xOffset;
+//int8_t *xOffset;
 int8_t *yOffset;
 int8_t *xComp;
-int8_t *yComp;
+//int8_t *yComp;
 
 
 GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
@@ -25,15 +25,12 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
   mTextColor = 0;
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
   mFrame = 0;
-//  mBackground = new BBitmap(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_DEPTH);
-
-//  mBackground->SetPalette(mBackgroundSource, 0, 128);
 
 
-  xOffset = (int8_t *)AllocMem(320, MEMF_SLOW);
+//  xOffset = (int8_t *)AllocMem(320, MEMF_SLOW);
   xComp   = (int8_t *)AllocMem(320, MEMF_SLOW);
   yOffset = (int8_t *)AllocMem(240, MEMF_SLOW);
-  yComp   = (int8_t *)AllocMem(240, MEMF_SLOW);
+//  yComp   = (int8_t *)AllocMem(240, MEMF_SLOW);
 
 }
 
@@ -49,13 +46,13 @@ void GLevel1Playfield::Animate() {
   // This block will setup x and y offsets
   mFrame++;
   for (int x = 0; x < 320; x++) {
-    xOffset[x] = sin(mFrame * 0.15 + x * 0.06) * 4;
-    xComp[x] = sin(mFrame * 0.11 + x * 0.12) * 4;
+//    xOffset[x] = sin(mFrame * 0.15 + x * 0.06) * 4;
+    xComp[x] = sin(mFrame * 0.11 + x * 0.12) * 3;
   }
 
   for (int y = 0; y < 240; y++) {
-    yOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 4;
-    yComp[y] = sin(mFrame * 0.07 + y * 0.15) * 4;
+    yOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 2;
+//    yComp[y] = sin(mFrame * 0.07 + y * 0.15) * 4;
   }
 
   gDisplay.renderBitmap->SetPalette(mBackground, 0, 128);
