@@ -101,6 +101,8 @@ int main() {
   return 0;
 }
 
+#if 0
+// use this (or close to it) in playfield constructor
 void precalc() {
   const int xmax = 460;
   const int ymax = 480;
@@ -121,4 +123,4 @@ void precalc() {
     }
   }
 }
-
+#endif
