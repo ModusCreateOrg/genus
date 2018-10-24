@@ -93,6 +93,14 @@ TBool GGameProcess::TimedControl(TUint16 aButton) {
 }
 
 TBool GGameProcess::StateControl() {
+  if (gControls.WasPressed(BUTTON_START)) {
+    gGameEngine->RemoveSprite(mSprite);
+    delete mSprite;
+    mSprite = ENull;
+
+    gGame->SetState(GAME_STATE_GAMEOVER);
+    return EFalse;
+  }
   mRepeatTimer--;
   if (gControls.WasPressed(BUTTONA)) {
     mSprite->RotateLeft();

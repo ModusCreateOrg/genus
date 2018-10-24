@@ -58,8 +58,6 @@ TUint32 GGameBoard::CountScore() {
 }
 
 void GGameBoard::Render() {
-  BBitmap *bm = gDisplay.renderBitmap;
-
   // render the board
   TInt      y   = BOARD_Y;
   for (TInt row = 0; row < VISIBLE_BOARD_ROWS; row++) {

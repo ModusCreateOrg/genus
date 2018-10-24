@@ -19,7 +19,7 @@
 #include "GameState/GGameState.h"
 #include "GGameOverState.h"
 #include "GEnterHighScoreState.h"
-#include "GHighScoresState.h"
+#include "HighScoresState/GHighScoresState.h"
 #include "GMainOptionsState.h"
 #include "GCreditsState.h"
 

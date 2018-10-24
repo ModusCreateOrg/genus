@@ -2,7 +2,7 @@
 
 
 PROJECT_NAME=Genus
-EXTRA_COMPONENT_DIRS=${PROJECT_PATH}/creative-engine ${PROJECT_PATH}/src ${PROJECT_PATH}/src/GameState
+EXTRA_COMPONENT_DIRS=${PROJECT_PATH}/creative-engine ${PROJECT_PATH}/src ${PROJECT_PATH}/src/GameState ${PROJECT_PATH}/src/HighScoreState
 
 # COMPONENT_PATH=./src
 
