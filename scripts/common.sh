@@ -62,7 +62,7 @@ function ensure_arch_devtools_installed {
 
 function ensure_creative_engine {
     if [[ ! -d "$CREATIVE_ENGINE_DIR" ]]; then
-        git clone https://github.com/ModusCreateOrg/creative-engine.git "$CREATIVE_ENGINE_DIR"
+        git clone git@github.com:ModusCreateOrg/creative-engine.git "$CREATIVE_ENGINE_DIR"
     fi
 }
 

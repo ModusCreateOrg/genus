@@ -30,6 +30,7 @@ export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
 op=${1:-}
 SKIP_TOOLS_INSTALL=false
 SUDO="sudo"
+export SUDO
 
 case "$op" in
     clean)
@@ -50,10 +51,8 @@ elif [ "$OS" == "Darwin" ]; then
     # Install homebrew packages
     cd "$BASE_DIR"
     brew bundle install
-    brew install doxygen
-    brew install imagemagick
-    brew install SDL2
-    brew install SDL2_image
+    # Travis has an older brew version of cmake, be sure we have the latest or this will not build
+    brew upgrade cmake || true
 elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
     if [[ -n "$(which apt-get 2>/dev/null)" ]]; then
