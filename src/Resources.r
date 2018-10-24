@@ -11,16 +11,15 @@ BITMAP main_options1.bmp
 
 BITMAP charset.bmp
 BITMAP level1_sprites.bmp
-BITMAP level1_bkgnew.bmp
-BITMAP level1_bkg1a.bmp
-BITMAP level1_bkg1.bmp
-BITMAP level1_bkg2.bmp
-BITMAP level2_bkg1.bmp
+
 
 PATH ../resources/backgrounds/under_water
-
 BITMAP under_water.bmp
-BITMAP under_water_small.bmp
+
+PATH ../resources/backgrounds/cyberpunk/
+BITMAP cyberpunk0.bmp
+BITMAP cyberpunk1.bmp
+BITMAP cyberpunk2.bmp
 
 
 # .-=[  MUSIC  ]=-.

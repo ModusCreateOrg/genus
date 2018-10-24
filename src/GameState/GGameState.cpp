@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "GGameBoard.h"
 #include "GLevel1Playfield.h"
+#include "GLevel2Playfield.h"
 #include "GGameProcess.h"
 
 static const TUint8 GRID_COLOR = 253;;
@@ -18,6 +19,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 GGameState::~GGameState() {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
 }
 
 void GGameState::PreRender() {
@@ -34,11 +36,9 @@ void GGameState::LoadLevel() {
   switch (mLevel) {
     case 1:
     default:
-      gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-      gResourceManager.LoadBitmap(UNDER_WATER_BMP, BKG_SLOT, IMAGE_ENTIRE);
-//      gResourceManager.LoadBitmap(UNDER_WATER_SMALL_BMP, BKG_SLOT, IMAGE_ENTIRE);
+
       delete mPlayfield;
-      mPlayfield = new GLevel1Playfield(this);
+      mPlayfield = new GLevel2Playfield(this);
 
       gSoundPlayer.PlayMusic(SONG1_S3M);
       break;
@@ -59,10 +59,10 @@ void GGameState::LoadLevel() {
 #ifdef RENDER_GRID
   // draw grid on backgrounds
   for (TInt row = 0; row < VISIBLE_BOARD_ROWS + 1; row++) {
-    mBackground->DrawFastHLine(ENull, BOARD_X, BOARD_Y + row * 16, VISIBLE_BOARD_COLS * 16, GRID_COLOR);
+    mBackground0->DrawFastHLine(ENull, BOARD_X, BOARD_Y + row * 16, VISIBLE_BOARD_COLS * 16, GRID_COLOR);
   }
   for (TInt col = 0; col < VISIBLE_BOARD_COLS + 1; col++) {
-    mBackground->DrawFastVLine(ENull, BOARD_X + col * 16, BOARD_Y, VISIBLE_BOARD_ROWS * 16, GRID_COLOR);
+    mBackground0->DrawFastVLine(ENull, BOARD_X + col * 16, BOARD_Y, VISIBLE_BOARD_ROWS * 16, GRID_COLOR);
   }
 #endif
 }
