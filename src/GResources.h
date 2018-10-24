@@ -7,8 +7,13 @@
 // BBitmap Slots
 static const TUint16 BKG_SLOT    = 0;
 static const TUint16 BKG2_SLOT   = 1;
-static const TUint16 PLAYER_SLOT = 2;
-static const TUint16 FONT_SLOT   = 3;
+static const TUint16 BKG3_SLOT   = 2;
+static const TUint16 PLAYER_SLOT = 3;
+static const TUint16 FONT_SLOT   = 4;
+
+// Song slot
+static const TUint8 SONG_SLOT    = 90;
+
 
 // Image Numbers on the sprite sheet
 static const TUint16 IMG_BLOCK1 = 0;
@@ -51,6 +56,5 @@ static const TUint8 COLOR_TIMERINNER  = 250;
 static const TUint8 COLOR_TIMERBORDER = 251;
 static const TUint8 COLOR_TEXT        = 252;
 static const TUint8 COLOR_GAMEOVER    = 253;
-static const TUint8 SONG_SLOT         = 90;
 
 #endif //GRESOURCES_H
