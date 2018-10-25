@@ -75,6 +75,7 @@ else
 fi
 
 ensure_creative_engine
+(cd $BASE_DIR && checkout_creative_engine_branch)
 build
 copy_sdl2_libs_to_app
 (cd $BASE_DIR && make docs)

@@ -163,3 +163,17 @@ function copy_sdl2_libs_to_app {
     fi
 }
 
+function checkout_creative_engine_branch {
+    DEFAULT_BRANCH="master"
+    GENUS_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
+    echo "The current genus branch is: $GENUS_BRANCH"
+    if (cd creative-engine && git checkout $GENUS_BRANCH); then
+        echo "Checked out creatine-engine branch: $GENUS_BRANCH"
+    elif (cd creative-engine && git checkout $DEFAULT_BRANCH); then
+        echo "Checked out creatine-engine branch: $DEFAULT_BRANCH"
+    else
+        echo "Faied to checkout a branch for creatine-engine!"
+        exit -1
+    fi
+}
+
