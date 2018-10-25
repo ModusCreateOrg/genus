@@ -49,13 +49,13 @@ function ensure_cmake {
 
 function ensure_debian_devtools_installed {
     $SUDO apt-get -qq update
-    $SUDO apt-get -qq install build-essential git libsdl2-dev libsdl2-image-dev curl
+    $SUDO apt-get -qq install build-essential git libsdl2-dev libsdl2-image-dev curl doxygen imagemagick
     # Ubuntu 18.04 has an old cmake (3.9) so install a newer one from binaries from cmake
     ensure_cmake
 }
 
 function ensure_arch_devtools_installed {
-    $SUDO pacman -Sqyyu --noconfirm base-devel libglvnd sdl2 sdl2_image curl
+    $SUDO pacman -Sqyyu --noconfirm base-devel libglvnd sdl2 sdl2_image curl doxygen imagemagick
     # Use same version of cmake as for ubuntu
     ensure_cmake
 }
