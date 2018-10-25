@@ -30,6 +30,7 @@ GLevel2Playfield::GLevel2Playfield(GGameState *aGameEngine) {
 
   printf("mBackground0 dimensions: %i x %i\n", mBackground0->Width(), mBackground0->Height());
   printf("mBackground1 dimensions: %i x %i\n", mBackground1->Width(), mBackground1->Height());
+
   printf("mBackground2 dimensions: %i x %i\n", mBackground2->Width(), mBackground2->Height());
 }
 
@@ -40,30 +41,9 @@ GLevel2Playfield::~GLevel2Playfield()  {
   delete mBackground0;
   delete mBackground1;
   delete mBackground2;
-
 }
 
-void GLevel2Playfield::Animate() {
-  mTextColor += 1;
-  mTextColor %= 64;
-  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
-  bgOffset0 += .01;
-  if ((mBackground0->Width() - (int)bgOffset0) < 1) {
-    bgOffset0 = 0;
-  }
-
-  bgOffset1 += .03;
-  if ((mBackground1->Width() - (int)bgOffset1) < 1) {
-    bgOffset0 = 0;
-  }
-
-  bgOffset2 += .07;
-  if ((mBackground2->Width() - (int)bgOffset2) < 1) {
-    bgOffset2= 0;
-  }
-
-}
 void GLevel2Playfield::DrawScrolledBackground(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset) {
 
   int canvasWidth     = gDisplay.renderBitmap->Width(),
@@ -173,7 +153,28 @@ void GLevel2Playfield::DrawScrolledBackgroundWithTransparency(BBitmap *aBitmap, 
     }
   }
 
+}
 
+
+void GLevel2Playfield::Animate() {
+  mTextColor += 1;
+  mTextColor %= 64;
+  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
+
+  bgOffset0 += .01;
+  if ((mBackground0->Width() - (int)bgOffset0) < 1) {
+    bgOffset0 = 0;
+  }
+
+  bgOffset1 += .03;
+  if ((mBackground1->Width() - (int)bgOffset1) < 1) {
+    bgOffset0 = 0;
+  }
+
+  bgOffset2 += 2;
+  if ((mBackground2->Width() - (int)bgOffset2) < 1) {
+    bgOffset2= 0;
+  }
 
 }
 
@@ -186,6 +187,6 @@ void GLevel2Playfield::Render() {
   DrawScrolledBackgroundWithTransparency(mBackground1, bgOffset1, 30);
   DrawScrolledBackgroundWithTransparency(mBackground2, bgOffset2, gDisplay.renderBitmap->Height() - mBackground2->Height() + 1);
 
-  mGameEngine->mGameBoard.Render();
+//  mGameEngine->mGameBoard.Render();
 }
 

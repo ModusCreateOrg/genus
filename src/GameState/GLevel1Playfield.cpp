@@ -1,7 +1,4 @@
-//
-// Created by mschwartz on 10/21/18.
-//
-
+// Created by jaygarcia on 10/23/18.
 #include "Game.h"
 #include "GLevel1Playfield.h"
 
@@ -11,76 +8,185 @@
 #include "freertos/FreeRTOS.h"
 #endif
 
-//int8_t *xOffset;
-
-//int8_t *yComp;
-
 
 GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-  gResourceManager.LoadBitmap(UNDER_WATER_BMP, BKG_SLOT, IMAGE_ENTIRE);
 
-  gDisplay.renderBitmap->SetPalette(mBackground, 0, 128);
+  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+  gResourceManager.LoadBitmap(CYBERPUNK0_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(CYBERPUNK1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(CYBERPUNK2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
+
 
   mGameEngine = aGameEngine;
   mTextColor = 0;
-  mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  mFrame = 0; // TODO: mFrame could be TFloat
 
+  bgOffset0 = 0;
+  bgOffset1 = 0;
+  bgOffset2 = 0;
 
-//  xOffset = (int8_t *)AllocMem(320, MEMF_SLOW);
-  mXComp   = (int8_t *)AllocMem(320, MEMF_SLOW);
-  mYOffset = (int8_t *)AllocMem(240, MEMF_SLOW);
-//  yComp   = (int8_t *)AllocMem(240, MEMF_SLOW);
+  mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
+  mBackground1 = gResourceManager.GetBitmap(BKG2_SLOT);
+  mBackground2 = gResourceManager.GetBitmap(BKG3_SLOT);
 
+  printf("mBackground0 dimensions: %i x %i\n", mBackground0->Width(), mBackground0->Height());
+  printf("mBackground1 dimensions: %i x %i\n", mBackground1->Width(), mBackground1->Height());
+
+  printf("mBackground2 dimensions: %i x %i\n", mBackground2->Width(), mBackground2->Height());
 }
 
 GLevel1Playfield::~GLevel1Playfield()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-
-  delete mYOffset;
-  delete mXComp;
+  gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
+  delete mBackground0;
+  delete mBackground1;
+  delete mBackground2;
 }
+
+
+void GLevel1Playfield::DrawScrolledBackground(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset) {
+
+  int canvasWidth     = gDisplay.renderBitmap->Width(),
+          remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
+          bgWidth         = aBitmap->Width(),
+          bgHeight        = aBitmap->Height(),
+          priorDrawWidth = 0;
+
+  while (remainDrawWidth > 0) {
+    int drawWidth;
+
+    uint8_t *src = aBitmap->mPixels,
+            *dest = gDisplay.renderBitmap->mPixels;
+
+    //TODO: Figure out how to draw images LARGER than the canvas!
+    if (remainDrawWidth == canvasWidth) {
+      // 1st pass
+      drawWidth = bgWidth - (int)aBackgroundOffsetH;
+      dest += aVerticalOffset * 320;
+      src  += (uint8_t)aBackgroundOffsetH;
+    }
+    else {
+      //All other passes
+      drawWidth = (bgWidth < remainDrawWidth) ? bgWidth : remainDrawWidth;
+      dest += (aVerticalOffset * 320) + priorDrawWidth;
+    }
+
+    for (int y = 0; y < bgHeight; y++) {
+      memcpy(dest, src, drawWidth);
+
+      dest += canvasWidth;
+      src += bgWidth;
+    }
+
+    priorDrawWidth += drawWidth;
+    remainDrawWidth -= drawWidth;
+
+    if (remainDrawWidth < 1) {
+      return;
+    }
+  }
+}
+void GLevel1Playfield::DrawScrolledBackgroundWithTransparency(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset) {
+
+  uint8_t *src  = aBitmap->mPixels,
+          *dest = gDisplay.renderBitmap->mPixels;
+
+  int canvasWidth     = gDisplay.renderBitmap->Width(),
+          remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
+          bgWidth         = aBitmap->Width(),
+          bgHeight        = aBitmap->Height(),
+          srcIndex        = 0,
+          destIndex       = 0;
+
+
+  int priorDrawWidth = 0;
+
+  while (remainDrawWidth > 0) {
+    int drawWidth;
+
+    //TODO: Figure out how to draw images LARGER than the canvas!
+    if (remainDrawWidth == canvasWidth) {
+      // 1st pass
+      drawWidth = bgWidth - (int)aBackgroundOffsetH;
+      destIndex = aVerticalOffset * 320;
+      srcIndex  = (uint8_t)aBackgroundOffsetH;
+    }
+    else {
+      //All other passes
+      drawWidth = (bgWidth < remainDrawWidth) ? bgWidth : remainDrawWidth;
+      destIndex = (aVerticalOffset * 320) + priorDrawWidth;
+      srcIndex = 0;
+    }
+
+
+    for (int y = 0; y < bgHeight; y++) {
+      for (int x = 0; x < drawWidth; x++) {
+        uint8_t srcVal = src[srcIndex];
+
+        if (srcVal != aBitmap->TransparentColor()) {
+          dest[destIndex] = srcVal;
+        }
+
+        destIndex++;
+        srcIndex++;
+
+        if (destIndex > 76800) {
+          return;
+        }
+
+      }
+
+      srcIndex += bgWidth - drawWidth;
+      if (remainDrawWidth == canvasWidth) {
+        destIndex = (y + aVerticalOffset) * 320;
+      }
+      else {
+        destIndex = ((y + aVerticalOffset) * 320) + priorDrawWidth;
+      }
+    }
+
+    priorDrawWidth += drawWidth;
+    remainDrawWidth -= drawWidth;
+
+    if (remainDrawWidth < 1) {
+      return;
+    }
+  }
+
+}
+
 
 void GLevel1Playfield::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
   gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
-  // This block will setup x and y offsets
-  mFrame++;
-  for (int x = 0; x < 320; x++) {
-//    xOffset[x] = sin(mFrame * 0.15 + x * 0.06) * 4;
-    mXComp[x] = sin(mFrame * 0.11 + x * 0.12) * 3.0f;
+  bgOffset0 += .01;
+  if ((mBackground0->Width() - (int)bgOffset0) < 1) {
+    bgOffset0 = 0;
   }
 
-  for (int y = 0; y < 240; y++) {
-    mYOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 2.0f;
-//    yComp[y] = sin(mFrame * 0.07 + y * 0.15) * 4;
+  bgOffset1 += .03;
+  if ((mBackground1->Width() - (int)bgOffset1) < 1) {
+    bgOffset0 = 0;
+  }
+
+  bgOffset2 += 2;
+  if ((mBackground2->Width() - (int)bgOffset2) < 1) {
+    bgOffset2= 0;
   }
 
 }
 
 void GLevel1Playfield::Render() {
-  uint8_t *src = mBackground->mPixels,
-          *dest = gDisplay.renderBitmap->mPixels;
 
+//  memset(gDisplay.renderBitmap->mPixels, 0, 320*240);
 
-//  memset(mBackground->mPixels, 0, 320 * 240);
-  int srcIndex = 8,
-          destIndex = 0;
+  DrawScrolledBackground(mBackground0, bgOffset0, 0);
 
-  for (uint8_t y = 0; y < 240; y++) {
-    for (int x = 0; x < 320; x++) {
-      dest[destIndex] = src[srcIndex + mYOffset[y] + mXComp[x]];
+  DrawScrolledBackgroundWithTransparency(mBackground1, bgOffset1, 30);
+  DrawScrolledBackgroundWithTransparency(mBackground2, bgOffset2, gDisplay.renderBitmap->Height() - mBackground2->Height() + 1);
 
-      srcIndex++;
-      destIndex++;
-    }
-
-    srcIndex += 16;
-  }
-
-  mGameEngine->mGameBoard.Render();
+//  mGameEngine->mGameBoard.Render();
 }
+
