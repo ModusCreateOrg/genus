@@ -11,9 +11,11 @@ public:
   GLevel2Playfield(GGameState *aGameEngine);
   ~GLevel2Playfield();
 
-public:
+
   void Animate();
   void Render();
+
+
 public:
   GGameState *mGameEngine;
   BBitmap *mBackground0;
@@ -24,8 +26,11 @@ public:
   float bgOffset1;
   float bgOffset2;
 
-  TInt64 mFrame;
   TUint8 mTextColor;
+private:
+  void DrawScrolledBackgroundWithTransparency(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset);
+  void DrawScrolledBackground(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset);
+
 };
 
 

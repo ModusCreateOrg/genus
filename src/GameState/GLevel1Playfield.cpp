@@ -20,10 +20,12 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(UNDER_WATER_BMP, BKG_SLOT, IMAGE_ENTIRE);
 
+  gDisplay.renderBitmap->SetPalette(mBackground, 0, 128);
+
   mGameEngine = aGameEngine;
   mTextColor = 0;
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  mFrame = 0;
+  mFrame = 0; // TODO: mFrame could be TFloat
 
 
 //  xOffset = (int8_t *)AllocMem(320, MEMF_SLOW);
@@ -58,13 +60,9 @@ void GLevel1Playfield::Animate() {
 //    yComp[y] = sin(mFrame * 0.07 + y * 0.15) * 4;
   }
 
-  gDisplay.renderBitmap->SetPalette(mBackground, 0, 128);
 }
 
 void GLevel1Playfield::Render() {
-//  gDisplay.renderBitmap->CopyPixels(mBackground);
-
-
   uint8_t *src = mBackground->mPixels,
           *dest = gDisplay.renderBitmap->mPixels;
 
@@ -75,8 +73,6 @@ void GLevel1Playfield::Render() {
 
   for (uint8_t y = 0; y < 240; y++) {
     for (int x = 0; x < 320; x++) {
-
-//      dest[destIndex] = src[srcIndex];
       dest[destIndex] = src[srcIndex + mYOffset[y] + mXComp[x]];
 
       srcIndex++;

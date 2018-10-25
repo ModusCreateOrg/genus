@@ -16,6 +16,7 @@ GLevel2Playfield::GLevel2Playfield(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(CYBERPUNK1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(CYBERPUNK2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
 
+
   mGameEngine = aGameEngine;
   mTextColor = 0;
 
@@ -27,12 +28,9 @@ GLevel2Playfield::GLevel2Playfield(GGameState *aGameEngine) {
   mBackground1 = gResourceManager.GetBitmap(BKG2_SLOT);
   mBackground2 = gResourceManager.GetBitmap(BKG3_SLOT);
 
-  mFrame = 0;
-
   printf("mBackground0 dimensions: %i x %i\n", mBackground0->Width(), mBackground0->Height());
   printf("mBackground1 dimensions: %i x %i\n", mBackground1->Width(), mBackground1->Height());
   printf("mBackground2 dimensions: %i x %i\n", mBackground2->Width(), mBackground2->Height());
-
 }
 
 GLevel2Playfield::~GLevel2Playfield()  {
@@ -50,173 +48,143 @@ void GLevel2Playfield::Animate() {
   mTextColor %= 64;
   gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
-  gDisplay.renderBitmap->SetPalette(mBackground0, 0, 128);
-
   bgOffset0 += .01;
+  if ((mBackground0->Width() - (int)bgOffset0) < 1) {
+    bgOffset0 = 0;
+  }
+
   bgOffset1 += .03;
-  bgOffset2 += .05;
+  if ((mBackground1->Width() - (int)bgOffset1) < 1) {
+    bgOffset0 = 0;
+  }
+
+  bgOffset2 += .07;
+  if ((mBackground2->Width() - (int)bgOffset2) < 1) {
+    bgOffset2= 0;
+  }
+
+}
+void GLevel2Playfield::DrawScrolledBackground(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset) {
+
+  int canvasWidth     = gDisplay.renderBitmap->Width(),
+      remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
+      bgWidth         = aBitmap->Width(),
+      bgHeight        = aBitmap->Height(),
+      priorDrawWidth = 0;
+
+  while (remainDrawWidth > 0) {
+    int drawWidth;
+
+    uint8_t *src = aBitmap->mPixels,
+            *dest = gDisplay.renderBitmap->mPixels;
+
+    //TODO: Figure out how to draw images LARGER than the canvas!
+    if (remainDrawWidth == canvasWidth) {
+      // 1st pass
+      drawWidth = bgWidth - (int)aBackgroundOffsetH;
+      dest += aVerticalOffset * 320;
+      src  += (uint8_t)aBackgroundOffsetH;
+    }
+    else {
+      //All other passes
+      drawWidth = (bgWidth < remainDrawWidth) ? bgWidth : remainDrawWidth;
+      dest += (aVerticalOffset * 320) + priorDrawWidth;
+    }
+
+    for (int y = 0; y < bgHeight; y++) {
+      memcpy(dest, src, drawWidth);
+
+      dest += canvasWidth;
+      src += bgWidth;
+    }
+
+    priorDrawWidth += drawWidth;
+    remainDrawWidth -= drawWidth;
+
+    if (remainDrawWidth < 1) {
+      return;
+    }
+  }
+}
+void GLevel2Playfield::DrawScrolledBackgroundWithTransparency(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset) {
+
+  uint8_t *src  = aBitmap->mPixels,
+          *dest = gDisplay.renderBitmap->mPixels;
+
+  int canvasWidth     = gDisplay.renderBitmap->Width(),
+      remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
+      bgWidth         = aBitmap->Width(),
+      bgHeight        = aBitmap->Height(),
+      srcIndex        = 0,
+      destIndex       = 0;
+
+
+  int priorDrawWidth = 0;
+
+  while (remainDrawWidth > 0) {
+    int drawWidth;
+
+    //TODO: Figure out how to draw images LARGER than the canvas!
+    if (remainDrawWidth == canvasWidth) {
+      // 1st pass
+      drawWidth = bgWidth - (int)aBackgroundOffsetH;
+      destIndex = aVerticalOffset * 320;
+      srcIndex  = (uint8_t)aBackgroundOffsetH;
+    }
+    else {
+      //All other passes
+      drawWidth = (bgWidth < remainDrawWidth) ? bgWidth : remainDrawWidth;
+      destIndex = (aVerticalOffset * 320) + priorDrawWidth;
+      srcIndex = 0;
+    }
+
+
+    for (int y = 0; y < bgHeight; y++) {
+      for (int x = 0; x < drawWidth; x++) {
+        uint8_t srcVal = src[srcIndex];
+
+        if (srcVal != aBitmap->TransparentColor()) {
+          dest[destIndex] = srcVal;
+        }
+
+        destIndex++;
+        srcIndex++;
+
+        if (destIndex > 76800) {
+          return;
+        }
+
+      }
+
+      srcIndex += bgWidth - drawWidth;
+      if (remainDrawWidth == canvasWidth) {
+        destIndex = (y + aVerticalOffset) * 320;
+      }
+      else {
+        destIndex = ((y + aVerticalOffset) * 320) + priorDrawWidth;
+      }
+    }
+
+    priorDrawWidth += drawWidth;
+    remainDrawWidth -= drawWidth;
+
+    if (remainDrawWidth < 1) {
+      return;
+    }
+  }
+
+
+
 }
 
 void GLevel2Playfield::Render() {
 
-  //TODO:  @jaygarcia Clean up!
-  
-  uint8_t *src = mBackground0->mPixels,
-          *dest = gDisplay.renderBitmap->mPixels;
+//  memset(gDisplay.renderBitmap->mPixels, 0, 320*240);
 
-  int canvasWidth = gDisplay.renderBitmap->Width(),
-      bg0Height = mBackground0->Height(),
-      bg0Width  = mBackground0->Width(),
-      bg1Height = mBackground1->Height(),
-      bg1Width  = mBackground1->Width(),
-      bg2Height = mBackground2->Height(),
-      bg2Width  = mBackground2->Width();
+  DrawScrolledBackground(mBackground0, bgOffset0, 0);
 
-
-  /*** PAINT BACK MOST LAYER (mBackground0) ***/
-  int drawWidth = bg0Width - (int)bgOffset0;
-
-  if (drawWidth < 1) {
-    drawWidth = 0;
-    bgOffset0 = 0;
-  }
-
-  // paint initial block
-  src += (uint8_t)bgOffset0;
-  for (int y = 0; y < bg0Height; y++) {
-    memcpy(dest, src, drawWidth);
-    dest += canvasWidth;
-    src += bg0Width;
-  }
-
-  // Second block
-  // Reset the pointer. Can we do dest = 0?
-  dest = gDisplay.renderBitmap->mPixels;
-  src = mBackground0->mPixels;
-  dest += drawWidth; // fast forward the pointer
-
-  int widthDiff = 320 - drawWidth;
-
-  for (int y = 0; y < bg0Height; y++) {
-    memcpy(dest, src, widthDiff);
-    dest += canvasWidth;
-    src += bg0Width;
-  }
-
-
-  /*** PAINT MIDDLE LAYER (mBackground1) ***/
-  int bg1StartHeight = 30;
-  src = mBackground1->mPixels;
-  dest = gDisplay.renderBitmap->mPixels;
-
-  drawWidth = bg1Width - (uint8_t)bgOffset1;
-
-  if (drawWidth < 1) {
-    drawWidth = 0;
-    bgOffset1 = 0;
-  }
-
-  int srcIndex = (uint8_t)bgOffset1;
-  int destIndex = bg1StartHeight * 320;
-
-  // paint initial block
-  for (int y = 0; y < bg1Height; y++) {
-    for (int x = 0; x < drawWidth; x++) {
-      uint8_t srcVal = src[srcIndex];
-
-      if (srcVal != mBackground0->TransparentColor()) {
-        dest[destIndex] = srcVal;
-      }
-
-      destIndex++;
-      srcIndex++;
-    }
-
-    srcIndex += bg1Width - drawWidth;
-    destIndex = (y + bg1StartHeight) * 320;
-  }
-
-
-
-  // Second block
-  srcIndex = 0;
-  int secondDrawWidth = 320 - drawWidth;
-  destIndex = drawWidth + (bg1StartHeight * 320); // fast forward the pointer
-
-  for (int y = 0; y < bg1Height; y++) {
-    for (int x = 0; x < secondDrawWidth; x++) {
-      uint8_t srcVal = src[srcIndex];
-
-      if (srcVal != mBackground0->TransparentColor()) {
-        dest[destIndex] = srcVal;
-      }
-
-      destIndex++;
-      srcIndex++;
-    }
-
-    srcIndex += bg1Width - secondDrawWidth;
-    destIndex = ((y + bg1StartHeight) * 320) + drawWidth;
-  }
-
-
-
-
-
-  /*** PAINT LAST LAYER (mBackground2) ***/
-  int bg2StartHeight = 240 - bg2Height + 1;
-  src = mBackground2->mPixels;
-
-  drawWidth = bg1Width - (uint8_t)bgOffset2;
-
-  if (drawWidth < 1) {
-    drawWidth = 0;
-    bgOffset2 = 0;
-  }
-
-  srcIndex = (uint8_t)bgOffset2;
-  destIndex = bg2StartHeight * 320;
-
-  // paint initial block
-  for (int y = 0; y < bg2Height; y++) {
-    for (int x = 0; x < drawWidth; x++) {
-      uint8_t srcVal = src[srcIndex];
-
-      if (srcVal != mBackground1->TransparentColor()) {
-        dest[destIndex] = srcVal;
-      }
-
-      destIndex++;
-      srcIndex++;
-    }
-
-    srcIndex += bg2Width - drawWidth;
-    destIndex = (y + bg2StartHeight) * 320;
-  }
-
-
-  // Second block
-  srcIndex = 0;
-  secondDrawWidth = 320 - drawWidth;
-  destIndex = drawWidth + (bg2StartHeight * 320); // fast forward the pointer
-
-  for (int y = 0; y < bg2Height; y++) {
-    for (int x = 0; x < secondDrawWidth; x++) {
-      uint8_t srcVal = src[srcIndex];
-
-      if (srcVal != mBackground1->TransparentColor()) {
-        dest[destIndex] = srcVal;
-      }
-
-      destIndex++;
-      srcIndex++;
-    }
-
-    srcIndex += bg2Width - secondDrawWidth;
-    destIndex = ((y + bg2StartHeight) * 320) + drawWidth;
-  }
-
-
+  DrawScrolledBackgroundWithTransparency(mBackground1, bgOffset1, 30);
+  DrawScrolledBackgroundWithTransparency(mBackground2, bgOffset2, gDisplay.renderBitmap->Height() - mBackground2->Height() + 1);
 
   mGameEngine->mGameBoard.Render();
 }
