@@ -77,6 +77,7 @@ fi
 ensure_creative_engine
 build
 copy_sdl2_libs_to_app
+(cd $BASE_DIR && make docs)
 
 
 
