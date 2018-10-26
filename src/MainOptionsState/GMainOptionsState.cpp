@@ -40,6 +40,7 @@ public:
   BBitmap *mBackground;
 };
 
+
 GMainOptionsState::GMainOptionsState() : BGameEngine(gViewPort) {
   mPlayfield = new GMainOptionsPlayfield();
   auto *p = new GMainOptionsProcess();

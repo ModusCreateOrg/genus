@@ -12,7 +12,7 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
 }
 
 GLevel1Playfield::~GLevel1Playfield()  {
-  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  //
 }
 
 void GLevel1Playfield::Animate() {

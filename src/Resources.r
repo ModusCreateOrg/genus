@@ -9,6 +9,7 @@ BITMAP high_scores1.bmp
 BITMAP main_menu1.bmp
 BITMAP main_options1.bmp
 
+
 BITMAP charset.bmp
 BITMAP level1_sprites.bmp
 BITMAP level1_bkgnew.bmp

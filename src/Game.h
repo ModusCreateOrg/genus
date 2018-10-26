@@ -14,13 +14,13 @@
 #include "GGame.h"
 
 // GGameEngine states
-#include "GSplashState.h"
-#include "GMainMenuState.h"
+#include "SplashState/GSplashState.h"
+#include "MainMenuState/GMainMenuState.h"
 #include "GameState/GGameState.h"
 #include "GGameOverState.h"
 #include "GEnterHighScoreState.h"
 #include "HighScoresState/GHighScoresState.h"
-#include "GMainOptionsState.h"
+#include "MainOptionsState/GMainOptionsState.h"
 #include "GCreditsState.h"
 
 extern BViewPort   *gViewPort;

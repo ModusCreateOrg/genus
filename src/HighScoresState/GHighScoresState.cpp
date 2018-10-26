@@ -32,7 +32,6 @@ public:
     gResourceManager.LoadBitmap(HIGH_SCORES1_BMP, BKG_SLOT, IMAGE_ENTIRE);
     mBackground = gResourceManager.GetBitmap(BKG_SLOT);
     gDisplay.SetPalette(mBackground);
-
   }
 
   virtual ~GHighScoresPlayfield() {
@@ -46,7 +45,6 @@ public:
 
 public:
   BBitmap        *mBackground;
-  HighScoreTable mHighScoreTable;
 };
 
 GHighScoresState::GHighScoresState() : BGameEngine(gViewPort) {
@@ -58,6 +56,8 @@ GHighScoresState::GHighScoresState() : BGameEngine(gViewPort) {
   BStore f("Genus");
   if (!f.Get("high_scores", &mHighScoreTable, sizeof(mHighScoreTable))) {
     mHighScoreTable.Reset();
+    f.Set("high_scores", &mHighScoreTable, sizeof(mHighScoreTable));
+    printf("Set High Scores\n");
   }
 
   gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
@@ -65,6 +65,10 @@ GHighScoresState::GHighScoresState() : BGameEngine(gViewPort) {
 }
 
 GHighScoresState::~GHighScoresState() {
+  delete mFont;
+  mFont = ENull;
+  delete mPlayfield;
+  mPlayfield = ENull;
 }
 
 void GHighScoresState::PostRender() {

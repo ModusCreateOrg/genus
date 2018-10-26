@@ -61,6 +61,7 @@ GMainMenuState::GMainMenuState() : BGameEngine(gViewPort) {
 }
 
 GMainMenuState::~GMainMenuState() {
-  // delete mPlayfield
+   delete mPlayfield;
+   mPlayfield = ENull;
 }
 
