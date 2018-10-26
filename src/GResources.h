@@ -8,7 +8,10 @@
 static const TUint16 BKG_SLOT    = 0;
 static const TUint16 BKG2_SLOT   = 1;
 static const TUint16 PLAYER_SLOT = 2;
-static const TUint16 FONT_SLOT   = 3;
+
+// Font Slots
+static const TUint16 FONT_8x8_SLOT   = 3;
+static const TUint16 FONT_16x16_SLOT = 4;
 
 // Image Numbers on the sprite sheet
 static const TUint16 IMG_BLOCK1 = 0;
