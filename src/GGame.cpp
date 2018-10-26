@@ -4,7 +4,7 @@ GGame::GGame() {
   // TODO: Jay - this needs to be in BApplication constructor (I think)
   gSoundPlayer.Init(3, 6);
 
-  gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
+  gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
 
   gViewPort = new BViewPort();
   gViewPort->Offset(0, 0);
