@@ -52,8 +52,13 @@ static const TUint16 IMG_LEVEL = 80; // LEVEL is 32 wide
 
 static const TUint8 COLOR_TIMERINNER  = 250;
 static const TUint8 COLOR_TIMERBORDER = 251;
+
+static const TUint8 COLOR_MENU_TITLE  = 251;
 static const TUint8 COLOR_TEXT        = 252;
+static const TUint8 COLOR_TEXT_BG     = 255;
 static const TUint8 COLOR_GAMEOVER    = 253;
-static const TUint8 SONG_SLOT         = 90;
+
+// BRaw slots
+static const TUint8 SONG_SLOT         = 1;
 
 #endif //GRESOURCES_H

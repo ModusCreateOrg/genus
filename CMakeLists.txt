@@ -7,7 +7,14 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 # resource compiler
 set(RCOMP "${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/tools/rcomp")
 
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/src ${CMAKE_BINARY_DIR} /usr/local/include)
+INCLUDE_DIRECTORIES(
+        ${SDL2_INCLUDE_DIRS}
+        ${SDL2IMAGE_INCLUDE_DIRS}
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/src/Widgets
+        ${CMAKE_BINARY_DIR} /usr/local/include
+        )
 
 # external libraries
 INCLUDE(FindPkgConfig)
@@ -68,7 +75,7 @@ add_executable(genus
         ${LIBXMP_SRC}
         ${CREATIVE_ENGINE}
         ${GENUS_SRC}
-        )
+        creative-engine/src/Widgets/BWidget.cpp creative-engine/src/Widgets/BWidget.h src/MainOptionsState/GMainOptionsWIdget.cpp src/MainOptionsState/GMainOptionsWIdget.h creative-engine/src/Widgets/BSelectWidget.cpp creative-engine/src/Widgets/BSelectWidget.h creative-engine/src/Widgets/BMenuWidget.cpp creative-engine/src/Widgets/BMenuWidget.h creative-engine/src/Widgets/Widgets.h creative-engine/src/Widgets/BContainerWidget.cpp creative-engine/src/Widgets/BContainerWidget.h)
 
 # make genus.app
 if(APPLE)

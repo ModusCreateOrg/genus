@@ -60,8 +60,8 @@ GHighScoresState::GHighScoresState() : BGameEngine(gViewPort) {
     printf("Set High Scores\n");
   }
 
-  gResourceManager.LoadBitmap(CHARSET_BMP, FONT_SLOT, IMAGE_8x8);
-  mFont = new BFont(gResourceManager.GetBitmap(FONT_SLOT), FONT_8x8);
+  gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
+  mFont = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
 }
 
 GHighScoresState::~GHighScoresState() {
