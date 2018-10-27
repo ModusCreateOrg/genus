@@ -44,116 +44,6 @@ GLevel2Playfield::~GLevel2Playfield()  {
 }
 
 
-void GLevel2Playfield::DrawScrolledBackground(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset) {
-
-  int canvasWidth     = gDisplay.renderBitmap->Width(),
-      remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
-      bgWidth         = aBitmap->Width(),
-      bgHeight        = aBitmap->Height(),
-      priorDrawWidth = 0;
-
-  while (remainDrawWidth > 0) {
-    int drawWidth;
-
-    uint8_t *src = aBitmap->mPixels,
-            *dest = gDisplay.renderBitmap->mPixels;
-
-    //TODO: Figure out how to draw images LARGER than the canvas!
-    if (remainDrawWidth == canvasWidth) {
-      // 1st pass
-      drawWidth = bgWidth - (int)aBackgroundOffsetH;
-      dest += aVerticalOffset * 320;
-      src  += (uint8_t)aBackgroundOffsetH;
-    }
-    else {
-      //All other passes
-      drawWidth = (bgWidth < remainDrawWidth) ? bgWidth : remainDrawWidth;
-      dest += (aVerticalOffset * 320) + priorDrawWidth;
-    }
-
-    for (int y = 0; y < bgHeight; y++) {
-      memcpy(dest, src, drawWidth);
-
-      dest += canvasWidth;
-      src += bgWidth;
-    }
-
-    priorDrawWidth += drawWidth;
-    remainDrawWidth -= drawWidth;
-
-    if (remainDrawWidth < 1) {
-      return;
-    }
-  }
-}
-void GLevel2Playfield::DrawScrolledBackgroundWithTransparency(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset) {
-
-  uint8_t *src  = aBitmap->mPixels,
-          *dest = gDisplay.renderBitmap->mPixels;
-
-  int canvasWidth     = gDisplay.renderBitmap->Width(),
-      remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
-      bgWidth         = aBitmap->Width(),
-      bgHeight        = aBitmap->Height(),
-      srcIndex        = 0,
-      destIndex       = 0;
-
-
-  int priorDrawWidth = 0;
-
-  while (remainDrawWidth > 0) {
-    int drawWidth;
-
-    //TODO: Figure out how to draw images LARGER than the canvas!
-    if (remainDrawWidth == canvasWidth) {
-      // 1st pass
-      drawWidth = bgWidth - (int)aBackgroundOffsetH;
-      destIndex = aVerticalOffset * 320;
-      srcIndex  = (uint8_t)aBackgroundOffsetH;
-    }
-    else {
-      //All other passes
-      drawWidth = (bgWidth < remainDrawWidth) ? bgWidth : remainDrawWidth;
-      destIndex = (aVerticalOffset * 320) + priorDrawWidth;
-      srcIndex = 0;
-    }
-
-
-    for (int y = 0; y < bgHeight; y++) {
-      for (int x = 0; x < drawWidth; x++) {
-        uint8_t srcVal = src[srcIndex];
-
-        if (srcVal != aBitmap->TransparentColor()) {
-          dest[destIndex] = srcVal;
-        }
-
-        destIndex++;
-        srcIndex++;
-
-        if (destIndex > 76800) {
-          return;
-        }
-
-      }
-
-      srcIndex += bgWidth - drawWidth;
-      if (remainDrawWidth == canvasWidth) {
-        destIndex = (y + aVerticalOffset) * 320;
-      }
-      else {
-        destIndex = ((y + aVerticalOffset) * 320) + priorDrawWidth;
-      }
-    }
-
-    priorDrawWidth += drawWidth;
-    remainDrawWidth -= drawWidth;
-
-    if (remainDrawWidth < 1) {
-      return;
-    }
-  }
-
-}
 
 
 void GLevel2Playfield::Animate() {
@@ -161,32 +51,134 @@ void GLevel2Playfield::Animate() {
   mTextColor %= 64;
   gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
-  bgOffset0 += .01;
-  if ((mBackground0->Width() - (int)bgOffset0) < 1) {
-    bgOffset0 = 0;
+  bgOffset0 += 1;
+  if ((int)bgOffset0 >= mBackground0->Width()) {
+    bgOffset0= 0;
   }
 
-  bgOffset1 += .03;
-  if ((mBackground1->Width() - (int)bgOffset1) < 1) {
-    bgOffset0 = 0;
+  bgOffset1 += 1.2;
+  if ((int)bgOffset1 >= mBackground1->Width()) {
+    bgOffset1 = 0;
   }
 
-  bgOffset2 += 2;
-  if ((mBackground2->Width() - (int)bgOffset2) < 1) {
-    bgOffset2= 0;
+  bgOffset2 += 1.3;
+  if ((int)bgOffset2 >= mBackground2->Width()) {
+    printf("Reset bgOffset2 %i\n", (int)bgOffset2);
+    bgOffset2 = 0;
   }
 
 }
 
+
+void GLevel2Playfield::DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, TUint aVerticalOffset, TBool aDrawTransparent) {
+
+  int intOffsetX = (int)aOffsetX,
+      canvasWidth = gDisplay.renderBitmap->Width(),
+      remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
+      bgWidth = aBitmap->Width(),
+      priorDrawWidth = 0;
+
+
+  int imgWidthDelta = bgWidth - intOffsetX;
+
+  // Background is too big for the canvas, so just draw the full canvas width and be done!
+  if (imgWidthDelta >= canvasWidth) {
+    TRect rect = TRect(intOffsetX, 0, bgWidth - 1, aBitmap->Height() - 1);
+
+    if (aDrawTransparent) {
+      gDisplay.renderBitmap->DrawBitmapTransparent(ENull, aBitmap, rect, 0, aVerticalOffset);
+    }
+    else {
+      gDisplay.renderBitmap->DrawBitmap(ENull, aBitmap, rect, 0, aVerticalOffset);
+    }
+    return;
+  }
+
+
+  while (remainDrawWidth > 0) {
+    int drawWidth = 0;
+
+    // Background is too big for the canvas
+    if (bgWidth > canvasWidth) {
+      if (remainDrawWidth == canvasWidth) {
+        drawWidth = imgWidthDelta;
+        TRect rect = TRect(intOffsetX, 0, bgWidth - 1, aBitmap->Height() - 1);
+
+        if (aDrawTransparent) {
+          gDisplay.renderBitmap->DrawBitmapTransparent(ENull, aBitmap, rect, 0, aVerticalOffset);
+        }
+        else {
+          gDisplay.renderBitmap->DrawBitmap(ENull, aBitmap, rect, 0, aVerticalOffset);
+        }
+
+      }
+      else {
+        drawWidth = 320 - priorDrawWidth;
+        TRect rect = TRect(0, 0, drawWidth - 1, aBitmap->Height() - 1);
+
+        if (aDrawTransparent) {
+          gDisplay.renderBitmap->DrawBitmapTransparent(ENull, aBitmap, rect, priorDrawWidth, aVerticalOffset);
+        }
+        else {
+          gDisplay.renderBitmap->DrawBitmap(ENull, aBitmap, rect, priorDrawWidth, aVerticalOffset);
+        }
+      }
+    }
+    else { // Backgrounds that are too small for the canvas
+      if (remainDrawWidth == canvasWidth) {
+        drawWidth = bgWidth - intOffsetX;
+        TRect rect = TRect(intOffsetX, 0, bgWidth - 1, aBitmap->Height() - 1);
+
+        if (aDrawTransparent) {
+          gDisplay.renderBitmap->DrawBitmapTransparent(ENull, aBitmap, rect, 0, aVerticalOffset);
+        }
+        else {
+          gDisplay.renderBitmap->DrawBitmap(ENull, aBitmap, rect, 0, aVerticalOffset);
+        }
+      }
+      else {
+        drawWidth = (remainDrawWidth > bgWidth) ? bgWidth : remainDrawWidth;
+        TRect rect = TRect(0, 0, drawWidth - 1, aBitmap->Height() - 1);
+
+        if (aDrawTransparent) {
+          gDisplay.renderBitmap->DrawBitmapTransparent(ENull, aBitmap, rect,  priorDrawWidth, aVerticalOffset);
+        }
+        else {
+          gDisplay.renderBitmap->DrawBitmap(ENull, aBitmap, rect, priorDrawWidth, aVerticalOffset);
+        }
+      }
+    }
+
+
+    if (drawWidth == 0) {
+//      printf("drawWidth == 0!\n");
+      return;
+    }
+
+    priorDrawWidth += drawWidth;
+    remainDrawWidth -= drawWidth;
+
+    if (remainDrawWidth < 1) {
+      return;
+    }
+  }
+}
+
 void GLevel2Playfield::Render() {
 
-//  memset(gDisplay.renderBitmap->mPixels, 0, 320*240);
+  memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
+//  DrawScrolledBackground(mBackground0, bgOffset0, 0);
+  DrawScrolledBackground(mBackground1, bgOffset1, 30, ETrue); // @Mtintiuc -- Set to EFalse, and the overflow drawing goes away.
+//  DrawScrolledBackground(mBackground2, bgOffset2, gDisplay.renderBitmap->Height() - mBackground2->Height() + 1, ETrue); // Same with this code.
 
-  DrawScrolledBackground(mBackground0, bgOffset0, 0);
 
-  DrawScrolledBackgroundWithTransparency(mBackground1, bgOffset1, 30);
-  DrawScrolledBackgroundWithTransparency(mBackground2, bgOffset2, gDisplay.renderBitmap->Height() - mBackground2->Height() + 1);
+#ifdef __XTENSA__
+  printf("DMA: %i    SPIRAM: %i\n",
+     heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_DMA),
+     heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_SPIRAM));
 
+  fflush(stdout);
+#endif
 //  mGameEngine->mGameBoard.Render();
 }
 
