@@ -12,7 +12,7 @@ static const TUint16 PLAYER_SLOT = 3;
 static const TUint16 FONT_SLOT   = 4;
 
 // Song slot
-static const TUint8 SONG_SLOT    = 90;
+static const TUint8 SONG_SLOT    = 5;
 
 
 // Image Numbers on the sprite sheet
