@@ -56,7 +56,7 @@ void GLevel2Playfield::Animate() {
     bgOffset0= 0;
   }
 
-  bgOffset1 += 1.2;
+  bgOffset1 += .2;
   if ((int)bgOffset1 >= mBackground1->Width()) {
     bgOffset1 = 0;
   }
@@ -167,9 +167,9 @@ void GLevel2Playfield::DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX,
 void GLevel2Playfield::Render() {
 
   memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
-//  DrawScrolledBackground(mBackground0, bgOffset0, 0);
+  DrawScrolledBackground(mBackground0, bgOffset0, 0);
   DrawScrolledBackground(mBackground1, bgOffset1, 30, ETrue); // @Mtintiuc -- Set to EFalse, and the overflow drawing goes away.
-//  DrawScrolledBackground(mBackground2, bgOffset2, gDisplay.renderBitmap->Height() - mBackground2->Height() + 1, ETrue); // Same with this code.
+  DrawScrolledBackground(mBackground2, bgOffset2, gDisplay.renderBitmap->Height() - mBackground2->Height() + 1, ETrue); // Same with this code.
 
 
 #ifdef __XTENSA__
