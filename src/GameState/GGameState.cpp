@@ -1,7 +1,8 @@
 #include "Game.h"
 #include "GGameBoard.h"
-#include "GLevel3Playfield.h"
+#include "GLevel1Playfield.h"
 #include "GLevel2Playfield.h"
+//#include "GLevel3Playfield.h"
 #include "GGameProcess.h"
 
 static const TUint8 GRID_COLOR = 253;;
@@ -20,6 +21,9 @@ GGameState::~GGameState() {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG4_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG5_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG6_SLOT);
 }
 
 void GGameState::PreRender() {
@@ -38,7 +42,7 @@ void GGameState::LoadLevel() {
     default:
 
       delete mPlayfield;
-      mPlayfield = new GLevel2Playfield(this);
+      mPlayfield = new GLevel1Playfield(this);
 
       gSoundPlayer.PlayMusic(SONG1_S3M);
       break;

@@ -6,11 +6,12 @@
 #define GENUS_GLEVEL2PLAYFIELD_H
 
 #include "GGameState.h"
-class GLevel2Playfield : public BPlayfield {
+#include "GScrollingLevel.h"
+
+class GLevel2Playfield : public GScrollingLevel {
 public:
   GLevel2Playfield(GGameState *aGameEngine);
   ~GLevel2Playfield();
-
 
   void Animate();
   void Render();
@@ -27,9 +28,6 @@ public:
   float bgOffset2;
 
   TUint8 mTextColor;
-private:
-  void DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, TUint aVerticalOffset, TBool aDrawTransparent = EFalse);
-
 };
 
 

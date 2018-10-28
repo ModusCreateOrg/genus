@@ -12,10 +12,12 @@
 GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
 
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-  gResourceManager.LoadBitmap(CYBERPUNK0_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  gResourceManager.LoadBitmap(CYBERPUNK1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
-  gResourceManager.LoadBitmap(CYBERPUNK2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
-
+  gResourceManager.LoadBitmap(COUNTRYSIDE0_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(COUNTRYSIDE1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(COUNTRYSIDE2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(COUNTRYSIDE3_BMP, BKG4_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(COUNTRYSIDE4_BMP, BKG5_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(COUNTRYSIDE5_BMP, BKG6_SLOT, IMAGE_ENTIRE);
 
   mGameEngine = aGameEngine;
   mTextColor = 0;
@@ -23,137 +25,42 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
   bgOffset0 = 0;
   bgOffset1 = 0;
   bgOffset2 = 0;
+  bgOffset3 = 0;
+  bgOffset4 = 0;
+  bgOffset5 = 0;
 
   mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
   mBackground1 = gResourceManager.GetBitmap(BKG2_SLOT);
   mBackground2 = gResourceManager.GetBitmap(BKG3_SLOT);
+  mBackground3 = gResourceManager.GetBitmap(BKG4_SLOT);
+  mBackground4 = gResourceManager.GetBitmap(BKG5_SLOT);
+  mBackground5 = gResourceManager.GetBitmap(BKG6_SLOT);
 
   printf("mBackground0 dimensions: %i x %i\n", mBackground0->Width(), mBackground0->Height());
   printf("mBackground1 dimensions: %i x %i\n", mBackground1->Width(), mBackground1->Height());
-
   printf("mBackground2 dimensions: %i x %i\n", mBackground2->Width(), mBackground2->Height());
+  printf("mBackground3 dimensions: %i x %i\n", mBackground3->Width(), mBackground3->Height());
+  printf("mBackground4 dimensions: %i x %i\n", mBackground4->Width(), mBackground4->Height());
+  printf("mBackground4 dimensions: %i x %i\n", mBackground5->Width(), mBackground5->Height());
 }
 
 GLevel1Playfield::~GLevel1Playfield()  {
-  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-  gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
-  gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
   delete mBackground0;
   delete mBackground1;
   delete mBackground2;
+  delete mBackground3;
+  delete mBackground4;
+  delete mBackground5;
+
+  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG4_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG5_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG6_SLOT);
 }
 
 
-void GLevel1Playfield::DrawScrolledBackground(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset) {
-
-  int canvasWidth     = gDisplay.renderBitmap->Width(),
-          remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
-          bgWidth         = aBitmap->Width(),
-          bgHeight        = aBitmap->Height(),
-          priorDrawWidth = 0;
-
-  while (remainDrawWidth > 0) {
-    int drawWidth;
-
-    uint8_t *src = aBitmap->mPixels,
-            *dest = gDisplay.renderBitmap->mPixels;
-
-    //TODO: Figure out how to draw images LARGER than the canvas!
-    if (remainDrawWidth == canvasWidth) {
-      // 1st pass
-      drawWidth = bgWidth - (int)aBackgroundOffsetH;
-      dest += aVerticalOffset * 320;
-      src  += (uint8_t)aBackgroundOffsetH;
-    }
-    else {
-      //All other passes
-      drawWidth = (bgWidth < remainDrawWidth) ? bgWidth : remainDrawWidth;
-      dest += (aVerticalOffset * 320) + priorDrawWidth;
-    }
-
-    for (int y = 0; y < bgHeight; y++) {
-      memcpy(dest, src, drawWidth);
-
-      dest += canvasWidth;
-      src += bgWidth;
-    }
-
-    priorDrawWidth += drawWidth;
-    remainDrawWidth -= drawWidth;
-
-    if (remainDrawWidth < 1) {
-      return;
-    }
-  }
-}
-void GLevel1Playfield::DrawScrolledBackgroundWithTransparency(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset) {
-
-  uint8_t *src  = aBitmap->mPixels,
-          *dest = gDisplay.renderBitmap->mPixels;
-
-  int canvasWidth     = gDisplay.renderBitmap->Width(),
-          remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
-          bgWidth         = aBitmap->Width(),
-          bgHeight        = aBitmap->Height(),
-          srcIndex        = 0,
-          destIndex       = 0;
-
-
-  int priorDrawWidth = 0;
-
-  while (remainDrawWidth > 0) {
-    int drawWidth;
-
-    //TODO: Figure out how to draw images LARGER than the canvas!
-    if (remainDrawWidth == canvasWidth) {
-      // 1st pass
-      drawWidth = bgWidth - (int)aBackgroundOffsetH;
-      destIndex = aVerticalOffset * 320;
-      srcIndex  = (uint8_t)aBackgroundOffsetH;
-    }
-    else {
-      //All other passes
-      drawWidth = (bgWidth < remainDrawWidth) ? bgWidth : remainDrawWidth;
-      destIndex = (aVerticalOffset * 320) + priorDrawWidth;
-      srcIndex = 0;
-    }
-
-
-    for (int y = 0; y < bgHeight; y++) {
-      for (int x = 0; x < drawWidth; x++) {
-        uint8_t srcVal = src[srcIndex];
-
-        if (srcVal != aBitmap->TransparentColor()) {
-          dest[destIndex] = srcVal;
-        }
-
-        destIndex++;
-        srcIndex++;
-
-        if (destIndex > 76800) {
-          return;
-        }
-
-      }
-
-      srcIndex += bgWidth - drawWidth;
-      if (remainDrawWidth == canvasWidth) {
-        destIndex = (y + aVerticalOffset) * 320;
-      }
-      else {
-        destIndex = ((y + aVerticalOffset) * 320) + priorDrawWidth;
-      }
-    }
-
-    priorDrawWidth += drawWidth;
-    remainDrawWidth -= drawWidth;
-
-    if (remainDrawWidth < 1) {
-      return;
-    }
-  }
-
-}
 
 
 void GLevel1Playfield::Animate() {
@@ -161,32 +68,55 @@ void GLevel1Playfield::Animate() {
   mTextColor %= 64;
   gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
-  bgOffset0 += .01;
-  if ((mBackground0->Width() - (int)bgOffset0) < 1) {
-    bgOffset0 = 0;
+
+  // Base background
+  bgOffset0 += .02;
+  if ((int)bgOffset0 >= mBackground0->Width()) {
+    bgOffset0= 0;
   }
 
-  bgOffset1 += .03;
-  if ((mBackground1->Width() - (int)bgOffset1) < 1) {
-    bgOffset0 = 0;
+  bgOffset1 += .1;
+  if ((int)bgOffset1 >= mBackground1->Width()) {
+    bgOffset1 = 0;
   }
 
-  bgOffset2 += 2;
-  if ((mBackground2->Width() - (int)bgOffset2) < 1) {
-    bgOffset2= 0;
+  bgOffset3 += .6;
+  if ((int)bgOffset3 >= mBackground3->Width()) {
+    bgOffset3 = 0;
+  }
+
+  bgOffset4 += 1;
+  if ((int)bgOffset4 >= mBackground4->Width()) {
+    bgOffset4 = 0;
+  }
+
+  bgOffset5 += .06;
+  if ((int)bgOffset5 >= mBackground5->Width()) {
+    bgOffset5 = 0;
   }
 
 }
 
 void GLevel1Playfield::Render() {
 
-//  memset(gDisplay.renderBitmap->mPixels, 0, 320*240);
-
+//  printf("%i\n", gDisplay.renderBitmap->Height() - mBackground4->Height() + 1);
+//  memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
   DrawScrolledBackground(mBackground0, bgOffset0, 0);
+  DrawScrolledBackground(mBackground1, bgOffset1, 95, ETrue);
 
-  DrawScrolledBackgroundWithTransparency(mBackground1, bgOffset1, 30);
-  DrawScrolledBackgroundWithTransparency(mBackground2, bgOffset2, gDisplay.renderBitmap->Height() - mBackground2->Height() + 1);
+  DrawScrolledBackground(mBackground3, bgOffset3, 189, ETrue);
+  DrawScrolledBackground(mBackground4, bgOffset4, 212, ETrue);
+  DrawScrolledBackground(mBackground5, bgOffset5, 10, ETrue);
+//  DrawScrolledBackground(mBackground1, bgOffset1, 186, ETrue);
 
+
+#ifdef __XTENSA__
+  printf("DMA: %i    SPIRAM: %i\n",
+     heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_DMA),
+     heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_SPIRAM));
+
+  fflush(stdout);
+#endif
 //  mGameEngine->mGameBoard.Render();
 }
 

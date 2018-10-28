@@ -16,6 +16,14 @@ BITMAP level1_sprites.bmp
 PATH ../resources/backgrounds/under_water
 BITMAP under_water.bmp
 
+PATH ../resources/backgrounds/countryside/
+BITMAP countryside0.bmp
+BITMAP countryside1.bmp
+BITMAP countryside2.bmp
+BITMAP countryside3.bmp
+BITMAP countryside4.bmp
+BITMAP countryside5.bmp
+
 PATH ../resources/backgrounds/cyberpunk/
 BITMAP cyberpunk0.bmp
 BITMAP cyberpunk1.bmp

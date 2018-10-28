@@ -6,31 +6,34 @@
 #define GENUS_GLevel1PLAYFIELD_H
 
 #include "GGameState.h"
-class GLevel1Playfield : public BPlayfield {
+#include "GScrollingLevel.h"
+
+class GLevel1Playfield : public GScrollingLevel {
 public:
-  GLevel1Playfield(GGameState *aGameEngine);
-  ~GLevel1Playfield();
+    GLevel1Playfield(GGameState *aGameEngine);
+    ~GLevel1Playfield();
 
-
-  void Animate();
-  void Render();
+    void Animate();
+    void Render();
 
 
 public:
-  GGameState *mGameEngine;
-  BBitmap *mBackground0;
-  BBitmap *mBackground1;
-  BBitmap *mBackground2;
+    GGameState *mGameEngine;
+    BBitmap *mBackground0;
+    BBitmap *mBackground1;
+    BBitmap *mBackground2;
+    BBitmap *mBackground3;
+    BBitmap *mBackground4;
+    BBitmap *mBackground5;
 
-  float bgOffset0;
-  float bgOffset1;
-  float bgOffset2;
+    float bgOffset0;
+    float bgOffset1;
+    float bgOffset2;
+    float bgOffset3;
+    float bgOffset4;
+    float bgOffset5;
 
-  TUint8 mTextColor;
-private:
-  void DrawScrolledBackgroundWithTransparency(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset);
-  void DrawScrolledBackground(BBitmap *aBitmap, TFloat aBackgroundOffsetH, TUint aVerticalOffset);
-
+    TUint8 mTextColor;
 };
 
 
