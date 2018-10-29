@@ -1,4 +1,5 @@
 #include "GGame.h"
+static TUint32 start;
 
 static TUint32 start;
 GGame::GGame() {

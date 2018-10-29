@@ -52,7 +52,7 @@ static int loadSong(BRaw *aSong);
 GSoundPlayer::GSoundPlayer() {
   xmpContext = xmp_create_context();
 
-  mMusicVolume = 48;
+  mMusicVolume = 3;
   mEffectsVolume = 96;
   mMuted = false;
   mAudioPaused = false;
