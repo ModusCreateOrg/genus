@@ -1,5 +1,6 @@
 #include "GGame.h"
 
+static TUint32 start;
 GGame::GGame() {
   // TODO: Jay - this needs to be in BApplication constructor (I think)
   gSoundPlayer.Init(3, 6);
@@ -13,7 +14,7 @@ GGame::GGame() {
   mState = mNextState = -1;
   gGameEngine = ENull;
   SetState(GAME_STATE_SPLASH);
-
+  start = Milliseconds();
 }
 
 GGame::~GGame() {
@@ -75,6 +76,9 @@ void GGame::Run() {
     }
     gGameEngine->GameLoop();
     gDisplay.Update();
+    TUint32 now = Milliseconds(), elapsed = now - start;
+    start = now;
+    printf("elapsed %d\r", elapsed);
     if (gControls.WasPressed(BUTTONQ)) {
       done = true;
     }
