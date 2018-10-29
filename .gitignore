@@ -88,3 +88,4 @@ src/Resources.bin
 src/Resources.h
 sdkconfig
 sdkconfig.old
+*.store

@@ -18,6 +18,8 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 }
 
 GGameState::~GGameState() {
+  //
+  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);

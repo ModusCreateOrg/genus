@@ -53,7 +53,6 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
   if (mGameOver) {
     return ETrue;
   }
-  BBitmap *bm = gDisplay.renderBitmap;
   TInt    xx  = TInt(x + .5);
   TInt    yy  = TInt(y + .5);
 

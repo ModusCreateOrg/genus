@@ -1,8 +1,12 @@
 #include "Game.h"
 
+static const TInt TIMEOUT = 30*5;
+
 class GMainMenuProcess : public BProcess {
 public:
-  GMainMenuProcess() : BProcess() {}
+  GMainMenuProcess() : BProcess() {
+    mTimer = TIMEOUT;
+  }
 
 public:
   TBool RunBefore() {
@@ -18,8 +22,15 @@ public:
       gGame->SetState(GAME_STATE_MAIN_OPTIONS);
       return EFalse;
     }
+    mTimer--;
+    if (mTimer < 0) {
+      gGame->SetState(GAME_STATE_HIGH_SCORES);
+      return EFalse;
+    }
     return ETrue;
   }
+private:
+  TInt mTimer;
 };
 
 class GMainMenuPlayfield : public BPlayfield {
@@ -50,6 +61,7 @@ GMainMenuState::GMainMenuState() : BGameEngine(gViewPort) {
 }
 
 GMainMenuState::~GMainMenuState() {
-  // delete mPlayfield
+   delete mPlayfield;
+   mPlayfield = ENull;
 }
 
