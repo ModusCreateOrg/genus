@@ -110,13 +110,13 @@ void GLevel1Playfield::Render() {
 //  DrawScrolledBackground(mBackground1, bgOffset1, 186, ETrue);
 
 
-#ifdef __XTENSA__
-  printf("DMA: %i    SPIRAM: %i\n",
-     heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_DMA),
-     heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_SPIRAM));
+// #ifdef __XTENSA__
+//   printf("DMA: %i    SPIRAM: %i\n",
+//      heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_DMA),
+//      heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_SPIRAM));
 
-  fflush(stdout);
-#endif
-//  mGameEngine->mGameBoard.Render();
+//   fflush(stdout);
+// #endif
+ mGameEngine->mGameBoard.Render();
 }
 
