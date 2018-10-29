@@ -117,6 +117,6 @@ void GLevel1Playfield::Render() {
 
   fflush(stdout);
 #endif
-//  mGameEngine->mGameBoard.Render();
+  mGameEngine->mGameBoard.Render();
 }
 
