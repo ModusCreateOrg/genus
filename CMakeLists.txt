@@ -75,7 +75,7 @@ add_executable(genus
         ${LIBXMP_SRC}
         ${CREATIVE_ENGINE}
         ${GENUS_SRC}
-        creative-engine/src/Widgets/BWidget.cpp creative-engine/src/Widgets/BWidget.h src/MainOptionsState/GMainOptionsWIdget.cpp src/MainOptionsState/GMainOptionsWIdget.h creative-engine/src/Widgets/BSelectWidget.cpp creative-engine/src/Widgets/BSelectWidget.h creative-engine/src/Widgets/BMenuWidget.cpp creative-engine/src/Widgets/BMenuWidget.h creative-engine/src/Widgets/Widgets.h creative-engine/src/Widgets/BContainerWidget.cpp creative-engine/src/Widgets/BContainerWidget.h creative-engine/src/Widgets/BDialogWidget.cpp creative-engine/src/Widgets/BDialogWidget.h creative-engine/src/Widgets/BWidgetTheme.cpp creative-engine/src/Widgets/BWidgetTheme.h src/MainOptionsState/GMusic.cpp src/MainOptionsState/GMusic.h)
+        )
 
 # make genus.app
 if(APPLE)
