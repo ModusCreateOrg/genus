@@ -20,7 +20,7 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(COUNTRYSIDE5_BMP, BKG6_SLOT, IMAGE_ENTIRE);
 
   mGameEngine = aGameEngine;
-  mTextColor = 0;
+  mTextColor  = 0;
 
   bgOffset0 = 0;
   bgOffset1 = 0;
@@ -44,7 +44,7 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
   printf("mBackground4 dimensions: %i x %i\n", mBackground5->Width(), mBackground5->Height());
 }
 
-GLevel1Playfield::~GLevel1Playfield()  {
+GLevel1Playfield::~GLevel1Playfield() {
   delete mBackground0;
   delete mBackground1;
   delete mBackground2;
@@ -61,8 +61,6 @@ GLevel1Playfield::~GLevel1Playfield()  {
 }
 
 
-
-
 void GLevel1Playfield::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
@@ -71,27 +69,27 @@ void GLevel1Playfield::Animate() {
 
   // Base background
   bgOffset0 += .02;
-  if ((int)bgOffset0 >= mBackground0->Width()) {
-    bgOffset0= 0;
+  if ((int) bgOffset0 >= mBackground0->Width()) {
+    bgOffset0 = 0;
   }
 
   bgOffset1 += .1;
-  if ((int)bgOffset1 >= mBackground1->Width()) {
+  if ((int) bgOffset1 >= mBackground1->Width()) {
     bgOffset1 = 0;
   }
 
   bgOffset3 += .6;
-  if ((int)bgOffset3 >= mBackground3->Width()) {
+  if ((int) bgOffset3 >= mBackground3->Width()) {
     bgOffset3 = 0;
   }
 
   bgOffset4 += 1;
-  if ((int)bgOffset4 >= mBackground4->Width()) {
+  if ((int) bgOffset4 >= mBackground4->Width()) {
     bgOffset4 = 0;
   }
 
   bgOffset5 += .06;
-  if ((int)bgOffset5 >= mBackground5->Width()) {
+  if ((int) bgOffset5 >= mBackground5->Width()) {
     bgOffset5 = 0;
   }
 
@@ -110,13 +108,13 @@ void GLevel1Playfield::Render() {
 //  DrawScrolledBackground(mBackground1, bgOffset1, 186, ETrue);
 
 
-#ifdef __XTENSA__
-  printf("DMA: %i    SPIRAM: %i\n",
-     heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_DMA),
-     heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_SPIRAM));
+// #ifdef __XTENSA__
+//   printf("DMA: %i    SPIRAM: %i\n",
+//      heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_DMA),
+//      heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_SPIRAM));
 
-  fflush(stdout);
-#endif
+//   fflush(stdout);
+// #endif
   mGameEngine->mGameBoard.Render();
 }
 
