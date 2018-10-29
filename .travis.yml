@@ -4,4 +4,4 @@ language: cpp
 
 before_install: git clone git@github.com:ModusCreateOrg/creative-engine.git
 
-install: ./scripts/build.sh 
+script: ./scripts/build.sh 

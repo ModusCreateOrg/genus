@@ -30,11 +30,13 @@ export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
 op=${1:-}
 SKIP_TOOLS_INSTALL=false
 SUDO="sudo"
+export SUDO
 
+# This remains a case for future expansion.
 case "$op" in
     clean)
-        clean
-        ;;
+        #clean Moved below installs because ArchLinux needs git installed first
+        ;;    
     docker-build)
         SKIP_TOOLS_INSTALL=true
         ;;
@@ -50,10 +52,8 @@ elif [ "$OS" == "Darwin" ]; then
     # Install homebrew packages
     cd "$BASE_DIR"
     brew bundle install
-    brew install doxygen
-    brew install imagemagick
-    brew install SDL2
-    brew install SDL2_image
+    # Travis has an older brew version of cmake, be sure we have the latest or this will not build
+    brew upgrade cmake || true
 elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
     if [[ -n "$(which apt-get 2>/dev/null)" ]]; then
@@ -71,13 +71,31 @@ elif [ "$(cut -c1-10 <<<"$OS")" == "MINGW64_NT" ]; then
     echo "64 bit Windows not supported"
     exit 1
 else
-    echo 'Unsupported operating system "'"$OS"'"'
+    echo "Unsupported operating system '$OS'"
     exit 1
 fi
 
+# This remains a case for future expansion.
+case "$op" in
+    clean)
+        clean
+        ;;    
+    docker-build)
+        clean
+        ;;
+esac
+
 ensure_creative_engine
+
+cd $BASE_DIR || exit 1
+checkout_creative_engine_branch
+
 build
+
 copy_sdl2_libs_to_app
+
+$BASE_DIR/doxygen/build.sh
+
 
 
 
