@@ -12,11 +12,24 @@ BITMAP main_options1.bmp
 BITMAP charset_8x8.bmp
 BITMAP charset_16x16.bmp
 BITMAP level1_sprites.bmp
-BITMAP level1_bkgnew.bmp
-BITMAP level1_bkg1a.bmp
-BITMAP level1_bkg1.bmp
-BITMAP level1_bkg2.bmp
-BITMAP level2_bkg1.bmp
+
+
+PATH ../resources/backgrounds/under_water
+BITMAP under_water.bmp
+
+PATH ../resources/backgrounds/countryside/
+BITMAP countryside0.bmp
+BITMAP countryside1.bmp
+BITMAP countryside2.bmp
+BITMAP countryside3.bmp
+BITMAP countryside4.bmp
+BITMAP countryside5.bmp
+
+PATH ../resources/backgrounds/cyberpunk/
+BITMAP cyberpunk0.bmp
+BITMAP cyberpunk1.bmp
+BITMAP cyberpunk2.bmp
+
 
 # .-=[  MUSIC  ]=-.
 PATH ../resources/music
@@ -24,7 +37,7 @@ PATH ../resources/music
 RAW EmptySong.xm
 RAW Song0.xm
 RAW Song1.s3m
-RAW Song2.xm
+#RAW Song2.xm
 
 # .-=[ Sound Effects ]=-.
 PATH ../resources/sound_effects
