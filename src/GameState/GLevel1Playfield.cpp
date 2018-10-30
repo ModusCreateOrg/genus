@@ -45,13 +45,6 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
 }
 
 GLevel1Playfield::~GLevel1Playfield()  {
-  delete mBackground0;
-  delete mBackground1;
-  delete mBackground2;
-  delete mBackground3;
-  delete mBackground4;
-  delete mBackground5;
-
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
