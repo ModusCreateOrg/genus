@@ -1,5 +1,4 @@
 #include "GGame.h"
-
 static TUint32 start;
 GGame::GGame() {
   // TODO: Jay - this needs to be in BApplication constructor (I think)
