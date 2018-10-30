@@ -78,7 +78,7 @@ void GGame::Run() {
     gDisplay.Update();
     TUint32 now = Milliseconds(), elapsed = now - start;
     start = now;
-    printf("elapsed %d\r", elapsed);
+    printf("elapsed %4d\r", elapsed);
     if (gControls.WasPressed(BUTTONQ)) {
       done = true;
     }
