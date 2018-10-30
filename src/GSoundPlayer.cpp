@@ -5,6 +5,9 @@
 #include "GSoundPlayer.h"
 #include "GResources.h"
 
+#define DISABLE_AUDIO
+#undef DISABLE_AUDIO
+
 
 GSoundPlayer gSoundPlayer;
 
@@ -50,15 +53,21 @@ bool musicFileLoaded = false;
 static int loadSong(BRaw *aSong);
 
 GSoundPlayer::GSoundPlayer() {
+#ifdef DISABLE_AUDIO
+  return;
+#endif
   xmpContext = xmp_create_context();
 
-  mMusicVolume = 3;
+  mMusicVolume = 10;
   mEffectsVolume = 96;
   mMuted = false;
   mAudioPaused = false;
 }
 
 GSoundPlayer::~GSoundPlayer() {
+#ifdef DISABLE_AUDIO
+  return;
+#endif
   Reset();
   xmp_end_player(xmpContext);
 #ifndef __XTENSA__
@@ -69,12 +78,12 @@ GSoundPlayer::~GSoundPlayer() {
 bool WARNED_OF_PLAY_BUFFER = false;
 
 static void fillBuffer(void *audioBuffer, size_t length) {
-//  printf("length = %i\n", length);fflush(stdout);
+#ifdef DISABLE_AUDIO
+  return;
+#endif
+  //  printf("length = %i\n", length);fflush(stdout);
   if (musicFileLoaded && ! gSoundPlayer.mAudioPaused) {
     int result = xmp_play_buffer(xmpContext, audioBuffer, length, 0);
-
-//    struct xmp_frame_info frameInfo;
-
 
     if (result != 0) {
       if (!WARNED_OF_PLAY_BUFFER) {
@@ -102,7 +111,10 @@ static void fillBuffer(void *audioBuffer, size_t length) {
 
 // ESP32 style timer
 static void timerCallback(void *arg) {
-//  printf("AUDIO_BUFF_SIZE %i\n", AUDIO_BUFF_SIZE); fflush(stdout);
+#ifdef DISABLE_AUDIO
+  return;
+#endif
+  //  printf("AUDIO_BUFF_SIZE %i\n", AUDIO_BUFF_SIZE); fflush(stdout);
   fillBuffer(audio.mAudioBuffer, AUDIO_BUFF_SIZE);
   // Need to submit to the audio driver.
   audio.Submit(audio.mAudioBuffer, AUDIO_BUFF_SIZE >> 2);
@@ -119,6 +131,9 @@ static void timerCallback(void *udata, Uint8 *audioBuffer, int length) {
 
 
 void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
+#ifdef DISABLE_AUDIO
+  return;
+#endif
   audio.Init(&timerCallback);
 
   PlayMusic(EMPTYSONG_XM);
@@ -133,6 +148,9 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
 }
 
 static int loadSong(BRaw *aSong) {
+//#ifdef DISABLE_AUDIO
+//  return 0;
+//#endif
   int loadResult = xmp_load_module_from_memory(xmpContext, aSong->mData, aSong->mSize);
 //  printf("xmp_load_module_from_memory result = %i\n", loadResult); fflush(stdout);
   return loadResult;
@@ -140,41 +158,25 @@ static int loadSong(BRaw *aSong) {
 
 
 TBool GSoundPlayer::LoadEffect(TUint16 aResourceId, TUint8 aSlotNumber) {
-  gResourceManager.LoadRaw(aResourceId, SONG_SLOT);
-  BRaw *effect = gResourceManager.GetRaw(SONG_SLOT);
+#ifdef DISABLE_AUDIO
+  return false;
+#endif
 
+  gResourceManager.LoadRaw(aResourceId, SFX1_SLOT + aSlotNumber);
+  BRaw *effect = gResourceManager.GetRaw(SFX1_SLOT + aSlotNumber);
 //  printf("LoadEffect slot=%i, size=%i\n", aSlotNumber, effect->mSize);
   int result = xmp_smix_load_sample_from_memory(xmpContext, aSlotNumber, effect->mData, effect->mSize);
-//  printf("xmp_smix_load_sample_from_memory result = %i\n", result);
-
-  gResourceManager.ReleaseRawSlot(SONG_SLOT);
 
   return result == 0;
 }
 
-void loadEffects() {
-
-  const uint16_t effectsList[] = {
-    SFX_GOOD_DROP_BLOCK_WAV,
-    SFX_BAD_DROP_BLOCK_WAV,
-    SFX_MOVE_BLOCK_WAV,
-    SFX_ROTATE_BLOCK_LEFT_WAV,
-    SFX_ROTATE_BLOCK_RIGHT_WAV,
-    SFX_SCORE_COMBO_WAV
-  };
-
-  for (uint8_t i = 0; i < 6; i++) {
-//    printf("loadEffect(%i)\n", i);
-    gSoundPlayer.LoadEffect(effectsList[i], i);
-  }
-
-}
 
 
 
 TUint8 sfxChannel = 0;
 
 TBool GSoundPlayer::StopMusic() {
+
   // Should we test for XMP_STATE_UNLOADED, XMP_STATE_PLAYING?
   xmp_stop_module(xmpContext);
   return true;
@@ -188,6 +190,7 @@ TBool GSoundPlayer::Reset() {
 }
 
 TBool GSoundPlayer::SetVolume(TFloat aPercent) {
+
   if (xmpContext) {
     if (aPercent > 1.0f) {
       aPercent = 1.0f;
@@ -208,6 +211,9 @@ TBool GSoundPlayer::SetVolume(TFloat aPercent) {
 }
 
 TBool GSoundPlayer::SetMusicVolume(TFloat aPercent) {
+#ifdef DISABLE_AUDIO
+  return false;
+#endif
   if (xmpContext) {
     if (aPercent > 1.0f) {
       aPercent = 1.0f;
@@ -226,6 +232,9 @@ TBool GSoundPlayer::SetMusicVolume(TFloat aPercent) {
 }
 
 TBool GSoundPlayer::SetEffectsVolume(TFloat aPercent) {
+#ifdef DISABLE_AUDIO
+  return false;
+#endif
   if (xmpContext) {
     if (aPercent > 1.0f) {
       aPercent = 1.0f;
@@ -246,10 +255,13 @@ TBool GSoundPlayer::SetEffectsVolume(TFloat aPercent) {
 
 
 TBool GSoundPlayer::PlaySound(TInt aSoundNumber, TInt aPriority, TBool aLoop) {
+#ifdef DISABLE_AUDIO
+  return false;
+#endif
   //Todo: priority?
-  printf("SFX: %i\n", aSoundNumber); fflush(stdout);
+//  printf("SFX: %i\n", aSoundNumber); fflush(stdout);
   if (! musicFileLoaded) {
-    printf("No Music file loaded\n");
+    printf("%s: No Music file loaded! Cannot play sound effects!\n", __FUNCTION__);
     return false;
   }
 
@@ -264,17 +276,22 @@ TBool GSoundPlayer::PlaySound(TInt aSoundNumber, TInt aPriority, TBool aLoop) {
 
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
+#ifdef DISABLE_AUDIO
+  return false;
+#endif
   if (aResourceId == mCurrentSongLoaded) {
     return false;
   }
 
   PauseMusic(true);
-  printf("PlayMusic(%i);\n", aResourceId); fflush(stdout);
+//  printf("PlayMusic(%i);\n", aResourceId); fflush(stdout);
 
 #ifndef __XTENSA__
   SDL_PauseAudio(1);
   SDL_Delay(100); // Give the sound engine an opportunity to pause the thread
 #endif
+  gResourceManager.ReleaseRawSlot(SONG_SLOT);
+
 
 //  if (xmpConte)
   xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, 0);
@@ -287,7 +304,6 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
   gResourceManager.LoadRaw(aResourceId, SONG_SLOT);
   BRaw *song = gResourceManager.GetRaw(SONG_SLOT);
 
-
   int loadResult = loadSong(song);
   if (loadResult < 0) {
     // Sometimes XMP fails for no obvious reason. Try one more time for good measure.
@@ -299,8 +315,6 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
     mCurrentSongLoaded = aResourceId;
   }
 
-  gResourceManager.ReleaseRawSlot(SONG_SLOT);
-
   if (!musicFileLoaded) {
     printf("MUSIC LOADING FAILED!\n"); fflush(stdout);
     return EFalse;
@@ -308,7 +322,21 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 
   // Every time a new song is loaded, we must load sound effects too!
   xmp_start_smix(xmpContext, mNumberFxChannels, mNumberFxSlots);
-  loadEffects();
+
+  // Load effects
+  const uint16_t effectsList[] = {
+    SFX_GOOD_DROP_BLOCK_WAV,
+    SFX_BAD_DROP_BLOCK_WAV,
+    SFX_MOVE_BLOCK_WAV,
+    SFX_ROTATE_BLOCK_LEFT_WAV,
+    SFX_ROTATE_BLOCK_RIGHT_WAV,
+    SFX_SCORE_COMBO_WAV
+  };
+
+  for (uint8_t i = 0; i < 6; i++) {
+//    printf("loadEffect(%i)\n", i);
+    gSoundPlayer.LoadEffect(effectsList[i], i);
+  }
 
   xmp_start_player(xmpContext, SAMPLE_RATE, 0);
   xmp_set_player(xmpContext, XMP_PLAYER_VOLUME, mMusicVolume);
@@ -319,6 +347,9 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
   MuteMusic(EFalse);
   PauseMusic(false);
   audio.Mute(false);
+#if 0
+
+#endif
 
 #ifndef __XTENSA__
   SDL_PauseAudio(0);
