@@ -38,9 +38,6 @@ GLevel2Playfield::~GLevel2Playfield()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
-  delete mBackground0;
-  delete mBackground1;
-  delete mBackground2;
 }
 
 
