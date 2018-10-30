@@ -27,6 +27,7 @@ public:
     gResourceManager.LoadBitmap(SPLASH1_BMP, BKG_SLOT, IMAGE_ENTIRE);
     mBackground = gResourceManager.GetBitmap(BKG_SLOT);
     gDisplay.SetPalette(mBackground);
+    gSoundPlayer.PlayMusic(SONG0_XM);
   }
 
   virtual ~GSplashPlayfield() {
@@ -34,7 +35,6 @@ public:
   }
 
   void Render() {
-    gSoundPlayer.PlayMusic(SONG0_XM);
     gDisplay.renderBitmap->CopyPixels(mBackground);
   }
 public:
