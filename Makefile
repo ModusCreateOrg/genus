@@ -1,18 +1,18 @@
 # ESP-IDF Makefile for game project
-
-
 PROJECT_NAME=Genus
 
 GENUS_SRC_PATH=${PROJECT_PATH}/src
-GENUS_STATES= $(GENUS_SRC_PATH)/GameState
-GENUS_STATES+= $(GENUS_SRC_PATH)/HighScoreState
-GENUS_STATES+= $(GENUS_SRC_PATH)/MainOptionsState
-GENUS_STATES+= $(GENUS_SRC_PATH)/SplashState
+ifndef CREATIVE_ENGINE_PATH
+CREATIVE_ENGINE_PATH=$(abspath ${PROJECT_PATH}/../creative-engine)
+export CREATIVE_ENGINE_PATH
+endif
 
-EXTRA_COMPONENT_DIRS=${PROJECT_PATH}/creative-engine ${PROJECT_PATH}/src $(GENUS_STATES)
+GENUS_STATES=$(GENUS_SRC_PATH)/GameState
+GENUS_STATES+=$(GENUS_SRC_PATH)/HighScoreState
+GENUS_STATES+=$(GENUS_SRC_PATH)/MainOptionsState
+GENUS_STATES+=$(GENUS_SRC_PATH)/SplashState
 
-# COMPONENT_PATH=./src
-
+EXTRA_COMPONENT_DIRS=${CREATIVE_ENGINE_PATH} ${PROJECT_PATH}/src $(GENUS_STATES)
 
 include $(IDF_PATH)/make/project.mk
 
@@ -27,14 +27,13 @@ gen_sfx_headers:
 	echo "Generating sound effects headers"
 	cd resources/sound_effects && ./gen_header.sh
 
-
 rcomp: FORCE
 	echo "Building rcomp"
-	cd ./creative-engine/tools && make
+	cd ${CREATIVE_ENGINE_PATH}/tools && make
 
 resources: rcomp FORCE
 	echo "Compiling resources"
-	cd src && ../creative-engine/tools/rcomp Resources.r
+	cd src && ${CREATIVE_ENGINE_PATH}/tools/rcomp Resources.r
 	
 FORCE:
 
