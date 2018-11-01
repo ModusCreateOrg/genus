@@ -17,9 +17,6 @@ void GPlayerSprite::Randomize() {
   mBlocks[1] = TUint8(Random() & 1);
   mBlocks[2] = TUint8(Random() & 1);
   mBlocks[3] = TUint8(Random() & 1);
-  this->x  = PLAYER_X;
-  this->y  = PLAYER_Y;
-  this->vy = 0;
 }
 
 void GPlayerSprite::RotateLeft() {

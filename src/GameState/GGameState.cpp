@@ -5,6 +5,10 @@
 //#include "GLevel3Playfield.h"
 #include "GGameProcess.h"
 
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
 GGameState::GGameState() : BGameEngine(gViewPort) {
   mLevel       = 1;
   mGameOver    = EFalse;
@@ -33,6 +37,10 @@ GGameState::~GGameState() {
   //  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
 }
 
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
 void GGameState::PreRender() {
   if (mBonusTimer >= 0) {
     mBonusTimer--;
@@ -43,10 +51,15 @@ void GGameState::PreRender() {
   }
 }
 
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
 void GGameState::LoadLevel() {
   switch (mLevel) {
     case 1:
     default:
+      mBlocksThisLevel = 100;
 
       delete mPlayfield;
       mPlayfield = new GLevel1Playfield(this);
@@ -54,6 +67,8 @@ void GGameState::LoadLevel() {
       gSoundPlayer.PlayMusic(SONG1_S3M);
       break;
     case 2:
+      mBlocksThisLevel = 100;
+
       delete mPlayfield;
       mPlayfield = new GLevel2Playfield(this);
       // TODO: Jay needs to implement this
@@ -75,18 +90,27 @@ void GGameState::LoadLevel() {
   gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
 
 
-  delete mGameProcess;
+  if (mGameProcess) {
+    mGameProcess->Remove();
+    delete mGameProcess;
+    mGameProcess = ENull;
+  }
   mGameProcess = new GGameProcess(this);
   AddProcess((BProcess *) mGameProcess);
 
+  mBlocksRemaining = mBlocksThisLevel;
   mGameBoard.Clear();
 }
+
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
 
 void GGameState::RenderTimer() {
   BBitmap *bm = gDisplay.renderBitmap;
   if (mBonusTimer >= 0 || true) {
 
-    bm->DrawStringShadow(ENull, "Time", mFont, TIMER_X, TIMER_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -5);
+    bm->DrawStringShadow(ENull, "Time", mFont, TIMER_X, TIMER_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
     // frame
     bm->DrawRect(ENull, TIMER_BORDER.x1, TIMER_BORDER.y1, TIMER_BORDER.x2, TIMER_BORDER.y2, COLOR_TIMERBORDER);
     // inner
@@ -106,35 +130,12 @@ void GGameState::RenderScore() {
     score_text[i] = '0' + char(v);
   }
   score_text[8] = '\0';
-  bm->DrawStringShadow(ENull, score_text, mFont, SCORE_X, SCORE_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -5);
+  bm->DrawStringShadow(ENull, score_text, mFont, SCORE_X, SCORE_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
 }
 
 void GGameState::RenderLevel() {
   BBitmap *bm = gDisplay.renderBitmap;
-  bm->DrawStringShadow(ENull, "Level 25", mFont, LEVEL_X, LEVEL_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -5);
-
-}
-
-void GGameState::RenderNext() {
-  BBitmap *bm = gDisplay.renderBitmap;
-  bm->DrawStringShadow(ENull, "Next", mFont, NEXT_X, NEXT_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -5);
-}
-
-void GGameState::RenderMovesLeft() {
-  BBitmap *bm = gDisplay.renderBitmap;
-  bm->DrawRect(ENull, MOVES_BORDER.x1, MOVES_BORDER.y1, MOVES_BORDER.x2, MOVES_BORDER.y2, COLOR_BORDER1);
-  bm->FillRect(ENull, MOVES_INNER.x1, MOVES_INNER.y1, MOVES_INNER.x2, MOVES_INNER.y2, COLOR_BORDER2);
-}
-
-// render on top of the background
-void GGameState::PostRender() {
-  BBitmap *bm = gDisplay.renderBitmap;
-  // Score
-  RenderTimer();
-  RenderScore();
-  RenderLevel();
-  RenderMovesLeft();
-  RenderNext();
+  bm->DrawStringShadow(ENull, "Level 25", mFont, LEVEL_X, LEVEL_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
 //  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, 8, 0);
 //  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, 24, 0);
 //  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 2, 40, 0);
@@ -149,6 +150,39 @@ void GGameState::PostRender() {
 //  }
 //  TInt      v = mScore.mValue & 0x0f;
 //  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 0);
+
+}
+
+void GGameState::RenderNext() {
+  BBitmap *bm = gDisplay.renderBitmap;
+  bm->DrawStringShadow(ENull, "Next", mFont, NEXT_X, NEXT_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+}
+
+void GGameState::RenderMovesLeft() {
+  BBitmap *bm = gDisplay.renderBitmap;
+
+  // frame
+  bm->DrawRect(ENull, MOVES_BORDER.x1, MOVES_BORDER.y1, MOVES_BORDER.x2, MOVES_BORDER.y2, COLOR_BORDER1);
+  // inner
+  const TInt moves_width = MOVES_INNER.x2 - MOVES_INNER.x1;
+  const TFloat pct   = TFloat(mBlocksRemaining) / TFloat(mBlocksThisLevel);
+  const TInt   width = TInt(pct * moves_width);
+  bm->FillRect(ENull, MOVES_INNER.x1, MOVES_INNER.y1, MOVES_INNER.x1 + width, MOVES_INNER.y2, COLOR_BORDER2);
+}
+
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
+// render on top of the background
+void GGameState::PostRender() {
+  BBitmap *bm = gDisplay.renderBitmap;
+  //
+  RenderTimer();
+  RenderScore();
+  RenderLevel();
+  RenderMovesLeft();
+  RenderNext();
 
   // render GAME OVER message
   if (mGameOver) {

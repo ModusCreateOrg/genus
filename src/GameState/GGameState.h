@@ -38,8 +38,8 @@ static const TRect MOVES_INNER(226, 75, 301,86);
 // screen coordinates of Next
 static const TInt NEXT_X = 224;
 static const TInt NEXT_Y = 144;
-static const TInt NEXT_BLOCK_X = 224;
-static const TInt NEXT_BLOCK_Y = 167;
+static const TInt NEXT_BLOCK_X = 226;
+static const TInt NEXT_BLOCK_Y = 168;
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -80,9 +80,14 @@ public:
   TInt       mLevel;
   TBCD       mScore;
   GGameBoard mGameBoard;
+
 public:
   TInt mBonusTime;        // how much time to set bonus timer to (faster = harder)
   TInt mBonusTimer;
+
+public:
+  TInt mBlocksThisLevel;  // number of moves this level
+  TInt mBlocksRemaining;  // remaining moves this level
 
 private:
   // these used by PostRender()

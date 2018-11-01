@@ -20,9 +20,20 @@ GGameProcess::GGameProcess(GGameState *aGameState) : BProcess() {
 
   mSprite = new GPlayerSprite();
   aGameState->AddSprite(mSprite);
+  mSprite->x  = PLAYER_X;
+  mSprite->y  = PLAYER_Y;
+  mSprite->vy = 0;
+
+  mNextSprite    = new GPlayerSprite();
+  aGameState->AddSprite(mNextSprite);
+  mNextSprite->flags |= SFLAG_RENDER;
+  mNextSprite->x = NEXT_BLOCK_X;
+  mNextSprite->y = NEXT_BLOCK_Y;
+  mNextSprite->Randomize();
 }
 
 GGameProcess::~GGameProcess() {
+  // sprites are automatically removed and deleted by BGameEngine
 }
 
 TBool GGameProcess::RunBefore() {
@@ -62,7 +73,11 @@ TBool GGameProcess::Drop() {
   (*p)[row + 1][col]     = b[2];
   (*p)[row + 1][col + 1] = b[3];
 
-  mSprite->Randomize();
+  mSprite->Copy(mNextSprite);
+  mSprite->x  = PLAYER_X;
+  mSprite->y  = PLAYER_Y;
+  mSprite->vy = 0;
+  mNextSprite->Randomize();
 
   return mGameBoard->Combine();
 }
@@ -93,11 +108,8 @@ TBool GGameProcess::TimedControl(TUint16 aButton) {
 }
 
 TBool GGameProcess::StateControl() {
+  // TODO: remove this for production
   if (gControls.WasPressed(BUTTON_START)) {
-    gGameEngine->RemoveSprite(mSprite);
-    delete mSprite;
-    mSprite = ENull;
-
     gGame->SetState(GAME_STATE_GAMEOVER);
     return EFalse;
   }
@@ -203,6 +215,10 @@ TBool GGameProcess::StateRemoveBlocks() {
         mRemoveScore++;
         // remove the block
         mGameBoard->mBoard[mRemoveRow][mRemoveCol] = 255;
+        if (mGameState->mBlocksRemaining > 0) {
+          mGameState->mBlocksRemaining--;
+        }
+
         mRemoveCol++;
         break;
       }
