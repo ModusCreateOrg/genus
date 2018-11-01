@@ -10,7 +10,6 @@
 
 
 GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
-
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(COUNTRYSIDE0_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
@@ -45,19 +44,22 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
 }
 
 GLevel1Playfield::~GLevel1Playfield() {
+  // TODO: Jay - always clean up what you make in the construtor
+  // never delete things in slots, just release them
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG4_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG5_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG6_SLOT);
+  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
 }
 
 
 void GLevel1Playfield::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
-  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
+//  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
 
   // Base background
@@ -108,6 +110,6 @@ void GLevel1Playfield::Render() {
 
 //   fflush(stdout);
 // #endif
-  mGameEngine->mGameBoard.Render();
+  mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }
 

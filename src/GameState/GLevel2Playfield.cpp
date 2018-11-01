@@ -35,9 +35,12 @@ GLevel2Playfield::GLevel2Playfield(GGameState *aGameEngine) {
 }
 
 GLevel2Playfield::~GLevel2Playfield()  {
+  // TODO: Jay - always clean up what you make in the construtor
+  // never delete things in slots, just release them
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
+  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
 }
 
 
@@ -81,6 +84,6 @@ void GLevel2Playfield::Render() {
 
 //   fflush(stdout);
 // #endif
- mGameEngine->mGameBoard.Render();
+ mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }
 

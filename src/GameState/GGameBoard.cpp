@@ -57,26 +57,30 @@ TUint32 GGameBoard::CountScore() {
   return accumulated_score;
 }
 
-void GGameBoard::Render() {
+void GGameBoard::Render(TInt aX, TInt aY) {
   // render the board
-  TInt      y   = BOARD_Y;
+  TInt      y   = aY;
   for (TInt row = 0; row < VISIBLE_BOARD_ROWS; row++) {
-    TInt      x   = BOARD_X;
+    TInt      x   = aX;
     for (TInt col = 0; col < VISIBLE_BOARD_COLS; col++) {
       TUint8 v = mBoard[mBoardY + row][mBoardX + col];
       if (v != 255) {
         BSprite::DrawSprite(gViewPort, PLAYER_SLOT, v, x + col * 16, y + row * 16);
       }
 #ifdef RENDER_CHECKERBOARD
-      else if (row & 1) {
-        BSprite::DrawSprite(gViewPort, PLAYER_SLOT, col & 1 ? IMG_BGTILE1 : IMG_BGTILE2, x + col * 16, y + row * 16);
-      } else {
-        BSprite::DrawSprite(gViewPort, PLAYER_SLOT, col & 1 ? IMG_BGTILE2 : IMG_BGTILE1, x + col * 16, y + row * 16);
+      else {
+        BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_BGTILE1, x + col * 16, y + row * 16);
       }
 #endif
     }
   }
+#ifdef RENDER_CHECKERBOARD
+  // render border
+  BBitmap *bm = gDisplay.renderBitmap;
 
+  bm->DrawRect(ENull, aX - 1, aY - 1, aX + BOARD_COLS * 16 + 1, aY + BOARD_ROWS * 16 + 1, COLOR_BORDER2);
+  bm->DrawRect(ENull, aX - 2, aY - 2, aX + BOARD_COLS * 16 , aY + BOARD_ROWS * 16, COLOR_BORDER1);
+#endif
 }
 
 // mark a block as matched (e.g. turn from blue/pink to blue/pink with black center
@@ -88,8 +92,8 @@ TBool GGameBoard::Mark(TInt aRow, TInt aCol) {
 }
 
 TBool GGameBoard::Combine() {
-  TUint8  quad[4];
-  TBool new_combination = EFalse;
+  TUint8 quad[4];
+  TBool  new_combination = EFalse;
 
   for (TInt row = 0; row < BOARD_ROWS - 1; row++) {
     for (TInt col = 0; col < BOARD_COLS - 1; col++) {
@@ -100,7 +104,7 @@ TBool GGameBoard::Combine() {
         continue;
       }
 
-      if (Mark(row, col) | Mark(row, col+1) | Mark(row+1, col) | Mark(row+1, col+1)) {
+      if (Mark(row, col) | Mark(row, col + 1) | Mark(row + 1, col) | Mark(row + 1, col + 1)) {
         new_combination = ETrue;
       }
       // look right
@@ -108,7 +112,7 @@ TBool GGameBoard::Combine() {
         if (!GetQuad(row, right, quad)) {
           break;
         }
-        if (Mark(row, right) | Mark(row+1, right)) {
+        if (Mark(row, right) | Mark(row + 1, right)) {
           new_combination = ETrue;
         }
       }
@@ -117,7 +121,7 @@ TBool GGameBoard::Combine() {
         if (!GetQuad(bottom, col, quad)) {
           break;
         }
-        if (Mark(bottom, col) | Mark(bottom+1, col)) {
+        if (Mark(bottom, col) | Mark(bottom + 1, col)) {
           new_combination = ETrue;
         }
       }

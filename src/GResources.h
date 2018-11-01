@@ -67,15 +67,19 @@ static const TUint16 IMG_SCORE = 76; // score is 48 wide
 static const TUint16 IMG_LEVEL = 80; // LEVEL is 32 wide
 
 // COLOR PALETTE INDEXES
+static const TUint8 COLOR_BORDER1 = 153;
+static const TUint8 COLOR_BORDER2 = 155;
+
 static const TUint8 COLOR_TIMERINNER  = 250;
 static const TUint8 COLOR_TIMERBORDER = 251;
 
 // user interface/widgets colors
-static const TUint8 COLOR_DIALOG_BG  = 249;
-static const TUint8 COLOR_DIALOG_FG  = 250;
-static const TUint8 COLOR_MENU_TITLE = 251;
-static const TUint8 COLOR_TEXT       = 252;
-static const TUint8 COLOR_TEXT_BG    = 253;
-static const TUint8 COLOR_GAMEOVER   = 253;
+static const TUint8 COLOR_DIALOG_BG   = 249;
+static const TUint8 COLOR_DIALOG_FG   = 250;
+static const TUint8 COLOR_MENU_TITLE  = 251;
+static const TUint8 COLOR_TEXT        = 252;
+static const TUint8 COLOR_TEXT_SHADOW = 253;
+static const TUint8 COLOR_TEXT_BG     = 254;
+static const TUint8 COLOR_GAMEOVER    = 255;
 
 #endif //GRESOURCES_H
