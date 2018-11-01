@@ -11,6 +11,7 @@ BITMAP main_options1.bmp
 
 BITMAP charset_8x8.bmp
 BITMAP charset_16x16.bmp
+BITMAP common_sprites.bmp
 BITMAP level1_sprites.bmp
 
 

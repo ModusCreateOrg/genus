@@ -10,7 +10,6 @@
 
 
 GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(COUNTRYSIDE0_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
@@ -52,7 +51,6 @@ GLevel1Playfield::~GLevel1Playfield() {
   gResourceManager.ReleaseBitmapSlot(BKG4_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG5_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG6_SLOT);
-  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
 }
 
 

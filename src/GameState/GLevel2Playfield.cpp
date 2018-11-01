@@ -10,8 +10,6 @@
 
 
 GLevel2Playfield::GLevel2Playfield(GGameState *aGameEngine) {
-
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(CYBERPUNK0_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(CYBERPUNK1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(CYBERPUNK2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
@@ -40,7 +38,6 @@ GLevel2Playfield::~GLevel2Playfield()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
-  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
 }
 
 
