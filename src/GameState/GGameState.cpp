@@ -16,7 +16,6 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mBonusTime  = 15 * 30;   // TODO: difficulty, etc.
   mBonusTimer = -1;
 
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
@@ -29,15 +28,11 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 }
 
 GGameState::~GGameState() {
+  gResourceManager.ReleaseBitmapSlot(FONT_16x16_SLOT);
+  gResourceManager.ReleaseBitmapSlot(FONT_8x8_SLOT);
+  gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
+  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
   delete mFont;
-  // TODO: check these should be done in the BPlayfield children
-  //  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-  //  gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
-  //  gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
-  //  gResourceManager.ReleaseBitmapSlot(BKG4_SLOT);
-  //  gResourceManager.ReleaseBitmapSlot(BKG5_SLOT);
-  //  gResourceManager.ReleaseBitmapSlot(BKG6_SLOT);
-  //  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
 }
 
 /****************************************************************************************************************
@@ -66,12 +61,15 @@ void GGameState::LoadLevel() {
     delete mPlayfield;
     mPlayfield = new GLevel1Playfield(this);
 
+    gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
     gSoundPlayer.PlayMusic(SONG1_S3M);
   } else {
     mBlocksThisLevel = 20;
 
     delete mPlayfield;
     mPlayfield = new GLevel2Playfield(this);
+    gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+
     // TODO: Jay needs to implement this
 //      gSoundPlayer.PlayMusic(SONG2_S3M);
     gSoundPlayer.PlayMusic(SONG1_S3M);    // TODO: Jay needs to remove this hack..  Hack for now so we have some music

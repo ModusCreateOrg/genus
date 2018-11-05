@@ -206,20 +206,21 @@ TBool GGameProcess::StateRemoveBlocks() {
     }
     TUint8 v = mGameBoard->mBoard[mRemoveRow][mRemoveCol];
     if (v != 255) {
-      if (mGameBoard->mBoard[mRemoveRow][mRemoveCol] & 8) {
+      if ((v > 0 && v <= 5) || (v > 16 && v <= 21)) {
         TBCD add;
         add.FromUint32(mRemoveScore);
         mGameState->mScore.Add(add);
         // TODO: Jay, add a sound here for the score incrementing as we remove blocks
         // sound lasts roughly 1/4 second
         mRemoveScore++;
-        // remove the block
-        mGameBoard->mBoard[mRemoveRow][mRemoveCol] = 255;
+        // remove the block - start explosion
+        mGameBoard->mBoard[mRemoveRow][mRemoveCol] =  TUint8((v <= 5) ? 8 : 24);
         if (mGameState->mBlocksRemaining > 0) {
           mGameState->mBlocksRemaining--;
         }
 
         mRemoveCol++;
+        gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
         break;
       }
     }

@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "GPlayerSprite.h"
 
-static const TInt BLINK_TIME   = 2;
+static const TInt BLINK_TIME = 2;
 
 GPlayerSprite::GPlayerSprite() : BSprite(0, PLAYER_SLOT) {
   this->flags     = SFLAG_RENDER;
@@ -13,10 +13,10 @@ GPlayerSprite::~GPlayerSprite() {}
 
 
 void GPlayerSprite::Randomize() {
-  mBlocks[0] = TUint8(Random() & 1);
-  mBlocks[1] = TUint8(Random() & 1);
-  mBlocks[2] = TUint8(Random() & 1);
-  mBlocks[3] = TUint8(Random() & 1);
+  mBlocks[0] = TUint8(Random() & 1 ? 16 : 0);
+  mBlocks[1] = TUint8(Random() & 1 ? 16 : 0);
+  mBlocks[2] = TUint8(Random() & 1 ? 16 : 0);
+  mBlocks[3] = TUint8(Random() & 1 ? 16 : 0);
 }
 
 void GPlayerSprite::RotateLeft() {
@@ -52,8 +52,8 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
   if (mGameOver) {
     return ETrue;
   }
-  TInt    xx  = TInt(round(x));
-  TInt    yy  = TInt(round(y));
+  TInt xx = TInt(round(x));
+  TInt yy = TInt(round(y));
 
   if (flags & SFLAG_RENDER) {
     BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[0], xx, yy);
