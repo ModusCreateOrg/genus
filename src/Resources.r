@@ -32,6 +32,14 @@ BITMAP cyberpunk1.bmp
 BITMAP cyberpunk2.bmp
 
 
+PATH ../resources/backgrounds/glacial_mountains/
+BITMAP glacial_mountains0.bmp
+BITMAP glacial_mountains1.bmp
+BITMAP glacial_mountains2.bmp
+BITMAP glacial_mountains3.bmp
+BITMAP glacial_mountains4.bmp
+BITMAP glacial_mountains5.bmp
+
 # .-=[  MUSIC  ]=-.
 PATH ../resources/music
 

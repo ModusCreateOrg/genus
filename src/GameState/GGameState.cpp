@@ -1,8 +1,9 @@
 #include "Game.h"
 #include "GGameBoard.h"
-#include "GLevel1Playfield.h"
-#include "GLevel2Playfield.h"
-//#include "GLevel3Playfield.h"
+#include "GLevelCountryside.h"
+#include "GLevelCyberpunk.h"
+#include "GLevelUnderWater1.h"
+#include "GLevelGlacialMountains.h"
 #include "GGameProcess.h"
 
 /****************************************************************************************************************
@@ -59,7 +60,7 @@ void GGameState::LoadLevel() {
     mBlocksThisLevel = 20;
 
     delete mPlayfield;
-    mPlayfield = new GLevel1Playfield(this);
+    mPlayfield = new GLevelCountryside(this);
 
     gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
     gSoundPlayer.PlayMusic(SONG1_S3M);
@@ -67,7 +68,7 @@ void GGameState::LoadLevel() {
     mBlocksThisLevel = 20;
 
     delete mPlayfield;
-    mPlayfield = new GLevel2Playfield(this);
+    mPlayfield = new GLevelCyberpunk(this);
     gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
 
     // TODO: Jay needs to implement this
@@ -81,7 +82,7 @@ void GGameState::LoadLevel() {
       mBlocksThisLevel = 100;
 
       delete mPlayfield;
-      mPlayfield = new GLevel1Playfield(this);
+      mPlayfield = new GLevelCountryside(this);
 
       gSoundPlayer.PlayMusic(SONG1_S3M);
       break;

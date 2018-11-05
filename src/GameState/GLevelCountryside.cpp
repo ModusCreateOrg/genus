@@ -1,6 +1,6 @@
 // Created by jaygarcia on 10/23/18.
 #include "Game.h"
-#include "GLevel1Playfield.h"
+#include "GLevelCountryside.h"
 
 #ifdef __XTENSA__
 #include <math.h>
@@ -9,7 +9,7 @@
 #endif
 
 
-GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
+GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(COUNTRYSIDE0_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
@@ -42,9 +42,7 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
   printf("mBackground4 dimensions: %i x %i\n", mBackground5->Width(), mBackground5->Height());
 }
 
-GLevel1Playfield::~GLevel1Playfield() {
-  // TODO: Jay - always clean up what you make in the construtor
-  // never delete things in slots, just release them
+GLevelCountryside::~GLevelCountryside()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
@@ -54,7 +52,8 @@ GLevel1Playfield::~GLevel1Playfield() {
 }
 
 
-void GLevel1Playfield::Animate() {
+
+void GLevelCountryside::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
 //  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
@@ -88,26 +87,16 @@ void GLevel1Playfield::Animate() {
 
 }
 
-void GLevel1Playfield::Render() {
+void GLevelCountryside::Render() {
 
 //  printf("%i\n", gDisplay.renderBitmap->Height() - mBackground4->Height() + 1);
 //  memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
   DrawScrolledBackground(mBackground0, bgOffset0, 0);
   DrawScrolledBackground(mBackground1, bgOffset1, 95, ETrue);
-
   DrawScrolledBackground(mBackground3, bgOffset3, 189, ETrue);
   DrawScrolledBackground(mBackground4, bgOffset4, 212, ETrue);
   DrawScrolledBackground(mBackground5, bgOffset5, 10, ETrue);
-//  DrawScrolledBackground(mBackground1, bgOffset1, 186, ETrue);
 
-
-// #ifdef __XTENSA__
-//   printf("DMA: %i    SPIRAM: %i\n",
-//      heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_DMA),
-//      heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_SPIRAM));
-
-//   fflush(stdout);
-// #endif
   mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }
 
