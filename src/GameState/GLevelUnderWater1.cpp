@@ -76,5 +76,5 @@ void GLevelUnderWater1::Render() {
     srcIndex += 16;
   }
 
-  mGameEngine->mGameBoard.Render();
+  mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }

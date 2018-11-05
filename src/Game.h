@@ -6,6 +6,8 @@
 #include <time.h>
 
 #include <CreativeEngine.h>
+
+
 #include "GSoundPlayer.h"
 #include "Resources.h"
 
@@ -23,6 +25,7 @@
 #include "MainOptionsState/GMainOptionsState.h"
 #include "GCreditsState.h"
 
+// globals
 extern BViewPort   *gViewPort;
 extern BGameEngine *gGameEngine;
 

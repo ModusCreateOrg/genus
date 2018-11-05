@@ -5,46 +5,108 @@
 #include "GGameBoard.h"
 #include "GGameProcess.h"
 
-static const TFloat PLAYER_X = BOARD_X + 48;
-static const TFloat PLAYER_Y = BOARD_Y; //  - 32;
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
+//
+// SCREEN LAYOUT
+//
+
+// screen coordinates of the board
+static const TInt BOARD_X = 18;
+static const TInt BOARD_Y = 34;
+
+// screen coordinates of the bonus timer
+static const TInt TIMER_X = 16;
+static const TInt TIMER_Y = 10;
+static const TRect TIMER_BORDER(64, 10, 207, 25);
+static const TRect TIMER_INNER(66, 12, 205, 23);
+
+// screen coordinates of the score
+static const TInt SCORE_X = 224;
+static const TInt SCORE_Y = 10;
+
+// screen coordinates of level display
+static const TInt LEVEL_X = 224;
+static const TInt LEVEL_Y = 48;
+
+// screen coordinates of moves remaining display
+static const TRect MOVES_BORDER(224, 73, 303, 88);
+static const TRect MOVES_INNER(226, 75, 301,86);
+
+// screen coordinates of Next
+static const TInt NEXT_X = 224;
+static const TInt NEXT_Y = 144;
+static const TInt NEXT_BLOCK_X = 226;
+static const TInt NEXT_BLOCK_Y = 168;
+
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
+static const TFloat PLAYER_X     = BOARD_X + 48;
+static const TFloat PLAYER_Y     = BOARD_Y; //  - 32;
 static const TFloat PLAYER_X_MIN = BOARD_X;
 static const TFloat PLAYER_X_MAX = BOARD_X + (VISIBLE_BOARD_COLS - 2) * 16;
 static const TFloat PLAYER_Y_MIN = BOARD_Y;
 static const TFloat PLAYER_Y_MAX = BOARD_Y + (VISIBLE_BOARD_ROWS - 2) * 16;
 
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
 class GGameState : public BGameEngine {
 public:
-    GGameState();
+  GGameState();
 
-    virtual ~GGameState();
+  virtual ~GGameState();
 
 public:
-    void StartBonusTimer() {
-      if (mBonusTimer < 0) {
-        mBonusTimer = mBonusTime;
-      }
+  void StartBonusTimer() {
+    if (mBonusTimer < 0) {
+      mBonusTimer = mBonusTime;
     }
+  }
+
 protected:
-    BBitmap *mBackground;
+  BBitmap *mBackground;
 protected:
-    GGameProcess *mGameProcess;
+  GGameProcess *mGameProcess;
 
 public:
-    TBool mGameOver;
-    TInt mLevel;
-    TBCD mScore;
-    GGameBoard mGameBoard;
-public:
-    TInt mBonusTime;        // how much time to set bonus timer to (faster = harder)
-    TInt mBonusTimer;
-    // override BGameEngine PreRender() so we can manage timers
-    void PreRender();
-    // override PostRender() to draw the scores, etc.
-    void PostRender();
-public:
-    void Clear();
+  BFont      *mFont;
+  TBool      mGameOver;
+  TInt       mLevel;
+  TBCD       mScore;
+  GGameBoard mGameBoard;
 
-    void LoadLevel();
+public:
+  TInt mBonusTime;        // how much time to set bonus timer to (faster = harder)
+  TInt mBonusTimer;
+
+public:
+  TInt mBlocksThisLevel;  // number of moves this level
+  TInt mBlocksRemaining;  // remaining moves this level
+
+private:
+  // these used by PostRender()
+  void RenderTimer();
+  void RenderScore();
+  void RenderLevel();
+  void RenderMovesLeft();
+  void RenderNext();
+
+public:
+  // override BGameEngine PreRender() so we can manage timers
+  void PreRender();
+
+  // override PostRender() to draw the scores, etc.
+  void PostRender();
+public:
+  void Clear();
+
+  void LoadLevel();
 
 };
 

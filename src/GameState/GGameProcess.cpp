@@ -20,9 +20,20 @@ GGameProcess::GGameProcess(GGameState *aGameState) : BProcess() {
 
   mSprite = new GPlayerSprite();
   aGameState->AddSprite(mSprite);
+  mSprite->x  = PLAYER_X;
+  mSprite->y  = PLAYER_Y;
+  mSprite->vy = 0;
+
+  mNextSprite    = new GPlayerSprite();
+  aGameState->AddSprite(mNextSprite);
+  mNextSprite->flags |= SFLAG_RENDER;
+  mNextSprite->x = NEXT_BLOCK_X;
+  mNextSprite->y = NEXT_BLOCK_Y;
+  mNextSprite->Randomize();
 }
 
 GGameProcess::~GGameProcess() {
+  // sprites are automatically removed and deleted by BGameEngine
 }
 
 TBool GGameProcess::RunBefore() {
@@ -62,7 +73,11 @@ TBool GGameProcess::Drop() {
   (*p)[row + 1][col]     = b[2];
   (*p)[row + 1][col + 1] = b[3];
 
-  mSprite->Randomize();
+  mSprite->Copy(mNextSprite);
+  mSprite->x  = PLAYER_X;
+  mSprite->y  = PLAYER_Y;
+  mSprite->vy = 0;
+  mNextSprite->Randomize();
 
   return mGameBoard->Combine();
 }
@@ -93,11 +108,8 @@ TBool GGameProcess::TimedControl(TUint16 aButton) {
 }
 
 TBool GGameProcess::StateControl() {
+  // TODO: remove this for production
   if (gControls.WasPressed(BUTTON_START)) {
-    gGameEngine->RemoveSprite(mSprite);
-    delete mSprite;
-    mSprite = ENull;
-
     gGame->SetState(GAME_STATE_GAMEOVER);
     return EFalse;
   }
@@ -194,16 +206,21 @@ TBool GGameProcess::StateRemoveBlocks() {
     }
     TUint8 v = mGameBoard->mBoard[mRemoveRow][mRemoveCol];
     if (v != 255) {
-      if (mGameBoard->mBoard[mRemoveRow][mRemoveCol] & 8) {
+      if ((v > 0 && v <= 5) || (v > 16 && v <= 21)) {
         TBCD add;
         add.FromUint32(mRemoveScore);
         mGameState->mScore.Add(add);
         // TODO: Jay, add a sound here for the score incrementing as we remove blocks
         // sound lasts roughly 1/4 second
         mRemoveScore++;
-        // remove the block
-        mGameBoard->mBoard[mRemoveRow][mRemoveCol] = 255;
+        // remove the block - start explosion
+        mGameBoard->mBoard[mRemoveRow][mRemoveCol] =  TUint8((v <= 5) ? 8 : 24);
+        if (mGameState->mBlocksRemaining > 0) {
+          mGameState->mBlocksRemaining--;
+        }
+
         mRemoveCol++;
+        gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
         break;
       }
     }

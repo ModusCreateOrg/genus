@@ -11,7 +11,6 @@
 
 GLevelCyberpunk::GLevelCyberpunk(GGameState *aGameEngine) {
 
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(CYBERPUNK0_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(CYBERPUNK1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(CYBERPUNK2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
@@ -39,8 +38,6 @@ GLevelCyberpunk::~GLevelCyberpunk()  {
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
 }
-
-
 
 
 void GLevelCyberpunk::Animate() {
@@ -72,6 +69,6 @@ void GLevelCyberpunk::Render() {
   DrawScrolledBackground(mBackground1, bgOffset1, 30, ETrue);
   DrawScrolledBackground(mBackground2, bgOffset2, gDisplay.renderBitmap->Height() - mBackground2->Height() + 1, ETrue); // Same with this code.
 
- mGameEngine->mGameBoard.Render();
+ mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }
 

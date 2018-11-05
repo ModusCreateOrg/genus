@@ -10,8 +10,6 @@
 
 
 GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
-
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(COUNTRYSIDE0_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
@@ -20,7 +18,7 @@ GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(COUNTRYSIDE5_BMP, BKG6_SLOT, IMAGE_ENTIRE);
 
   mGameEngine = aGameEngine;
-  mTextColor = 0;
+  mTextColor  = 0;
 
   bgOffset0 = 0;
   bgOffset1 = 0;
@@ -55,36 +53,35 @@ GLevelCountryside::~GLevelCountryside()  {
 
 
 
-
 void GLevelCountryside::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
-  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
+//  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
 
   // Base background
   bgOffset0 += .02;
-  if ((int)bgOffset0 >= mBackground0->Width()) {
-    bgOffset0= 0;
+  if ((int) bgOffset0 >= mBackground0->Width()) {
+    bgOffset0 = 0;
   }
 
   bgOffset1 += .1;
-  if ((int)bgOffset1 >= mBackground1->Width()) {
+  if ((int) bgOffset1 >= mBackground1->Width()) {
     bgOffset1 = 0;
   }
 
   bgOffset3 += .6;
-  if ((int)bgOffset3 >= mBackground3->Width()) {
+  if ((int) bgOffset3 >= mBackground3->Width()) {
     bgOffset3 = 0;
   }
 
   bgOffset4 += 1;
-  if ((int)bgOffset4 >= mBackground4->Width()) {
+  if ((int) bgOffset4 >= mBackground4->Width()) {
     bgOffset4 = 0;
   }
 
   bgOffset5 += .06;
-  if ((int)bgOffset5 >= mBackground5->Width()) {
+  if ((int) bgOffset5 >= mBackground5->Width()) {
     bgOffset5 = 0;
   }
 
@@ -100,6 +97,6 @@ void GLevelCountryside::Render() {
   DrawScrolledBackground(mBackground4, bgOffset4, 212, ETrue);
   DrawScrolledBackground(mBackground5, bgOffset5, 10, ETrue);
 
- mGameEngine->mGameBoard.Render();
+  mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }
 

@@ -47,20 +47,19 @@ add_subdirectory(${CREATIVE_ENGINE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/creative-en
 
 # build rcomp
 add_custom_command(
-    OUTPUT rcomp
-    COMMAND cd ${CREATIVE_ENGINE_PATH}/tools && make
-    OUTPUTS rcomp
-    COMMENT "Building rcomp ${CREATIVE_ENGINE_PATH}"
+        OUTPUT rcomp
+        COMMAND cd ${CREATIVE_ENGINE_PATH}/tools && make
+        OUTPUTS rcomp
+        COMMENT "Building rcomp ${CREATIVE_ENGINE_PATH}"
 )
 
 # build Resources.bin
 add_custom_command(
-    OUTPUT Resources.bin
-    COMMAND @echo
-    COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/src && ${RCOMP} Resources.r
-    OUTPUTS Resources.bin
-    DEPENDS rcomp
-    COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR}"
+        OUTPUT Resources.bin
+        COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/src && ${RCOMP} Resources.r
+        OUTPUTS Resources.bin
+        DEPENDS rcomp
+        COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 # gather creative-engine sources
@@ -70,28 +69,28 @@ file(GLOB_RECURSE CREATIVE_ENGINE ${CREATIVE_ENGINE_PATH}/src/*.cpp)
 add_compile_definitions(LIBXMP_CORE_PLAYER=true)
 add_compile_definitions(LIBXMP_CORE_DISABLE_IT=true)
 file(
-    GLOB LIBXMP_SRC
-    ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/*.h
-    ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/*.c
-    ${CREATIVE_ENGINE_PATH}/src/libxmp/*.h
-    ${CREATIVE_ENGINE_PATH}/src/libxmp/*.c
+        GLOB LIBXMP_SRC
+        ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/*.h
+        ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/*.c
+        ${CREATIVE_ENGINE_PATH}/src/libxmp/*.h
+        ${CREATIVE_ENGINE_PATH}/src/libxmp/*.c
 )
 
 # gather Genus sources
 file(GLOB_RECURSE GENUS_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 
 add_executable(
-    genus
-    Resources.bin
-    ${LIBXMP_SRC}
-    ${CREATIVE_ENGINE}
-    ${GENUS_SRC}
-)
+        genus
+        Resources.bin
+        ${LIBXMP_SRC}
+        ${CREATIVE_ENGINE}
+        ${GENUS_SRC}
+        )
 
 # make genus.app
-if(APPLE)
+if (APPLE)
     SET_TARGET_PROPERTIES(genus PROPERTIES MACOSX_BUNDLE TRUE)
     INSTALL(TARGETS genus DESTINATION ".")
-endif(APPLE)
+endif (APPLE)
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})

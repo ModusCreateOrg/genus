@@ -9,48 +9,49 @@ class GGameState;
 
 class GGameProcess : public BProcess {
 public:
-    GGameProcess(GGameState *aGameState);
+  GGameProcess(GGameState *aGameState);
 
-    virtual ~GGameProcess();
+  virtual ~GGameProcess();
 
-    TInt BoardRow();
+  TInt BoardRow();
 
-    TInt BoardCol();
-
-public:
-    TBool TimedControl(TUint16 aButton);
-
-    TBool CanDrop();
-
-    TBool Drop();
+  TInt BoardCol();
 
 public:
-    TBool StateGameOver();
+  TBool TimedControl(TUint16 aButton);
 
-    TBool StateControl();
+  TBool CanDrop();
 
-    TBool StateRemoveBlocks();
-
-public:
-    void RemoveBlocks();
+  TBool Drop();
 
 public:
-    TBool RunBefore();
+  TBool StateGameOver();
 
-    TBool RunAfter();
+  TBool StateControl();
+
+  TBool StateRemoveBlocks();
 
 public:
-    TInt mState;
-    TInt mRepeatTimer;
-    TInt mBlinkTimer;
+  void RemoveBlocks();
+
 public:
-    GPlayerSprite *mSprite;
-    GGameState *mGameState;
-    GGameBoard *mGameBoard;
+  TBool RunBefore();
+
+  TBool RunAfter();
+
 public:
-    TInt mRemoveRow, mRemoveCol;
-    TInt mRemoveTimer;
-    TUint32 mRemoveScore;
+  TInt mState;
+  TInt mRepeatTimer;
+  TInt mBlinkTimer;
+public:
+  GPlayerSprite *mSprite;
+  GPlayerSprite *mNextSprite;
+  GGameState    *mGameState;
+  GGameBoard    *mGameBoard;
+public:
+  TInt    mRemoveRow, mRemoveCol;
+  TInt    mRemoveTimer;
+  TUint32 mRemoveScore;
 };
 
 #endif //GENUS_GGAMEPROCESS_H

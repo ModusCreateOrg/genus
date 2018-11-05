@@ -14,6 +14,7 @@ public:
   void Animate();
   TBool Render(BViewPort *aVP);
   void Swap(GPlayerSprite *aOther);
+  void Copy(GPlayerSprite *aOther);
 public:
   TInt   mBlinkTimer;
   TUint8 mBlocks[4];
