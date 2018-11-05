@@ -1,6 +1,6 @@
 // Created by jaygarcia on 10/23/18.
 #include "Game.h"
-#include "GLevel1Playfield.h"
+#include "GLevelCountryside.h"
 
 #ifdef __XTENSA__
 #include <math.h>
@@ -9,7 +9,7 @@
 #endif
 
 
-GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
+GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
 
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(COUNTRYSIDE0_BMP, BKG_SLOT, IMAGE_ENTIRE);
@@ -44,7 +44,7 @@ GLevel1Playfield::GLevel1Playfield(GGameState *aGameEngine) {
   printf("mBackground4 dimensions: %i x %i\n", mBackground5->Width(), mBackground5->Height());
 }
 
-GLevel1Playfield::~GLevel1Playfield()  {
+GLevelCountryside::~GLevelCountryside()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
@@ -56,7 +56,7 @@ GLevel1Playfield::~GLevel1Playfield()  {
 
 
 
-void GLevel1Playfield::Animate() {
+void GLevelCountryside::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
   gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
@@ -90,7 +90,7 @@ void GLevel1Playfield::Animate() {
 
 }
 
-void GLevel1Playfield::Render() {
+void GLevelCountryside::Render() {
 
 //  printf("%i\n", gDisplay.renderBitmap->Height() - mBackground4->Height() + 1);
 //  memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes

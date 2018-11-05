@@ -1,6 +1,6 @@
 // Created by jaygarcia on 10/23/18.
 #include "Game.h"
-#include "GLevel2Playfield.h"
+#include "GLevelCyberpunk.h"
 
 #ifdef __XTENSA__
 #include <math.h>
@@ -9,7 +9,7 @@
 #endif
 
 
-GLevel2Playfield::GLevel2Playfield(GGameState *aGameEngine) {
+GLevelCyberpunk::GLevelCyberpunk(GGameState *aGameEngine) {
 
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(CYBERPUNK0_BMP, BKG_SLOT, IMAGE_ENTIRE);
@@ -34,7 +34,7 @@ GLevel2Playfield::GLevel2Playfield(GGameState *aGameEngine) {
   printf("mBackground2 dimensions: %i x %i\n", mBackground2->Width(), mBackground2->Height());
 }
 
-GLevel2Playfield::~GLevel2Playfield()  {
+GLevelCyberpunk::~GLevelCyberpunk()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
@@ -43,7 +43,7 @@ GLevel2Playfield::~GLevel2Playfield()  {
 
 
 
-void GLevel2Playfield::Animate() {
+void GLevelCyberpunk::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
   gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
@@ -66,7 +66,7 @@ void GLevel2Playfield::Animate() {
 
 }
 
-void GLevel2Playfield::Render() {
+void GLevelCyberpunk::Render() {
 
   memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
   DrawScrolledBackground(mBackground0, bgOffset0, 0);

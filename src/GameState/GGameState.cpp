@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "GGameBoard.h"
-#include "GLevel1Playfield.h"
-#include "GLevel2Playfield.h"
+#include "GLevelCountryside.h"
+#include "GLevelCyberpunk.h"
 //#include "GLevel3Playfield.h"
 #include "GGameProcess.h"
 
@@ -44,7 +44,7 @@ void GGameState::LoadLevel() {
     default:
 
       delete mPlayfield;
-      mPlayfield = new GLevel1Playfield(this);
+      mPlayfield = new GLevelCountryside(this);
 
       gSoundPlayer.PlayMusic(SONG1_S3M);
       break;
