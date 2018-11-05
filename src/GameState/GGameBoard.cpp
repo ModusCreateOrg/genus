@@ -102,6 +102,9 @@ TBool GGameBoard::Mark(TInt aRow, TInt aCol) {
   return mBoard[aRow][aCol] != v;
 }
 
+static TBool check(TUint8 v) {
+  return (v != 0 && v != 16);
+}
 TBool GGameBoard::Combine() {
   TUint8 quad[4];
   TBool  new_combination = EFalse;
@@ -109,6 +112,10 @@ TBool GGameBoard::Combine() {
   for (TInt row = 0; row < BOARD_ROWS - 1; row++) {
     for (TInt col = 0; col < BOARD_COLS - 1; col++) {
       if (!GetQuad(row, col, quad)) {
+        continue;
+      }
+
+      if (check(quad[0]) || check(quad[1]) || check(quad[2]) || check(quad[3])) {
         continue;
       }
 //      if (quad[0] > 1 || quad[1] > 1 || quad[2] > 1 || quad[3] > 1) {
