@@ -36,7 +36,7 @@ protected:
 
   TUint8 GetBlock(TInt aRow, TInt aCol) {
     TUint8 b = mBoard[aRow][aCol];
-    if (b >= 0 && b <= 5) {
+    if (/* b >= 0 &&*/ b <= 5) {
       return 0;
     } else if (b >= 16 && b <= 21) {
       return 16;
