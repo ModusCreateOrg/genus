@@ -1,6 +1,10 @@
-// Created by jaygarcia on 10/23/18.
+//
+// Created by Jesus Garcia on 11/5/18.
+//
+
+#include "GLevelGlacialMountains.h"
 #include "Game.h"
-#include "GLevelCountryside.h"
+#include "GLevelGlacialMountains.h"
 
 #ifdef __XTENSA__
 #include <math.h>
@@ -9,7 +13,7 @@
 #endif
 
 
-GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
+GLevelGlacialMountains::GLevelGlacialMountains(GGameState *aGameEngine) {
 
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(COUNTRYSIDE0_BMP, BKG_SLOT, IMAGE_ENTIRE);
@@ -44,7 +48,7 @@ GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
   printf("mBackground4 dimensions: %i x %i\n", mBackground5->Width(), mBackground5->Height());
 }
 
-GLevelCountryside::~GLevelCountryside()  {
+GLevelGlacialMountains::~GLevelGlacialMountains()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
@@ -56,7 +60,7 @@ GLevelCountryside::~GLevelCountryside()  {
 
 
 
-void GLevelCountryside::Animate() {
+void GLevelGlacialMountains::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
   gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
@@ -90,9 +94,8 @@ void GLevelCountryside::Animate() {
 
 }
 
-void GLevelCountryside::Render() {
+void GLevelGlacialMountains::Render() {
 
-//  printf("%i\n", gDisplay.renderBitmap->Height() - mBackground4->Height() + 1);
 //  memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
   DrawScrolledBackground(mBackground0, bgOffset0, 0);
   DrawScrolledBackground(mBackground1, bgOffset1, 95, ETrue);
@@ -100,6 +103,6 @@ void GLevelCountryside::Render() {
   DrawScrolledBackground(mBackground4, bgOffset4, 212, ETrue);
   DrawScrolledBackground(mBackground5, bgOffset5, 10, ETrue);
 
- mGameEngine->mGameBoard.Render();
+  mGameEngine->mGameBoard.Render();
 }
 

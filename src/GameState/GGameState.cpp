@@ -2,7 +2,7 @@
 #include "GGameBoard.h"
 #include "GLevelCountryside.h"
 #include "GLevelCyberpunk.h"
-//#include "GLevel3Playfield.h"
+#include "GLevelUnderWater1.h"
 #include "GGameProcess.h"
 
 static const TUint8 GRID_COLOR = 253;;
@@ -44,7 +44,7 @@ void GGameState::LoadLevel() {
     default:
 
       delete mPlayfield;
-      mPlayfield = new GLevelCountryside(this);
+      mPlayfield = new GLevelUnderWater1(this);
 
       gSoundPlayer.PlayMusic(SONG1_S3M);
       break;

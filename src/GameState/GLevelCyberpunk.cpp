@@ -60,7 +60,6 @@ void GLevelCyberpunk::Animate() {
 
   bgOffset2 += 1.3;
   if ((int)bgOffset2 >= mBackground2->Width()) {
-    printf("Reset bgOffset2 %i\n", (int)bgOffset2);
     bgOffset2 = 0;
   }
 
@@ -68,19 +67,11 @@ void GLevelCyberpunk::Animate() {
 
 void GLevelCyberpunk::Render() {
 
-  memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
+//  memset(gDisplay.renderBitmap->GetPixels(), 0, 320*240); // debug purposes
   DrawScrolledBackground(mBackground0, bgOffset0, 0);
-  DrawScrolledBackground(mBackground1, bgOffset1, 30, ETrue); // @Mtintiuc -- Set to EFalse, and the overflow drawing goes away.
+  DrawScrolledBackground(mBackground1, bgOffset1, 30, ETrue);
   DrawScrolledBackground(mBackground2, bgOffset2, gDisplay.renderBitmap->Height() - mBackground2->Height() + 1, ETrue); // Same with this code.
 
-
-// #ifdef __XTENSA__
-//   printf("DMA: %i    SPIRAM: %i\n",
-//      heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_DMA),
-//      heap_caps_get_free_size(MALLOC_CAP_8BIT | MALLOC_CAP_SPIRAM));
-
-//   fflush(stdout);
-// #endif
  mGameEngine->mGameBoard.Render();
 }
 

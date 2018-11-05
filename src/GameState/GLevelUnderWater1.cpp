@@ -7,16 +7,16 @@
 #include "freertos/FreeRTOS.h"
 #endif
 
-int8_t *xOffset;
-
-int8_t *yComp;
+//int8_t *xOffset;
+//
+//int8_t *yComp;
 
 
 GLevelUnderWater1::GLevelUnderWater1(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(UNDER_WATER_BMP, BKG_SLOT, IMAGE_ENTIRE);
 
-  gDisplay.renderBitmap->SetPalette(mBackground, 0, 128);
+//  gDisplay.renderBitmap->SetPalette(mBackground, 0, 128);
 
   mGameEngine = aGameEngine;
   mTextColor = 0;
@@ -59,13 +59,11 @@ void GLevelUnderWater1::Animate() {
 }
 
 void GLevelUnderWater1::Render() {
-  uint8_t *src = mBackground->mPixels,
-          *dest = gDisplay.renderBitmap->mPixels;
+  uint8_t *src = mBackground->GetPixels(),
+          *dest = gDisplay.renderBitmap->GetPixels();
 
-
-//  memset(mBackground->mPixels, 0, 320 * 240);
   int srcIndex = 8,
-          destIndex = 0;
+      destIndex = 0;
 
   for (uint8_t y = 0; y < 240; y++) {
     for (int x = 0; x < 320; x++) {
