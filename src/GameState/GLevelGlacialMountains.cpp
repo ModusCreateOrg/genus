@@ -16,12 +16,12 @@
 GLevelGlacialMountains::GLevelGlacialMountains(GGameState *aGameEngine) {
 
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-  gResourceManager.LoadBitmap(COUNTRYSIDE0_BMP, BKG_SLOT, IMAGE_ENTIRE);
-  gResourceManager.LoadBitmap(COUNTRYSIDE1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
-  gResourceManager.LoadBitmap(COUNTRYSIDE2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
-  gResourceManager.LoadBitmap(COUNTRYSIDE3_BMP, BKG4_SLOT, IMAGE_ENTIRE);
-  gResourceManager.LoadBitmap(COUNTRYSIDE4_BMP, BKG5_SLOT, IMAGE_ENTIRE);
-  gResourceManager.LoadBitmap(COUNTRYSIDE5_BMP, BKG6_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS0_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS3_BMP, BKG4_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS4_BMP, BKG5_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS5_BMP, BKG6_SLOT, IMAGE_ENTIRE);
 
   mGameEngine = aGameEngine;
   mTextColor = 0;
@@ -67,27 +67,32 @@ void GLevelGlacialMountains::Animate() {
 
 
   // Base background
-  bgOffset0 += .02;
+  bgOffset0 += .005;
   if ((int)bgOffset0 >= mBackground0->Width()) {
     bgOffset0= 0;
   }
 
-  bgOffset1 += .1;
+  bgOffset1 += .008;
   if ((int)bgOffset1 >= mBackground1->Width()) {
     bgOffset1 = 0;
   }
 
-  bgOffset3 += .6;
+//  bgOffset2 += .01;
+//  if ((int)bgOffset2 >= mBackground2->Width()) {
+//    bgOffset2 = 0;
+//  }
+
+  bgOffset3 += .01;
   if ((int)bgOffset3 >= mBackground3->Width()) {
     bgOffset3 = 0;
   }
 
-  bgOffset4 += 1;
+  bgOffset4 += .3;
   if ((int)bgOffset4 >= mBackground4->Width()) {
     bgOffset4 = 0;
   }
 
-  bgOffset5 += .06;
+  bgOffset5 += .5;
   if ((int)bgOffset5 >= mBackground5->Width()) {
     bgOffset5 = 0;
   }
@@ -98,10 +103,11 @@ void GLevelGlacialMountains::Render() {
 
 //  memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
   DrawScrolledBackground(mBackground0, bgOffset0, 0);
-  DrawScrolledBackground(mBackground1, bgOffset1, 95, ETrue);
-  DrawScrolledBackground(mBackground3, bgOffset3, 189, ETrue);
-  DrawScrolledBackground(mBackground4, bgOffset4, 212, ETrue);
-  DrawScrolledBackground(mBackground5, bgOffset5, 10, ETrue);
+  DrawScrolledBackground(mBackground1, bgOffset1, 60, ETrue);
+  DrawScrolledBackground(mBackground2, bgOffset2, 70, ETrue);
+  DrawScrolledBackground(mBackground3, bgOffset3, 173, ETrue);
+  DrawScrolledBackground(mBackground4, bgOffset4, 175, ETrue);
+  DrawScrolledBackground(mBackground5, bgOffset5, gDisplay.renderBitmap->Height() - mBackground5->Height(), ETrue);
 
   mGameEngine->mGameBoard.Render();
 }

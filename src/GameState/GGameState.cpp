@@ -3,6 +3,7 @@
 #include "GLevelCountryside.h"
 #include "GLevelCyberpunk.h"
 #include "GLevelUnderWater1.h"
+#include "GLevelGlacialMountains.h"
 #include "GGameProcess.h"
 
 static const TUint8 GRID_COLOR = 253;;
