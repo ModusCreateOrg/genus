@@ -19,7 +19,14 @@ static const TUint16 FONT_8x8_SLOT   = 8;
 static const TUint16 FONT_16x16_SLOT = 9;
 
 // Song slot
-static const TUint8 SONG_SLOT = 10;
+static const TUint8 SONG_SLOT = 1;
+static const TUint8 SFX1_SLOT = 2;
+static const TUint8 SFX2_SLOT = 3;
+static const TUint8 SFX3_SLOT = 4;
+static const TUint8 SFX4_SLOT = 5;
+static const TUint8 SFX5_SLOT = 6;
+static const TUint8 SFX6_SLOT = 7;
+static const TUint8 SFX7_SLOT = 8;
 
 
 // Font Slots
