@@ -58,6 +58,7 @@ GSoundPlayer::GSoundPlayer() {
 #endif
   xmpContext = xmp_create_context();
 
+
   mMusicVolume = 10;
   mEffectsVolume = 96;
   mMuted = false;

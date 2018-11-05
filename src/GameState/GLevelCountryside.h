@@ -8,10 +8,10 @@
 #include "GGameState.h"
 #include "GScrollingLevel.h"
 
-class GLevel1Playfield : public GScrollingLevel {
+class GLevelCountryside : public GScrollingLevel {
 public:
-    GLevel1Playfield(GGameState *aGameEngine);
-    ~GLevel1Playfield();
+    GLevelCountryside(GGameState *aGameEngine);
+    ~GLevelCountryside();
 
     void Animate();
     void Render();

@@ -8,10 +8,10 @@
 #include "GGameState.h"
 #include "GScrollingLevel.h"
 
-class GLevel2Playfield : public GScrollingLevel {
+class GLevelCyberpunk : public GScrollingLevel {
 public:
-  GLevel2Playfield(GGameState *aGameEngine);
-  ~GLevel2Playfield();
+  GLevelCyberpunk(GGameState *aGameEngine);
+  ~GLevelCyberpunk();
 
   void Animate();
   void Render();
