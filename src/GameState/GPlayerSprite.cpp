@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "GPlayerSprite.h"
 
-static const TInt BLINK_TIME   = 2;
+static const TInt BLINK_TIME = 2;
 
 GPlayerSprite::GPlayerSprite() : BSprite(0, PLAYER_SLOT) {
   this->flags     = SFLAG_RENDER;
@@ -13,13 +13,10 @@ GPlayerSprite::~GPlayerSprite() {}
 
 
 void GPlayerSprite::Randomize() {
-  mBlocks[0] = TUint8(Random() & 1);
-  mBlocks[1] = TUint8(Random() & 1);
-  mBlocks[2] = TUint8(Random() & 1);
-  mBlocks[3] = TUint8(Random() & 1);
-  this->x  = PLAYER_X;
-  this->y  = PLAYER_Y;
-  this->vy = 0;
+  mBlocks[0] = TUint8(Random() & 1 ? 16 : 0);
+  mBlocks[1] = TUint8(Random() & 1 ? 16 : 0);
+  mBlocks[2] = TUint8(Random() & 1 ? 16 : 0);
+  mBlocks[3] = TUint8(Random() & 1 ? 16 : 0);
 }
 
 void GPlayerSprite::RotateLeft() {
@@ -29,6 +26,7 @@ void GPlayerSprite::RotateLeft() {
   mBlocks[1] = mBlocks[3];
   mBlocks[3] = mBlocks[2];
   mBlocks[2] = save;
+  // TODO: Jay - this should be in the caller of this method
   gSoundPlayer.PlaySound(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/4, 0, EFalse);
 }
 
@@ -39,6 +37,7 @@ void GPlayerSprite::RotateRight() {
   mBlocks[2] = mBlocks[3];
   mBlocks[3] = mBlocks[1];
   mBlocks[1] = save;
+  // TODO: Jay - this should be in the caller of this method
   gSoundPlayer.PlaySound(/*SFX_ROTATE_BLOCK_LEFT_WAV*/3, 0, EFalse);
 }
 
@@ -53,8 +52,8 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
   if (mGameOver) {
     return ETrue;
   }
-  TInt    xx  = TInt(x + .5);
-  TInt    yy  = TInt(y + .5);
+  TInt xx = TInt(round(x));
+  TInt yy = TInt(round(y));
 
   if (flags & SFLAG_RENDER) {
     BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[0], xx, yy);
@@ -88,5 +87,12 @@ void GPlayerSprite::Swap(GPlayerSprite *aOther) {
   save = aOther->mBlocks[3];
   aOther->mBlocks[3] = this->mBlocks[3];
   this->mBlocks[3]   = save;
+}
+
+void GPlayerSprite::Copy(GPlayerSprite *aOther) {
+  this->mBlocks[0] = aOther->mBlocks[0];
+  this->mBlocks[1] = aOther->mBlocks[1];
+  this->mBlocks[2] = aOther->mBlocks[2];
+  this->mBlocks[3] = aOther->mBlocks[3];
 }
 

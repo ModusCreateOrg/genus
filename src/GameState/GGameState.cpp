@@ -6,28 +6,39 @@
 #include "GLevelGlacialMountains.h"
 #include "GGameProcess.h"
 
-static const TUint8 GRID_COLOR = 253;;
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
 
 GGameState::GGameState() : BGameEngine(gViewPort) {
-  mLevel       = 1;
-  mGameOver    = EFalse;
-  mPlayfield   = ENull;
-  mGameProcess = ENull;
-  mBonusTime   = 15 * 30;   // TODO: difficulty, etc.
-  mBonusTimer  = -1;
+  mLevel      = 1;
+  mGameOver   = EFalse;
+  mPlayfield  = ENull;
+  mBonusTime  = 15 * 30;   // TODO: difficulty, etc.
+  mBonusTimer = -1;
+
+  gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
+  gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
+  gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
+  mFont = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
+
+  mGameBoard.Clear();
   LoadLevel();
+  mGameProcess = new GGameProcess(this);
+  AddProcess((BProcess *) mGameProcess);
 }
 
 GGameState::~GGameState() {
-  //
+  gResourceManager.ReleaseBitmapSlot(FONT_16x16_SLOT);
+  gResourceManager.ReleaseBitmapSlot(FONT_8x8_SLOT);
+  gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
   gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-  gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
-  gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
-  gResourceManager.ReleaseBitmapSlot(BKG4_SLOT);
-  gResourceManager.ReleaseBitmapSlot(BKG5_SLOT);
-  gResourceManager.ReleaseBitmapSlot(BKG6_SLOT);
+  delete mFont;
 }
+
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
 
 void GGameState::PreRender() {
   if (mBonusTimer >= 0) {
@@ -39,118 +50,157 @@ void GGameState::PreRender() {
   }
 }
 
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
 void GGameState::LoadLevel() {
+#if 1
+  if (mLevel & 1) {
+    mBlocksThisLevel = 20;
+
+    delete mPlayfield;
+    mPlayfield = new GLevelCountryside(this);
+
+    gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+    gSoundPlayer.PlayMusic(SONG1_S3M);
+  } else {
+    mBlocksThisLevel = 20;
+
+    delete mPlayfield;
+    mPlayfield = new GLevelCyberpunk(this);
+    gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+
+    // TODO: Jay needs to implement this
+//      gSoundPlayer.PlayMusic(SONG2_S3M);
+    gSoundPlayer.PlayMusic(SONG1_S3M);    // TODO: Jay needs to remove this hack..  Hack for now so we have some music
+  }
+#else
   switch (mLevel) {
     case 1:
     default:
+      mBlocksThisLevel = 100;
 
       delete mPlayfield;
       mPlayfield = new GLevelCountryside(this);
 
       gSoundPlayer.PlayMusic(SONG1_S3M);
       break;
+    case 2:
+      mBlocksThisLevel = 100;
+
+      delete mPlayfield;
+      mPlayfield = new GLevel2Playfield(this);
+      // TODO: Jay needs to implement this
+//      gSoundPlayer.PlayMusic(SONG2_S3M);
+      gSoundPlayer.PlayMusic(SONG1_S3M);    // TODO: Jay needs to remove this hack..  Hack for now so we have some music
+      break;
   }
+#endif
+  // TODO: Jay we're assuming the playfield we just created loads the player slot
+  // each level might have different blocks, for example
   BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
 
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
+  // TODO: Jay - this logic can be moved to BPlayfield children
+  // this assumes BKG_SLOT bmp has the correct palette for the display
   gDisplay.SetPalette(mBackground, 0, 128);
   gDisplay.SetPalette(playerBitmap, 128, 128);
-  gDisplay.SetColor(GRID_COLOR, 255, 255, 255);
+  gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
+  gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
 
-  delete mGameProcess;
-  mGameProcess = new GGameProcess(this);
-  AddProcess((BProcess *) mGameProcess);
 
-  mGameBoard.Clear();
-
-#ifdef RENDER_GRID
-  // draw grid on backgrounds
-  for (TInt row = 0; row < VISIBLE_BOARD_ROWS + 1; row++) {
-    mBackground0->DrawFastHLine(ENull, BOARD_X, BOARD_Y + row * 16, VISIBLE_BOARD_COLS * 16, GRID_COLOR);
-  }
-  for (TInt col = 0; col < VISIBLE_BOARD_COLS + 1; col++) {
-    mBackground0->DrawFastVLine(ENull, BOARD_X + col * 16, BOARD_Y, VISIBLE_BOARD_ROWS * 16, GRID_COLOR);
-  }
-#endif
+  mBlocksRemaining = mBlocksThisLevel;
 }
+
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
+void GGameState::RenderTimer() {
+  BBitmap *bm = gDisplay.renderBitmap;
+  if (mBonusTimer >= 0) {
+
+    bm->DrawStringShadow(ENull, "Time", mFont, TIMER_X, TIMER_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+    // frame
+    bm->DrawRect(ENull, TIMER_BORDER.x1, TIMER_BORDER.y1, TIMER_BORDER.x2, TIMER_BORDER.y2, COLOR_TIMERBORDER);
+    // inner
+    const TInt   timer_width = TIMER_INNER.x2 - TIMER_INNER.x1;
+    const TFloat pct         = TFloat(mBonusTimer) / TFloat(mBonusTime);
+    const TInt   width       = TInt(pct * timer_width);
+    bm->FillRect(ENull, TIMER_INNER.x1, TIMER_INNER.y1, TIMER_INNER.x1 + width, TIMER_INNER.y2, COLOR_TIMERINNER);
+  }
+}
+
+void GGameState::RenderScore() {
+  BBitmap *bm = gDisplay.renderBitmap;
+  char    score_text[12];
+
+  for (TInt i   = 0; i < 8; i++) {
+    TInt v = (mScore.mValue >> ((7 - i) * 4)) & 0x0f;
+    score_text[i] = '0' + char(v);
+  }
+  score_text[8] = '\0';
+  bm->DrawStringShadow(ENull, score_text, mFont, SCORE_X, SCORE_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+}
+
+void GGameState::RenderLevel() {
+  BBitmap *bm = gDisplay.renderBitmap;
+  TBCD    level((TUint32) mLevel);
+  char    lev[10];
+  level.ToString(lev, EFalse);
+  char out[32];
+  if (strlen(lev) == 1) {
+    strcpy(out, "Level  ");
+  } else {
+    strcpy(out, "Level ");
+  }
+  strcat(out, lev);
+
+  bm->DrawStringShadow(ENull, out, mFont, LEVEL_X, LEVEL_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+}
+
+void GGameState::RenderNext() {
+  BBitmap *bm = gDisplay.renderBitmap;
+  bm->DrawStringShadow(ENull, "Next", mFont, NEXT_X, NEXT_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+}
+
+void GGameState::RenderMovesLeft() {
+  BBitmap *bm = gDisplay.renderBitmap;
+
+  // frame
+  bm->DrawRect(ENull, MOVES_BORDER.x1, MOVES_BORDER.y1, MOVES_BORDER.x2, MOVES_BORDER.y2, COLOR_BORDER1);
+  // inner
+  const TInt   moves_width = MOVES_INNER.x2 - MOVES_INNER.x1;
+  const TFloat pct         = TFloat(mBlocksRemaining) / TFloat(mBlocksThisLevel);
+  const TInt   width       = TInt(pct * moves_width);
+  bm->FillRect(ENull, MOVES_INNER.x1, MOVES_INNER.y1, MOVES_INNER.x1 + width, MOVES_INNER.y2, COLOR_BORDER2);
+}
+
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
 
 // render on top of the background
 void GGameState::PostRender() {
-  BBitmap *bm = gDisplay.renderBitmap;
-#if 0
-  // render the red circles/dots at the top
-for (TInt i = 0, j = mBoardX; i < VISIBLE_BOARD_COLS; i++, j++) {
-  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + i*16, BOARD_Y - 16);
-//    if (j & 1) {
-//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X + i * 16, SCREEN_HEIGHT - 16);
-//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X + i * 16, BOARD_Y - 16);
-//    } else {
-//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + i * 16, SCREEN_HEIGHT - 16);
-//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + i * 16, BOARD_Y - 16);
-//    }
-}
-#endif
-#if 0
-  for (TInt i = 0, j = mBoardY; i < VISIBLE_BOARD_ROWS; i++, j++) {
-//    if (j & 1) {
-//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X - 16, BOARD_Y + i * 16);
-//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_ON, BOARD_X + VISIBLE_BOARD_COLS * 16, BOARD_Y + i * 16);
-//    } else {
-//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X - 16, BOARD_Y + i * 16);
-  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_BEAT_OFF, BOARD_X + VISIBLE_BOARD_COLS * 16, BOARD_Y + i * 16);
-//    }
-}
-#endif
-  // Score
-  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE, 8, 0);
-  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 1, 24, 0);
-  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_SCORE + 2, 40, 0);
-  TInt      x = 56;
-  for (TInt i = 0; i < 7; i++) {
-    TInt v = (mScore.mValue >> ((7 - i) * 4)) & 0x0f;
-    // commented out to show lead zeros
-//    if (v) {
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 0);
-//    }
-    x += 8;
+  if (mBlocksRemaining < 1) {
+    mLevel++;
+    LoadLevel();
   }
-  TInt      v = mScore.mValue & 0x0f;
-  BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_NUM0 + v, x, 0);
+  //
+  RenderTimer();
+  RenderScore();
+  RenderLevel();
+  RenderMovesLeft();
+  RenderNext();
 
   // render GAME OVER message
   if (mGameOver) {
-    x = BOARD_X + VISIBLE_BOARD_COLS * 16 + 32;
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER, x, BOARD_Y);
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER + 1, x + 16, BOARD_Y);
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER + 2, x + 32, BOARD_Y);
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER + 3, x + 48, BOARD_Y);
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER2, x, BOARD_Y + 16);
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER2 + 1, x + 16, BOARD_Y + 16);
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER2 + 2, x + 32, BOARD_Y + 16);
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_GAMEOVER2 + 3, x + 48, BOARD_Y + 16);
-  }
-
-  // render timer
-  // TODO: move to GGameTimer class?
-  static const TInt TIMER_X     = BOARD_X + 47;
-  static const TInt TIMER_Y     = BOARD_Y - 20;
-  static const TInt TIMER_WIDTH = 100; // BOARD_X + BOARD_COLS * 16 - TIMER_X;
-
-  if (mBonusTimer >= 0) {
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_TIME, 16, 14);
-    BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_TIME + 1, 16 + 16, 14);
-//  bm->DrawFastHLine(gViewPort, BOARD_X + 48, BOARD_Y - 20, BOARD_COLS * 12, COLOR_TIMERBORDER);
-//  bm->DrawFastHLine(gViewPort, BOARD_X + 48, BOARD_Y - 8, BOARD_COLS * 12, COLOR_TIMERBORDER);
-    bm->DrawFastHLine(gViewPort, TIMER_X, TIMER_Y, TIMER_WIDTH, COLOR_TIMERBORDER);
-    bm->DrawFastHLine(gViewPort, TIMER_X, TIMER_Y + 12, TIMER_WIDTH, COLOR_TIMERBORDER);
-
-    // calculate width and offset of timer, based upon time remaining
-    const TFloat pct   = TFloat(mBonusTimer) / TFloat(mBonusTime);
-    const TInt   width = pct * TIMER_WIDTH;
-    for (TInt    y     = 0; y < 9; y++) {
-      bm->DrawFastHLine(gViewPort, TIMER_X, TIMER_Y + 2 + y, width, COLOR_TIMERINNER);
+    if (mFrameCounter & 4) {
+      BBitmap *bm = gDisplay.renderBitmap;
+      bm->DrawBitmapTransparent(ENull, gResourceManager.GetBitmap(COMMON_SLOT), TRect(0, 0, 127, 15),
+                                (DISPLAY_WIDTH - 128) / 2, (DISPLAY_HEIGHT - 16) / 2);
     }
   }
-
 }
 

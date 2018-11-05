@@ -109,6 +109,6 @@ void GLevelGlacialMountains::Render() {
   DrawScrolledBackground(mBackground4, bgOffset4, 175, ETrue);
   DrawScrolledBackground(mBackground5, bgOffset5, gDisplay.renderBitmap->Height() - mBackground5->Height(), ETrue);
 
-  mGameEngine->mGameBoard.Render();
+  mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }
 

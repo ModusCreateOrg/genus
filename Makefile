@@ -27,6 +27,9 @@ gen_sfx_headers:
 	echo "Generating sound effects headers"
 	cd resources/sound_effects && ./gen_header.sh
 
+release: FORCE
+	./scripts/build.sh && cd build && tar czvfp ~/Downloads/genus.app.tgz genus.app
+
 rcomp: FORCE
 	echo "Building rcomp"
 	cd ${CREATIVE_ENGINE_PATH}/tools && make
@@ -34,7 +37,7 @@ rcomp: FORCE
 resources: rcomp FORCE
 	echo "Compiling resources"
 	cd src && ${CREATIVE_ENGINE_PATH}/tools/rcomp Resources.r
-	
+
 FORCE:
 
 

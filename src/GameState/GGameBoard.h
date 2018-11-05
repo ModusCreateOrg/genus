@@ -3,31 +3,31 @@
 
 #include <CreativeEngine.h>
 
+//
+// Design / layout constants
+//
+
 // number of rows and columns in the visible game board
 static const TInt VISIBLE_BOARD_ROWS = 12;
 static const TInt VISIBLE_BOARD_COLS = 12;
+
 // number of rows and columns in the game board (visible and hidden)
-static const TInt BOARD_ROWS         = (VISIBLE_BOARD_ROWS);
-static const TInt BOARD_COLS         = (VISIBLE_BOARD_COLS);
-//static const TInt BOARD_ROWS         = (VISIBLE_BOARD_ROWS + 8);
-//static const TInt BOARD_COLS         = (VISIBLE_BOARD_COLS + 8);
-static const TInt BOARD_X_MAX        = (BOARD_COLS - VISIBLE_BOARD_COLS);
-static const TInt BOARD_Y_MAX        = (BOARD_ROWS - VISIBLE_BOARD_ROWS);
+static const TInt BOARD_ROWS  = (VISIBLE_BOARD_ROWS);
+static const TInt BOARD_COLS  = (VISIBLE_BOARD_COLS);
+static const TInt BOARD_X_MAX = (BOARD_COLS - VISIBLE_BOARD_COLS);
+static const TInt BOARD_Y_MAX = (BOARD_ROWS - VISIBLE_BOARD_ROWS);
 
-// screen coordinates
-//static const TInt BOARD_X = ((320 - (VISIBLE_BOARD_COLS * 16)) / 2);
-//static const TInt BOARD_Y = (240 - 16 - (VISIBLE_BOARD_ROWS * 16));
-static const TInt BOARD_X = 16;
-static const TInt BOARD_Y = (240 - 12 - (VISIBLE_BOARD_ROWS * 16));
-//static const TInt BOARD_Y = (240 - 16 - (VISIBLE_BOARD_ROWS * 16));
-
+//
+//
+//
 class GGameBoard : public BBase {
 public:
   GGameBoard();
 
 public:
   void Clear();
-  void Render();
+
+  void Render(TInt aX, TInt aY);
 
 protected:
   // mark a block as matched (e.g. turn from blue/pink to blue/pink with black center
@@ -36,8 +36,10 @@ protected:
 
   TUint8 GetBlock(TInt aRow, TInt aCol) {
     TUint8 b = mBoard[aRow][aCol];
-    if (b != 255) {
-      b &= ~8;
+    if (b >= 0 && b <= 5) {
+      return 0;
+    } else if (b >= 16 && b <= 21) {
+      return 16;
     }
     return b;
   }
@@ -61,9 +63,9 @@ public:
   TBool IsGameOver();
 
 public:
-  TInt    mBoardX, mBoardY;  // scroll position of board
+  TInt mBoardX, mBoardY;  // scroll position of board
 
-  TUint8  mBoard[BOARD_ROWS][BOARD_COLS];
+  TUint8 mBoard[BOARD_ROWS][BOARD_COLS];
 };
 
 

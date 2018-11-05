@@ -4,32 +4,37 @@
 #include <BTypes.h>
 #include "Resources.h"
 
+// RESOURVE MANAGER
+
 // BBitmap Slots
+enum {
+  BKG_SLOT,
+  BKG2_SLOT,
+  BKG3_SLOT,
+  BKG4_SLOT,
+  BKG5_SLOT,
+  BKG6_SLOT,
 
-static const TUint16 BKG_SLOT  = 0;
-static const TUint16 BKG2_SLOT = 1;
-static const TUint16 BKG3_SLOT = 2;
-static const TUint16 BKG4_SLOT = 3;
-static const TUint16 BKG5_SLOT = 4;
-static const TUint16 BKG6_SLOT = 5;
-
-static const TUint16 PLAYER_SLOT     = 6;
-static const TUint16 FONT_SLOT       = 7;
-static const TUint16 FONT_8x8_SLOT   = 8;
-static const TUint16 FONT_16x16_SLOT = 9;
-
-// Song slot
-static const TUint8 SONG_SLOT = 1;
-static const TUint8 SFX1_SLOT = 2;
-static const TUint8 SFX2_SLOT = 3;
-static const TUint8 SFX3_SLOT = 4;
-static const TUint8 SFX4_SLOT = 5;
-static const TUint8 SFX5_SLOT = 6;
-static const TUint8 SFX6_SLOT = 7;
-static const TUint8 SFX7_SLOT = 8;
-
-
+  PLAYER_SLOT,
+  COMMON_SLOT,
 // Font Slots
+  FONT_8x8_SLOT,
+  FONT_16x16_SLOT,
+};
+
+// BRaw slots
+enum {
+  SONG_SLOT,
+  SFX1_SLOT,
+  SFX2_SLOT,
+  SFX3_SLOT,
+  SFX4_SLOT,
+  SFX5_SLOT,
+  SFX6_SLOT,
+  SFX7_SLOT,
+};
+
+// image numbers on sprite sheets
 static const TUint16 IMG_BLOCK1 = 0;
 static const TUint16 IMG_BLOCK2 = 1;
 static const TUint16 IMG_BLOCK3 = 2;
@@ -67,15 +72,19 @@ static const TUint16 IMG_SCORE = 76; // score is 48 wide
 static const TUint16 IMG_LEVEL = 80; // LEVEL is 32 wide
 
 // COLOR PALETTE INDEXES
+static const TUint8 COLOR_BORDER1 = 153;
+static const TUint8 COLOR_BORDER2 = 155;
+
 static const TUint8 COLOR_TIMERINNER  = 250;
 static const TUint8 COLOR_TIMERBORDER = 251;
 
 // user interface/widgets colors
-static const TUint8 COLOR_DIALOG_BG  = 249;
-static const TUint8 COLOR_DIALOG_FG  = 250;
-static const TUint8 COLOR_MENU_TITLE = 251;
-static const TUint8 COLOR_TEXT       = 252;
-static const TUint8 COLOR_TEXT_BG    = 253;
-static const TUint8 COLOR_GAMEOVER   = 253;
+static const TUint8 COLOR_DIALOG_BG   = 249;
+static const TUint8 COLOR_DIALOG_FG   = 250;
+static const TUint8 COLOR_MENU_TITLE  = 251;
+static const TUint8 COLOR_TEXT        = 252;
+static const TUint8 COLOR_TEXT_SHADOW = 253;
+static const TUint8 COLOR_TEXT_BG     = 254;
+static const TUint8 COLOR_GAMEOVER    = 255;
 
 #endif //GRESOURCES_H
