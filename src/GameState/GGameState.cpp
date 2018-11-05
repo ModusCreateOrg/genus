@@ -44,7 +44,7 @@ void GGameState::LoadLevel() {
     default:
 
       delete mPlayfield;
-      mPlayfield = new GLevelUnderWater1(this);
+      mPlayfield = new GLevelCountryside(this);
 
       gSoundPlayer.PlayMusic(SONG1_S3M);
       break;
