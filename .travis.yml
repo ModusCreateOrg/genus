@@ -1,9 +1,9 @@
---
+---
 env:
   global:
-   - FOO=bar
+    - FOO=bar
    #GITHUB_OAUTH_TOKEN
-   - secure: "GiMhmqzs8qO6RQKhCucktYC+eOhR//PBzJMiP8wdtkF1NG4cHIIcwb6F5UmrWDxVothHAIlDCloJT44gPt4O5xcp0wCEpbabF5K/44i6l/0N7a3Vvloorjp5XKzCv0m6uxCnDEpJJ3Hoj002sfJmIvsCjS84hZcWRfXp8t3ouePcAUtql3FU23T9PvVxy6G4bqWYlJleJZ8MgsVc+GkN8D/zp7qkdt3/kcKet75TSFkWDKjGxnLxXtlwF3GF5PinVwKtc+dtU7IsSWVhbehjQcSMPwZKI0Y2gs4a2DEKp9i/puIE7KLWKgoM36ANoyeRdw22QWFk3Bbowan6y/kfJm3yIHgR+q4PiasEjmq9BUx84u+bkir6iW73F9E++0qD/To02/v+te/xhgaoB+OtpQUgmJ3gvOv41z8MkpDJ85IZp1aVakjhfGW+Y+LplW48JITyG0R4z15RISt7NomDheZQ5DY1NWfoitga5HScpbat7vXBQMUha1AkUnyjMWycToSYqSbToFyOByBRUIQ7p9H/BEmF79yCkb6vgEDED87jpGsTMkGWezvfBwshWJLTaqF8FuUeGK8NwukbUJHPf4fHSiudRDFuh9nlIDXe9XA0JHA/2TYyHtFH3JtiaKj3xvQUXfVvpiekAuIhUaqcI00Byk3NHyvvixoEwzRW78Q="
+    - secure: "GiMhmqzs8qO6RQKhCucktYC+eOhR//PBzJMiP8wdtkF1NG4cHIIcwb6F5UmrWDxVothHAIlDCloJT44gPt4O5xcp0wCEpbabF5K/44i6l/0N7a3Vvloorjp5XKzCv0m6uxCnDEpJJ3Hoj002sfJmIvsCjS84hZcWRfXp8t3ouePcAUtql3FU23T9PvVxy6G4bqWYlJleJZ8MgsVc+GkN8D/zp7qkdt3/kcKet75TSFkWDKjGxnLxXtlwF3GF5PinVwKtc+dtU7IsSWVhbehjQcSMPwZKI0Y2gs4a2DEKp9i/puIE7KLWKgoM36ANoyeRdw22QWFk3Bbowan6y/kfJm3yIHgR+q4PiasEjmq9BUx84u+bkir6iW73F9E++0qD/To02/v+te/xhgaoB+OtpQUgmJ3gvOv41z8MkpDJ85IZp1aVakjhfGW+Y+LplW48JITyG0R4z15RISt7NomDheZQ5DY1NWfoitga5HScpbat7vXBQMUha1AkUnyjMWycToSYqSbToFyOByBRUIQ7p9H/BEmF79yCkb6vgEDED87jpGsTMkGWezvfBwshWJLTaqF8FuUeGK8NwukbUJHPf4fHSiudRDFuh9nlIDXe9XA0JHA/2TYyHtFH3JtiaKj3xvQUXfVvpiekAuIhUaqcI00Byk3NHyvvixoEwzRW78Q="
 
 sudo: enabled
 os: osx
@@ -11,14 +11,10 @@ language: cpp
 
 before_install: git clone git@github.com:ModusCreateOrg/creative-engine.git
 
-jobs:
-  include:
-    - script: ./scripts/build.sh 
-    - stage: GitHub Release
-      script: echo "Deploying to GitHub releases ..."
-      deploy:
-        provider: releases
-        api_key: $GITHUB_OAUTH_TOKEN
-        skip_cleanup: true
-        on:
-          tags: true
+script: ./scripts/build.sh 
+deploy:
+  provider: releases
+  api_key: $GITHUB_OAUTH_TOKEN
+  skip_cleanup: true
+  on:
+    tags: true
