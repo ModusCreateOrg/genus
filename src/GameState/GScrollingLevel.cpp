@@ -11,7 +11,7 @@
 void GScrollingLevel::DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, TUint aVerticalOffset, TBool aDrawTransparent) {
 
   int intOffsetX = (int)aOffsetX,
-      canvasWidth = gDisplay.GetRenderBitmap()->Width(),
+      canvasWidth = gDisplay.renderBitmap->Width(),
       remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
       bgWidth = aBitmap->Width(),
       priorDrawWidth = 0;
@@ -24,10 +24,10 @@ void GScrollingLevel::DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, 
     TRect rect = TRect(intOffsetX, 0, bgWidth - 1, aBitmap->Height() - 1);
 
     if (aDrawTransparent) {
-      gDisplay.GetRenderBitmap()->DrawBitmapTransparent(ENull, aBitmap, rect, 0, aVerticalOffset);
+      gDisplay.renderBitmap->DrawBitmapTransparent(ENull, aBitmap, rect, 0, aVerticalOffset);
     }
     else {
-      gDisplay.GetRenderBitmap()->DrawBitmap(ENull, aBitmap, rect, 0, aVerticalOffset);
+      gDisplay.renderBitmap->DrawBitmap(ENull, aBitmap, rect, 0, aVerticalOffset);
     }
     return;
   }
@@ -43,10 +43,10 @@ void GScrollingLevel::DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, 
         TRect rect = TRect(intOffsetX, 0, bgWidth - 1, aBitmap->Height() - 1);
 
         if (aDrawTransparent) {
-          gDisplay.GetRenderBitmap()->DrawBitmapTransparent(ENull, aBitmap, rect, 0, aVerticalOffset);
+          gDisplay.renderBitmap->DrawBitmapTransparent(ENull, aBitmap, rect, 0, aVerticalOffset);
         }
         else {
-          gDisplay.GetRenderBitmap()->DrawBitmap(ENull, aBitmap, rect, 0, aVerticalOffset);
+          gDisplay.renderBitmap->DrawBitmap(ENull, aBitmap, rect, 0, aVerticalOffset);
         }
 
       }
@@ -55,10 +55,10 @@ void GScrollingLevel::DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, 
         TRect rect = TRect(0, 0, drawWidth - 1, aBitmap->Height() - 1);
 
         if (aDrawTransparent) {
-          gDisplay.GetRenderBitmap()->DrawBitmapTransparent(ENull, aBitmap, rect, priorDrawWidth, aVerticalOffset);
+          gDisplay.renderBitmap->DrawBitmapTransparent(ENull, aBitmap, rect, priorDrawWidth, aVerticalOffset);
         }
         else {
-          gDisplay.GetRenderBitmap()->DrawBitmap(ENull, aBitmap, rect, priorDrawWidth, aVerticalOffset);
+          gDisplay.renderBitmap->DrawBitmap(ENull, aBitmap, rect, priorDrawWidth, aVerticalOffset);
         }
       }
     }
@@ -68,10 +68,10 @@ void GScrollingLevel::DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, 
         TRect rect = TRect(intOffsetX, 0, bgWidth - 1, aBitmap->Height() - 1);
 
         if (aDrawTransparent) {
-          gDisplay.GetRenderBitmap()->DrawBitmapTransparent(ENull, aBitmap, rect, 0, aVerticalOffset);
+          gDisplay.renderBitmap->DrawBitmapTransparent(ENull, aBitmap, rect, 0, aVerticalOffset);
         }
         else {
-          gDisplay.GetRenderBitmap()->DrawBitmap(ENull, aBitmap, rect, 0, aVerticalOffset);
+          gDisplay.renderBitmap->DrawBitmap(ENull, aBitmap, rect, 0, aVerticalOffset);
         }
       }
       else {
@@ -79,10 +79,10 @@ void GScrollingLevel::DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, 
         TRect rect = TRect(0, 0, drawWidth - 1, aBitmap->Height() - 1);
 
         if (aDrawTransparent) {
-          gDisplay.GetRenderBitmap()->DrawBitmapTransparent(ENull, aBitmap, rect,  priorDrawWidth, aVerticalOffset);
+          gDisplay.renderBitmap->DrawBitmapTransparent(ENull, aBitmap, rect,  priorDrawWidth, aVerticalOffset);
         }
         else {
-          gDisplay.GetRenderBitmap()->DrawBitmap(ENull, aBitmap, rect, priorDrawWidth, aVerticalOffset);
+          gDisplay.renderBitmap->DrawBitmap(ENull, aBitmap, rect, priorDrawWidth, aVerticalOffset);
         }
       }
     }
