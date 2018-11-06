@@ -184,8 +184,10 @@ function checkout_creative_engine_branch {
 
 function archive_app {
     if [ "$OS" == "Darwin" ]; then
+        echo "Archiving app"
         cd "$BUILD_DIR"
         tar czvfp genus.tgz genus-docs genus.app
+        ls -l
         cd -
     fi
 }
