@@ -4,6 +4,7 @@
 #include "GLevelCyberpunk.h"
 #include "GLevelUnderWater1.h"
 #include "GLevelGlacialMountains.h"
+#include "GLevelUnderWaterFantasy.h"
 #include "GGameProcess.h"
 
 /****************************************************************************************************************
@@ -56,6 +57,11 @@ void GGameState::PreRender() {
 
 void GGameState::LoadLevel() {
 #if 1
+//Todo: @Mike, other working Backgrounds:
+  //     mPlayfield = new GLevelUnderWater1(this); // Playfield 2
+  //     mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
+  //     mPlayfield = new GLevelIDKYet(this); // Playfield 4
+  //     mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 5
   if (mLevel & 1) {
     mBlocksThisLevel = 20;
 
@@ -68,7 +74,7 @@ void GGameState::LoadLevel() {
     mBlocksThisLevel = 20;
 
     delete mPlayfield;
-    mPlayfield = new GLevelCyberpunk(this);
+    mPlayfield = new GLevelCyberpunk(this); // Todo: @Mike, this is Level 6
     gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
 
     // TODO: Jay needs to implement this
