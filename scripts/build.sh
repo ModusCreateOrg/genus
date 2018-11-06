@@ -92,16 +92,18 @@ case "$op" in
         ;;
 esac
 
+# Prepare dependencies
 ensure_creative_engine
 checkout_creative_engine_branch
 
+# Build the software and documentation
 build
-
 copy_sdl2_libs_to_app
+"$BASE_DIR/doxygen/build.sh"
 
+# Archive the artifacts
 archive_app
 
-"$BASE_DIR/doxygen/build.sh"
 
 
 
