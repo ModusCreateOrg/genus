@@ -28,9 +28,9 @@ export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
 ######################### Main build ##################################
 
 # FIXME: temp to get stuff working
-mkdir -p "$BUILD_DIR"
-tar cvfz "$BUILD_DIR/genus.app.tgz" /bin/bash
-exit 0
+#mkdir -p "$BUILD_DIR"
+#tar cvfz "$BUILD_DIR/genus.app.tgz" /bin/bash
+#exit 0
 
 
 
@@ -100,6 +100,8 @@ checkout_creative_engine_branch
 build
 
 copy_sdl2_libs_to_app
+
+archive_app
 
 $BASE_DIR/doxygen/build.sh
 
