@@ -66,7 +66,7 @@ void GGameState::LoadLevel() {
     mBlocksThisLevel = 20;
 
     delete mPlayfield;
-    mPlayfield = new GLevelGlacialMountains(this);
+    mPlayfield = new GLevelCountryside(this);
 
     gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
     gSoundPlayer.PlayMusic(SONG1_S3M);
