@@ -4,7 +4,6 @@
 
 #include "GLevelGlacialMountains.h"
 #include "Game.h"
-#include "GLevelGlacialMountains.h"
 
 #ifdef __XTENSA__
 #include <math.h>
@@ -25,6 +24,7 @@ GLevelGlacialMountains::GLevelGlacialMountains(GGameState *aGameEngine) {
 
   mGameEngine = aGameEngine;
   mTextColor = 0;
+  mRenderTarget = gDisplay.renderBitmap;
 
   bgOffset0 = 0;
   bgOffset1 = 0;

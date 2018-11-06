@@ -29,7 +29,6 @@ GLevelCyberpunk::GLevelCyberpunk(GGameState *aGameEngine) {
 
   printf("mBackground0 dimensions: %i x %i\n", mBackground0->Width(), mBackground0->Height());
   printf("mBackground1 dimensions: %i x %i\n", mBackground1->Width(), mBackground1->Height());
-
   printf("mBackground2 dimensions: %i x %i\n", mBackground2->Width(), mBackground2->Height());
 }
 

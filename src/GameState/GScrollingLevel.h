@@ -16,7 +16,10 @@ public:
 public:
 
 protected:
-    void DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, TUint aVerticalOffset, TBool aDrawTransparent = EFalse);
+  BBitmap *mRenderTarget;
+  TBool mUseCustomRenderTarget;
+
+  void DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, TUint aVerticalOffset, TBool aDrawTransparent = EFalse);
 
 };
 

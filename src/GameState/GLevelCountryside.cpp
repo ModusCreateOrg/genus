@@ -18,6 +18,7 @@ GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(COUNTRYSIDE5_BMP, BKG6_SLOT, IMAGE_ENTIRE);
 
   mGameEngine = aGameEngine;
+  mRenderTarget = gDisplay.renderBitmap;
   mTextColor  = 0;
 
   bgOffset0 = 0;
