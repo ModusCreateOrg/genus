@@ -5,7 +5,7 @@
 #ifndef GENUS_GLEVELGLACIALMOUNTAINS_H
 #define GENUS_GLEVELGLACIALMOUNTAINS_H
 
-#include "GGameState.h"
+#include "GameState/GGameState.h"
 #include "GScrollingLevel.h"
 
 class GLevelGlacialMountains : public GScrollingLevel {

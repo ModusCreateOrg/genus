@@ -5,7 +5,7 @@
 #ifndef GENUS_GLEVEL2PLAYFIELD_H
 #define GENUS_GLEVEL2PLAYFIELD_H
 
-#include "GGameState.h"
+#include "GameState/GGameState.h"
 #include "GScrollingLevel.h"
 
 class GLevelCyberpunk : public GScrollingLevel {

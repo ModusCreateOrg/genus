@@ -10,25 +10,26 @@ if (EXISTS $ENV{CREATIVE_ENGINE_PATH})
     # set ENV variable in CLion project settings
     set(CREATIVE_ENGINE_PATH $ENV{CREATIVE_ENGINE_PATH})
     message(STATUS "Using user-defined creative-engine path: ${CREATIVE_ENGINE_PATH}")
-else()
+else ()
     set(CREATIVE_ENGINE_PATH "${CMAKE_SOURCE_DIR}/../creative-engine")
     message(STATUS "Falling back to default creative-engine path: ${CREATIVE_ENGINE_PATH}")
-endif()
+endif ()
 
 # resource compiler
 set(RCOMP "${CREATIVE_ENGINE_PATH}/tools/rcomp")
 
 INCLUDE_DIRECTORIES(
-    ${SDL2_INCLUDE_DIRS}
-    ${SDL2IMAGE_INCLUDE_DIRS}
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_BINARY_DIR} /usr/local/include
-    ${CREATIVE_ENGINE_PATH}/src
-    ${CREATIVE_ENGINE_PATH}/src/Widgets
-    ${CREATIVE_ENGINE_PATH}/src/libxmp
-    ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders
-    ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/prowizarde
+        ${SDL2_INCLUDE_DIRS}
+        ${SDL2IMAGE_INCLUDE_DIRS}
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/GameState
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_BINARY_DIR} /usr/local/include
+        ${CREATIVE_ENGINE_PATH}/src
+        ${CREATIVE_ENGINE_PATH}/src/Widgets
+        ${CREATIVE_ENGINE_PATH}/src/libxmp
+        ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders
+        ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/prowizarde
 )
 
 # external libraries
@@ -85,7 +86,7 @@ add_executable(
         ${LIBXMP_SRC}
         ${CREATIVE_ENGINE}
         ${GENUS_SRC}
-        )
+)
 
 # make genus.app
 if (APPLE)

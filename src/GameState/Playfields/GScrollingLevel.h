@@ -7,7 +7,7 @@
 
 
 
-#include "GGameState.h"
+#include "GameState/GGameState.h"
 
 class GScrollingLevel : public BPlayfield {
 public:

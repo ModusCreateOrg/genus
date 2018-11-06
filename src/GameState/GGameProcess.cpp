@@ -51,6 +51,10 @@ TInt GGameProcess::BoardCol() {
 
 //
 TBool GGameProcess::CanDrop() {
+  if (mSprite->mPowerup) {
+    // pwoerups can always be dropped
+    return ETrue;
+  }
   TInt row = BoardRow(),
        col = BoardCol();
 
@@ -63,16 +67,18 @@ TBool GGameProcess::CanDrop() {
 
 // returns ETrue if drop added to or created at least one 2x2 same blocks
 TBool GGameProcess::Drop() {
-  const TInt   row = BoardRow(),
-               col = BoardCol();
-  const TUint8 *b  = mSprite->mBlocks;
+  if (!mSprite->mPowerup) {
 
-  TUint8 (*p)[BOARD_ROWS][BOARD_COLS] = &mGameBoard->mBoard;
-  (*p)[row][col]         = b[0];
-  (*p)[row][col + 1]     = b[1];
-  (*p)[row + 1][col]     = b[2];
-  (*p)[row + 1][col + 1] = b[3];
+    const TInt   row = BoardRow(),
+                 col = BoardCol();
+    const TUint8 *b  = mSprite->mBlocks;
 
+    TUint8 (*p)[BOARD_ROWS][BOARD_COLS] = &mGameBoard->mBoard;
+    (*p)[row][col]         = b[0];
+    (*p)[row][col + 1]     = b[1];
+    (*p)[row + 1][col]     = b[2];
+    (*p)[row + 1][col + 1] = b[3];
+  }
   mSprite->Copy(mNextSprite);
   mSprite->x  = PLAYER_X;
   mSprite->y  = PLAYER_Y;
@@ -214,7 +220,7 @@ TBool GGameProcess::StateRemoveBlocks() {
         // sound lasts roughly 1/4 second
         mRemoveScore++;
         // remove the block - start explosion
-        mGameBoard->mBoard[mRemoveRow][mRemoveCol] =  TUint8((v <= 5) ? 8 : 24);
+        mGameBoard->mBoard[mRemoveRow][mRemoveCol] = TUint8((v <= 5) ? 8 : 24);
         if (mGameState->mBlocksRemaining > 0) {
           mGameState->mBlocksRemaining--;
         }

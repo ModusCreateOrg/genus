@@ -1,9 +1,9 @@
 #include "Game.h"
 #include "GGameBoard.h"
-#include "GLevelCountryside.h"
-#include "GLevelCyberpunk.h"
-#include "GLevelUnderWater1.h"
-#include "GLevelGlacialMountains.h"
+#include "GameState/Playfields/GLevelCountryside.h"
+#include "GameState/Playfields/GLevelCyberpunk.h"
+#include "GameState/Playfields/GLevelUnderWater1.h"
+#include "GameState/Playfields/GLevelGlacialMountains.h"
 #include "GGameProcess.h"
 
 /****************************************************************************************************************
@@ -123,12 +123,12 @@ void GGameState::RenderTimer() {
 
     bm->DrawStringShadow(ENull, "Time", mFont, TIMER_X, TIMER_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
     // frame
-    bm->DrawRect(ENull, TIMER_BORDER.x1, TIMER_BORDER.y1, TIMER_BORDER.x2, TIMER_BORDER.y2, COLOR_TIMERBORDER);
+    bm->DrawRect(ENull, TIMER_BORDER.x1, TIMER_BORDER.y1, TIMER_BORDER.x2, TIMER_BORDER.y2, COLOR_TIMER_BORDER);
     // inner
     const TInt   timer_width = TIMER_INNER.x2 - TIMER_INNER.x1;
     const TFloat pct         = TFloat(mBonusTimer) / TFloat(mBonusTime);
     const TInt   width       = TInt(pct * timer_width);
-    bm->FillRect(ENull, TIMER_INNER.x1, TIMER_INNER.y1, TIMER_INNER.x1 + width, TIMER_INNER.y2, COLOR_TIMERINNER);
+    bm->FillRect(ENull, TIMER_INNER.x1, TIMER_INNER.y1, TIMER_INNER.x1 + width, TIMER_INNER.y2, COLOR_TIMER_INNER);
   }
 }
 
