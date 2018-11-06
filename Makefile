@@ -28,7 +28,7 @@ gen_sfx_headers:
 	cd resources/sound_effects && ./gen_header.sh
 
 release: FORCE
-	./scripts/build.sh && cp ./build/genus.app.tgz ~/Downloads/
+	./scripts/build.sh && cp ./build/genus.tgz ~/Downloads/
 
 rcomp: FORCE
 	echo "Building rcomp"

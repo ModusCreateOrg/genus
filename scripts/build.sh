@@ -93,8 +93,6 @@ case "$op" in
 esac
 
 ensure_creative_engine
-
-cd $BASE_DIR || exit 1
 checkout_creative_engine_branch
 
 build
@@ -103,7 +101,7 @@ copy_sdl2_libs_to_app
 
 archive_app
 
-$BASE_DIR/doxygen/build.sh
+"$BASE_DIR/doxygen/build.sh"
 
 
 
