@@ -6,7 +6,7 @@ static const TInt BLINK_TIME = 2;
 GPlayerSprite::GPlayerSprite() : BSprite(0, PLAYER_SLOT) {
   this->flags     = SFLAG_RENDER;
   this->mGameOver = EFalse;
-  this->mPowerup  = EFalse;
+  this->mPowerupType = POWERUP_TYPE_NONE;
   Randomize();
 }
 
@@ -15,7 +15,7 @@ GPlayerSprite::~GPlayerSprite() {}
 
 void GPlayerSprite::Randomize() {
   if (Random(1, 20) == 19) {
-    mPowerup      = ETrue;
+    mPowerupType      = POWERUP_TYPE_M_BOMB;
     mPowerupImage = IMG_POWERUP_MODUS;
   } else {
     mBlocks[0] = TUint8(Random() & 1 ? 16 : 0);

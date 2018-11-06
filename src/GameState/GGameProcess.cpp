@@ -51,7 +51,7 @@ TInt GGameProcess::BoardCol() {
 
 //
 TBool GGameProcess::CanDrop() {
-  if (mSprite->mPowerup) {
+  if (mSprite->mPowerupType != POWERUP_TYPE_NONE) {
     // pwoerups can always be dropped
     return ETrue;
   }
@@ -67,8 +67,7 @@ TBool GGameProcess::CanDrop() {
 
 // returns ETrue if drop added to or created at least one 2x2 same blocks
 TBool GGameProcess::Drop() {
-  if (!mSprite->mPowerup) {
-
+  if (mSprite->mPowerupType == POWERUP_TYPE_NONE) {
     const TInt   row = BoardRow(),
                  col = BoardCol();
     const TUint8 *b  = mSprite->mBlocks;

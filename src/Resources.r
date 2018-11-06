@@ -40,6 +40,12 @@ BITMAP glacial_mountains3.bmp
 BITMAP glacial_mountains4.bmp
 BITMAP glacial_mountains5.bmp
 
+PATH ../resources/backgrounds/under_water_fantasy/
+BITMAP under_water_fantasy.bmp
+#BITMAP under_water_fantasy0.bmp
+#BITMAP under_water_fantasy1.bmp
+#BITMAP under_water_fantasy2.bmp
+
 # .-=[  MUSIC  ]=-.
 PATH ../resources/music
 

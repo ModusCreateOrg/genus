@@ -170,9 +170,9 @@ function checkout_creative_engine_branch {
     DEFAULT_BRANCH="master"
     GENUS_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
     echo "The current genus branch is: $GENUS_BRANCH"
-    if (cd creative-engine && git checkout $GENUS_BRANCH); then
+    if (cd $CREATIVE_ENGINE_DIR && git checkout $GENUS_BRANCH); then
         echo "Checked out creatine-engine branch: $GENUS_BRANCH"
-    elif (cd creative-engine && git checkout $DEFAULT_BRANCH); then
+    elif (cd $CREATIVE_ENGINE_DIR && git checkout $DEFAULT_BRANCH); then
         echo "Checked out creatine-engine branch: $DEFAULT_BRANCH"
     else
         echo "Faied to checkout a branch for creatine-engine!"

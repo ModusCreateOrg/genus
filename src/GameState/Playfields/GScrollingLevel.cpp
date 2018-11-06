@@ -11,10 +11,10 @@
 void GScrollingLevel::DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, TUint aVerticalOffset, TBool aDrawTransparent) {
 
   int intOffsetX = (int)aOffsetX,
-          canvasWidth = gDisplay.renderBitmap->Width(),
-          remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
-          bgWidth = aBitmap->Width(),
-          priorDrawWidth = 0;
+      canvasWidth = gDisplay.renderBitmap->Width(),
+      remainDrawWidth = canvasWidth, // Remaining width to draw, since we'll have to do multiple passes
+      bgWidth = aBitmap->Width(),
+      priorDrawWidth = 0;
 
 
   int imgWidthDelta = bgWidth - intOffsetX;

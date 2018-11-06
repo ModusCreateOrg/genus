@@ -20,7 +20,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BASE_DIR="$DIR/.."
 BUILD_DIR="$BASE_DIR/build"
 TOP_DIR="$BASE_DIR/.."
-CREATIVE_ENGINE_DIR="$TOP_DIR/creative-engine"
+CREATIVE_ENGINE_DIR=${CREATIVE_ENGINE_PATH:-"$TOP_DIR/creative-engine"}
 export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
 #shellcheck disable=SC1090
 . "$DIR/common.sh"
