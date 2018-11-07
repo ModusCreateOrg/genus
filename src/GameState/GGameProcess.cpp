@@ -5,8 +5,8 @@ static const TInt BLINK_TIME = 2;
 
 enum {
   PLAYERSTATE_CONTROL,
-  PLAYERSTATE_REMOVEBLOCKS,
-  PLAYERSTATE_GAMEOVER
+  PLAYERSTATE_REMOVE_BLOCKS,
+  PLAYERSTATE_GAME_OVER
 };
 
 static const TInt REPEAT_TIME  = 1,
@@ -52,7 +52,7 @@ TInt GGameProcess::BoardCol() {
 //
 TBool GGameProcess::CanDrop() {
   if (mSprite->mPowerupType != POWERUP_TYPE_NONE) {
-    // pwoerups can always be dropped
+    // powerups can always be dropped
     return ETrue;
   }
   TInt row = BoardRow(),
@@ -81,9 +81,11 @@ TBool GGameProcess::Drop() {
   mSprite->Copy(mNextSprite);
   mSprite->x  = PLAYER_X;
   mSprite->y  = PLAYER_Y;
-  mSprite->vy = 0;
   mNextSprite->Randomize();
 
+  if (mGameState->mBonusTimer < 0) {
+    mSprite->MaybePowerup();
+  }
   return mGameBoard->Combine();
 }
 
@@ -131,9 +133,16 @@ TBool GGameProcess::StateControl() {
     }
   } else if (TimedControl(JOYRIGHT)) {
     mSprite->x += 16;
-    if (mSprite->x > PLAYER_X_MAX) {
-      mSprite->x          = PLAYER_X_MAX;
-      mGameBoard->mBoardX = MIN(mGameBoard->mBoardX + 1, BOARD_X_MAX);
+    if (mSprite->mPowerupType != POWERUP_TYPE_NONE) {
+      if (mSprite->x > (PLAYER_X_MAX + 16)) {
+        mSprite->x          = PLAYER_X_MAX + 16;
+        mGameBoard->mBoardX = MIN(mGameBoard->mBoardX + 1, BOARD_X_MAX);
+      }
+    } else {
+      if (mSprite->x > PLAYER_X_MAX) {
+        mSprite->x          = PLAYER_X_MAX;
+        mGameBoard->mBoardX = MIN(mGameBoard->mBoardX + 1, BOARD_X_MAX);
+      }
     }
   } else if (TimedControl(JOYUP)) {
     mSprite->y -= 16;
@@ -143,9 +152,16 @@ TBool GGameProcess::StateControl() {
     }
   } else if (TimedControl(JOYDOWN)) {
     mSprite->y += 16;
-    if (mSprite->y > PLAYER_Y_MAX) {
-      mSprite->y          = PLAYER_Y_MAX;
-      mGameBoard->mBoardY = MIN(mGameBoard->mBoardY + 1, BOARD_Y_MAX);
+    if (mSprite->mPowerupType != POWERUP_TYPE_NONE) {
+      if (mSprite->y > (PLAYER_Y_MAX + 16)) {
+        mSprite->y          = PLAYER_Y_MAX + 16;
+        mGameBoard->mBoardY = MIN(mGameBoard->mBoardY + 1, BOARD_Y_MAX);
+      }
+    } else {
+      if (mSprite->y > PLAYER_Y_MAX) {
+        mSprite->y          = PLAYER_Y_MAX;
+        mGameBoard->mBoardY = MIN(mGameBoard->mBoardY + 1, BOARD_Y_MAX);
+      }
     }
   } else if (gControls.WasPressed(BUTTON_SELECT)) {
     if (CanDrop()) {
@@ -181,11 +197,12 @@ TBool GGameProcess::StateControl() {
   } else if (CanDrop()) {
     mSprite->flags |= SFLAG_RENDER;
   }
+  // TODO: Game Over while removing blocks
   if (mGameBoard->IsGameOver()) {
     if (mGameState->mBonusTimer >= 0) {
       mGameState->mBonusTimer = -1;
     } else {
-      mState = PLAYERSTATE_GAMEOVER;
+      mState = PLAYERSTATE_GAME_OVER;
       mGameState->mGameOver = ETrue;
     }
   }
@@ -196,7 +213,7 @@ TBool GGameProcess::StateRemoveBlocks() {
   if (mRemoveTimer--) {
     return ETrue;
   }
-  mRemoveTimer = 30 / 4;        // 1/4 second
+  mRemoveTimer = 30 / 8;        // 1/8 second
 
   while (mRemoveRow < BOARD_ROWS) {
     if (mRemoveCol >= BOARD_COLS) {
@@ -205,6 +222,7 @@ TBool GGameProcess::StateRemoveBlocks() {
       if (mRemoveRow >= BOARD_ROWS) {
         // all done, game resumes
         mState = PLAYERSTATE_CONTROL;
+        mGameState->mBlocksRemoving = EFalse;
         mSprite->flags |= SFLAG_RENDER;
         break;
       }
@@ -216,7 +234,9 @@ TBool GGameProcess::StateRemoveBlocks() {
         add.FromUint32(mRemoveScore);
         mGameState->mScore.Add(add);
         // TODO: Jay, add a sound here for the score incrementing as we remove blocks
-        // sound lasts roughly 1/4 second
+        // sound lasts roughly 1/8 second
+        // note: current sound I'm using seems pretty good.
+        gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
         mRemoveScore++;
         // remove the block - start explosion
         mGameBoard->mBoard[mRemoveRow][mRemoveCol] = TUint8((v <= 5) ? 8 : 24);
@@ -225,7 +245,6 @@ TBool GGameProcess::StateRemoveBlocks() {
         }
 
         mRemoveCol++;
-        gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
         break;
       }
     }
@@ -235,20 +254,21 @@ TBool GGameProcess::StateRemoveBlocks() {
 }
 
 void GGameProcess::RemoveBlocks() {
-  mState       = PLAYERSTATE_REMOVEBLOCKS;
+  mState       = PLAYERSTATE_REMOVE_BLOCKS;
   mRemoveRow   = mRemoveCol = 0;
   mRemoveScore = 1;
   mRemoveTimer = 1;
   mSprite->flags &= ~SFLAG_RENDER;
+  mGameState->mBlocksRemoving = ETrue;
 }
 
 TBool GGameProcess::RunAfter() {
   switch (mState) {
     case PLAYERSTATE_CONTROL:
       return StateControl();
-    case PLAYERSTATE_REMOVEBLOCKS:
+    case PLAYERSTATE_REMOVE_BLOCKS:
       return StateRemoveBlocks();
-    case PLAYERSTATE_GAMEOVER:
+    case PLAYERSTATE_GAME_OVER:
       return StateGameOver();
     default:
       Panic("Invalid mState in RunAfter\n");

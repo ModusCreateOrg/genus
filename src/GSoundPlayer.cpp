@@ -6,7 +6,7 @@
 #include "GResources.h"
 
 #define DISABLE_AUDIO
-#undef DISABLE_AUDIO
+//#undef DISABLE_AUDIO
 
 
 GSoundPlayer gSoundPlayer;

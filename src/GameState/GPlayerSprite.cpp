@@ -4,26 +4,28 @@
 static const TInt BLINK_TIME = 2;
 
 GPlayerSprite::GPlayerSprite() : BSprite(0, PLAYER_SLOT) {
-  this->flags     = SFLAG_RENDER;
-  this->mGameOver = EFalse;
+  this->flags        = SFLAG_RENDER;
+  this->mGameOver    = EFalse;
   this->mPowerupType = POWERUP_TYPE_NONE;
   Randomize();
 }
 
 GPlayerSprite::~GPlayerSprite() {}
 
+void GPlayerSprite::MaybePowerup() {
+  TInt maybe = Random(1, 20);
+  if (maybe == 19) {
+    mPowerupType  = POWERUP_TYPE_M_BOMB;
+    mPowerupImage = IMG_POWERUP_MODUS;
+  }
+}
 
 void GPlayerSprite::Randomize() {
-  if (Random(1, 20) == 19) {
-    mPowerupType      = POWERUP_TYPE_M_BOMB;
-    mPowerupImage = IMG_POWERUP_MODUS;
-  } else {
-    mBlocks[0] = TUint8(Random() & 1 ? 16 : 0);
-    mBlocks[1] = TUint8(Random() & 1 ? 16 : 0);
-    mBlocks[2] = TUint8(Random() & 1 ? 16 : 0);
-    mBlocks[3] = TUint8(Random() & 1 ? 16 : 0);
-    mPowerupType = POWERUP_TYPE_NONE;
-  }
+  mBlocks[0] = TUint8(Random() & 1 ? 16 : 0);
+  mBlocks[1] = TUint8(Random() & 1 ? 16 : 0);
+  mBlocks[2] = TUint8(Random() & 1 ? 16 : 0);
+  mBlocks[3] = TUint8(Random() & 1 ? 16 : 0);
+  mPowerupType = POWERUP_TYPE_NONE;
 }
 
 void GPlayerSprite::RotateLeft() {
@@ -105,7 +107,7 @@ void GPlayerSprite::Copy(GPlayerSprite *aOther) {
   this->mBlocks[1] = aOther->mBlocks[1];
   this->mBlocks[2] = aOther->mBlocks[2];
   this->mBlocks[3] = aOther->mBlocks[3];
-  this->mPowerupType      = aOther->mPowerupType;
+  this->mPowerupType  = aOther->mPowerupType;
   this->mPowerupImage = aOther->mPowerupImage;
 }
 

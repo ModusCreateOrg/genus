@@ -16,6 +16,7 @@ public:
   ~GPlayerSprite();
 
 public:
+  void MaybePowerup();
   void Randomize();
 
   void RotateLeft();
