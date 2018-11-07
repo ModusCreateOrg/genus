@@ -19,6 +19,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mBonusTime      = 15 * 30;   // TODO: difficulty, etc.
   mBonusTimer     = -1;
 
+  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
