@@ -184,7 +184,8 @@ function archive_app {
     if [[ "$OS" == "Darwin" ]]; then
         echo "Archiving app"
         cd "$BUILD_DIR"
-        tar czvfp genus.tgz genus-docs genus.app
+        # TODO: Archive docs also
+        tar czvfp genus.tgz genus.app
         ls -l
         cd -
     fi
