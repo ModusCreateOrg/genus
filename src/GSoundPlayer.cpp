@@ -59,6 +59,7 @@ GSoundPlayer::GSoundPlayer() {
   xmpContext = xmp_create_context();
 
 
+  // TODO: Jay - read volume from gOptions
   mMusicVolume = 46;
   mEffectsVolume = 96;
   mMuted = false;
