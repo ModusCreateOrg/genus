@@ -1,5 +1,15 @@
+# Credits: http://clarkgrubb.com/makefile-style-guide
+MAKEFLAGS += --warn-undefined-variables
+SHELL := bash
+.SHELLFLAGS := -eu -o pipefail -c
+.DEFAULT_GOAL := help
+.DELETE_ON_ERROR:
+.SUFFIXES:
+
 # ESP-IDF Makefile for game project
 PROJECT_NAME=Genus
+# To stop '--warn-undefined-variables' from whining.
+PROJECT_PATH ?=
 
 GENUS_SRC_PATH=${PROJECT_PATH}/src
 ifndef CREATIVE_ENGINE_PATH
@@ -14,7 +24,7 @@ GENUS_STATES+=$(GENUS_SRC_PATH)/SplashState
 
 EXTRA_COMPONENT_DIRS=${CREATIVE_ENGINE_PATH} ${PROJECT_PATH}/src $(GENUS_STATES)
 
-include $(IDF_PATH)/make/project.mk
+# include $(IDF_PATH)/make/project.mk
 
 # Temporary until RCOMP is folded into the music/sfx workflow
 gen_sound_headers: gen_music_headers gen_sfx_headers FORCE
@@ -28,7 +38,7 @@ gen_sfx_headers:
 	cd resources/sound_effects && ./gen_header.sh
 
 release: FORCE
-	./scripts/build.sh && cd build && tar czvfp ~/Downloads/genus.app.tgz genus.app
+	./scripts/build.sh && cp ./build/genus.tgz ~/Downloads/
 
 rcomp: FORCE
 	echo "Building rcomp"
