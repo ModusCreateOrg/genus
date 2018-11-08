@@ -8,8 +8,7 @@ SHELL := bash
 
 # ESP-IDF Makefile for game project
 PROJECT_NAME=Genus
-# To stop '--warn-undefined-variables' from whining.
-PROJECT_PATH ?=
+PROJECT_PATH ?= $(CURDIR)
 
 GENUS_SRC_PATH=${PROJECT_PATH}/src
 ifndef CREATIVE_ENGINE_PATH
