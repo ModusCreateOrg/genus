@@ -4,6 +4,9 @@
 
 # Set bash unofficial strict mode http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
+# our traps need access to some vars to do their job properly.
+set -o errtrace
+set -o functrace
 IFS=$'\n\t'
 
 # Enable for enhanced debugging
@@ -92,10 +95,10 @@ checkout_creative_engine_branch
 
 build
 
+archive_app
+
 copy_sdl2_libs_to_app
 
 "$BASE_DIR"/doxygen/build.sh
 
-
-
-
+exit 0
