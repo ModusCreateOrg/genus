@@ -100,5 +100,3 @@ archive_app
 copy_sdl2_libs_to_app
 
 "$BASE_DIR"/doxygen/build.sh
-
-exit 0
