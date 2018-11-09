@@ -12,7 +12,6 @@
 GSoundPlayer gSoundPlayer;
 
 void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
-
   BSoundPlayer::Init(aNumberFxChannels, aNumberFxSlots);
 
   PlayMusic(EMPTYSONG_XM);
@@ -20,7 +19,6 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
 
 
 TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
-
 
   gResourceManager.ReleaseRawSlot(SONG_SLOT);
 

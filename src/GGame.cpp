@@ -8,6 +8,9 @@ GGame::GGame() {
 
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
 
+  // Load Game Options
+  gOptions = new TOptions();
+
   gViewPort = new BViewPort();
   gViewPort->Offset(0, 0);
   gViewPort->SetRect(TRect(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1));

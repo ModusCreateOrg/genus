@@ -7,13 +7,17 @@ static const TSelectOption difficulty_options[] = {
     TSELECT_END_OPTIONS
 };
 
-
 GDifficulty::GDifficulty() : BSelectWidget("Difficulty", &difficulty_options[0], COLOR_TEXT, COLOR_TEXT_BG) {
   mHeight = 24;
+  mSelectedIndex = gOptions->difficulty;
 }
 
 GDifficulty::~GDifficulty() {
   //
+}
+
+void GDifficulty::Set(TInt aIndex) {
+  mSelectedIndex = aIndex;
 }
 
 TInt GDifficulty::Render(TInt aX, TInt aY) {
@@ -24,5 +28,6 @@ TInt GDifficulty::Render(TInt aX, TInt aY) {
 }
 
 void GDifficulty::Select(TInt aIndex) {
-  printf("Selected %d\n", aIndex);
+  gOptions->difficulty = aIndex;
+  gOptions->Save();
 }

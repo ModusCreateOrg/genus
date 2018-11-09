@@ -14,6 +14,7 @@
 // Game specific includes
 #include "GResources.h"
 #include "GGame.h"
+#include "TOptions.h"
 
 // GGameEngine states
 #include "SplashState/GSplashState.h"
@@ -28,5 +29,6 @@
 // globals
 extern BViewPort   *gViewPort;
 extern BGameEngine *gGameEngine;
+extern TOptions    *gOptions;
 
 #endif
