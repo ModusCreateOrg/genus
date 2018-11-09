@@ -1,7 +1,7 @@
 #ifndef GENUS_GGAMESTATE_H
 #define GENUS_GGAMESTATE_H
 
-#include "Game.h"
+//#include "Game.h"
 #include "GGameBoard.h"
 #include "GGameProcess.h"
 
@@ -48,9 +48,9 @@ static const TInt NEXT_BLOCK_Y = 168;
 static const TFloat PLAYER_X     = BOARD_X + 48;
 static const TFloat PLAYER_Y     = BOARD_Y; //  - 32;
 static const TFloat PLAYER_X_MIN = BOARD_X;
-static const TFloat PLAYER_X_MAX = BOARD_X + (VISIBLE_BOARD_COLS - 2) * 16;
+static const TFloat PLAYER_X_MAX = BOARD_X + (BOARD_COLS - 2) * 16;
 static const TFloat PLAYER_Y_MIN = BOARD_Y;
-static const TFloat PLAYER_Y_MAX = BOARD_Y + (VISIBLE_BOARD_ROWS - 2) * 16;
+static const TFloat PLAYER_Y_MAX = BOARD_Y + (BOARD_ROWS - 2) * 16;
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -65,6 +65,10 @@ public:
 public:
   void StartBonusTimer() {
     if (mBonusTimer < 0) {
+//      printf("StartBonusTimer %d\n", mBonusTime);
+      if (mBonusTime > 1000) {
+        printf("bad value\n");
+      }
       mBonusTimer = mBonusTime;
     }
   }

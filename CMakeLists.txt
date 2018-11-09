@@ -23,6 +23,7 @@ INCLUDE_DIRECTORIES(
         ${SDL2IMAGE_INCLUDE_DIRS}
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/src/GameState
+        ${CMAKE_SOURCE_DIR}/src/GameState/Powerups
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_BINARY_DIR} /usr/local/include
         ${CREATIVE_ENGINE_PATH}/src
@@ -86,7 +87,7 @@ add_executable(
         ${LIBXMP_SRC}
         ${CREATIVE_ENGINE}
         ${GENUS_SRC}
-)
+        src/GameState/Powerups/GNoPowerup.cpp src/GameState/Powerups/GNoPowerup.h src/GameState/Powerups/Powerups.h)
 
 # make genus.app
 if (APPLE)

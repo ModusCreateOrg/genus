@@ -4,6 +4,7 @@
 #include <BProcess.h>
 #include "GGameBoard.h"
 #include "GPlayerSprite.h"
+#include "Powerups/Powerups.h"
 
 class GGameState;
 
@@ -13,23 +14,33 @@ public:
 
   virtual ~GGameProcess();
 
-  TInt BoardRow();
-
-  TInt BoardCol();
-
 public:
   TBool TimedControl(TUint16 aButton);
 
+protected:
+  // Drop methods for the powerups and normal
+  void Drop2x2();
+
+  void DropMBomb();
+
+public:
   TBool CanDrop();
 
   TBool Drop();
 
-public:
+  void MaybePowerup();
+
+protected:
   TBool StateGameOver();
 
-  TBool StateControl();
+  TBool StatePlay();
 
   TBool StateRemoveBlocks();
+
+protected:
+  TInt mBombStep;
+
+  TBool StateMBomb();
 
 public:
   void RemoveBlocks();
@@ -40,18 +51,21 @@ public:
   TBool RunAfter();
 
 public:
-  TInt mState;
-  TInt mRepeatTimer;
-  TInt mBlinkTimer;
+  BPowerup *mPowerup;
+  TInt     mState;
+  TInt     mRepeatTimer;
+  TInt     mBlinkTimer;
 public:
   GPlayerSprite *mSprite;
   GPlayerSprite *mNextSprite;
   GGameState    *mGameState;
   GGameBoard    *mGameBoard;
 public:
+#if 0
   TInt    mRemoveRow, mRemoveCol;
   TInt    mRemoveTimer;
   TUint32 mRemoveScore;
+#endif
 };
 
 #endif //GENUS_GGAMEPROCESS_H

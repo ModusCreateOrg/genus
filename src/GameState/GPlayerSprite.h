@@ -1,22 +1,25 @@
 #ifndef GENUS_GPLAYERSPRITE_H
 #define GENUS_GPLAYERSPRITE_H
 
-#include <BSprite.h>
+#include <BAnimSprite.h>
 
 enum {
-  POWERUP_TYPE_NONE,
-  POWERUP_TYPE_M_BOMB,
-  POWERUP_TYPE_COLOR_SWAP,
+  BLOCKSIZE_2x2,
+  BLOCKSIZE_1x1,
 };
 
-class GPlayerSprite : public BSprite {
+class GPlayerSprite : public BAnimSprite {
 public:
   GPlayerSprite();
 
   ~GPlayerSprite();
 
 public:
-  void MaybePowerup();
+  TInt BoardRow();
+
+  TInt BoardCol();
+
+public:
   void Randomize();
 
   void RotateLeft();
@@ -34,10 +37,8 @@ public:
 public:
   TInt   mBlinkTimer;
   TUint8 mBlocks[4];
+  TInt   mBlockSize;
   TBool  mGameOver;
-public:
-  TInt mPowerupType;
-  TInt mPowerupImage;
 };
 
 #endif //GENUS_GPLAYERSPRITE_H

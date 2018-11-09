@@ -46,9 +46,9 @@ GGameState::~GGameState() {
 void GGameState::PreRender() {
   if (mBonusTimer >= 0) {
     mBonusTimer--;
-    if (mBonusTimer < 0) {
-      mGameProcess->RemoveBlocks();
-    }
+//    if (mBonusTimer < 0) {
+//      mGameProcess->RemoveBlocks();
+//    }
   }
 }
 
