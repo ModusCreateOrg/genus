@@ -169,6 +169,7 @@ function copy_sdl2_libs_to_app {
 function checkout_creative_engine_branch {
     DEFAULT_BRANCH="master"
     GENUS_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
+    cd "$BASE_DIR"
     echo "The current genus branch is: $GENUS_BRANCH"
     if (cd $CREATIVE_ENGINE_DIR && git checkout $GENUS_BRANCH); then
         echo "Checked out creatine-engine branch: $GENUS_BRANCH"
@@ -180,3 +181,13 @@ function checkout_creative_engine_branch {
     fi
 }
 
+
+function archive_app {
+    if [ "$OS" == "Darwin" ]; then
+        echo "Archiving app"
+        cd "$BUILD_DIR"
+        tar czvfp genus.tgz genus-docs genus.app
+        ls -l
+        cd -
+    fi
+}
