@@ -8,10 +8,10 @@ class GDifficulty : public BSelectWidget {
 public:
     GDifficulty();
     virtual ~GDifficulty();
-    TInt Render(TInt aX, TInt aY);
 public:
+    TInt Render(TInt aX, TInt aY);
     void Select(TInt aIndex);
+    void Set(TInt aIndex);
 };
 
 #endif
-

@@ -3,13 +3,14 @@
 
 #include "Widgets.h"
 
-class GMusic : public BSelectWidget {
+class GMusic : public BSliderWidget {
 public:
     GMusic();
     ~GMusic();
 public:
     TInt Render(TInt aX, TInt aY);
-    void Select(TInt aIndex);
+    void Select(TInt aVal);
+    void Set(TInt aVal);
 };
 
 #endif //GENUS_GMUSIC_H

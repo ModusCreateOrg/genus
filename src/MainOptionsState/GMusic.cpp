@@ -1,27 +1,32 @@
 #include "GMusic.h"
 #include "Game.h"
 
-static const TSelectOption music_options[] = {
-    {"On", 1},
-    {"Off", 2},
-    TSELECT_END_OPTIONS
+static const TRange music_options = {
+  0, 100, 5, 100
 };
 
-GMusic::GMusic() : BSelectWidget("Music", &music_options[0], COLOR_TEXT, COLOR_TEXT_BG) {
+GMusic::GMusic() : BSliderWidget("Music", &music_options, COLOR_TEXT, COLOR_TEXT_BG) {
   mHeight = 24;
+  mSelectedValue = gOptions->music;
 }
 
 GMusic::~GMusic() {
 
 }
 
+void GMusic::Set(TInt aVal) {
+  mSelectedValue = aVal;
+}
+
 TInt GMusic::Render(TInt aX, TInt aY) {
   TInt h = 0;
-  TInt dy = BSelectWidget::Render(aX, aY);
+  TInt dy = BSliderWidget::Render(aX, aY);
   h += dy;
   return h;
 }
 
-void GMusic::Select(TInt aIndex) {
-  printf("Music Selected %d\n", aIndex);
+void GMusic::Select(TInt aVal) {
+  gOptions->music = aVal;
+  gOptions->Save();
+  gSoundPlayer.SetVolume(aVal / TFloat(music_options.precision));
 }
