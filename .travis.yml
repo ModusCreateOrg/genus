@@ -1,19 +1,13 @@
----
-env:
-  global:
-   #GITHUB_OAUTH_TOKEN
-    - secure: "b+qTyORacyhEhmQ4UaMjRg9lkOZzItry6CLG1HuUZDJ9mLJ/fiv8DbedBBgjkjxQMFmrRuG0qPEVbraYc0DsCMxKt74QMACQLNDcXKNgokMPT+TR7EVX8/4BioKSG0H8SMpCQxQzMUu8u/6aLE5QCtDB67NRdxnaUCMxaTRLDOHvu4qweKnwhm6mdSo3KT5lFPrKfNyIcLvTeX7VX+yovTvbPuCA07H3p2iu/eC9APi0qcJovN5voCtRDd1zMrUl+GC0Qw3Sl/I3+prUd6dlf7FGW3JY4THIrRw9jY3zH/SRVqlYUtJnR5Sc3NzPsroylxFxeLwRqEbAgqBYdRcfukAJmnutRxdu0pDewPJVjl+rhqBB3hQGkwp1sqV5YERXGVGzZtCNd/7yWGFmjjU5iyA5ZZeTGgACIr6z6rTyIsUq2EA9S0sErQYPd3dPWICr9cFzwZsZokBgn2Dsbt6pRQBHHjIafrIQt15iVbvvBzpec7M1ptrclBBVFp1yflSgMqqKxj/UnZKnTNfw+yLv5Wcf056wJnTYRSbMW2hXnUWscN+O51M7Pl1Gqafc+idq1x9I+M01W4jo5ELlywfZNpHRrfE1WNwwi+K0JnRwbUrmOMDDJu98cJks8g06MJqCOPbuH8ocvNTV+q5LJiN7wntcDkXMLYKRND4eP/JGeJU="
 sudo: enabled
 os: osx
 language: cpp
-
 before_install: git clone git@github.com:ModusCreateOrg/creative-engine.git
-
-script: ./scripts/build.sh 
+script: "./scripts/build.sh"
 deploy:
   provider: releases
+  api_key:
+    secure: jxwFGUdNqv9NMMI/svd8ZRhCnte31dLyszAYd9a5H4H+jDSqUOd8esLCvVYYHkGPvZWlixvBC5G9dGy66Hv6z39FV/4WExrlOzFGMnKZu1rHWo7IQJ2lU0S5P75cM2uCxP1IRvQyzp0T59TglwKo9GBGBTj0Jq1V4EKm3fRwbyVmm++W6n/JoWRGp5PIkFBVBS/FxZ7eXya0+7SBtsqdlLOc+EO78GBnH2X8b7WB7m/NVYhJxgC/raYO6gk0G6KMHpfq5GqfgdSpDW0ZWnCTI7I/H5QXwjPaQtWT/tC3arvuFLs+iNkegWs7L+zfeSTjYaltbl7yOzeDYT9oFJtVIywQ4TltKTl6kCPohDmTsaE1DfkpOH47I4S955Y3rOfi0gqbetVJUvTWpxacHJ7nzDJlIHwwqjR6uKINXOv3J5LfSKCu9pxYypcA1MbjD4Y19Am80a9bOvFU5zF44QXDOtVGJzvn6lT8Sf51rADIcLctcjf8ho7GMuoz9EMVAOOTW/PFVfOEN8ovoDMHrTRDRF8eCxBSu7HsJcF0De/kihD10bjLqUza3WSejYd26vvjlR4of4tbYXBIcrRT33VwV/D6bL09hwvZyrlkf/QQXzriqE3uBdRuGU9bCkxm+06I6a7Ql3MQ/WWufvuQwfc1yV8piiwvrd9l4d7OSPLz5ek=
   file: ./build/genus.tgz
-  api_key: $GITHUB_OAUTH_TOKEN
   skip_cleanup: true
 #  on:
-#    tags: true
+#  tags: true
