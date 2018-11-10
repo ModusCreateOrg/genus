@@ -80,10 +80,14 @@ wp-content/plugins/hello.php
 !.gitignore
 !.editorconfig
 
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+cmake-build-debug
 creative-engine
 clion-log.txt
-cmake-build-debug
 build
+genus.app
 src/Resources.bin
 src/Resources.h
 sdkconfig
