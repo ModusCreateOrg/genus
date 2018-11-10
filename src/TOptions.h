@@ -5,12 +5,15 @@
 #include "BStore.h"
 
 struct TOptions {
-  TUint music;
+  TBool muted;
   TUint difficulty;
+  TFloat music;
+  TFloat sfx;
 
   TOptions();
   void SetDefaults();
   void Save();
+  TBool Load();
 };
 
 #endif

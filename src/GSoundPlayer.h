@@ -19,8 +19,8 @@ public:
   TBool LoadSongSlot(TInt16 aResourceId) override;
   TBool LoadEffects() override;
   BRaw* LoadEffectResource(TUint16 aResourceId, TInt16 aSlotNumber) override;
+  TBool PlayMusic(TInt16 aResourceId);
 };
-
 
 
 extern GSoundPlayer gSoundPlayer;

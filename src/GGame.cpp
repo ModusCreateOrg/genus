@@ -3,13 +3,13 @@
 static TUint32 start;
 
 GGame::GGame() {
+  // Load Game Options
+  gOptions = new TOptions();
+
   // TODO: Jay - this needs to be in BApplication constructor (I think)
   gSoundPlayer.Init(3, 6);
 
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
-
-  // Load Game Options
-  gOptions = new TOptions();
 
   gViewPort = new BViewPort();
   gViewPort->Offset(0, 0);
@@ -31,7 +31,7 @@ void GGame::SetState(TInt aNewState) {
 }
 
 void GGame::Run() {
-  TBool muted = EFalse;
+  TBool muted = gOptions->muted;
 
   TBool done = EFalse;
   while (!done) {
@@ -88,6 +88,8 @@ void GGame::Run() {
     }
     if (gControls.WasPressed(BUTTON2)) {
       muted = !muted;
+      gOptions->muted = muted;
+      gOptions->Save();
       gSoundPlayer.MuteMusic(muted);
     }
   }

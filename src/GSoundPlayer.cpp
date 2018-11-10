@@ -2,6 +2,7 @@
 // Created by Jesus Garcia on 10/2/18.
 //
 
+#include "Game.h"
 #include "GSoundPlayer.h"
 #include "GResources.h"
 
@@ -15,8 +16,15 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
   BSoundPlayer::Init(aNumberFxChannels, aNumberFxSlots);
 
   PlayMusic(EMPTYSONG_XM);
+  SetMusicVolume(gOptions->music);
+  SetEffectsVolume(gOptions->sfx);
 }
 
+TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
+  TBool music = BSoundPlayer::PlayMusic(aResourceId);
+  MuteMusic(gOptions->muted);
+  return music;
+}
 
 TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
 

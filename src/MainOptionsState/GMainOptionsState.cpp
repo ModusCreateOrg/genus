@@ -1,13 +1,15 @@
 #include "Game.h"
-#include "GDifficulty.h"
-#include "GMusic.h"
+#include "GDifficultyWidget.h"
+#include "GMusicWidget.h"
+#include "GSfxWidget.h"
 
 
 class OptionsContainer : public BDialogWidget {
 public:
     OptionsContainer(TInt aX, TInt aY) : BDialogWidget("Options", aX, aY) {
-      AddWidget((BWidget &) *new GDifficulty());
-      AddWidget((BWidget &) *new GMusic());
+      AddWidget((BWidget &) *new GDifficultyWidget());
+      AddWidget((BWidget &) *new GMusicWidget());
+      AddWidget((BWidget &) *new GSfxWidget());
     }
 };
 
