@@ -60,7 +60,7 @@ elif [ "$OS" == "Darwin" ]; then
     cd "$BASE_DIR"
     brew bundle install
     # Travis has an older brew version of cmake, be sure we have the latest or this will not build
-    brew upgrade cmake || true
+    HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade cmake || true
 elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
     if [[ -n "$(which apt-get 2>/dev/null)" ]]; then
