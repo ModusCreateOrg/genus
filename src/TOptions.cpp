@@ -1,19 +1,25 @@
 #include "TOptions.h"
 
 TOptions::TOptions() {
-  BStore f("Genus");
-  if (!f.Get("options", this, sizeof(this))) {
+  if (!Load()) {
     SetDefaults();
     Save();
   }
 }
 
 void TOptions::SetDefaults() {
-  music = 50;
+  muted = EFalse;
+  music = 0.5f;
+  sfx = 0.96f;
   difficulty = 1;
 }
 
 void TOptions::Save() {
   BStore f("Genus");
-  f.Set("options", this, sizeof(this));
+  f.Set("options", this, sizeof(TOptions));
+}
+
+TBool TOptions::Load() {
+  BStore f("Genus");
+  return f.Get("options", this, sizeof(TOptions));
 }
