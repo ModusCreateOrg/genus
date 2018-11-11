@@ -87,7 +87,7 @@ add_executable(
         ${LIBXMP_SRC}
         ${CREATIVE_ENGINE}
         ${GENUS_SRC}
-        src/GameState/Powerups/GNoPowerup.cpp src/GameState/Powerups/GNoPowerup.h src/GameState/Powerups/Powerups.h)
+        src/GameState/Powerups/GNoPowerup.cpp src/GameState/Powerups/GNoPowerup.h src/GameState/Powerups/Powerups.h src/GameState/Powerups/GColorSwapPowerup.cpp src/GameState/Powerups/GColorSwapPowerup.h)
 
 # make genus.app
 if (APPLE)

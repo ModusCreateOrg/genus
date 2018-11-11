@@ -10,7 +10,7 @@ TInt BPowerup::mRepeatTimer = 0;
 
 BPowerup::BPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : mSprite(aSprite), mGameState(aGameState) {
   mGameBoard = &mGameState->mGameBoard;
-  mDropped = EFalse;
+  mDropped   = EFalse;
   mSprite->mBlockSize = BLOCKSIZE_2x2;
   mSprite->flags |= SFLAG_RENDER;
 }
