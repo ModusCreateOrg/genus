@@ -53,7 +53,6 @@ public:
 public:
   BPowerup *mPowerup;
   TInt     mState;
-  TInt     mRepeatTimer;
   TInt     mBlinkTimer;
 public:
   GPlayerSprite *mSprite;

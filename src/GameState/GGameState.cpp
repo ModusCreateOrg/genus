@@ -5,7 +5,7 @@
 #include "Playfields/GLevelUnderWater1.h"
 #include "Playfields/GLevelGlacialMountains.h"
 #include "Playfields/GLevelUnderWater1.h"
-#include "GGameProcess.h"
+//#include "GGameProcess.h"
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -27,11 +27,31 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   mGameBoard.Clear();
   LoadLevel();
-  mGameProcess = new GGameProcess(this);
-  AddProcess((BProcess *) mGameProcess);
+
+  mSprite = new GPlayerSprite();
+  AddSprite(mSprite);
+  mSprite->x  = PLAYER_X;
+  mSprite->y  = PLAYER_Y;
+  mSprite->vy = 0;
+
+  mNextSprite    = new GPlayerSprite();
+  AddSprite(mNextSprite);
+  mNextSprite->flags |= SFLAG_RENDER;
+  mNextSprite->x = NEXT_BLOCK_X;
+  mNextSprite->y = NEXT_BLOCK_Y;
+  mNextSprite->Randomize();
+
+  mGameProcess = new GNoPowerup(mSprite, this);
+  AddProcess(mGameProcess);
+  Next(EFalse);
 }
 
 GGameState::~GGameState() {
+  mNextSprite->Remove();
+  delete mNextSprite;
+  mSprite->Remove();
+  delete mSprite;
+
   gResourceManager.ReleaseBitmapSlot(FONT_16x16_SLOT);
   gResourceManager.ReleaseBitmapSlot(FONT_8x8_SLOT);
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
@@ -39,17 +59,32 @@ GGameState::~GGameState() {
   delete mFont;
 }
 
+void GGameState::Next(TBool aCanPowerup) {
+  mSprite->x = PLAYER_X;
+  mSprite->y = PLAYER_Y;
+  mSprite->Copy(mNextSprite);
+  mNextSprite->Randomize();
+
+//  TInt maybe = Random(15, 20);
+//  if (aCanPowerup && maybe == 16) {
+//    if (Random() & 1) {
+//      mGameProcess = new GModusBombPowerup(mSprite, this);
+//    } else {
+//      mGameProcess = new GColorSwapPowerup(mSprite, this);
+//    }
+//  } else {
+
+//  }
+}
+
 /****************************************************************************************************************
  ****************************************************************************************************************
  ****************************************************************************************************************/
 
 void GGameState::PreRender() {
-  if (mBonusTimer >= 0) {
-    mBonusTimer--;
-//    if (mBonusTimer < 0) {
-//      mGameProcess->RemoveBlocks();
-//    }
-  }
+//  if (mBonusTimer >= 0) {
+//    mBonusTimer--;
+//  }
 }
 
 /****************************************************************************************************************

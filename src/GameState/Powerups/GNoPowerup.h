@@ -8,14 +8,28 @@
 class GNoPowerup : public BPowerup {
 public:
   GNoPowerup(GPlayerSprite *aSprite, GGameState *aGameState);
+
   ~GNoPowerup();
-public:
-  TBool CanDrop();
-  TBool Drop(GGameProcess *aProcess);
-  TBool Run();
+
 protected:
-  TInt mRemoveTimer;
-  TInt mRemoveRow, mRemoveCol;
+  TBool CanDrop();
+
+  TBool Drop();
+
+  TBool RunBefore();
+
+  TBool RunAfter() { return ETrue; }
+
+protected:
+  TBool TimerState();
+
+  TBool RemoveState();
+
+  TBool MoveState();
+
+protected:
+  TInt    mRemoveTimer;
+  TInt    mRemoveRow, mRemoveCol;
   TUint32 mRemoveScore;
 };
 

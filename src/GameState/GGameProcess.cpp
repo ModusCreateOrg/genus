@@ -3,6 +3,7 @@
 
 #include "Powerups/Powerups.h"
 
+#if 0
 static const TInt BLINK_TIME = 2;
 
 enum {
@@ -12,29 +13,11 @@ enum {
   PLAYERSTATE_GAME_OVER
 };
 
-static const TInt REPEAT_TIME  = 1,
-                  REPEAT_DELAY = REPEAT_TIME + 2;
-
 GGameProcess::GGameProcess(GGameState *aGameState) : BProcess() {
   mGameState  = aGameState;
   mGameBoard  = &mGameState->mGameBoard;
   mState      = PLAYERSTATE_PLAY;
   mBlinkTimer = BLINK_TIME;
-
-  mSprite = new GPlayerSprite();
-  aGameState->AddSprite(mSprite);
-  mSprite->x  = PLAYER_X;
-  mSprite->y  = PLAYER_Y;
-  mSprite->vy = 0;
-
-  mNextSprite    = new GPlayerSprite();
-  aGameState->AddSprite(mNextSprite);
-  mNextSprite->flags |= SFLAG_RENDER;
-  mNextSprite->x = NEXT_BLOCK_X;
-  mNextSprite->y = NEXT_BLOCK_Y;
-  mNextSprite->Randomize();
-
-  mPowerup = new GNoPowerup(mSprite, mGameState);
 }
 
 GGameProcess::~GGameProcess() {
@@ -47,83 +30,6 @@ TBool GGameProcess::RunBefore() {
   }
   return ETrue;
 }
-
-#if 0
-/********************************************************************************************************************
- ********************************************************************************************************************
- ********************************************************************************************************************
- ** ____
- ** |  _ \ _ __ ___  _ __
- ** | | | | '__/ _ \| '_ \
- ** | |_| | | | (_) | |_) |
- ** |____/|_|  \___/| .__/
- **                 |_|
- ********************************************************************************************************************
- ********************************************************************************************************************
- *******************************************************************************************************************/
-//
-TBool GGameProcess::CanDrop() {
-  if (mSprite->mPowerupType != POWERUP_TYPE_NONE) {
-    // powerups can always be dropped
-    return ETrue;
-  }
-  TInt row = mSprite->BoardRow(),
-       col = mSprite->BoardCol();
-
-  if (mGameBoard->mBoard[row][col] != 255 || mGameBoard->mBoard[row][col + 1] != 255 ||
-      mGameBoard->mBoard[row + 1][col] != 255 || mGameBoard->mBoard[row + 1][col + 1] != 255) {
-    return EFalse;
-  }
-  return ETrue;
-}
-
-// drop a 2x2 tile/block
-void GGameProcess::Drop2x2() {
-  const TInt   row = mSprite->BoardRow(),
-               col = mSprite->BoardCol();
-  const TUint8 *b  = mSprite->mBlocks;
-
-  TUint8 (*p)[BOARD_ROWS][BOARD_COLS] = &mGameBoard->mBoard;
-  (*p)[row][col]         = b[0];
-  (*p)[row][col + 1]     = b[1];
-  (*p)[row + 1][col]     = b[2];
-  (*p)[row + 1][col + 1] = b[3];
-}
-
-// drop the M Bomb
-void GGameProcess::DropMBomb() {
-  mBombStep                   = 0;
-  mState                      = PLAYERSTATE_M_BOMB;
-  mSprite->flags &= ~SFLAG_RENDER;
-  mGameState->mBlocksRemoving = ETrue;
-  mRemoveTimer = 1;
-  mRemoveRow   = mSprite->BoardRow();
-  mRemoveCol   = mSprite->BoardCol();
-}
-
-// returns ETrue if drop added to or created at least one 2x2 same blocks
-TBool GGameProcess::Drop() {
-  switch (mSprite->mPowerupType) {
-    case POWERUP_TYPE_NONE:
-      Drop2x2();
-      break;
-    case POWERUP_TYPE_M_BOMB:
-      DropMBomb();
-      break;
-  }
-  mSprite->Copy(mNextSprite);
-  mSprite->x = PLAYER_X;
-  mSprite->y = PLAYER_Y;
-  mNextSprite->Randomize();
-
-  TBool ret = mGameBoard->Combine();
-  if (!ret && mGameState->mBonusTimer < 0) {
-    printf("bonus timer: %d\n", mGameState->mBonusTimer);
-    mSprite->MaybePowerup();
-  }
-  return ret;
-}
-#endif
 
 /********************************************************************************************************************
  ********************************************************************************************************************
@@ -157,12 +63,15 @@ void GGameProcess::MaybePowerup() {
   TInt maybe = Random(15, 20);
   printf("maybe %d\n", maybe);
   delete mPowerup;
-  if (maybe == 16) {
-    mPowerup = new GModusBombPowerup(mSprite, mGameState);
-  }
-  else {
+//  if (mGameState->mBonusTimer < 0 && maybe == 16) {
+//    if (Random() & 1) {
+//      mPowerup = new GModusBombPowerup(mSprite, mGameState);
+//    } else {
+//      mPowerup = new GColorSwapPowerup(mSprite, mGameState);
+//    }
+//  } else {
     mPowerup = new GNoPowerup(mSprite, mGameState);
-  }
+//  }
 }
 
 TBool GGameProcess::StatePlay() {
@@ -172,158 +81,67 @@ TBool GGameProcess::StatePlay() {
     return EFalse;
   }
   mPowerup->Move();
-  mPowerup->Run();
   if (gControls.WasPressed(BUTTON_SELECT)) {
     if (mPowerup->CanDrop()) {
+      gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
       if (mPowerup->Drop(this)) {
+        // combined!
         // start bonus timer, if not already started
         if (mGameState->mBonusTimer < 0) {
           mGameState->StartBonusTimer();
-          TUint32 score = mGameBoard->CountScore();
-          if (score > 0) {
-            gSoundPlayer.PlaySound(5, 0, EFalse);
-          }
-
-          TBCD p;
-          p.FromUint32(score);
-          mGameState->mScore.Add(p);
         }
-        mSprite->Copy(mNextSprite);
-        mSprite->x = PLAYER_X;
-        mSprite->y = PLAYER_Y;
-        mNextSprite->Randomize();
-        MaybePowerup();
       }
-      gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
+      mSprite->Copy(mNextSprite);
+      mSprite->x = PLAYER_X;
+      mSprite->y = PLAYER_Y;
+      mNextSprite->Randomize();
+      MaybePowerup();
     } else {
       // can't drop sound:
       gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
     }
   }
-  if (mRepeatTimer < 1) {
-    mRepeatTimer = 3;
-  }
-  mBlinkTimer--;
-  if (mBlinkTimer < 0) {
-    mBlinkTimer = BLINK_TIME;
-    if (!mPowerup->CanDrop()) {
-      mSprite->flags ^= SFLAG_RENDER;
+
+  if (!mPowerup->Run()) {
+    TUint32 score = mGameBoard->CountScore();
+    if (score > 0) {
+      gSoundPlayer.PlaySound(5, 0, EFalse);
     }
-  } else if (mPowerup->CanDrop()) {
-    mSprite->flags |= SFLAG_RENDER;
-  }
-  // TODO: Game Over while removing blocks
-  if (mGameBoard->IsGameOver() && mGameState->mBonusTimer < 0) {
-    mState = PLAYERSTATE_GAME_OVER;
-    mGameState->mGameOver = ETrue;
-  }
-  return ETrue;
-}
 
-#if 0
-TBool GGameProcess::StateRemoveBlocks() {
-  if (mRemoveTimer--) {
-    return ETrue;
+    TBCD p;
+    p.FromUint32(score);
+    mGameState->mScore.Add(p);
   }
-  mRemoveTimer = 30 / 8;        // 1/8 second
+  if (!mGameState->mBlocksRemoving) {
 
-  while (mRemoveRow < BOARD_ROWS) {
-    if (mRemoveCol >= BOARD_COLS) {
-      mRemoveCol = 0;
-      mRemoveRow++;
-      if (mRemoveRow >= BOARD_ROWS) {
-        // all done, game resumes
-        mState = PLAYERSTATE_PLAY;
-        mGameState->mBlocksRemoving = EFalse;
-        mSprite->flags |= SFLAG_RENDER;
-        gControls.dKeys             = 0;  // in case user pressed a key during removing blocks
-        break;
+    mBlinkTimer--;
+    if (mBlinkTimer < 0) {
+      mBlinkTimer = BLINK_TIME;
+      if (!mPowerup->CanDrop()) {
+        mSprite->flags ^= SFLAG_RENDER;
       }
-    }
-    TUint8 v = mGameBoard->mBoard[mRemoveRow][mRemoveCol];
-    if (v != 255) {
-      if ((v > 0 && v <= 5) || (v > 16 && v <= 21)) {
-        TBCD add;
-        add.FromUint32(mRemoveScore);
-        mGameState->mScore.Add(add);
-        mRemoveScore++;
-        // remove the block - start explosion
-        mGameBoard->ExplodeBlock(mRemoveRow, mRemoveCol);
-        if (mGameState->mBlocksRemaining > 0) {
-          mGameState->mBlocksRemaining--;
-        }
-
-        mRemoveCol++;
-        break;
-      }
-    }
-    mRemoveCol++;
-  }
-  return ETrue;
-}
-
-TBool GGameProcess::StateMBomb() {
-  if (mRemoveTimer--) {
-    return ETrue;
-  }
-  mRemoveTimer = 30 / 2;        // 1/8 second
-
-  TInt row = mRemoveRow,
-       col = mRemoveCol;
-
-  switch (mBombStep++) {
-    case 0:
-      mGameBoard->ExplodeBlock(row, col);
-      break;
-    case 1:
-      mGameBoard->ExplodeBlock(row - 1, col - 1);
-      mGameBoard->ExplodeBlock(row - 1, col);
-      mGameBoard->ExplodeBlock(row - 1, col + 1);
-      mGameBoard->ExplodeBlock(row, col - 1);
-      mGameBoard->ExplodeBlock(row, col + 1);
-      mGameBoard->ExplodeBlock(row + 1, col - 1);
-      mGameBoard->ExplodeBlock(row + 1, col);
-      mGameBoard->ExplodeBlock(row + 1, col + 1);
-      break;
-    case 3:
-      mGameBoard->ExplodeBlock(row - 2, col);
-      mGameBoard->ExplodeBlock(row, col - 2);
-      mGameBoard->ExplodeBlock(row, col + 2);
-      mGameBoard->ExplodeBlock(row + 2, col);
-      break;
-    default:
-      // done!
+    } else if (mPowerup->CanDrop()) {
       mSprite->flags |= SFLAG_RENDER;
-      mState = PLAYERSTATE_PLAY;
-      gControls.dKeys             = 0;  // in case user pressed a key during removing blocks
-      mGameState->mBlocksRemoving = EFalse;
-      break;
+    }
+// TODO: Game Over while removing blocks
+    if (mGameBoard->IsGameOver() && mGameState->mBonusTimer < 0) {
+      mState = PLAYERSTATE_GAME_OVER;
+      mGameState->
+        mGameOver = ETrue;
+    }
   }
   return ETrue;
 }
-#endif
 
-//void GGameProcess::RemoveBlocks() {
-//  mState                      = PLAYERSTATE_REMOVE_BLOCKS;
-//  mRemoveRow                  = mRemoveCol = 0;
-//  mRemoveScore                = 1;
-//  mRemoveTimer                = 1;
-//  mSprite->flags &= ~SFLAG_RENDER;
-//  mGameState->mBlocksRemoving = ETrue;
-//}
 TBool GGameProcess::RunAfter() {
   switch (mState) {
     case PLAYERSTATE_PLAY:
       return StatePlay();
-//    case PLAYERSTATE_REMOVE_BLOCKS:
-//      return StateRemoveBlocks();
     case PLAYERSTATE_GAME_OVER:
       return StateGameOver();
-//    case PLAYERSTATE_M_BOMB:
-//      return StateMBomb();
     default:
       Panic("Invalid mState in RunAfter\n");
   }
   return ETrue;
 }
-
+#endif

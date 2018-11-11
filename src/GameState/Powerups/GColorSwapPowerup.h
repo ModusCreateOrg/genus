@@ -3,7 +3,7 @@
 
 #include "BPowerup.h"
 
-class GColorSwapPowerup : BPowerup {
+class GColorSwapPowerup : public BPowerup {
 public:
   GColorSwapPowerup(GPlayerSprite *aSprite, GGameState *aGameState);
 
@@ -14,6 +14,11 @@ public:
 
   virtual TBool Drop(GGameProcess *aProcess);    // actually drop the sprite on the board
   TBool Run();    // run animation for current frame, explosion, whatever, return false when done
+protected:
+  TInt mColorSwapTimer;
+  // stack of points for flood fill (connected blocks)
+  TAny *mPointStack;
+  TUint8 mSwapColor;  // color we are replacing
 };
 
 

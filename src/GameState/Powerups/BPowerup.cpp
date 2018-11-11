@@ -3,8 +3,6 @@
 #include "GGameBoard.h"
 #include "GGame.h"
 
-static const TInt REPEAT_TIME  = 1,
-                  REPEAT_DELAY = REPEAT_TIME + 2;
 
 TInt BPowerup::mRepeatTimer = 0;
 
@@ -12,7 +10,7 @@ BPowerup::BPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : mSprite(aSp
   mGameBoard = &mGameState->mGameBoard;
   mDropped   = EFalse;
   mSprite->mBlockSize = BLOCKSIZE_2x2;
-  mSprite->flags |= SFLAG_RENDER;
+//  mSprite->flags |= SFLAG_RENDER;
 }
 
 BPowerup::~BPowerup() {
@@ -29,6 +27,68 @@ TBool BPowerup::TimedControl(TUint16 aButton) {
   return EFalse;
 }
 
+void BPowerup::MoveLeft() {
+  mSprite->x -= 16;
+  if (mSprite->x < PLAYER_X_MIN) {
+    mSprite->x = PLAYER_X_MIN;
+  }
+  mRepeatTimer = REPEAT_DELAY;
+}
+
+void BPowerup::MoveRight() {
+  mSprite->x += 16;
+  if (mSprite->mBlockSize == BLOCKSIZE_1x1) {
+    if (mSprite->x > (PLAYER_X_MAX + 16)) {
+      mSprite->x = PLAYER_X_MAX + 16;
+    }
+  } else {
+    if (mSprite->x > PLAYER_X_MAX) {
+      mSprite->x = PLAYER_X_MAX;
+    }
+  }
+  mRepeatTimer = REPEAT_DELAY;
+}
+
+void BPowerup::MoveUp() {
+  mSprite->y -= 16;
+  if (mSprite->y < PLAYER_Y_MIN) {
+    mSprite->y = PLAYER_Y_MIN;
+  }
+  mRepeatTimer = REPEAT_DELAY;
+}
+
+void BPowerup::MoveDown() {
+  mSprite->y += 16;
+  if (mSprite->mBlockSize == BLOCKSIZE_1x1) {
+    if (mSprite->y > (PLAYER_Y_MAX + 16)) {
+      mSprite->y = PLAYER_Y_MAX + 16;
+    }
+  } else {
+    if (mSprite->y > PLAYER_Y_MAX) {
+      mSprite->y = PLAYER_Y_MAX;
+    }
+  }
+  mRepeatTimer = REPEAT_DELAY;
+}
+
+void BPowerup::RotateLeft() {
+  if (mSprite->mBlockSize == BLOCKSIZE_1x1) {
+    //
+  }
+  else {
+    mSprite->RotateLeft();
+  }
+}
+
+void BPowerup::RotateRight() {
+  if (mSprite->mBlockSize == BLOCKSIZE_1x1) {
+    //
+  }
+  else {
+    mSprite->RotateRight();
+  }
+}
+
 TBool BPowerup::Move() {
   // TODO: remove this for production
   if (gControls.WasPressed(BUTTON_START)) {
@@ -40,45 +100,16 @@ TBool BPowerup::Move() {
 
   if (gControls.WasPressed(BUTTONA)) {
     mSprite->RotateLeft();
-    mRepeatTimer = REPEAT_DELAY;
   } else if (gControls.WasPressed(BUTTONB)) {
     mSprite->RotateRight();
     mRepeatTimer = REPEAT_DELAY;
   } else if (TimedControl(JOYLEFT)) {
-    mSprite->x -= 16;
-    if (mSprite->x < PLAYER_X_MIN) {
-      mSprite->x = PLAYER_X_MIN;
-    }
     mRepeatTimer = REPEAT_DELAY;
   } else if (TimedControl(JOYRIGHT)) {
-    mSprite->x += 16;
-    if (mSprite->mBlockSize == BLOCKSIZE_1x1) {
-      if (mSprite->x > (PLAYER_X_MAX + 16)) {
-        mSprite->x = PLAYER_X_MAX + 16;
-      }
-    } else {
-      if (mSprite->x > PLAYER_X_MAX) {
-        mSprite->x = PLAYER_X_MAX;
-      }
-    }
     mRepeatTimer = REPEAT_DELAY;
   } else if (TimedControl(JOYUP)) {
-    mSprite->y -= 16;
-    if (mSprite->y < PLAYER_Y_MIN) {
-      mSprite->y = PLAYER_Y_MIN;
-    }
     mRepeatTimer = REPEAT_DELAY;
   } else if (TimedControl(JOYDOWN)) {
-    mSprite->y += 16;
-    if (mSprite->mBlockSize == BLOCKSIZE_1x1) {
-      if (mSprite->y > (PLAYER_Y_MAX + 16)) {
-        mSprite->y = PLAYER_Y_MAX + 16;
-      }
-    } else {
-      if (mSprite->y > PLAYER_Y_MAX) {
-        mSprite->y = PLAYER_Y_MAX;
-      }
-    }
     mRepeatTimer = REPEAT_DELAY;
   }
   return ETrue;

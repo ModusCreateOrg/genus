@@ -73,16 +73,20 @@ public:
     }
   }
 
+  // make next sprite current sprite, randomize next sprite
+  // maybe randomize powerup if aCanPowerup is true
+  void Next(TBool aCanPowerup);
 protected:
   BBitmap *mBackground;
 protected:
-  GGameProcess *mGameProcess;
+  BPowerup *mGameProcess;
 
 public:
   BFont      *mFont;
   TBool      mGameOver;
   TInt       mLevel;
   TBCD       mScore;
+  GPlayerSprite *mSprite, *mNextSprite;
   GGameBoard mGameBoard;
 
 public:

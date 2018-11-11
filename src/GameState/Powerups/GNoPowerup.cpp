@@ -1,8 +1,15 @@
 #include "GNoPowerup.h"
-#include "GGameState.h"
+#include "Game.h"
 
+enum {
+  STATE_MOVE,
+  STATE_TIMER,
+  STATE_REMOVE,
+  STATE_DONE,
+};
 GNoPowerup::GNoPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPowerup(aSprite, aGameState) {
   mSprite->mBlockSize = BLOCKSIZE_2x2;
+  mState = STATE_MOVE;
 }
 
 GNoPowerup::~GNoPowerup() {
@@ -20,7 +27,7 @@ TBool GNoPowerup::CanDrop() {
   return ETrue;
 }
 
-TBool GNoPowerup::Drop(GGameProcess *aProcess) {
+TBool GNoPowerup::Drop() {
   const TInt   row = mSprite->BoardRow(),
                col = mSprite->BoardCol();
   const TUint8 *b  = mSprite->mBlocks;
@@ -33,41 +40,106 @@ TBool GNoPowerup::Drop(GGameProcess *aProcess) {
 
   mDropped = ETrue;
 
-
   TBool ret = mGameBoard->Combine();
-#if 0
-  if (!ret && mGameState->mBonusTimer < 0) {
-    printf("bonus timer: %d\n", mGameState->mBonusTimer);
-    mSprite->MaybePowerup();
-  }
-#endif
-//  if (!ret && mGameState->mBonusTimer < 0) {
-//    mRemoveRow                  = mRemoveCol = 0;
-//    mRemoveScore                = 1;
-//    mRemoveTimer                = 1;
-//    mSprite->flags &= ~SFLAG_RENDER;
-//    mGameState->mBlocksRemoving = ETrue;
-//  }
+  mGameState->Next(mState == STATE_MOVE);
   return ret;
 }
 
-TBool GNoPowerup::Run() {
-  if (!mDropped) {
-    if (mGameState->mBonusTimer >= 0) {
-      mGameState->mBonusTimer--;
-      if (mGameState->mBonusTimer < 0) {
-        printf("timer exausted\n");
-        mRemoveRow                  = mRemoveCol = 0;
-        mRemoveScore                = 1;
-        mRemoveTimer                = 1;
-        mSprite->flags &= ~SFLAG_RENDER;
-        mGameState->mBlocksRemoving = ETrue;
-      }
-    }
-    return ETrue;
+TBool GNoPowerup::MoveState() {
+  mRepeatTimer--;
+
+  if (gControls.WasPressed(BUTTONA)) {
+    RotateLeft();
+  } else if (gControls.WasPressed(BUTTONB)) {
+    RotateRight();
+  } else if (TimedControl(JOYLEFT)) {
+    MoveLeft();
+  } else if (TimedControl(JOYRIGHT)) {
+    MoveRight();
+  } else if (TimedControl(JOYUP)) {
+    MoveUp();
+  } else if (TimedControl(JOYDOWN)) {
+    MoveDown();
   }
-  if (mRemoveTimer--) {
-    return ETrue;
+
+  if (gControls.WasPressed(BUTTON_SELECT)) {
+    if (CanDrop()) {
+      gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
+      if (Drop()) {
+        // combined!
+        // start bonus timer, if not already started
+        if (mGameState->mBonusTimer < 0) {
+          mGameState->StartBonusTimer();
+          mState = STATE_TIMER;
+        }
+        return ETrue;
+      }
+//      mSprite->Copy(mNextSprite);
+//      mSprite->x = PLAYER_X;
+//      mSprite->y = PLAYER_Y;
+//      mNextSprite->Randomize();
+//      MaybePowerup();
+    } else {
+      // can't drop sound:
+      gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
+    }
+  }
+
+  return ETrue;
+}
+
+TBool GNoPowerup::TimerState() {
+  if (mGameState->mBonusTimer >= 0) {
+    mGameState->mBonusTimer--;
+    if (mGameState->mBonusTimer < 0) {
+      mRemoveRow                  = mRemoveCol = 0;
+      mRemoveScore                = 1;
+      mRemoveTimer                = 1;
+      mSprite->flags &= ~SFLAG_RENDER;
+      mGameState->mBlocksRemoving = ETrue;
+      mState = STATE_REMOVE;
+      return ETrue;
+    }
+  }
+  mRepeatTimer--;
+
+  if (gControls.WasPressed(BUTTONA)) {
+    RotateLeft();
+  } else if (gControls.WasPressed(BUTTONB)) {
+    RotateRight();
+  } else if (TimedControl(JOYLEFT)) {
+    MoveLeft();
+  } else if (TimedControl(JOYRIGHT)) {
+    MoveRight();
+  } else if (TimedControl(JOYUP)) {
+    MoveUp();
+  } else if (TimedControl(JOYDOWN)) {
+    MoveDown();
+  }
+
+  if (gControls.WasPressed(BUTTON_SELECT)) {
+    if (CanDrop()) {
+      gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
+      Drop();
+//      mSprite->Copy(mNextSprite);
+//      mSprite->x = PLAYER_X;
+//      mSprite->y = PLAYER_Y;
+//      mNextSprite->Randomize();
+//      MaybePowerup();
+    } else {
+      // can't drop sound:
+      gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
+    }
+  }
+
+  return ETrue;
+}
+
+TBool GNoPowerup::RemoveState() {
+  if (mRemoveTimer > 0) {
+    if (mRemoveTimer--) {
+      return ETrue;
+    }
   }
   mRemoveTimer = 30 / 8;        // 1/8 second
 
@@ -80,7 +152,8 @@ TBool GNoPowerup::Run() {
         mGameState->mBlocksRemoving = EFalse;
         mSprite->flags |= SFLAG_RENDER;
         gControls.dKeys             = 0;  // in case user pressed a key during removing blocks
-        return EFalse;
+        mState = STATE_MOVE;
+        return ETrue;
       }
     }
     TUint8 v = mGameBoard->mBoard[mRemoveRow][mRemoveCol];
@@ -97,10 +170,23 @@ TBool GNoPowerup::Run() {
         }
 
         mRemoveCol++;
-        break;
+        return ETrue;
       }
     }
     mRemoveCol++;
+  }
+  mState = STATE_MOVE;
+  return ETrue;
+}
+
+TBool GNoPowerup::RunBefore() {
+  switch (mState) {
+    case STATE_MOVE:
+      return MoveState();
+    case STATE_TIMER:
+      return TimerState();
+    case STATE_REMOVE:
+      return RemoveState();
   }
   return ETrue;
 }

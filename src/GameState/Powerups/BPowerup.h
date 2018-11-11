@@ -9,12 +9,16 @@ class GGameState;
 
 class GGameBoard;
 
-#include <BBase.h>
+#include <BProcess.h>
 #include "GPlayerSprite.h"
 
-class BPowerup : public BBase {
+static const TInt REPEAT_TIME  = 1,
+                  REPEAT_DELAY = REPEAT_TIME + 2;
+
+class BPowerup : public BProcess {
 public:
   BPowerup(GPlayerSprite *aSprite, GGameState *aGameState);
+
   virtual ~BPowerup();
 
 public:
@@ -23,16 +27,13 @@ public:
 public:
   TBool Move();   // process controls (joystick, buttons)
 
-public:
-  // return true if sprite can be dropped on the board
-  virtual TBool CanDrop() = 0;
+  void MoveLeft();
+  void MoveRight();
+  void MoveUp();
+  void MoveDown();
 
-  // returns ETrue if drop added to or created at least one 2x2 same blocks
-  virtual TBool Drop(GGameProcess *aProcess) = 0;    // actually drop the sprite on the board
-
-  // run animation for current frame, explosion, whatever, return false when done
-  virtual TBool Run() = 0;
-
+  void RotateLeft();
+  void RotateRight();
 
 protected:
   GPlayerSprite *mSprite;
@@ -40,6 +41,7 @@ protected:
   GGameBoard    *mGameBoard;
   static TInt   mRepeatTimer;
   TBool         mDropped;
+  TInt          mState;
 };
 
 #endif //GENUS_BPOWERUP_H

@@ -76,8 +76,6 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
 
   if (flags & SFLAG_RENDER) {
     if (mBlockSize == BLOCKSIZE_2x2) {
-//      BSprite::DrawSprite(gViewPort, COMMON_SLOT, mPowerupImage, xx, yy);
-//    } else {
       BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[0], xx, yy);
       BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[1], xx + 16, yy);
       BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[2], xx, yy + 16);
