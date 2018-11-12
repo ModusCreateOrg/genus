@@ -19,27 +19,28 @@ PATH ../resources/backgrounds/under_water
 BITMAP under_water.bmp
 
 PATH ../resources/backgrounds/countryside/
-BITMAP countryside0.bmp
-BITMAP countryside1.bmp
-BITMAP countryside2.bmp
-BITMAP countryside3.bmp
-BITMAP countryside4.bmp
-BITMAP countryside5.bmp
+#BITMAP countryside0.bmp
+#BITMAP countryside1.bmp
+#BITMAP countryside2.bmp
+#BITMAP countryside3.bmp
+#BITMAP countryside4.bmp
+#BITMAP countryside5.bmp
 BITMAP countryside_static.bmp
 
 PATH ../resources/backgrounds/cyberpunk/
-BITMAP cyberpunk0.bmp
-BITMAP cyberpunk1.bmp
-BITMAP cyberpunk2.bmp
+#BITMAP cyberpunk0.bmp
+#BITMAP cyberpunk1.bmp
+#BITMAP cyberpunk2.bmp
 BITMAP cyberpunk_static.bmp
 
 PATH ../resources/backgrounds/glacial_mountains/
-BITMAP glacial_mountains0.bmp
-BITMAP glacial_mountains1.bmp
-BITMAP glacial_mountains2.bmp
-BITMAP glacial_mountains3.bmp
-BITMAP glacial_mountains4.bmp
-BITMAP glacial_mountains5.bmp
+#BITMAP glacial_mountains0.bmp
+#BITMAP glacial_mountains1.bmp
+#BITMAP glacial_mountains2.bmp
+#BITMAP glacial_mountains3.bmp
+#BITMAP glacial_mountains4.bmp
+#BITMAP glacial_mountains5.bmp
+BITMAP glacial_mountains_static.bmp
 
 PATH ../resources/backgrounds/under_water_fantasy/
 BITMAP under_water_fantasy.bmp
