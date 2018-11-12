@@ -10,16 +10,21 @@
 
 
 GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
+  mGameEngine = aGameEngine;
+  mRenderTarget = gDisplay.renderBitmap;
+  mTextColor  = 0;
+
+#ifdef STATIC_GAME_BACKGROUNDS
+  gResourceManager.LoadBitmap(COUNTRYSIDE_STATIC_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
+
+#else
   gResourceManager.LoadBitmap(COUNTRYSIDE0_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE3_BMP, BKG4_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE4_BMP, BKG5_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(COUNTRYSIDE5_BMP, BKG6_SLOT, IMAGE_ENTIRE);
-
-  mGameEngine = aGameEngine;
-  mRenderTarget = gDisplay.renderBitmap;
-  mTextColor  = 0;
 
   bgOffset0 = 0;
   bgOffset1 = 0;
@@ -41,6 +46,7 @@ GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
   printf("mBackground3 dimensions: %i x %i\n", mBackground3->Width(), mBackground3->Height());
   printf("mBackground4 dimensions: %i x %i\n", mBackground4->Width(), mBackground4->Height());
   printf("mBackground4 dimensions: %i x %i\n", mBackground5->Width(), mBackground5->Height());
+#endif
 }
 
 GLevelCountryside::~GLevelCountryside()  {
@@ -57,10 +63,11 @@ GLevelCountryside::~GLevelCountryside()  {
 void GLevelCountryside::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
-//  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
+  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
 
   // Base background
+#ifndef STATIC_GAME_BACKGROUNDS
   bgOffset0 += .02;
   if ((int) bgOffset0 >= mBackground0->Width()) {
     bgOffset0 = 0;
@@ -85,19 +92,22 @@ void GLevelCountryside::Animate() {
   if ((int) bgOffset5 >= mBackground5->Width()) {
     bgOffset5 = 0;
   }
-
+#endif
 }
 
 void GLevelCountryside::Render() {
 
 //  printf("%i\n", gDisplay.renderBitmap->Height() - mBackground4->Height() + 1);
 //  memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
+#ifdef STATIC_GAME_BACKGROUNDS
+  gDisplay.renderBitmap->CopyPixels(mBackground0);
+#else
   DrawScrolledBackground(mBackground0, bgOffset0, 0);
   DrawScrolledBackground(mBackground1, bgOffset1, 95, ETrue);
   DrawScrolledBackground(mBackground3, bgOffset3, 189, ETrue);
   DrawScrolledBackground(mBackground4, bgOffset4, 212, ETrue);
   DrawScrolledBackground(mBackground5, bgOffset5, 10, ETrue);
-
+#endif
   mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }
 

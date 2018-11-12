@@ -25,12 +25,13 @@ BITMAP countryside2.bmp
 BITMAP countryside3.bmp
 BITMAP countryside4.bmp
 BITMAP countryside5.bmp
+BITMAP countryside_static.bmp
 
 PATH ../resources/backgrounds/cyberpunk/
 BITMAP cyberpunk0.bmp
 BITMAP cyberpunk1.bmp
 BITMAP cyberpunk2.bmp
-
+BITMAP cyberpunk_static.bmp
 
 PATH ../resources/backgrounds/glacial_mountains/
 BITMAP glacial_mountains0.bmp
