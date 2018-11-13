@@ -85,10 +85,13 @@ function build {
 }
 
 function ensure_esp_idf {
+    set +u
     if [[ ! -z "$IDF_PATH" ]]; then
         echo "XTENSA is already installed, nothing to do."
+        set -u
         return
     fi
+    set -u
 
     echo "Attempting to install XTENSA on: $OS"
 
