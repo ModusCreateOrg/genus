@@ -3,6 +3,9 @@
 static TUint32 start;
 
 GGame::GGame() {
+  // Load Game Options
+  gOptions = new TOptions();
+
   // TODO: Jay - this needs to be in BApplication constructor (I think)
   gSoundPlayer.Init(3, 6);
 
@@ -28,7 +31,7 @@ void GGame::SetState(TInt aNewState) {
 }
 
 void GGame::Run() {
-  TBool muted = EFalse;
+  TBool muted = gOptions->muted;
 
   TBool done = EFalse;
   while (!done) {
@@ -85,6 +88,8 @@ void GGame::Run() {
     }
     if (gControls.WasPressed(BUTTON2)) {
       muted = !muted;
+      gOptions->muted = muted;
+      gOptions->Save();
       gSoundPlayer.MuteMusic(muted);
     }
   }

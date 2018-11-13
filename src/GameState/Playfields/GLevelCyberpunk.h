@@ -20,12 +20,15 @@ public:
 public:
   GGameState *mGameEngine;
   BBitmap *mBackground0;
+
+#ifndef STATIC_GAME_BACKGROUNDS
   BBitmap *mBackground1;
   BBitmap *mBackground2;
 
   float bgOffset0;
   float bgOffset1;
   float bgOffset2;
+#endif
 
   TUint8 mTextColor;
 };

@@ -19,7 +19,11 @@ public:
 
 public:
   GGameState *mGameEngine;
+  TUint8 mTextColor;
   BBitmap *mBackground0;
+
+#ifndef STATIC_GAME_BACKGROUNDS
+
   BBitmap *mBackground1;
   BBitmap *mBackground2;
   BBitmap *mBackground3;
@@ -32,8 +36,7 @@ public:
   float bgOffset3;
   float bgOffset4;
   float bgOffset5;
-
-  TUint8 mTextColor;
+#endif
 };
 
 

@@ -13,6 +13,7 @@ enum {
   GAME_STATE_MAIN_OPTIONS,
   GAME_STATE_CREDITS
 };
+
 class GGame : public BApplication {
 public:
   GGame();

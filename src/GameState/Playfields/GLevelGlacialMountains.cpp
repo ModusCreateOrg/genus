@@ -13,6 +13,18 @@
 
 
 GLevelGlacialMountains::GLevelGlacialMountains(GGameState *aGameEngine) {
+  mGameEngine = aGameEngine;
+  mTextColor = 0;
+  mRenderTarget = gDisplay.renderBitmap;
+
+
+
+#ifdef STATIC_GAME_BACKGROUNDS
+  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+  gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS_STATIC_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
+
+#else
 
   gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS0_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
@@ -21,9 +33,7 @@ GLevelGlacialMountains::GLevelGlacialMountains(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS4_BMP, BKG5_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS5_BMP, BKG6_SLOT, IMAGE_ENTIRE);
 
-  mGameEngine = aGameEngine;
-  mTextColor = 0;
-  mRenderTarget = gDisplay.renderBitmap;
+
 
   bgOffset0 = 0;
   bgOffset1 = 0;
@@ -45,6 +55,7 @@ GLevelGlacialMountains::GLevelGlacialMountains(GGameState *aGameEngine) {
   printf("mBackground3 dimensions: %i x %i\n", mBackground3->Width(), mBackground3->Height());
   printf("mBackground4 dimensions: %i x %i\n", mBackground4->Width(), mBackground4->Height());
   printf("mBackground4 dimensions: %i x %i\n", mBackground5->Width(), mBackground5->Height());
+#endif
 }
 
 GLevelGlacialMountains::~GLevelGlacialMountains()  {
@@ -65,7 +76,9 @@ void GLevelGlacialMountains::Animate() {
   gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
 
-  // Base background
+#ifndef STATIC_GAME_BACKGROUNDS
+
+// Base background
   bgOffset0 += .005;
   if ((int)bgOffset0 >= mBackground0->Width()) {
     bgOffset0= 0;
@@ -95,19 +108,23 @@ void GLevelGlacialMountains::Animate() {
   if ((int)bgOffset5 >= mBackground5->Width()) {
     bgOffset5 = 0;
   }
-
+#endif
 }
 
 void GLevelGlacialMountains::Render() {
 
 //  memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
+
+#ifdef STATIC_GAME_BACKGROUNDS
+  gDisplay.renderBitmap->CopyPixels(mBackground0);
+#else
   DrawScrolledBackground(mBackground0, bgOffset0, 0);
   DrawScrolledBackground(mBackground1, bgOffset1, 60, ETrue);
   DrawScrolledBackground(mBackground2, bgOffset2, 70, ETrue);
   DrawScrolledBackground(mBackground3, bgOffset3, 173, ETrue);
   DrawScrolledBackground(mBackground4, bgOffset4, 175, ETrue);
   DrawScrolledBackground(mBackground5, bgOffset5, gDisplay.renderBitmap->Height() - mBackground5->Height(), ETrue);
-
+#endif
   mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }
 

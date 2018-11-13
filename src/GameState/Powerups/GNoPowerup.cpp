@@ -1,15 +1,18 @@
 #include "GNoPowerup.h"
 #include "Game.h"
 
+static const TInt BLINK_TIME = 2;
+
 enum {
   STATE_MOVE,
   STATE_TIMER,
   STATE_REMOVE,
-  STATE_DONE,
 };
+
 GNoPowerup::GNoPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPowerup(aSprite, aGameState) {
   mSprite->mBlockSize = BLOCKSIZE_2x2;
-  mState = STATE_MOVE;
+  mState      = STATE_MOVE;
+  mBlinkTimer = BLINK_TIME;
 }
 
 GNoPowerup::~GNoPowerup() {
@@ -45,6 +48,19 @@ TBool GNoPowerup::Drop() {
   return ret;
 }
 
+void GNoPowerup::Blink() {
+  TBool canDrop = CanDrop();
+  mBlinkTimer--;
+  if (mBlinkTimer < 0) {
+    mBlinkTimer = BLINK_TIME;
+    if (!canDrop) {
+      mSprite->flags ^= SFLAG_RENDER;
+    }
+  } else if (CanDrop()) {
+    mSprite->flags |= SFLAG_RENDER;
+  }
+}
+
 TBool GNoPowerup::MoveState() {
   mRepeatTimer--;
 
@@ -74,17 +90,12 @@ TBool GNoPowerup::MoveState() {
         }
         return ETrue;
       }
-//      mSprite->Copy(mNextSprite);
-//      mSprite->x = PLAYER_X;
-//      mSprite->y = PLAYER_Y;
-//      mNextSprite->Randomize();
-//      MaybePowerup();
     } else {
       // can't drop sound:
       gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
     }
   }
-
+  Blink();
   return ETrue;
 }
 
@@ -121,17 +132,13 @@ TBool GNoPowerup::TimerState() {
     if (CanDrop()) {
       gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
       Drop();
-//      mSprite->Copy(mNextSprite);
-//      mSprite->x = PLAYER_X;
-//      mSprite->y = PLAYER_Y;
-//      mNextSprite->Randomize();
-//      MaybePowerup();
     } else {
       // can't drop sound:
       gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
     }
   }
 
+  Blink();
   return ETrue;
 }
 

@@ -38,15 +38,6 @@ INCLUDE(FindPkgConfig)
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 
-# include creative-engine sources
-# when using out-of-tree source paths add_subdirectory's build_dir argument is required
-# use the project's current build directory
-
-# https://cmake.org/cmake/help/latest/variable/CMAKE_CURRENT_BINARY_DIR.html
-# https://cmake.org/cmake/help/latest/command/add_subdirectory.html
-# https://stackoverflow.com/questions/35260552/how-do-i-explicitly-specify-an-out-of-tree-source-in-cmake
-add_subdirectory(${CREATIVE_ENGINE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/creative-engine)
-
 # build rcomp
 add_custom_command(
         OUTPUT rcomp

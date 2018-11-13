@@ -15,6 +15,7 @@ protected:
   TBool CanDrop();
 
   TBool Drop();
+  void Blink();
 
   TBool RunBefore();
 
@@ -28,6 +29,7 @@ protected:
   TBool MoveState();
 
 protected:
+  TInt    mBlinkTimer;
   TInt    mRemoveTimer;
   TInt    mRemoveRow, mRemoveCol;
   TUint32 mRemoveScore;
