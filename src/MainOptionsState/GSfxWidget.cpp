@@ -31,4 +31,5 @@ void GSfxWidget::Select(TInt aVal) {
   gOptions->Save();
   gSoundPlayer.SetEffectsVolume(gOptions->sfx);
   gSoundPlayer.MuteMusic(gOptions->muted);
+  gSoundPlayer.PlaySound(/*SFX_SCORE_COMBO_WAV*/5, 0, EFalse);
 }
