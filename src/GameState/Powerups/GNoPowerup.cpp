@@ -49,7 +49,7 @@ TBool GNoPowerup::Drop() {
 
   TBool ret = mGameBoard->Combine();
   // Get Next 2x2 into current, maybe powerup
-  mGameState->Next(mState == STATE_MOVE);
+  mGameState->Next(mState == STATE_MOVE && !ret);
   return ret;
 }
 

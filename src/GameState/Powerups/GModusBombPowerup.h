@@ -19,6 +19,8 @@ protected:
 
   TBool StateRemove();
 
+  TBool StateWait();
+
 protected:
   TInt mBombStep;
   TInt mBombTimer;
