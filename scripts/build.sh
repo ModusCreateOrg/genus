@@ -98,6 +98,7 @@ checkout_creative_engine_branch
 
 # Build the software and documentation
 build
+build_xtensa
 copy_sdl2_libs_to_app
 "$BASE_DIR/doxygen/build.sh"
 
