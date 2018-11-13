@@ -98,6 +98,7 @@ function ensure_esp_idf {
     cd "$BASE_DIR"
     OS="$(uname)"
     if [ "$OS" == "Darwin" ]; then
+        cp sdkconfig.osx sdkconfig
         mkdir esp 
         cd esp 
         git clone --recursive https://github.com/espressif/esp-idf.git
@@ -233,7 +234,7 @@ function archive_app {
     if [ "$OS" == "Darwin" ]; then
         echo "Archiving app"
         cd "$BUILD_DIR"
-        tar czvfp genus.tgz genus-docs genus.app
+        tar czvfp genus.tgz genus-docs genus.app Genus.bin Genus.elf Genus.map
         ls -l
         cd -
     fi
