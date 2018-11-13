@@ -2,6 +2,7 @@
 #include "GDifficultyWidget.h"
 #include "GMusicWidget.h"
 #include "GSfxWidget.h"
+#include "GResetWidget.h"
 
 
 class OptionsContainer : public BDialogWidget {
@@ -10,6 +11,7 @@ public:
       AddWidget((BWidget &) *new GDifficultyWidget());
       AddWidget((BWidget &) *new GMusicWidget());
       AddWidget((BWidget &) *new GSfxWidget());
+      AddWidget((BWidget &) *new GResetWidget());
     }
 };
 
