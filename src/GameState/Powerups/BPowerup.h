@@ -25,14 +25,16 @@ public:
   TBool TimedControl(TUint16 aButton);
 
 public:
-  TBool Move();   // process controls (joystick, buttons)
-
   void MoveLeft();
+
   void MoveRight();
+
   void MoveUp();
+
   void MoveDown();
 
   void RotateLeft();
+
   void RotateRight();
 
 protected:
@@ -41,7 +43,12 @@ protected:
   GGameBoard    *mGameBoard;
   static TInt   mRepeatTimer;
   TBool         mDropped;
-  TInt          mState;
+  enum {
+    STATE_MOVE,
+    STATE_TIMER,
+    STATE_REMOVE,
+    STATE_WAIT,
+  }             mState;
 };
 
 #endif //GENUS_BPOWERUP_H

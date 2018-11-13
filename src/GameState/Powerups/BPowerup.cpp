@@ -89,28 +89,3 @@ void BPowerup::RotateRight() {
   }
 }
 
-TBool BPowerup::Move() {
-  // TODO: remove this for production
-  if (gControls.WasPressed(BUTTON_START)) {
-    gGame->SetState(GAME_STATE_GAMEOVER);
-    return EFalse;
-  }
-
-  mRepeatTimer--;
-
-  if (gControls.WasPressed(BUTTONA)) {
-    mSprite->RotateLeft();
-  } else if (gControls.WasPressed(BUTTONB)) {
-    mSprite->RotateRight();
-    mRepeatTimer = REPEAT_DELAY;
-  } else if (TimedControl(JOYLEFT)) {
-    mRepeatTimer = REPEAT_DELAY;
-  } else if (TimedControl(JOYRIGHT)) {
-    mRepeatTimer = REPEAT_DELAY;
-  } else if (TimedControl(JOYUP)) {
-    mRepeatTimer = REPEAT_DELAY;
-  } else if (TimedControl(JOYDOWN)) {
-    mRepeatTimer = REPEAT_DELAY;
-  }
-  return ETrue;
-}

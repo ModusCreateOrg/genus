@@ -12,12 +12,11 @@
  ****************************************************************************************************************/
 
 GGameState::GGameState() : BGameEngine(gViewPort) {
-  mLevel          = 1;
-  mGameOver       = EFalse;
-  mBlocksRemoving = EFalse;
-  mPlayfield      = ENull;
-  mBonusTime      = 15 * 30;   // TODO: difficulty, etc.
-  mBonusTimer     = -1;
+  mLevel      = 1;
+  mGameOver   = EFalse;
+  mPlayfield  = ENull;
+  mBonusTime  = 15 * 30;   // TODO: difficulty, etc.
+  mBonusTimer = -1;
 
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
@@ -60,21 +59,27 @@ GGameState::~GGameState() {
 }
 
 void GGameState::Next(TBool aCanPowerup) {
+  if (aCanPowerup) {
+    if (mBonusTimer > 0) {
+      printf("canPowerup with bonus timer running!\n");
+    }
+    TInt maybe = Random(15, 20);
+    if (maybe == 16) {
+      mGameProcess->Wait();
+      if (Random() & 1) {
+        AddProcess(new GModusBombPowerup(mSprite, this));
+      } else {
+        AddProcess(new GColorSwapPowerup(mSprite, this));
+      }
+      return;
+    }
+  }
+  // NOT a powerup
   mSprite->x = PLAYER_X;
   mSprite->y = PLAYER_Y;
   mSprite->Copy(mNextSprite);
   mNextSprite->Randomize();
-
-//  TInt maybe = Random(15, 20);
-//  if (aCanPowerup && maybe == 16) {
-//    if (Random() & 1) {
-//      mGameProcess = new GModusBombPowerup(mSprite, this);
-//    } else {
-//      mGameProcess = new GColorSwapPowerup(mSprite, this);
-//    }
-//  } else {
-
-//  }
+  mGameProcess->Signal();
 }
 
 /****************************************************************************************************************

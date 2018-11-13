@@ -3,12 +3,6 @@
 
 static const TInt BLINK_TIME = 2;
 
-enum {
-  STATE_MOVE,
-  STATE_TIMER,
-  STATE_REMOVE,
-};
-
 GNoPowerup::GNoPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPowerup(aSprite, aGameState) {
   mSprite->mBlockSize = BLOCKSIZE_2x2;
   mState      = STATE_MOVE;
@@ -17,6 +11,16 @@ GNoPowerup::GNoPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPoweru
 
 GNoPowerup::~GNoPowerup() {
 
+}
+
+void GNoPowerup::Wait() {
+  mState = STATE_WAIT;
+}
+
+void GNoPowerup::Signal() {
+  if (mState == STATE_WAIT) {
+    mState = STATE_MOVE;
+  }
 }
 
 TBool GNoPowerup::CanDrop() {
@@ -44,6 +48,7 @@ TBool GNoPowerup::Drop() {
   mDropped = ETrue;
 
   TBool ret = mGameBoard->Combine();
+  // Get Next 2x2 into current, maybe powerup
   mGameState->Next(mState == STATE_MOVE);
   return ret;
 }
@@ -107,7 +112,6 @@ TBool GNoPowerup::TimerState() {
       mRemoveScore                = 1;
       mRemoveTimer                = 1;
       mSprite->flags &= ~SFLAG_RENDER;
-      mGameState->mBlocksRemoving = ETrue;
       mState = STATE_REMOVE;
       return ETrue;
     }
@@ -156,7 +160,6 @@ TBool GNoPowerup::RemoveState() {
       mRemoveRow++;
       if (mRemoveRow >= BOARD_ROWS) {
         // all done, game resumes
-        mGameState->mBlocksRemoving = EFalse;
         mSprite->flags |= SFLAG_RENDER;
         gControls.dKeys             = 0;  // in case user pressed a key during removing blocks
         mState = STATE_MOVE;
@@ -186,6 +189,10 @@ TBool GNoPowerup::RemoveState() {
   return ETrue;
 }
 
+TBool GNoPowerup::WaitState() {
+  return ETrue;
+}
+
 TBool GNoPowerup::RunBefore() {
   switch (mState) {
     case STATE_MOVE:
@@ -194,6 +201,8 @@ TBool GNoPowerup::RunBefore() {
       return TimerState();
     case STATE_REMOVE:
       return RemoveState();
+    case STATE_WAIT:
+      return WaitState();
   }
   return ETrue;
 }

@@ -2,7 +2,7 @@
 #include "GGameState.h"
 #include "Game.h"
 
-ANIMSCRIPT BombAnimation[] = {
+static ANIMSCRIPT BombAnimation[] = {
   ABITMAP(COMMON_SLOT),
   ALABEL,
   ASTEP1(IMG_POWERUP_MODUS),
@@ -13,22 +13,16 @@ ANIMSCRIPT BombAnimation[] = {
 GModusBombPowerup::GModusBombPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPowerup(aSprite, aGameState) {
   mSprite->mBlockSize = BLOCKSIZE_1x1;
   mSprite->StartAnimation(BombAnimation);
+  mState = STATE_MOVE;
 }
 
 GModusBombPowerup::~GModusBombPowerup() {
 
 }
 
-TBool GModusBombPowerup::CanDrop() {
-  return ETrue; // bomb can be dropped anywhere
-}
-
-TBool GModusBombPowerup::Drop(GGameProcess *aProcess) {
+TBool GModusBombPowerup::Drop() {
   // disable rendering
   mSprite->flags &= ~SFLAG_RENDER;
-
-  // notify GameState that blocks are being removed
-  mGameState->mBlocksRemoving = ETrue;
 
   // where on the board the bomb was placed
   mBombRow = mSprite->BoardRow();
@@ -41,10 +35,32 @@ TBool GModusBombPowerup::Drop(GGameProcess *aProcess) {
   return EFalse;
 }
 
-TBool GModusBombPowerup::Run() {
-  if (!mDropped) {
-    return ETrue;
+TBool GModusBombPowerup::StateMove() {
+  mRepeatTimer--;
+
+  if (gControls.WasPressed(BUTTONA)) {
+    RotateLeft();
+  } else if (gControls.WasPressed(BUTTONB)) {
+    RotateRight();
+  } else if (TimedControl(JOYLEFT)) {
+    MoveLeft();
+  } else if (TimedControl(JOYRIGHT)) {
+    MoveRight();
+  } else if (TimedControl(JOYUP)) {
+    MoveUp();
+  } else if (TimedControl(JOYDOWN)) {
+    MoveDown();
   }
+
+  if (gControls.WasPressed(BUTTON_SELECT)) {
+    Drop();
+    mState = STATE_REMOVE;
+  }
+
+  return ETrue;
+}
+
+TBool GModusBombPowerup::StateRemove() {
   if (mBombTimer--) {
     return ETrue;
   }
@@ -77,7 +93,21 @@ TBool GModusBombPowerup::Run() {
       // done!
       mSprite->flags |= SFLAG_RENDER;
       gControls.dKeys             = 0;  // in case user pressed a key during removing blocks
-      mGameState->mBlocksRemoving = EFalse;
+      mGameState->Next(EFalse);
       return EFalse;
   }
+}
+
+TBool GModusBombPowerup::RunAfter() {
+  switch (mState) {
+    case STATE_MOVE:
+      return StateMove();
+    case STATE_REMOVE:
+      return StateRemove();
+    case STATE_TIMER:
+      return StateMove();
+      case STATE_WAIT:
+        return ETrue;
+  }
+  return ETrue;
 }

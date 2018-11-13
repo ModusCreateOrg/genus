@@ -10,14 +10,19 @@ public:
   virtual ~GColorSwapPowerup();
 
 public:
-  TBool CanDrop();
+  TBool RunBefore() { return ETrue; }
 
-  virtual TBool Drop(GGameProcess *aProcess);    // actually drop the sprite on the board
-  TBool Run();    // run animation for current frame, explosion, whatever, return false when done
+  TBool RunAfter();    // run animation for current frame, explosion, whatever, return false when done
 protected:
-  TInt mColorSwapTimer;
+  TBool Drop();    // actually drop the sprite on the board
+  TBool StateMove();
+
+  TBool StateRemove();
+
+protected:
+  TInt   mColorSwapTimer;
   // stack of points for flood fill (connected blocks)
-  TAny *mPointStack;
+  TAny   *mPointStack;
   TUint8 mSwapColor;  // color we are replacing
 };
 

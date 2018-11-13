@@ -2,8 +2,8 @@
 #define GENUS_GGAMESTATE_H
 
 //#include "Game.h"
+#include "Powerups.h"
 #include "GGameBoard.h"
-#include "GGameProcess.h"
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -79,7 +79,7 @@ public:
 protected:
   BBitmap *mBackground;
 protected:
-  BPowerup *mGameProcess;
+  GNoPowerup *mGameProcess;
 
 public:
   BFont      *mFont;
@@ -96,7 +96,6 @@ public:
 public:
   TInt  mBlocksThisLevel;  // number of moves this level
   TInt  mBlocksRemaining;  // remaining moves this level
-  TBool mBlocksRemoving;
 
 private:
   // these used by PostRender()
