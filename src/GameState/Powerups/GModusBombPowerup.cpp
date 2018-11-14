@@ -91,7 +91,7 @@ TBool GModusBombPowerup::StateRemove() {
       mGameBoard->ExplodeBlock(row + 1, col);
       mGameBoard->ExplodeBlock(row + 1, col + 1);
       return ETrue;
-    case 3:
+    case 2:
       mGameBoard->ExplodeBlock(row - 2, col);
       mGameBoard->ExplodeBlock(row, col - 2);
       mGameBoard->ExplodeBlock(row, col + 2);
