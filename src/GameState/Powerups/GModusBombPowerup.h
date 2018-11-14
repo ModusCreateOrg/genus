@@ -7,7 +7,7 @@ class GModusBombPowerup : public BPowerup {
 public:
   GModusBombPowerup(GPlayerSprite *aSprite, GGameState *aGameState);
 
-  virtual ~GModusBombPowerup();
+  ~GModusBombPowerup();
 
 public:
   TBool RunBefore() { return ETrue; }
