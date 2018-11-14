@@ -69,9 +69,9 @@ void GNoPowerup::Blink() {
 TBool GNoPowerup::MoveState() {
   mRepeatTimer--;
 
-  if (gControls.WasPressed(BUTTONA)) {
+  if (gControls.WasPressed(BUTTONB)) {
     RotateLeft();
-  } else if (gControls.WasPressed(BUTTONB)) {
+  } else if (gControls.WasPressed(BUTTONA)) {
     RotateRight();
   } else if (TimedControl(JOYLEFT)) {
     MoveLeft();

@@ -8,19 +8,16 @@
 #include "GGameState.h"
 #include "GScrollingLevel.h"
 
-
-
-
 class Star {
 public:
   float mX, mY, mZ;
   int mScreenX, mScreenY, mOldScreenX, mOldScreenY, mSpeed;
 
   void Randomize(int aMinX, int aMaxX, int aMinY, int aMaxY, int aMinZ, int aMaxZ, int aMinSpeed, int aMaxSpeed) {
-    mX = rand() % (aMaxX - aMinX + 1) + aMinX;
-    mY = rand() % (aMaxY - aMinY + 1) + aMinY;
-    mZ = rand() % (aMaxZ - aMinZ + 1) + aMinZ;
-    mSpeed = rand() % (aMaxSpeed - aMinSpeed + 1) + aMinSpeed;
+    mX = Random() % (aMaxX - aMinX + 1) + aMinX;
+    mY = Random() % (aMaxY - aMinY + 1) + aMinY;
+    mZ = Random() % (aMaxZ - aMinZ + 1) + aMinZ;
+    mSpeed = Random() % (aMaxSpeed - aMinSpeed + 1) + aMinSpeed;
   };
 };
 
@@ -45,24 +42,9 @@ public:
   TUint8 mTextColor;
   BBitmap *mBackground0;
   BBitmap *mBackground1;
-
-#ifndef STATIC_GAME_BACKGROUNDS
-
-  BBitmap *mBackground2;
-  BBitmap *mBackground3;
-  BBitmap *mBackground4;
-  BBitmap *mBackground5;
-
-  float bgOffset0;
-  float bgOffset1;
-  float bgOffset2;
-  float bgOffset3;
-  float bgOffset4;
-  float bgOffset5;
-#endif
 };
 
 
 
 
-#endif //GENUS_GLEVELGLACIALMOUNTAINS_H
+#endif //GENUS_GLEVELSPACE_H

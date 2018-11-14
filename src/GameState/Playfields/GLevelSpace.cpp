@@ -26,7 +26,6 @@ GLevelSpace::GLevelSpace(GGameState *aGameEngine) {
   mTextColor = 0;
   mRenderTarget = gDisplay.renderBitmap;
 
-
   mCurrSpeed = 10;
   mBoostSpeed = false;
 
@@ -46,17 +45,13 @@ GLevelSpace::GLevelSpace(GGameState *aGameEngine) {
   }
 
 
-
-#ifdef STATIC_GAME_BACKGROUNDS
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(SPACE_STATIC_TOP_LEFT_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(SPACE_STATIC_BOTTOM_RIGHT_BMP, BKG2_SLOT, IMAGE_ENTIRE);
 
   mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
   mBackground1 = gResourceManager.GetBitmap(BKG2_SLOT);
-#else
 
-#endif
 }
 
 GLevelSpace::~GLevelSpace()  {
@@ -71,12 +66,6 @@ void GLevelSpace::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
   gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
-
-
-#ifndef STATIC_GAME_BACKGROUNDS
-
-  // Scrolly stuff goes here6
-#endif
 }
 
 void GLevelSpace::Render() {
@@ -150,19 +139,14 @@ void GLevelSpace::Render() {
       mCurrSpeed = STAR_SPEED_MIN;
     }
 
-
     //If the mStars go off the screen remove them and re-draw. If the mStars hang out in the center remove them also
     if (mStars[i].mScreenX > 320 || mStars[i].mScreenX < 0 || mStars[i].mScreenY > 240 || mStars[i].mScreenY < 0 || (mStars[i].mScreenX == 320 >> 1 && mStars[i].mScreenY == 240 >> 1) ) {
-      int xMin = -1000,
-          xMax = 1000,
-          yMin = -500,
-          yMax = 500;
 
       mStars[i].Randomize(
-        xMin,
-        xMax,
-        yMin,
-        yMax,
+        -1000,
+        1000,
+        -500,
+        500,
         RANDOM_Z_MIN,
         RANDOM_Z_MAX,
         STAR_SPEED_MIN,
