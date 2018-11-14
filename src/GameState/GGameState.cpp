@@ -5,6 +5,7 @@
 #include "GLevelUnderWater1.h"
 #include "GLevelGlacialMountains.h"
 #include "GLevelUnderWaterFantasy.h"
+#include "GLevelSpace.h"
 #include "GGameProcess.h"
 
 /****************************************************************************************************************
