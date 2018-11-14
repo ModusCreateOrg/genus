@@ -17,10 +17,10 @@ public:
   int mScreenX, mScreenY, mOldScreenX, mOldScreenY, mSpeed;
 
   void Randomize(int aMinX, int aMaxX, int aMinY, int aMaxY, int aMinZ, int aMaxZ, int aMinSpeed, int aMaxSpeed) {
-    mX = rand() % (aMaxX - aMinX + 1) + aMinX;
-    mY = rand() % (aMaxY - aMinY + 1) + aMinY;
-    mZ = rand() % (aMaxZ - aMinZ + 1) + aMinZ;
-    mSpeed = rand() % (aMaxSpeed - aMinSpeed + 1) + aMinSpeed;
+    mX = Random() % (aMaxX - aMinX + 1) + aMinX;
+    mY = Random() % (aMaxY - aMinY + 1) + aMinY;
+    mZ = Random() % (aMaxZ - aMinZ + 1) + aMinZ;
+    mSpeed = Random() % (aMaxSpeed - aMinSpeed + 1) + aMinSpeed;
   };
 };
 
