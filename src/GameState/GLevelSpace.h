@@ -46,24 +46,9 @@ public:
   BBitmap *mBackground0;
   BBitmap *mBackground1;
 
-#ifndef STATIC_GAME_BACKGROUNDS
-
-  BBitmap *mBackground1;
-  BBitmap *mBackground2;
-  BBitmap *mBackground3;
-  BBitmap *mBackground4;
-  BBitmap *mBackground5;
-
-  float bgOffset0;
-  float bgOffset1;
-  float bgOffset2;
-  float bgOffset3;
-  float bgOffset4;
-  float bgOffset5;
-#endif
 };
 
 
 
 
-#endif //GENUS_GLEVELGLACIALMOUNTAINS_H
+#endif //GENUS_GLEVELSPACE_H
