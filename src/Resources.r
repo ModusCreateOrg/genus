@@ -48,6 +48,12 @@ BITMAP under_water_fantasy.bmp
 #BITMAP under_water_fantasy1.bmp
 #BITMAP under_water_fantasy2.bmp
 
+PATH ../resources/backgrounds/space/
+#BITMAP space_static.bmp
+#BITMAP space_static2.bmp
+BITMAP space_static_top_left.bmp
+BITMAP space_static_bottom_right.bmp
+
 # .-=[  MUSIC  ]=-.
 PATH ../resources/music
 
