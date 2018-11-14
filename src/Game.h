@@ -28,6 +28,7 @@
 #include "GEnterHighScoreState.h"
 #include "HighScoresState/GHighScoresState.h"
 #include "MainOptionsState/GMainOptionsState.h"
+#include "MainOptionsState/GResetOptionsState.h"
 #include "GCreditsState.h"
 
 // globals

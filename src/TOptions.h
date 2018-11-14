@@ -12,6 +12,7 @@ struct TOptions {
 
   TOptions();
   void SetDefaults();
+  void Reset(TBool aSave = ETrue);
   void Save();
   TBool Load();
 };

@@ -2,31 +2,22 @@
 #include "Game.h"
 
 static const TRange music_options = {
-  0, 100, 5, 100
+  0, 8, 1
 };
 
-GMusicWidget::GMusicWidget() : BSliderWidget("Music", &music_options, COLOR_TEXT, COLOR_TEXT_BG) {
+GMusicWidget::GMusicWidget() : GSoundSliderWidget("MUSIC", &music_options, COLOR_TEXT, COLOR_TEXT_BG) {
   mHeight = 24;
-  mSelectedValue = gOptions->music * music_options.precision;
 }
 
-GMusicWidget::~GMusicWidget() {
-
-}
-
-void GMusicWidget::Set(TInt aVal) {
-  mSelectedValue = aVal;
-}
+GMusicWidget::~GMusicWidget() {}
 
 TInt GMusicWidget::Render(TInt aX, TInt aY) {
-  TInt h = 0;
-  TInt dy = BSliderWidget::Render(aX, aY);
-  h += dy;
-  return h;
+  mSelectedValue = gOptions->music / 0.125;
+  return GSoundSliderWidget::Render(aX, aY);
 }
 
 void GMusicWidget::Select(TInt aVal) {
-  gOptions->music = aVal / TFloat(music_options.precision);
+  gOptions->music = aVal * 0.125;
   gOptions->muted = EFalse;
   gOptions->Save();
   gSoundPlayer.SetMusicVolume(gOptions->music);

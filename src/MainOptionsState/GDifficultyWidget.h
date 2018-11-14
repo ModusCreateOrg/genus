@@ -10,6 +10,7 @@ public:
     virtual ~GDifficultyWidget();
 public:
     TInt Render(TInt aX, TInt aY);
+    TInt RenderTitle(TInt aX, TInt aY, TBool aActive = EFalse);
     void Select(TInt aIndex);
     void Set(TInt aIndex);
 };

@@ -2,8 +2,7 @@
 
 TOptions::TOptions() {
   if (!Load()) {
-    SetDefaults();
-    Save();
+    Reset();
   }
 }
 
@@ -12,6 +11,14 @@ void TOptions::SetDefaults() {
   music = 0.5f;
   sfx = 0.96f;
   difficulty = 1;
+}
+
+void TOptions::Reset(TBool aSave) {
+  SetDefaults();
+
+  if (aSave) {
+    Save();
+  }
 }
 
 void TOptions::Save() {

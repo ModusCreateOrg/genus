@@ -1,29 +1,21 @@
 #include "Game.h"
-#include "GDifficultyWidget.h"
-#include "GMusicWidget.h"
-#include "GSfxWidget.h"
-#include "GResetWidget.h"
-#include "GExitWidget.h"
+#include "GConfirmResetWidget.h"
 
 
-class OptionsContainer : public BDialogWidget {
+class ResetOptionsContainer : public BDialogWidget {
 public:
-    OptionsContainer(TInt aX, TInt aY) : BDialogWidget("Options", aX, aY) {
-      AddWidget((BWidget &) *new GDifficultyWidget());
-      AddWidget((BWidget &) *new GMusicWidget());
-      AddWidget((BWidget &) *new GSfxWidget());
-      AddWidget((BWidget &) *new GResetWidget());
-      AddWidget((BWidget &) *new GExitWidget());
+    ResetOptionsContainer(TInt aX, TInt aY) : BDialogWidget("RESET GAME", aX, aY) {
+      AddWidget((BWidget &) *new GConfirmResetWidget());
     }
 };
 
-class GMainOptionsProcess : public BProcess {
+class GResetOptionsProcess : public BProcess {
 public:
-    GMainOptionsProcess() : BProcess() {
-      mContainer = new OptionsContainer(10, 60);
+    GResetOptionsProcess() : BProcess() {
+      mContainer = new ResetOptionsContainer(10, 60);
     }
 
-    ~GMainOptionsProcess() {
+    ~GResetOptionsProcess() {
       delete mContainer;
     }
 
@@ -46,19 +38,19 @@ public:
     }
 
 protected:
-    OptionsContainer *mContainer;
+    ResetOptionsContainer *mContainer;
     BFont *mFont16;
 };
 
-class GMainOptionsPlayfield : public BPlayfield {
+class GResetOptionsPlayfield : public BPlayfield {
 public:
-    GMainOptionsPlayfield() {
+    GResetOptionsPlayfield() {
       gResourceManager.LoadBitmap(MAIN_OPTIONS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
       mBackground = gResourceManager.GetBitmap(BKG_SLOT);
       gDisplay.SetPalette(mBackground);
     }
 
-    virtual ~GMainOptionsPlayfield() {
+    virtual ~GResetOptionsPlayfield() {
       gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
     }
 
@@ -72,14 +64,14 @@ public:
 };
 
 
-GMainOptionsState::GMainOptionsState() : BGameEngine(gViewPort) {
+GResetOptionsState::GResetOptionsState() : BGameEngine(gViewPort) {
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT);
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT);
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
 
-  mPlayfield = new GMainOptionsPlayfield();
+  mPlayfield = new GResetOptionsPlayfield();
 
-  auto *p = new GMainOptionsProcess();
+  auto *p = new GResetOptionsProcess();
   AddProcess(p);
   gSoundPlayer.PlayMusic(SONG0_XM);
   gWidgetTheme.Configure(
@@ -97,10 +89,9 @@ GMainOptionsState::GMainOptionsState() : BGameEngine(gViewPort) {
 
   gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
   gDisplay.SetColor(COLOR_TEXT_BG, 255, 92, 93);
-
 }
 
-GMainOptionsState::~GMainOptionsState() {
+GResetOptionsState::~GResetOptionsState() {
   gResourceManager.ReleaseBitmapSlot(FONT_8x8_SLOT);
   gResourceManager.ReleaseBitmapSlot(FONT_16x16_SLOT);
   delete mFont16;
