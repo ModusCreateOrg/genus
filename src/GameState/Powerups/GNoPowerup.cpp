@@ -19,7 +19,12 @@ void GNoPowerup::Wait() {
 
 void GNoPowerup::Signal() {
   if (mState == STATE_WAIT) {
-    mState = STATE_MOVE;
+    if (mGameBoard->Combine()) {
+      mGameState->StartBonusTimer();
+      mState = STATE_TIMER;
+    } else {
+      mState = STATE_MOVE;
+    }
   }
 }
 
@@ -89,10 +94,8 @@ TBool GNoPowerup::MoveState() {
       if (Drop()) {
         // combined!
         // start bonus timer, if not already started
-        if (mGameState->mBonusTimer < 0) {
-          mGameState->StartBonusTimer();
-          mState = STATE_TIMER;
-        }
+        mGameState->StartBonusTimer();
+        mState = STATE_TIMER;
         return ETrue;
       }
     } else {
@@ -108,9 +111,9 @@ TBool GNoPowerup::TimerState() {
   if (mGameState->mBonusTimer >= 0) {
     mGameState->mBonusTimer--;
     if (mGameState->mBonusTimer < 0) {
-      mRemoveRow                  = mRemoveCol = 0;
-      mRemoveScore                = 1;
-      mRemoveTimer                = 1;
+      mRemoveRow   = mRemoveCol = 0;
+      mRemoveScore = 1;
+      mRemoveTimer = 1;
       mSprite->flags &= ~SFLAG_RENDER;
       mState = STATE_REMOVE;
       return ETrue;
@@ -161,7 +164,7 @@ TBool GNoPowerup::RemoveState() {
       if (mRemoveRow >= BOARD_ROWS) {
         // all done, game resumes
         mSprite->flags |= SFLAG_RENDER;
-        gControls.dKeys             = 0;  // in case user pressed a key during removing blocks
+        gControls.dKeys = 0;  // in case user pressed a key during removing blocks
         mState = STATE_MOVE;
         return ETrue;
       }
