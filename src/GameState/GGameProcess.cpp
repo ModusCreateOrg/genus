@@ -114,9 +114,9 @@ TBool GGameProcess::StateControl() {
     return EFalse;
   }
   mRepeatTimer--;
-  if (gControls.WasPressed(BUTTONA)) {
+  if (gControls.WasPressed(BUTTONB)) {
     mSprite->RotateLeft();
-  } else if (gControls.WasPressed(BUTTONB)) {
+  } else if (gControls.WasPressed(BUTTONA)) {
     mSprite->RotateRight();
   } else if (TimedControl(JOYLEFT)) {
     mSprite->x -= 16;
