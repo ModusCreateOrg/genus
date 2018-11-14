@@ -26,7 +26,6 @@ GLevelSpace::GLevelSpace(GGameState *aGameEngine) {
   mTextColor = 0;
   mRenderTarget = gDisplay.renderBitmap;
 
-
   mCurrSpeed = 10;
   mBoostSpeed = false;
 
@@ -140,19 +139,14 @@ void GLevelSpace::Render() {
       mCurrSpeed = STAR_SPEED_MIN;
     }
 
-
     //If the mStars go off the screen remove them and re-draw. If the mStars hang out in the center remove them also
     if (mStars[i].mScreenX > 320 || mStars[i].mScreenX < 0 || mStars[i].mScreenY > 240 || mStars[i].mScreenY < 0 || (mStars[i].mScreenX == 320 >> 1 && mStars[i].mScreenY == 240 >> 1) ) {
-      int xMin = -1000,
-          xMax = 1000,
-          yMin = -500,
-          yMax = 500;
 
       mStars[i].Randomize(
-        xMin,
-        xMax,
-        yMin,
-        yMax,
+        -1000,
+        1000,
+        -500,
+        500,
         RANDOM_Z_MIN,
         RANDOM_Z_MAX,
         STAR_SPEED_MIN,
