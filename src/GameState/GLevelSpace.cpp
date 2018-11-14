@@ -46,17 +46,13 @@ GLevelSpace::GLevelSpace(GGameState *aGameEngine) {
   }
 
 
-
-#ifdef STATIC_GAME_BACKGROUNDS
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(SPACE_STATIC_TOP_LEFT_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(SPACE_STATIC_BOTTOM_RIGHT_BMP, BKG2_SLOT, IMAGE_ENTIRE);
 
   mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
   mBackground1 = gResourceManager.GetBitmap(BKG2_SLOT);
-#else
 
-#endif
 }
 
 GLevelSpace::~GLevelSpace()  {
@@ -71,12 +67,6 @@ void GLevelSpace::Animate() {
   mTextColor += 1;
   mTextColor %= 64;
   gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
-
-
-#ifndef STATIC_GAME_BACKGROUNDS
-
-  // Scrolly stuff goes here6
-#endif
 }
 
 void GLevelSpace::Render() {
