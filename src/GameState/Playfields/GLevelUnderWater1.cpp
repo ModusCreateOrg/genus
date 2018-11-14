@@ -13,7 +13,6 @@
 
 
 GLevelUnderWater1::GLevelUnderWater1(GGameState *aGameEngine) {
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(UNDER_WATER_BMP, BKG_SLOT, IMAGE_ENTIRE);
 
 //  gDisplay.renderBitmap->SetPalette(mBackground, 0, 128);
@@ -33,7 +32,6 @@ GLevelUnderWater1::GLevelUnderWater1(GGameState *aGameEngine) {
 
 GLevelUnderWater1::~GLevelUnderWater1()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
 
   delete mYOffset;
   delete mXComp;

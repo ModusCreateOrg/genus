@@ -8,9 +8,6 @@
 #include "GGameState.h"
 #include "GScrollingLevel.h"
 
-
-
-
 class Star {
 public:
   float mX, mY, mZ;
@@ -45,7 +42,6 @@ public:
   TUint8 mTextColor;
   BBitmap *mBackground0;
   BBitmap *mBackground1;
-
 };
 
 
