@@ -78,7 +78,7 @@ add_executable(
         ${LIBXMP_SRC}
         ${CREATIVE_ENGINE}
         ${GENUS_SRC}
-        )
+        src/GameState/GGameOverProcess.cpp src/GameState/GGameOverProcess.h)
 
 # make genus.app
 if (APPLE)

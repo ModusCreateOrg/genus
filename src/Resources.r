@@ -13,6 +13,8 @@ BITMAP charset_8x8.bmp
 BITMAP charset_16x16.bmp
 BITMAP common_sprites.bmp
 BITMAP level1_sprites.bmp
+BITMAP level2_sprites.bmp
+BITMAP level3_sprites.bmp
 
 
 PATH ../resources/backgrounds/under_water
