@@ -2,6 +2,7 @@
 PATH ../resources # path to resource files
 
 BITMAP splash1.bmp
+BITMAP splash_sprites.bmp
 BITMAP credits1.bmp
 BITMAP enter_initials1.bmp
 BITMAP game_over1.bmp

@@ -1,50 +1,17 @@
 #include "Game.h"
-
-class GSplashProcess : public BProcess {
-public:
-  GSplashProcess() : BProcess() {
-    mTimer = 30*6;
-  }
-
-public:
-  TBool RunBefore() {
-    return ETrue;
-  }
-
-  TBool RunAfter() {
-    if (gControls.WasPressed(BUTTON_ANY) || --mTimer <= 0) {
-      gGame->SetState(GAME_STATE_MAIN_MENU);
-      return EFalse;
-    }
-    return ETrue;
-  }
-  TInt mTimer;
-};
-
-class GSplashPlayfield : public BPlayfield {
-public:
-  GSplashPlayfield() {
-    gResourceManager.LoadBitmap(SPLASH1_BMP, BKG_SLOT, IMAGE_ENTIRE);
-    mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-    gDisplay.SetPalette(mBackground);
-    gSoundPlayer.PlayMusic(SONG0_XM);
-  }
-
-  virtual ~GSplashPlayfield() {
-    gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-  }
-
-  void Render() {
-    gDisplay.renderBitmap->CopyPixels(mBackground);
-  }
-public:
-  BBitmap *mBackground;
-};
+#include "GSplashPlayfield.h"
+#include "GDropProcess.h"
+#include "GSplashProcess.h"
 
 GSplashState::GSplashState() : BGameEngine(gViewPort) {
   mPlayfield = new GSplashPlayfield();
-  auto *p = new GSplashProcess();
-  AddProcess(p);
+  AddProcess(new GSplashProcess());
+  AddProcess(new GDropProcess(this, 0));
+  AddProcess(new GDropProcess(this, 1));
+  AddProcess(new GDropProcess(this, 2));
+  AddProcess(new GDropProcess(this, 3));
+  AddProcess(new GDropProcess(this, 4));
+  AddProcess(new GDropProcess(this, 5));
 }
 
 GSplashState::~GSplashState() {

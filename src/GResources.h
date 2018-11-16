@@ -49,6 +49,14 @@ static const TUint16 IMG_POWERUP_COLORSWAP = 24;
 static const TUint16 IMG_POWERUP_COL = 48;
 static const TUint16 IMG_POWERUP_ROW = 56;
 
+// SPLASH_SPRITES.BMP
+static const TUint16 IMG_DROP1 = 0;
+static const TUint16 IMG_DROP2 = 4;
+static const TUint16 IMG_DROP3 = 8;
+static const TUint16 IMG_DROP4 = 16;
+static const TUint16 IMG_DROP5 = 24;
+static const TUint16 IMG_DROP6 = 32;
+
 // COLOR PALETTE INDEXES
 static const TUint8 COLOR_BORDER1 = 153;
 static const TUint8 COLOR_BORDER2 = 155;
