@@ -1,13 +1,15 @@
-#include "GGameOverProcess.h"
+#include "GGameStateGameOverProcess.h"
 #include "Game.h"
 
-GGameOverProcess::GGameOverProcess() {
+GGameStateGameOverProcess::GGameStateGameOverProcess() {
   mFrameCounter = 0;
+  mTextColor = 0;
+  mState = STATE_FADEIN;
 }
 
-GGameOverProcess::~GGameOverProcess() {}
+GGameStateGameOverProcess::~GGameStateGameOverProcess() {}
 
-TBool GGameOverProcess::RunBefore() {
+TBool GGameStateGameOverProcess::RunBefore() {
   if (gControls.WasPressed(BUTTON_ANY)) {
     gGame->SetState(GAME_STATE_GAMEOVER);
     return EFalse;
@@ -15,7 +17,7 @@ TBool GGameOverProcess::RunBefore() {
   return ETrue;
 }
 
-TBool GGameOverProcess::RunAfter() {
+void GGameStateGameOverProcess::Render() {
   mFrameCounter++;
   if (mFrameCounter & 4) {
     gDisplay.SetColor(253, 255, 255, 255);
@@ -23,5 +25,9 @@ TBool GGameOverProcess::RunAfter() {
     bm->DrawBitmapTransparent(ENull, gResourceManager.GetBitmap(COMMON_SLOT), TRect(0, 0, 127, 15),
                               (DISPLAY_WIDTH - 128) / 2, (DISPLAY_HEIGHT - 16) / 2);
   }
+}
+
+TBool GGameStateGameOverProcess::RunAfter() {
+  Render();
   return ETrue;
 }

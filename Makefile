@@ -37,8 +37,12 @@ rcomp: FORCE
 	cd ${CREATIVE_ENGINE_PATH}/tools && make
 
 resources: rcomp FORCE
-	echo "Compiling resources"
+	echo "Compiling resources
 	cd src && ${CREATIVE_ENGINE_PATH}/tools/rcomp Resources.r
+
+reset: FORCE
+	echo "Resetting high score table (and options)"
+	 rm -f cmake-build-debug/genus.app/Contents/MacOS/*.store
 
 FORCE:
 

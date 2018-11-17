@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "GGameBoard.h"
-#include "GGameOverProcess.h"
+#include "GGameStateGameOverProcess.h"
 #include "Playfields/GLevelCountryside.h"
 #include "Playfields/GLevelCyberpunk.h"
 #include "Playfields/GLevelUnderWater1.h"
@@ -91,12 +91,18 @@ void GGameState::Next(TBool aCanPowerup) {
       return;
     }
   }
+
   // NOT a powerup
-  if (mGameBoard.IsGameOver()) {
+//  if (mGameBoard.IsGameOver())) {   // this belongs in game for production!
+  if (mGameBoard.IsGameOver() || gControls.WasPressed(BUTTON_START)) {
     mGameOver = ETrue;
     mGameProcess->Wait();
     mSprite->flags &= ~SFLAG_RENDER;
-    AddProcess(new GGameOverProcess());
+    AddProcess(new GGameStateGameOverProcess());
+    THighScoreTable h;
+    h.Load();
+    h.lastScore.mValue = mScore.mValue;
+    h.Save();
     return;
   }
   mSprite->x = PLAYER_X;
@@ -178,7 +184,6 @@ void GGameState::LoadLevel() {
   gDisplay.SetPalette(playerBitmap, 128, 128);
   gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
   gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
-
 
   mBlocksRemaining = mBlocksThisLevel;
 }
