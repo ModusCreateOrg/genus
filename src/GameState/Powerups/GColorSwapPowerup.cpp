@@ -42,8 +42,8 @@ public:
  ***********************************************************************/
 
 GColorSwapPowerup::GColorSwapPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPowerup(aSprite, aGameState) {
-  mSprite->mBlockSize = BLOCKSIZE_1x1;
-  mSprite->StartAnimation(ColorSwapAninmation);
+  mPlayerSprite->mBlockSize = BLOCKSIZE_1x1;
+  mPlayerSprite->StartAnimation(ColorSwapAninmation);
   mPointStack = new PointStack();
   mState      = STATE_MOVE;
 }
@@ -58,14 +58,13 @@ GColorSwapPowerup::~GColorSwapPowerup() {
 
 TBool GColorSwapPowerup::Drop() {
   // disable rendering
-  mSprite->flags &= ~SFLAG_RENDER;
+  mPlayerSprite->flags &= ~SFLAG_RENDER;
 
   // where on the board the bomb was placed
-  TInt row = mSprite->BoardRow();
-  TInt col = mSprite->BoardCol();
+  TInt row = mPlayerSprite->BoardRow();
+  TInt col = mPlayerSprite->BoardCol();
 
   mColorSwapTimer = 1; // 1st step immediately
-  mDropped        = ETrue;
 
   mSwapColor = mGameBoard->mBoard[row][col];
 
@@ -121,7 +120,7 @@ TBool GColorSwapPowerup::StateMove() {
   }
 
   if (gControls.WasPressed(BUTTON_SELECT)) {
-    if (mGameBoard->mBoard[mSprite->BoardRow()][mSprite->BoardCol()] != 255) {
+    if (mGameBoard->mBoard[mPlayerSprite->BoardRow()][mPlayerSprite->BoardCol()] != 255) {
       Drop();
       mState = STATE_REMOVE;
     }

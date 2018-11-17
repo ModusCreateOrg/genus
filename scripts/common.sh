@@ -129,7 +129,7 @@ function build_xtensa {
         ln -s ../creative-engine . 
     fi
     mkdir -p "$BUILD_DIR"
-    make
+    make -j 10
 }
 
 function clean {

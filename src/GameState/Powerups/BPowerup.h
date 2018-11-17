@@ -38,16 +38,16 @@ public:
   void RotateRight();
 
 protected:
-  GPlayerSprite *mSprite;
+  GPlayerSprite *mPlayerSprite;
   GGameState    *mGameState;
   GGameBoard    *mGameBoard;
   static TInt   mRepeatTimer;
-  TBool         mDropped;
+  // powerups and no-powerup have these 4 states
   enum {
-    STATE_MOVE,
-    STATE_TIMER,
-    STATE_REMOVE,
-    STATE_WAIT,
+    STATE_MOVE,   // move/control the powerup/2x2
+    STATE_TIMER,  // timer is running, move the no-power
+    STATE_REMOVE, // process is removing blocks from board
+    STATE_WAIT,   // process is waiting (do nothing)
   }             mState;
 };
 

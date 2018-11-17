@@ -22,8 +22,8 @@ static ANIMSCRIPT BombDropAnimation[] = {
 };
 
 GModusBombPowerup::GModusBombPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPowerup(aSprite, aGameState) {
-  mSprite->mBlockSize = BLOCKSIZE_1x1;
-  mSprite->StartAnimation(BombAnimation);
+  mPlayerSprite->mBlockSize = BLOCKSIZE_1x1;
+  mPlayerSprite->StartAnimation(BombAnimation);
   mState = STATE_MOVE;
 }
 
@@ -33,15 +33,14 @@ GModusBombPowerup::~GModusBombPowerup() {
 
 TBool GModusBombPowerup::Drop() {
   // disable rendering
-  mSprite->flags &= ~SFLAG_RENDER;
+  mPlayerSprite->flags &= ~SFLAG_RENDER;
 
   // where on the board the bomb was placed
-  mBombRow = mSprite->BoardRow();
-  mBombCol = mSprite->BoardCol();
+  mBombRow = mPlayerSprite->BoardRow();
+  mBombCol = mPlayerSprite->BoardCol();
 
   mBombStep  = 0;  // animation step
   mBombTimer = 1; // 1st step immediately
-  mDropped   = ETrue;
 
   return EFalse;
 }
@@ -62,7 +61,7 @@ TBool GModusBombPowerup::StateMove() {
   if (gControls.WasPressed(BUTTON_SELECT)) {
     Drop();
     mState = STATE_REMOVE;
-    mSprite->StartAnimation(BombDropAnimation);
+    mPlayerSprite->StartAnimation(BombDropAnimation);
   }
 
   return ETrue;
@@ -105,8 +104,8 @@ TBool GModusBombPowerup::StateRemove() {
 }
 
 TBool GModusBombPowerup::StateWait() {
-  if (mSprite->AnimDone()) {
-    mSprite->flags |= SFLAG_RENDER;
+  if (mPlayerSprite->AnimDone()) {
+    mPlayerSprite->flags |= SFLAG_RENDER;
     gControls.dKeys = 0;  // in case user pressed a key during removing blocks
     mGameState->Next(EFalse);
     return EFalse;

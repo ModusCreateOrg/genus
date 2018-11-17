@@ -4,7 +4,7 @@
 static const TInt BLINK_TIME = 2;
 
 GNoPowerup::GNoPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPowerup(aSprite, aGameState) {
-  mSprite->mBlockSize = BLOCKSIZE_2x2;
+  mPlayerSprite->mBlockSize = BLOCKSIZE_2x2;
   mState      = STATE_MOVE;
   mBlinkTimer = BLINK_TIME;
 }
@@ -29,8 +29,8 @@ void GNoPowerup::Signal() {
 }
 
 TBool GNoPowerup::CanDrop() {
-  TInt row = mSprite->BoardRow(),
-       col = mSprite->BoardCol();
+  TInt row = mPlayerSprite->BoardRow(),
+       col = mPlayerSprite->BoardCol();
 
   if (mGameBoard->mBoard[row][col] != 255 || mGameBoard->mBoard[row][col + 1] != 255 ||
       mGameBoard->mBoard[row + 1][col] != 255 || mGameBoard->mBoard[row + 1][col + 1] != 255) {
@@ -40,17 +40,15 @@ TBool GNoPowerup::CanDrop() {
 }
 
 TBool GNoPowerup::Drop() {
-  const TInt   row = mSprite->BoardRow(),
-               col = mSprite->BoardCol();
-  const TUint8 *b  = mSprite->mBlocks;
+  const TInt   row = mPlayerSprite->BoardRow(),
+               col = mPlayerSprite->BoardCol();
+  const TUint8 *b  = mPlayerSprite->mBlocks;
 
   TUint8 (*p)[BOARD_ROWS][BOARD_COLS] = &mGameBoard->mBoard;
   (*p)[row][col]         = b[0];
   (*p)[row][col + 1]     = b[1];
   (*p)[row + 1][col]     = b[2];
   (*p)[row + 1][col + 1] = b[3];
-
-  mDropped = ETrue;
 
   TBool ret = mGameBoard->Combine();
   // Get Next 2x2 into current, maybe powerup
@@ -64,10 +62,10 @@ void GNoPowerup::Blink() {
   if (mBlinkTimer < 0) {
     mBlinkTimer = BLINK_TIME;
     if (!canDrop) {
-      mSprite->flags ^= SFLAG_RENDER;
+      mPlayerSprite->flags ^= SFLAG_RENDER;
     }
   } else if (CanDrop()) {
-    mSprite->flags |= SFLAG_RENDER;
+    mPlayerSprite->flags |= SFLAG_RENDER;
   }
 }
 
@@ -114,7 +112,7 @@ TBool GNoPowerup::TimerState() {
       mRemoveRow   = mRemoveCol = 0;
       mRemoveScore = 1;
       mRemoveTimer = 1;
-      mSprite->flags &= ~SFLAG_RENDER;
+      mPlayerSprite->flags &= ~SFLAG_RENDER;
       mState = STATE_REMOVE;
       return ETrue;
     }
@@ -163,7 +161,7 @@ TBool GNoPowerup::RemoveState() {
       mRemoveRow++;
       if (mRemoveRow >= BOARD_ROWS) {
         // all done, game resumes
-        mSprite->flags |= SFLAG_RENDER;
+        mPlayerSprite->flags |= SFLAG_RENDER;
         gControls.dKeys = 0;  // in case user pressed a key during removing blocks
         mState = STATE_MOVE;
         return ETrue;

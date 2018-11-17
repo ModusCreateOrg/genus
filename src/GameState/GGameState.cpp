@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GGameBoard.h"
+#include "GGameStateGameOverProcess.h"
 #include "Playfields/GLevelCountryside.h"
 #include "Playfields/GLevelCyberpunk.h"
 #include "Playfields/GLevelUnderWater1.h"
@@ -18,7 +19,9 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mBonusTime  = 15 * 30;   // TODO: difficulty, etc.
   mBonusTimer = -1;
 
+  // this should be done in the playfield logic:
   gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
@@ -46,6 +49,8 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 }
 
 GGameState::~GGameState() {
+  mGameProcess->Remove();
+  delete mGameProcess;
   mNextSprite->Remove();
   delete mNextSprite;
   mSprite->Remove();
@@ -58,6 +63,18 @@ GGameState::~GGameState() {
   delete mFont;
 }
 
+/**
+ * Next - process next piece
+ *
+ * This is called by the various *Powerup processes when they are done with their work.
+ * For example, M Bomb process will control the piece, place it, loop while blowing up the appropriate pieces,
+ * then will call Next() before committing suicide (return EFalse from Run*).
+ *
+ * This routine will then either copy mNextSprite blocks to mPlayerSprite or if a powerup is possible, maybe
+ * will spawn a random powerup.
+ *
+ * @param aCanPowerup true if Next piece can be a powerup
+ */
 void GGameState::Next(TBool aCanPowerup) {
   if (aCanPowerup) {
     if (mBonusTimer > 0) {
@@ -74,7 +91,20 @@ void GGameState::Next(TBool aCanPowerup) {
       return;
     }
   }
+
   // NOT a powerup
+//  if (mGameBoard.IsGameOver())) {   // this belongs in game for production!
+  if (mGameBoard.IsGameOver() || gControls.WasPressed(BUTTON_START)) {
+    mGameOver = ETrue;
+    mGameProcess->Wait();
+    mSprite->flags &= ~SFLAG_RENDER;
+    AddProcess(new GGameStateGameOverProcess());
+    THighScoreTable h;
+    h.Load();
+    h.lastScore.mValue = mScore.mValue;
+    h.Save();
+    return;
+  }
   mSprite->x = PLAYER_X;
   mSprite->y = PLAYER_Y;
   mSprite->Copy(mNextSprite);
@@ -87,9 +117,7 @@ void GGameState::Next(TBool aCanPowerup) {
  ****************************************************************************************************************/
 
 void GGameState::PreRender() {
-//  if (mBonusTimer >= 0) {
-//    mBonusTimer--;
-//  }
+  //
 }
 
 /****************************************************************************************************************
@@ -156,7 +184,6 @@ void GGameState::LoadLevel() {
   gDisplay.SetPalette(playerBitmap, 128, 128);
   gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
   gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
-
 
   mBlocksRemaining = mBlocksThisLevel;
 }
@@ -236,7 +263,7 @@ void GGameState::RenderMovesLeft() {
 // render on top of the background
 void GGameState::PostRender() {
   // TODO: we don't want to do this while blocks are exploding, being removed!
-  if (!mBlocksRemaining && mBlocksRemaining < 1) {
+  if (!mGameOver && !mBlocksRemaining && mBlocksRemaining < 1) {
     mLevel++;
     LoadLevel();
   }
@@ -246,14 +273,5 @@ void GGameState::PostRender() {
   RenderLevel();
   RenderMovesLeft();
   RenderNext();
-
-  // render GAME OVER message
-  if (mGameOver) {
-    if (mFrameCounter & 4) {
-      BBitmap *bm = gDisplay.renderBitmap;
-      bm->DrawBitmapTransparent(ENull, gResourceManager.GetBitmap(COMMON_SLOT), TRect(0, 0, 127, 15),
-                                (DISPLAY_WIDTH - 128) / 2, (DISPLAY_HEIGHT - 16) / 2);
-    }
-  }
 }
 
