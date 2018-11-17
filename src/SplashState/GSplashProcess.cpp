@@ -6,14 +6,12 @@ static const char *splash_message2 = "Press a button";
 GSplashProcess::GSplashProcess() : BProcess() {
   mColor = 0;
   mState = STATE_FADEIN;
-  gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
   mFont = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
   mCurrentText = splash_message1;
 }
 
 GSplashProcess::~GSplashProcess() {
   delete mFont;
-  gResourceManager.ReleaseBitmapSlot(FONT_16x16_SLOT);
 }
 
 TBool GSplashProcess::RunBefore() {
