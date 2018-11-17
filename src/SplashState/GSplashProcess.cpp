@@ -15,6 +15,8 @@ GSplashProcess::~GSplashProcess() {
 }
 
 TBool GSplashProcess::RunBefore() {
+  RenderText();
+
   return ETrue;
 }
 
@@ -64,7 +66,6 @@ TBool GSplashProcess::RunAfter() {
     gGame->SetState(GAME_STATE_MAIN_MENU);
     return EFalse;
   }
-  RenderText();
   switch (mState) {
     case STATE_FADEIN:
       return FadeInState();
