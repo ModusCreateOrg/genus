@@ -80,7 +80,7 @@ void THighScoreTable::InsertScore(TInt aDifficulty, TInt aIndex, char *aInitials
   strcpy(t[aIndex].name, aInitials);
 }
 
-TInt THighScoreTable::Render(TInt aDifficulty, TInt aCount, TInt aX, TInt aY, BFont *aFont, TInt aColor) {
+TInt THighScoreTable::Render(TInt aDifficulty, TInt aCount, TInt aX, TInt aY, BFont *aFont, TInt aColor, TInt aShadowColor) {
   THighScore *t = GetTable(aDifficulty);
   gDisplay.SetColor(COLOR_TEXT, 255,255,255);
   BBitmap   *bm = gDisplay.renderBitmap;
@@ -94,7 +94,7 @@ TInt THighScoreTable::Render(TInt aDifficulty, TInt aCount, TInt aX, TInt aY, BF
     strcat(buf, "  ");
     t[i].score.ToString(sbuf);
     strcat(buf, sbuf);
-    bm->DrawString(gViewPort, buf, aFont, x, y, aColor);
+    bm->DrawStringShadow(gViewPort, buf, aFont, x, y, aColor, aShadowColor, -1, -4);
     y += aFont->mHeight;
   }
   return y;

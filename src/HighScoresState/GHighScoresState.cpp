@@ -41,7 +41,7 @@ public:
 
   TBool RunAfter() {
     static const TInt16 TITLE_Y      = 10;
-    static const TInt16 HIGHSCORES_X = 50;
+    static const TInt16 HIGHSCORES_X = 80;
     static const TInt16 HIGHSCORES_Y = TITLE_Y + 32;
 
     if (--mTimer < 0 || gControls.WasPressed(BUTTON_START)) {
@@ -64,7 +64,7 @@ public:
         Panic("GGameOverProcess: invalid difficulty: %d\n", gOptions->difficulty);
     }
     y += 16;
-    mHighScoreTable.Render(gOptions->difficulty, 10, HIGHSCORES_X, y, mFont16, COLOR_TEXT);
+    mHighScoreTable.Render(gOptions->difficulty, 10, HIGHSCORES_X, y, mFont16, COLOR_TEXT, COLOR_TEXT_SHADOW);
     if (gControls.WasPressed(BUTTON_START)) {
       gGame->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;

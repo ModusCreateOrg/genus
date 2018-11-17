@@ -63,7 +63,7 @@ public:
    * @param aColor
    * @return
    */
-  TInt Render(TInt aDifficulty, TInt aCount, TInt aX, TInt aY, BFont *aFont, TInt aColor);
+  TInt Render(TInt aDifficulty, TInt aCount, TInt aX, TInt aY, BFont *aFont, TInt aColor, TInt aShadowColor);
 
 protected:
   THighScore *GetTable(TInt aDifficulty);
