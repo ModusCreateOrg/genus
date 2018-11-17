@@ -82,11 +82,11 @@ TBool GDropProcess::WaitState() {
   switch (mDropNumber) {
     case 0:
       mSprite->x = 37;
-      mSprite->y = 117;
+      mSprite->y = 118;
       mSprite->StartAnimation(Drop1Animation);
       break;
     case 1:
-      mSprite->x = 98;
+      mSprite->x = 97;
       mSprite->y = 124;
       mSprite->StartAnimation(Drop2Animation);
       break;
@@ -102,7 +102,7 @@ TBool GDropProcess::WaitState() {
       break;
     case 4:
       mSprite->x = 40;
-      mSprite->y = 133;
+      mSprite->y = 138;
       mSprite->StartAnimation(Drop5Animation);
       break;
     case 5:
@@ -123,12 +123,12 @@ TBool GDropProcess::FormState() {
     mState = STATE_FALL;
     switch (mDropNumber) {
       case 0:
-        mSprite->x += 8;
+        mSprite->x += 6;
         mSprite->y += 11;
         mSprite->mImageNumber = IMG_DROP1 + 3;
         break;
       case 1:
-        mSprite->x += 5;
+        mSprite->x += 1;
         mSprite->y += 11;
         mSprite->mImageNumber = IMG_DROP2 + 3;
         break;
