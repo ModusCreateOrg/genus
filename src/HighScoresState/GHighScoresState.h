@@ -2,7 +2,7 @@
 #define GENUS_GHIGHSCORESSTATE_H
 
 #include <BGameEngine.h>
-#include <THighScoreTable.h>
+#include "THighScoreTable.h"
 
 class GHighScoresState : public BGameEngine {
 public:
@@ -14,7 +14,7 @@ public:
   void PostRender();
 
 public:
-  HighScoreTable mHighScoreTable;
+  THighScoreTable mHighScoreTable;
   BFont *mFont;
 };
 

@@ -1,7 +1,7 @@
 #ifndef GENUS_GGAMEUNDERWATER1_H
 #define GENUS_GGAMEUNDERWATER1_H
 
-#include "GGameState.h"
+#include "GameState/GGameState.h"
 
 class GLevelUnderWater1 : public BPlayfield {
 public:

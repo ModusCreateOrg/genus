@@ -84,6 +84,54 @@ function build {
     make
 }
 
+function ensure_esp_idf {
+    set +u
+    if [[ ! -z "$IDF_PATH" ]]; then
+        echo "XTENSA is already installed, nothing to do."
+        set -u
+        return
+    fi
+    set -u
+
+    echo "Attempting to install XTENSA on: $OS"
+
+    cd "$BASE_DIR"
+    OS="$(uname)"
+    if [ "$OS" == "Darwin" ]; then
+        cp sdkconfig.osx sdkconfig
+        mkdir esp 
+        cd esp 
+        git clone --recursive https://github.com/espressif/esp-idf.git
+        cd esp-idf
+        git submodule update --init --recursive
+        export IDF_PATH="$BASE_DIR/esp/esp-idf"
+        python -m pip install --user -r $IDF_PATH/requirements.txt
+    else
+        echo "Can't install XTENSA on: $OS"
+    fi
+}
+
+function build_xtensa {
+    if [[ ! "$OS" == "Darwin" ]]; then
+        echo "Can't build XTENSA target on: $OS"
+        return
+    fi
+    ensure_esp_idf
+    if [ -z "$IDF_PATH" ]; then
+        Echo "ESP_IDF is not installed!"
+        return
+    fi
+
+    cd "$BASE_DIR" || exit 1
+
+    if [[ ! -d creative-engine ]]; then
+        rm -f creative-engine
+        ln -s ../creative-engine . 
+    fi
+    mkdir -p "$BUILD_DIR"
+    make -j 10
+}
+
 function clean {
     cd "$CREATIVE_ENGINE_DIR" || exit 1
     git clean -fdx
@@ -186,7 +234,7 @@ function archive_app {
     if [ "$OS" == "Darwin" ]; then
         echo "Archiving app"
         cd "$BUILD_DIR"
-        tar czvfp genus.tgz genus-docs genus.app
+        tar czvfp genus.tgz genus-docs genus.app Genus.bin Genus.elf Genus.map
         ls -l
         cd -
     fi

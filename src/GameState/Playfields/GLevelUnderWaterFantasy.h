@@ -6,7 +6,7 @@
 #define GENUS_GLEVELUNDERWATERFANTASY_H
 
 #include "GGameState.h"
-#include "GScrollingLevel.h"
+#include "Playfields/GScrollingLevel.h"
 #include "BViewPort.h"
 
 #ifdef __XTENSA__

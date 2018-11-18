@@ -1,11 +1,12 @@
 #include "Game.h"
 #include "GGameBoard.h"
-#include "GLevelCountryside.h"
-#include "GLevelCyberpunk.h"
-#include "GLevelUnderWater1.h"
-#include "GLevelGlacialMountains.h"
-#include "GLevelUnderWaterFantasy.h"
-#include "GGameProcess.h"
+#include "GGameStateGameOverProcess.h"
+#include "Playfields/GLevelCountryside.h"
+#include "Playfields/GLevelCyberpunk.h"
+#include "Playfields/GLevelUnderWater1.h"
+#include "Playfields/GLevelGlacialMountains.h"
+#include "Playfields/GLevelUnderWater1.h"
+#include "Playfields/GLevelSpace.h"
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -18,6 +19,9 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mBonusTime  = 15 * 30;   // TODO: difficulty, etc.
   mBonusTimer = -1;
 
+  // this should be done in the playfield logic:
+  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
@@ -25,11 +29,33 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   mGameBoard.Clear();
   LoadLevel();
-  mGameProcess = new GGameProcess(this);
-  AddProcess((BProcess *) mGameProcess);
+
+  mSprite = new GPlayerSprite();
+  AddSprite(mSprite);
+  mSprite->x  = PLAYER_X;
+  mSprite->y  = PLAYER_Y;
+  mSprite->vy = 0;
+
+  mNextSprite    = new GPlayerSprite();
+  AddSprite(mNextSprite);
+  mNextSprite->flags |= SFLAG_RENDER;
+  mNextSprite->x = NEXT_BLOCK_X;
+  mNextSprite->y = NEXT_BLOCK_Y;
+  mNextSprite->Randomize();
+
+  mGameProcess = new GNoPowerup(mSprite, this);
+  AddProcess(mGameProcess);
+  Next(EFalse);
 }
 
 GGameState::~GGameState() {
+  mGameProcess->Remove();
+  delete mGameProcess;
+  mNextSprite->Remove();
+  delete mNextSprite;
+  mSprite->Remove();
+  delete mSprite;
+
   gResourceManager.ReleaseBitmapSlot(FONT_16x16_SLOT);
   gResourceManager.ReleaseBitmapSlot(FONT_8x8_SLOT);
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
@@ -37,18 +63,61 @@ GGameState::~GGameState() {
   delete mFont;
 }
 
+/**
+ * Next - process next piece
+ *
+ * This is called by the various *Powerup processes when they are done with their work.
+ * For example, M Bomb process will control the piece, place it, loop while blowing up the appropriate pieces,
+ * then will call Next() before committing suicide (return EFalse from Run*).
+ *
+ * This routine will then either copy mNextSprite blocks to mPlayerSprite or if a powerup is possible, maybe
+ * will spawn a random powerup.
+ *
+ * @param aCanPowerup true if Next piece can be a powerup
+ */
+void GGameState::Next(TBool aCanPowerup) {
+  if (aCanPowerup) {
+    if (mBonusTimer > 0) {
+      printf("canPowerup with bonus timer running!\n");
+    }
+    TInt maybe = Random(15, 20);
+    if (maybe == 16) {
+      mGameProcess->Wait();
+      if (Random() & 1) {
+        AddProcess(new GModusBombPowerup(mSprite, this));
+      } else {
+        AddProcess(new GColorSwapPowerup(mSprite, this));
+      }
+      return;
+    }
+  }
+
+  // NOT a powerup
+//  if (mGameBoard.IsGameOver())) {   // this belongs in game for production!
+  if (mGameBoard.IsGameOver() || gControls.WasPressed(BUTTON_START)) {
+    mGameOver = ETrue;
+    mGameProcess->Wait();
+    mSprite->flags &= ~SFLAG_RENDER;
+    AddProcess(new GGameStateGameOverProcess());
+    THighScoreTable h;
+    h.Load();
+    h.lastScore.mValue = mScore.mValue;
+    h.Save();
+    return;
+  }
+  mSprite->x = PLAYER_X;
+  mSprite->y = PLAYER_Y;
+  mSprite->Copy(mNextSprite);
+  mNextSprite->Randomize();
+  mGameProcess->Signal();
+}
+
 /****************************************************************************************************************
  ****************************************************************************************************************
  ****************************************************************************************************************/
 
 void GGameState::PreRender() {
-  if (mBonusTimer >= 0) {
-    mBonusTimer--;
-    if (mBonusTimer < 0) {
-      printf("remove blocks\b");
-      mGameProcess->RemoveBlocks();
-    }
-  }
+  //
 }
 
 /****************************************************************************************************************
@@ -56,57 +125,58 @@ void GGameState::PreRender() {
  ****************************************************************************************************************/
 
 void GGameState::LoadLevel() {
-#if 1
-//Todo: @Mike, other working Backgrounds:
-  //     mPlayfield = new GLevelUnderWater1(this); // Playfield 2
-  //     mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
-  //     mPlayfield = new GLevelIDKYet(this); // Playfield 4
-  //     mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 5
-  if (mLevel & 1) {
-    mBlocksThisLevel = 20;
-
+  if ((mLevel % 5) == 1) {  // every 5th level
     delete mPlayfield;
-    mPlayfield = new GLevelCountryside(this);
-
-    gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-    gSoundPlayer.PlayMusic(SONG1_S3M);
-  } else {
-    mBlocksThisLevel = 20;
-
-    delete mPlayfield;
-    mPlayfield = new GLevelCyberpunk(this); // Todo: @Mike, this is Level 6
-    gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-
-    // TODO: Jay needs to implement this
-//      gSoundPlayer.PlayMusic(SONG2_S3M);
-    gSoundPlayer.PlayMusic(SONG1_S3M);    // TODO: Jay needs to remove this hack..  Hack for now so we have some music
+    switch ((mLevel / 5) % 5) {
+      case 0:
+        mPlayfield = new GLevelCountryside(this);
+        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
+        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gSoundPlayer.PlayMusic(SONG1_S3M);
+        mBlocksThisLevel = 20;
+        break;
+      case 1:
+        mPlayfield = new GLevelUnderWater1(this); // Playfield 2
+        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
+        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gSoundPlayer.PlayMusic(SONG1_S3M);
+        mBlocksThisLevel = 20;
+        break;
+      case 2:
+        mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
+        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
+        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gSoundPlayer.PlayMusic(SONG1_S3M);
+        mBlocksThisLevel = 20;
+        break;
+      case 3:
+        // TODO: @Jay???
+//        mPlayfield = new GLevelIDKYet(this); // Playfield 4
+        mPlayfield = new GLevelUnderWater1(this); // Playfield 2    // temporary TODO: @Jay
+        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
+        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gSoundPlayer.PlayMusic(SONG1_S3M);
+        mBlocksThisLevel = 20;
+        break;
+      case 4:
+        mPlayfield = new GLevelUnderWater1(this); // Playfield 5
+        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
+        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gSoundPlayer.PlayMusic(SONG1_S3M);
+        mBlocksThisLevel = 20;
+        break;
+      case 5:
+        mPlayfield = new GLevelCyberpunk(this); // Todo: @Mike, this is Level 6
+        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
+        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gSoundPlayer.PlayMusic(SONG1_S3M);
+        mBlocksThisLevel = 20;
+        break;
+      default:
+        Panic("LoadLevel invalid level\n");
+    }
   }
-#else
-  switch (mLevel) {
-    case 1:
-    default:
-      mBlocksThisLevel = 100;
-
-      delete mPlayfield;
-      mPlayfield = new GLevelCountryside(this);
-
-      gSoundPlayer.PlayMusic(SONG1_S3M);
-      break;
-    case 2:
-      mBlocksThisLevel = 100;
-
-      delete mPlayfield;
-      mPlayfield = new GLevel2Playfield(this);
-      // TODO: Jay needs to implement this
-//      gSoundPlayer.PlayMusic(SONG2_S3M);
-      gSoundPlayer.PlayMusic(SONG1_S3M);    // TODO: Jay needs to remove this hack..  Hack for now so we have some music
-      break;
-  }
-#endif
-  // TODO: Jay we're assuming the playfield we just created loads the player slot
-  // each level might have different blocks, for example
   BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
-
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
   // TODO: Jay - this logic can be moved to BPlayfield children
   // this assumes BKG_SLOT bmp has the correct palette for the display
@@ -114,7 +184,6 @@ void GGameState::LoadLevel() {
   gDisplay.SetPalette(playerBitmap, 128, 128);
   gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
   gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
-
 
   mBlocksRemaining = mBlocksThisLevel;
 }
@@ -129,12 +198,16 @@ void GGameState::RenderTimer() {
 
     bm->DrawStringShadow(ENull, "Time", mFont, TIMER_X, TIMER_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
     // frame
-    bm->DrawRect(ENull, TIMER_BORDER.x1, TIMER_BORDER.y1, TIMER_BORDER.x2, TIMER_BORDER.y2, COLOR_TIMERBORDER);
+    bm->DrawRect(ENull, TIMER_BORDER.x1, TIMER_BORDER.y1, TIMER_BORDER.x2, TIMER_BORDER.y2, COLOR_TIMER_BORDER);
     // inner
     const TInt   timer_width = TIMER_INNER.x2 - TIMER_INNER.x1;
     const TFloat pct         = TFloat(mBonusTimer) / TFloat(mBonusTime);
     const TInt   width       = TInt(pct * timer_width);
-    bm->FillRect(ENull, TIMER_INNER.x1, TIMER_INNER.y1, TIMER_INNER.x1 + width, TIMER_INNER.y2, COLOR_TIMERINNER);
+    if (width > (TIMER_INNER.x2 - TIMER_INNER.x1 + 1)) {
+      printf("BUG!  mBonusTimer: %d, mBonusTime: %d\n", mBonusTimer, mBonusTime);
+      Panic("Aborting\n");
+    }
+    bm->FillRect(ENull, TIMER_INNER.x1, TIMER_INNER.y1, TIMER_INNER.x1 + width, TIMER_INNER.y2, COLOR_TIMER_INNER);
   }
 }
 
@@ -189,7 +262,8 @@ void GGameState::RenderMovesLeft() {
 
 // render on top of the background
 void GGameState::PostRender() {
-  if (mBlocksRemaining < 1) {
+  // TODO: we don't want to do this while blocks are exploding, being removed!
+  if (!mGameOver && !mBlocksRemaining && mBlocksRemaining < 1) {
     mLevel++;
     LoadLevel();
   }
@@ -199,14 +273,5 @@ void GGameState::PostRender() {
   RenderLevel();
   RenderMovesLeft();
   RenderNext();
-
-  // render GAME OVER message
-  if (mGameOver) {
-    if (mFrameCounter & 4) {
-      BBitmap *bm = gDisplay.renderBitmap;
-      bm->DrawBitmapTransparent(ENull, gResourceManager.GetBitmap(COMMON_SLOT), TRect(0, 0, 127, 15),
-                                (DISPLAY_WIDTH - 128) / 2, (DISPLAY_HEIGHT - 16) / 2);
-    }
-  }
 }
 

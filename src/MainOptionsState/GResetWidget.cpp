@@ -36,7 +36,7 @@ void GResetWidget::Select() {
   gGame->SetState(GAME_STATE_MAIN_OPTIONS_RESET);
 
   // Reset High Scores and Options
-  HighScoreTable highScoreTable;
+  THighScoreTable highScoreTable;
   highScoreTable.Reset();
   gOptions->Reset();
 

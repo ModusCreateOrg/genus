@@ -35,48 +35,34 @@ enum {
 };
 
 // image numbers on sprite sheets
-static const TUint16 IMG_BLOCK1 = 0;
-static const TUint16 IMG_BLOCK2 = 1;
-static const TUint16 IMG_BLOCK3 = 2;
-static const TUint16 IMG_BLOCK4 = 3;
+// SPRITES.BMP
+static const TUint16 IMG_TILE1 = 0;   // pink
+static const TUint16 IMG_TILE2 = 16;   // green
 
-static const TUint16 IMG_BGTILE1 = 6;
-static const TUint16 IMG_BGTILE2 = 7;
+static const TUint16 IMG_BGTILE1 = 6; // this is the grid background tile
+static const TUint16 IMG_FRAMEL  = 14;
+static const TUint16 IMG_FRAMER  = 15;
 
-static const TUint16 IMG_BLOCK1x = 8;
-static const TUint16 IMG_BLOCK2x = 9;
-static const TUint16 IMG_BLOCK3x = 10;
-static const TUint16 IMG_BLOCK4x = 11;
+// COMMON.BMP
+static const TUint16 IMG_POWERUP_MODUS     = 16;  // m bomb
+static const TUint16 IMG_POWERUP_COLORSWAP = 24;
+static const TUint16 IMG_POWERUP_COL = 48;
+static const TUint16 IMG_POWERUP_ROW = 56;
 
-static const TUint16 IMG_GAMEOVER  = 16;
-static const TUint16 IMG_GAMEOVER2 = 24;
-
-static const TUint16 IMG_BEAT_OFF = 48;
-static const TUint16 IMG_BEAT_ON  = 49;
-
-static const TUint16 IMG_FRAMEL = 56;
-static const TUint16 IMG_FRAMER = 57;
-
-static const TUint16 IMG_NUM0  = 64;
-static const TUint16 IMG_NUM1  = 65;
-static const TUint16 IMG_NUM2  = 66;
-static const TUint16 IMG_NUM3  = 67;
-static const TUint16 IMG_NUM4  = 68;
-static const TUint16 IMG_NUM5  = 69;
-static const TUint16 IMG_NUM6  = 70;
-static const TUint16 IMG_NUM7  = 71;
-static const TUint16 IMG_NUM8  = 72;
-static const TUint16 IMG_NUM9  = 73;
-static const TUint16 IMG_TIME  = 74; // time is 32 wide
-static const TUint16 IMG_SCORE = 76; // score is 48 wide
-static const TUint16 IMG_LEVEL = 80; // LEVEL is 32 wide
+// SPLASH_SPRITES.BMP
+static const TUint16 IMG_DROP1 = 0;
+static const TUint16 IMG_DROP2 = 4;
+static const TUint16 IMG_DROP3 = 8;
+static const TUint16 IMG_DROP4 = 16;
+static const TUint16 IMG_DROP5 = 24;
+static const TUint16 IMG_DROP6 = 32;
 
 // COLOR PALETTE INDEXES
 static const TUint8 COLOR_BORDER1 = 153;
 static const TUint8 COLOR_BORDER2 = 155;
 
-static const TUint8 COLOR_TIMERINNER  = 250;
-static const TUint8 COLOR_TIMERBORDER = 251;
+static const TUint8 COLOR_TIMER_INNER  = 250;
+static const TUint8 COLOR_TIMER_BORDER = 251;
 
 // user interface/widgets colors
 static const TUint8 COLOR_DIALOG_BG   = 249;
