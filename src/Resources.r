@@ -17,6 +17,9 @@ BITMAP common_sprites.bmp
 BITMAP level1_sprites.bmp
 BITMAP level2_sprites.bmp
 BITMAP level3_sprites.bmp
+BITMAP level4_sprites.bmp
+BITMAP level5_sprites.bmp
+BITMAP level6_sprites.bmp
 
 
 PATH ../resources/backgrounds/under_water

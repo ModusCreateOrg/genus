@@ -19,9 +19,6 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mBonusTime  = 15 * 30;   // TODO: difficulty, etc.
   mBonusTimer = -1;
 
-  // this should be done in the playfield logic:
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
@@ -140,14 +137,14 @@ void GGameState::LoadLevel() {
       case 1:
         mPlayfield = new GLevelUnderWater1(this); // Playfield 2
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
         mBlocksThisLevel = 20;
         break;
       case 2:
         mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gResourceManager.LoadBitmap(LEVEL3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
         mBlocksThisLevel = 20;
         break;
@@ -156,21 +153,21 @@ void GGameState::LoadLevel() {
 //        mPlayfield = new GLevelIDKYet(this); // Playfield 4
         mPlayfield = new GLevelUnderWater1(this); // Playfield 2    // temporary TODO: @Jay
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
         mBlocksThisLevel = 20;
         break;
       case 4:
         mPlayfield = new GLevelUnderWater1(this); // Playfield 5
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
         mBlocksThisLevel = 20;
         break;
       case 5:
         mPlayfield = new GLevelCyberpunk(this); // Todo: @Mike, this is Level 6
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gResourceManager.LoadBitmap(LEVEL6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
         mBlocksThisLevel = 20;
         break;
