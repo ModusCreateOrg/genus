@@ -15,6 +15,7 @@ public:
 
   TBool RunAfter() {
     if (gControls.WasPressed(BUTTON_START)) {
+      printf("Difficulty: %d\n", gOptions->difficulty);
       gGame->SetState(GAME_STATE_GAME);
       return EFalse;
     } else if (gControls.WasPressed(BUTTON_MENU)) {

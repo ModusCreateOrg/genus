@@ -82,7 +82,7 @@ protected:
   GNoPowerup *mGameProcess;
 
 public:
-  BFont      *mFont;
+  BFont      *mFont8, *mFont16;
   TBool      mGameOver;
   TInt       mLevel;
   TBCD       mScore;

@@ -71,9 +71,9 @@ GLevelGlacialMountains::~GLevelGlacialMountains()  {
 
 
 void GLevelGlacialMountains::Animate() {
-  mTextColor += 1;
-  mTextColor %= 64;
-  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
+//  mTextColor += 1;
+//  mTextColor %= 64;
+//  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
 
 #ifndef STATIC_GAME_BACKGROUNDS
