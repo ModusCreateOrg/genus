@@ -37,7 +37,7 @@ rcomp: FORCE
 	cd ${CREATIVE_ENGINE_PATH}/tools && make
 
 resources: rcomp FORCE
-	echo "Compiling resources
+	echo "Compiling resources"
 	cd src && ${CREATIVE_ENGINE_PATH}/tools/rcomp Resources.r
 
 reset: FORCE

@@ -1,11 +1,44 @@
 #include "Game.h"
 #include "GConfirmResetWidget.h"
+#include "GCancelResetWidget.h"
 
 
 class ResetOptionsContainer : public BDialogWidget {
 public:
     ResetOptionsContainer(TInt aX, TInt aY) : BDialogWidget("RESET GAME", aX, aY) {
       AddWidget((BWidget &) *new GConfirmResetWidget());
+      AddWidget((BWidget &) *new GCancelResetWidget());
+    }
+
+    void Run() {
+      for (BWidget *w = (BWidget *) mList.First(); !mList.End(w); w = (BWidget *) mList.Next(w)) {
+        w->Run();
+      }
+      if (gControls.WasPressed(JOYRIGHT)) {
+        mCurrentWidget->Deactivate();
+        if (mCurrentWidget == mList.First()) {
+          mCurrentWidget = (BWidget *) mList.Last();
+        } else {
+          mCurrentWidget = (BWidget *) mList.Prev(mCurrentWidget);
+        }
+        mCurrentWidget->Activate();
+        printf("%s\n", mCurrentWidget->mTitle);
+
+        // reset dKeys so next state doesn't react to any keys already pressed
+        gControls.dKeys = 0;
+      }
+      if (gControls.WasPressed(JOYLEFT)) {
+        mCurrentWidget->Deactivate();
+        if (mCurrentWidget == mList.Last()) {
+          mCurrentWidget = (BWidget *) mList.First();
+        } else {
+          mCurrentWidget = (BWidget *) mList.Next(mCurrentWidget);
+        }
+        mCurrentWidget->Activate();
+
+        // reset dKeys so next state doesn't react to any keys already pressed
+        gControls.dKeys = 0;
+      }
     }
 };
 
@@ -30,9 +63,6 @@ public:
       if (gControls.WasPressed(BUTTON_START)) {
         gGame->SetState(GAME_STATE_MAIN_MENU);
         return EFalse;
-      } else if (gControls.WasPressed(BUTTON_MENU)) {
-        gGame->SetState(GAME_STATE_CREDITS);
-        return EFalse;
       }
       return ETrue;
     }
@@ -45,7 +75,7 @@ protected:
 class GResetOptionsPlayfield : public BPlayfield {
 public:
     GResetOptionsPlayfield() {
-      gResourceManager.LoadBitmap(MAIN_OPTIONS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+      gResourceManager.LoadBitmap(MAIN_OPTIONS_RESET1_BMP, BKG_SLOT, IMAGE_ENTIRE);
       mBackground = gResourceManager.GetBitmap(BKG_SLOT);
       gDisplay.SetPalette(mBackground);
     }

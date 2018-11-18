@@ -34,14 +34,4 @@ TInt GResetWidget::Render(TInt aX, TInt aY) {
 void GResetWidget::Select() {
   // Trigger popup - confirmation game state
   gGame->SetState(GAME_STATE_MAIN_OPTIONS_RESET);
-
-  // Reset High Scores and Options
-  THighScoreTable highScoreTable;
-  highScoreTable.Reset();
-  gOptions->Reset();
-
-  // Switch to  UI
-
-  // Play notification sound
-  gSoundPlayer.PlaySound(/*SFX_SCORE_COMBO_WAV*/5, 0, EFalse);
 }

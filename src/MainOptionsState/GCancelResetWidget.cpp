@@ -1,13 +1,15 @@
-#include "GConfirmResetWidget.h"
+#include "GCancelResetWidget.h"
 #include "Game.h"
 #include "THighScoreTable.h"
 
-GConfirmResetWidget::GConfirmResetWidget() : BButtonWidget("Yes", COLOR_TEXT, COLOR_TEXT_BG) {}
+GCancelResetWidget::GCancelResetWidget() : BButtonWidget("No", COLOR_TEXT, COLOR_TEXT_BG) {}
 
-GConfirmResetWidget::~GConfirmResetWidget() {}
+GCancelResetWidget::~GCancelResetWidget() {}
 
-TInt GConfirmResetWidget::Render(TInt aX, TInt aY) {
+TInt GCancelResetWidget::Render(TInt aX, TInt aY) {
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
+  aY -= f->mHeight - 4;
+  aX += 60;
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
@@ -31,15 +33,7 @@ TInt GConfirmResetWidget::Render(TInt aX, TInt aY) {
   return f->mHeight - 4;
 }
 
-void GConfirmResetWidget::Select() {
-  // Reset High Scores and Options
-  THighScoreTable highScoreTable;
-  highScoreTable.Reset();
-  gOptions->Reset();
-
-  // Play notification sound
-  gSoundPlayer.PlaySound(/*SFX_SCORE_COMBO_WAV*/5, 0, EFalse);
-
+void GCancelResetWidget::Select() {
   // Go Back
   gGame->SetState(GAME_STATE_MAIN_OPTIONS);
 }
