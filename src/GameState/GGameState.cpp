@@ -238,9 +238,9 @@ void GGameState::RenderScore() {
 
 void GGameState::RenderLevel() {
   BBitmap *bm = gDisplay.renderBitmap;
-  TBCD    level((TUint32) mLevel);
-  char    lev[10];
-  level.ToString(lev, EFalse);
+  TNumber level(mLevel);
+  char    lev[20];
+  level.ToString(lev, ENull);
   char out[32];
   if (strlen(lev) == 1) {
     strcpy(out, "Level  ");
