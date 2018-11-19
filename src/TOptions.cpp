@@ -9,7 +9,7 @@ TOptions::TOptions() {
 void TOptions::SetDefaults() {
   muted = EFalse;
   music = 0.5f;
-  sfx = 0.96f;
+  sfx = 0.875f;
   difficulty = 1;
 }
 
