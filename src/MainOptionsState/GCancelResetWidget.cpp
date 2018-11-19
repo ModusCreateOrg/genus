@@ -2,7 +2,7 @@
 #include "Game.h"
 #include "THighScoreTable.h"
 
-GCancelResetWidget::GCancelResetWidget() : BButtonWidget("No", COLOR_TEXT, COLOR_TEXT_BG) {}
+GCancelResetWidget::GCancelResetWidget() : BButtonWidget("CANCEL", COLOR_TEXT, COLOR_TEXT_BG) {}
 
 GCancelResetWidget::~GCancelResetWidget() {}
 

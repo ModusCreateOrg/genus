@@ -2,7 +2,7 @@
 #include "Game.h"
 #include "THighScoreTable.h"
 
-GConfirmResetWidget::GConfirmResetWidget() : BButtonWidget("Yes", COLOR_TEXT, COLOR_TEXT_BG) {}
+GConfirmResetWidget::GConfirmResetWidget() : BButtonWidget("RESET", COLOR_TEXT, COLOR_TEXT_BG) {}
 
 GConfirmResetWidget::~GConfirmResetWidget() {}
 

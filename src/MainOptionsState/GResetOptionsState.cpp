@@ -22,7 +22,6 @@ public:
           mCurrentWidget = (BWidget *) mList.Prev(mCurrentWidget);
         }
         mCurrentWidget->Activate();
-        printf("%s\n", mCurrentWidget->mTitle);
 
         // reset dKeys so next state doesn't react to any keys already pressed
         gControls.dKeys = 0;
@@ -45,7 +44,7 @@ public:
 class GResetOptionsProcess : public BProcess {
 public:
     GResetOptionsProcess() : BProcess() {
-      mContainer = new ResetOptionsContainer(10, 60);
+      mContainer = new ResetOptionsContainer(10, 160);
     }
 
     ~GResetOptionsProcess() {
@@ -87,6 +86,39 @@ public:
 public:
     void Render() {
       gDisplay.renderBitmap->CopyPixels(mBackground);
+
+      const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
+      const char* str1 = "Are you sure you want to";
+      const char* str2 = "reset all options and";
+      const char* str3 = "highscores?";
+      const TInt charWidth = f->mWidth - 6;
+
+      gDisplay.renderBitmap->DrawStringShadow(ENull,
+          str1,
+          f,
+          (SCREEN_WIDTH - strlen(str1) * charWidth) / 2, 100,
+          gWidgetTheme.GetInt(WIDGET_TITLE_FG),
+          COLOR_TEXT_SHADOW,
+          gWidgetTheme.GetInt(WIDGET_TITLE_BG),
+          -6);
+
+      gDisplay.renderBitmap->DrawStringShadow(ENull,
+          str2,
+          f,
+          (SCREEN_WIDTH - strlen(str2) * charWidth) / 2, 120,
+          gWidgetTheme.GetInt(WIDGET_TITLE_FG),
+          COLOR_TEXT_SHADOW,
+          gWidgetTheme.GetInt(WIDGET_TITLE_BG),
+          -6);
+
+      gDisplay.renderBitmap->DrawStringShadow(ENull,
+          str3,
+          f,
+          (SCREEN_WIDTH - strlen(str3) * charWidth) / 2, 140,
+          gWidgetTheme.GetInt(WIDGET_TITLE_FG),
+          COLOR_TEXT_SHADOW,
+          gWidgetTheme.GetInt(WIDGET_TITLE_BG),
+          -6);
     }
 
 public:
