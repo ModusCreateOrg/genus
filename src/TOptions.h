@@ -21,20 +21,26 @@ struct TOptions {
 
   void SetDefaults();
 
+  void Reset(TBool aSave = ETrue);
+
   void Save();
 
   TBool Load();
 
-  const char *DifficultyString(TBool aUpperCase = ETrue) {
-    switch (difficulty) {
+  const char *DifficultyString(TBool aUpperCase = ETrue, TInt aDifficulty = -1) {
+    if (aDifficulty == -1) {
+      aDifficulty = difficulty;
+    }
+
+    switch (aDifficulty) {
       case DIFFICULTY_EASY:
         return aUpperCase ? "EASY" : "Easy";
       case DIFFICULTY_INTERMEDIATE:
-        return aUpperCase ? "INTERMEDIATE" : "Intermediate";
+        return aUpperCase ? "NORMAL" : "Normal";
       case DIFFICULTY_HARD:
         return aUpperCase ? "HARD" : "Hard";
       default:
-        Panic("DifficultyString: invalid difficulty %d", difficulty);
+        Panic("DifficultyString: invalid difficulty %d", aDifficulty);
     }
     return "Not defined";
   }
