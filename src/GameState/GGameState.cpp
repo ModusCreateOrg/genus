@@ -16,16 +16,14 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mLevel      = 1;
   mGameOver   = EFalse;
   mPlayfield  = ENull;
-  mBonusTime  = 15 * 30;   // TODO: difficulty, etc.
   mBonusTimer = -1;
-
-  // this should be done in the playfield logic:
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
 
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
-  mFont = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
+
+  mFont8 = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
+  mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
 
   mGameBoard.Clear();
   LoadLevel();
@@ -60,7 +58,8 @@ GGameState::~GGameState() {
   gResourceManager.ReleaseBitmapSlot(FONT_8x8_SLOT);
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
   gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-  delete mFont;
+  delete mFont16;
+  delete mFont8;
 }
 
 /**
@@ -127,50 +126,58 @@ void GGameState::PreRender() {
 void GGameState::LoadLevel() {
   if ((mLevel % 5) == 1) {  // every 5th level
     delete mPlayfield;
+    // difficulty
+    // TODO: Jay tweak until you are satisfied!
+    mBlocksThisLevel = 20 + mLevel*5 + gOptions->difficulty * 10;
+    switch(gOptions->difficulty) {
+      case DIFFICULTY_EASY:
+        mBonusTime = 20 * 30;
+        break;
+      case DIFFICULTY_INTERMEDIATE:
+        mBonusTime = 15 * 30;
+        break;
+      case DIFFICULTY_HARD:
+        mBonusTime = 10 * 30;
+        break;
+    }
+    //
     switch ((mLevel / 5) % 5) {
       case 0:
         mPlayfield = new GLevelCountryside(this);
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
-        mBlocksThisLevel = 20;
         break;
       case 1:
         mPlayfield = new GLevelUnderWater1(this); // Playfield 2
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
-        mBlocksThisLevel = 20;
         break;
       case 2:
         mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gResourceManager.LoadBitmap(LEVEL3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
-        mBlocksThisLevel = 20;
         break;
       case 3:
         // TODO: @Jay???
-//        mPlayfield = new GLevelIDKYet(this); // Playfield 4
         mPlayfield = new GLevelUnderWater1(this); // Playfield 2    // temporary TODO: @Jay
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
-        mBlocksThisLevel = 20;
         break;
       case 4:
         mPlayfield = new GLevelUnderWater1(this); // Playfield 5
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
-        mBlocksThisLevel = 20;
         break;
       case 5:
         mPlayfield = new GLevelCyberpunk(this); // Todo: @Mike, this is Level 6
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        gResourceManager.LoadBitmap(LEVEL6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SONG1_S3M);
-        mBlocksThisLevel = 20;
         break;
       default:
         Panic("LoadLevel invalid level\n");
@@ -196,7 +203,7 @@ void GGameState::RenderTimer() {
   BBitmap *bm = gDisplay.renderBitmap;
   if (mBonusTimer >= 0) {
 
-    bm->DrawStringShadow(ENull, "Time", mFont, TIMER_X, TIMER_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+    bm->DrawStringShadow(ENull, "Time", mFont16, TIMER_X, TIMER_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
     // frame
     bm->DrawRect(ENull, TIMER_BORDER.x1, TIMER_BORDER.y1, TIMER_BORDER.x2, TIMER_BORDER.y2, COLOR_TIMER_BORDER);
     // inner
@@ -220,7 +227,8 @@ void GGameState::RenderScore() {
     score_text[i] = '0' + char(v);
   }
   score_text[8] = '\0';
-  bm->DrawStringShadow(ENull, score_text, mFont, SCORE_X, SCORE_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+  bm->DrawStringShadow(ENull, score_text, mFont16, SCORE_X, SCORE_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+  bm->DrawStringShadow(ENull, gOptions->DifficultyString(), mFont8, SCORE_X+4, SCORE_Y+18, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -1);
 }
 
 void GGameState::RenderLevel() {
@@ -236,12 +244,12 @@ void GGameState::RenderLevel() {
   }
   strcat(out, lev);
 
-  bm->DrawStringShadow(ENull, out, mFont, LEVEL_X, LEVEL_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+  bm->DrawStringShadow(ENull, out, mFont16, LEVEL_X, LEVEL_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
 }
 
 void GGameState::RenderNext() {
   BBitmap *bm = gDisplay.renderBitmap;
-  bm->DrawStringShadow(ENull, "Next", mFont, NEXT_X, NEXT_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+  bm->DrawStringShadow(ENull, "Next", mFont16, NEXT_X, NEXT_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
 }
 
 void GGameState::RenderMovesLeft() {
