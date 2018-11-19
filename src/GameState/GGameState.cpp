@@ -92,18 +92,23 @@ void GGameState::Next(TBool aCanPowerup) {
   }
 
   // NOT a powerup
-//  if (mGameBoard.IsGameOver())) {   // this belongs in game for production!
-  if (mGameBoard.IsGameOver() || gControls.WasPressed(BUTTON_START)) {
-    mGameOver = ETrue;
-    mGameProcess->Wait();
+  if (mGameBoard.IsGameOver()) {   // this belongs in game for production!
     mSprite->flags &= ~SFLAG_RENDER;
-    AddProcess(new GGameStateGameOverProcess());
-    THighScoreTable h;
-    h.Load();
-    h.lastScore.mValue = mScore.mValue;
-    h.Save();
+    if (mBonusTimer > 1) {
+      mBonusTimer = 0;
+    }
+    else {
+      mGameProcess->Wait();
+      mGameOver = ETrue;
+      AddProcess(new GGameStateGameOverProcess());
+      THighScoreTable h;
+      h.Load();
+      h.lastScore.mValue = mScore.mValue;
+      h.Save();
+    }
     return;
   }
+
   mSprite->x = PLAYER_X;
   mSprite->y = PLAYER_Y;
   mSprite->Copy(mNextSprite);
@@ -270,8 +275,7 @@ void GGameState::RenderMovesLeft() {
 
 // render on top of the background
 void GGameState::PostRender() {
-  // TODO: we don't want to do this while blocks are exploding, being removed!
-  if (!mGameOver && !mBlocksRemaining && mBlocksRemaining < 1) {
+  if (!mGameOver && mBlocksRemaining < 1) {
     mLevel++;
     LoadLevel();
   }
