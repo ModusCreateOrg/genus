@@ -1,9 +1,9 @@
 #include "GDifficultyWidget.h"
 
 static const TSelectOption difficulty_options[] = {
-    {"Easy", 1},
-    {"Normal", 2},
-    {"Hard", 3},
+    {gOptions->DifficultyString(EFalse, DIFFICULTY_EASY), 1},
+    {gOptions->DifficultyString(EFalse, DIFFICULTY_INTERMEDIATE), 2},
+    {gOptions->DifficultyString(EFalse, DIFFICULTY_HARD), 3},
     TSELECT_END_OPTIONS
 };
 
@@ -24,7 +24,7 @@ TInt GDifficultyWidget::RenderTitle(TInt aX, TInt aY, TBool aActive) {
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
-        ">",
+        "\xe",
         f,
         aX - 16, aY,
         gWidgetTheme.GetInt(WIDGET_TEXT_BG),

@@ -11,7 +11,7 @@ TInt GResetWidget::Render(TInt aX, TInt aY) {
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
-        ">",
+        "\xe",
         f,
         aX - 16, aY,
         gWidgetTheme.GetInt(WIDGET_TEXT_BG),

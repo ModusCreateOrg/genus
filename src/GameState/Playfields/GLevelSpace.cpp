@@ -63,9 +63,9 @@ GLevelSpace::~GLevelSpace()  {
 
 
 void GLevelSpace::Animate() {
-  mTextColor += 1;
-  mTextColor %= 64;
-  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
+//  mTextColor += 1;
+//  mTextColor %= 64;
+//  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 }
 
 void GLevelSpace::Render() {

@@ -11,7 +11,7 @@ TInt GConfirmResetWidget::Render(TInt aX, TInt aY) {
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
-        ">",
+        "\xe",
         f,
         aX - 16, aY,
         gWidgetTheme.GetInt(WIDGET_TEXT_BG),
@@ -42,4 +42,7 @@ void GConfirmResetWidget::Select() {
 
   // Go Back
   gGame->SetState(GAME_STATE_MAIN_OPTIONS);
+
+  // Make sure we hear the reset in music volume immediately
+  gSoundPlayer.SetMusicVolume(gOptions->music);
 }

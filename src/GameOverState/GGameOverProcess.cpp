@@ -53,13 +53,13 @@ TBool GGameOverProcess::HighScoresState() {
   TInt y = TITLE_Y;
   y += CenterText16("HIGH SCORES", y);
   switch (gOptions->difficulty) {
-    case 1:
-      y += CenterText8("Easy", y);
+    case DIFFICULTY_EASY:
+      y += CenterText8("Beginner", y);
       break;
-    case 2:
-      y += CenterText8("Moderate", y);
+    case DIFFICULTY_INTERMEDIATE:
+      y += CenterText8("Intermediate", y);
       break;
-    case 3:
+    case DIFFICULTY_HARD:
       y += CenterText8("Hard", y);
       break;
     default:

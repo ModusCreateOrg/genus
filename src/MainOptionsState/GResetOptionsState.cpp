@@ -44,7 +44,7 @@ public:
 class GResetOptionsProcess : public BProcess {
 public:
     GResetOptionsProcess() : BProcess() {
-      mContainer = new ResetOptionsContainer(10, 160);
+      mContainer = new ResetOptionsContainer(50, 160);
     }
 
     ~GResetOptionsProcess() {

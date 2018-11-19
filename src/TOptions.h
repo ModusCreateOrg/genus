@@ -3,18 +3,47 @@
 
 #include "BTypes.h"
 #include "BStore.h"
+#include "Panic.h"
+
+enum {
+  DIFFICULTY_EASY,
+  DIFFICULTY_INTERMEDIATE,
+  DIFFICULTY_HARD
+};
 
 struct TOptions {
-  TBool muted;
-  TUint difficulty;
+  TBool  muted;
+  TUint  difficulty;
   TFloat music;
   TFloat sfx;
 
   TOptions();
+
   void SetDefaults();
+
   void Reset(TBool aSave = ETrue);
+
   void Save();
+
   TBool Load();
+
+  const char *DifficultyString(TBool aUpperCase = ETrue, TInt aDifficulty = -1) {
+    if (aDifficulty == -1) {
+      aDifficulty = difficulty;
+    }
+
+    switch (aDifficulty) {
+      case DIFFICULTY_EASY:
+        return aUpperCase ? "EASY" : "Easy";
+      case DIFFICULTY_INTERMEDIATE:
+        return aUpperCase ? "NORMAL" : "Normal";
+      case DIFFICULTY_HARD:
+        return aUpperCase ? "HARD" : "Hard";
+      default:
+        Panic("DifficultyString: invalid difficulty %d", aDifficulty);
+    }
+    return "Not defined";
+  }
 };
 
 #endif
