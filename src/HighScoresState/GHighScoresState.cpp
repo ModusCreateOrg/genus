@@ -50,19 +50,7 @@ public:
     }
     TInt y = TITLE_Y;
     y += CenterText16("HIGH SCORES", y);
-    switch (gOptions->difficulty) {
-      case 1:
-        y += CenterText8("Easy", y);
-        break;
-      case 2:
-        y += CenterText8("Moderate", y);
-        break;
-      case 3:
-        y += CenterText8("Hard", y);
-        break;
-      default:
-        Panic("GGameOverProcess: invalid difficulty: %d\n", gOptions->difficulty);
-    }
+    y += CenterText8(gOptions->DifficultyString(), y);
     y += 16;
     mHighScoreTable.Render(gOptions->difficulty, 10, HIGHSCORES_X, y, mFont16, COLOR_TEXT, COLOR_TEXT_SHADOW);
     if (gControls.WasPressed(BUTTON_START)) {
