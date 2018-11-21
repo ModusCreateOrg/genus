@@ -72,14 +72,14 @@ function ensure_creative_engine {
 function build {
     cd "$BASE_DIR" || exit 1
     if [[ ! -d creative-engine ]]; then
-        rm -f creative-engine
-        ln -s ../creative-engine . 
+        # rm -f creative-engine
+        ln -sf ../creative-engine . 
     fi
     mkdir -p "$BUILD_DIR"
     cd "$BUILD_DIR" || exit 1
-    pwd
-    ls -l
-    ls -l ..
+    # pwd
+    # ls -l
+    # ls -l ..
     cmake ..
     make
 }
@@ -234,8 +234,9 @@ function archive_app {
     if [ "$OS" == "Darwin" ]; then
         echo "Archiving app"
         cd "$BUILD_DIR"
-        tar czvfp genus.tgz genus-docs genus.app Genus.bin Genus.elf Genus.map
-        ls -l
+        # tar czvfp genus.tgz genus-docs genus.app Genus.bin Genus.elf Genus.map
+        tar czvfp genus.tgz genus.app
+        # ls -l
         cd -
     fi
 }
