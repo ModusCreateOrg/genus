@@ -6,14 +6,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-implicit-exception-spec-mismatch")
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # creative-engine path
-if (EXISTS $ENV{CREATIVE_ENGINE_PATH})
-    # set ENV variable in CLion project settings
-    set(CREATIVE_ENGINE_PATH $ENV{CREATIVE_ENGINE_PATH})
-    message(STATUS "Using user-defined creative-engine path: ${CREATIVE_ENGINE_PATH}")
-else ()
-    set(CREATIVE_ENGINE_PATH "${CMAKE_SOURCE_DIR}/../creative-engine")
-    message(STATUS "Falling back to default creative-engine path: ${CREATIVE_ENGINE_PATH}")
-endif ()
+#if (EXISTS $ENV{CREATIVE_ENGINE_PATH})
+#    # set ENV variable in CLion project settings
+#    set(CREATIVE_ENGINE_PATH $ENV{CREATIVE_ENGINE_PATH})
+#    message(STATUS "********************************* Using user-defined creative-engine path: ${CREATIVE_ENGINE_PATH}")
+#else ()
+    set(CREATIVE_ENGINE_PATH "${CMAKE_SOURCE_DIR}/creative-engine")
+#    message(STATUS "<<<<<<<<<<<<<<<<<<<<<<<<<< Falling back to default creative-engine path: ${CREATIVE_ENGINE_PATH}")
+#endif ()
 
 # resource compiler
 set(RCOMP "${CREATIVE_ENGINE_PATH}/tools/rcomp")
