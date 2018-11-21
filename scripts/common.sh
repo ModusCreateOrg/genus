@@ -5,7 +5,7 @@
 SUDO=${SUDO:-}
 
 function ensure_xcode_installed {
-    #Ensure XCode full version is installed and configured, 
+    #Ensure XCode full version is installed and configured,
     #as xcodebuild gets invoked later in the build, and it will fail otherwise
     if [[ -z "$(which xcodebuild)" ]] || ! xcodebuild --help >/dev/null 2>&1; then
         cat 1>&2 <<EOF
@@ -72,16 +72,64 @@ function ensure_creative_engine {
 function build {
     cd "$BASE_DIR" || exit 1
     if [[ ! -d creative-engine ]]; then
-        rm -f creative-engine
-        ln -s ../creative-engine . 
+        # rm -f creative-engine
+        ln -sf ../creative-engine .
     fi
     mkdir -p "$BUILD_DIR"
     cd "$BUILD_DIR" || exit 1
-    pwd
-    ls -l
-    ls -l ..
+    # pwd
+    # ls -l
+    # ls -l ..
     cmake ..
     make
+}
+
+function ensure_esp_idf {
+    set +u
+    if [[ ! -z "$IDF_PATH" ]]; then
+        echo "XTENSA is already installed, nothing to do."
+        set -u
+        return
+    fi
+    set -u
+
+    echo "Attempting to install XTENSA on: $OS"
+
+    cd "$BASE_DIR"
+    OS="$(uname)"
+    if [ "$OS" == "Darwin" ]; then
+        cp sdkconfig.osx sdkconfig
+        mkdir esp
+        cd esp
+        git clone --recursive https://github.com/espressif/esp-idf.git
+        cd esp-idf
+        git submodule update --init --recursive
+        export IDF_PATH="$BASE_DIR/esp/esp-idf"
+        python -m pip install --user -r $IDF_PATH/requirements.txt
+    else
+        echo "Can't install XTENSA on: $OS"
+    fi
+}
+
+function build_xtensa {
+    if [[ ! "$OS" == "Darwin" ]]; then
+        echo "Can't build XTENSA target on: $OS"
+        return
+    fi
+    ensure_esp_idf
+    if [ -z "$IDF_PATH" ]; then
+        Echo "ESP_IDF is not installed!"
+        return
+    fi
+
+    cd "$BASE_DIR" || exit 1
+
+    if [[ ! -d creative-engine ]]; then
+        rm -f creative-engine
+        ln -s ../creative-engine .
+    fi
+    mkdir -p "$BUILD_DIR"
+    make -j 10
 }
 
 function clean {
@@ -109,7 +157,7 @@ function copy_sdl2_libs_to_app {
             cp /usr/local/opt/libtiff/lib/libtiff.dylib $APP_MACOSX_DIR/libs/
             cp /usr/local/opt/webp/lib/libwebp.dylib $APP_MACOSX_DIR/libs/
             chmod 755 $APP_MACOSX_DIR/libs/*
-         
+
             # FIX Genus
             install_name_tool -change \
             	/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
@@ -119,7 +167,7 @@ function copy_sdl2_libs_to_app {
             	/usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib \
             	./libs/libSDL2_image.dylib \
             	$APP_MACOSX_DIR/genus
-            
+
             # FIX SDL2_image
             install_name_tool -change \
             	/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
@@ -169,6 +217,7 @@ function copy_sdl2_libs_to_app {
 function checkout_creative_engine_branch {
     DEFAULT_BRANCH="master"
     GENUS_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
+    cd "$BASE_DIR"
     echo "The current genus branch is: $GENUS_BRANCH"
     if (cd $CREATIVE_ENGINE_DIR && git checkout $GENUS_BRANCH); then
         echo "Checked out creatine-engine branch: $GENUS_BRANCH"
@@ -180,13 +229,14 @@ function checkout_creative_engine_branch {
     fi
 }
 
+
 function archive_app {
-    if [[ "$OS" == "Darwin" ]]; then
+    if [ "$OS" == "Darwin" ]; then
         echo "Archiving app"
         cd "$BUILD_DIR"
-        # TODO: Archive docs also
+        # tar czvfp genus.tgz genus-docs genus.app Genus.bin Genus.elf Genus.map
         tar czvfp genus.tgz genus.app
-        ls -l
+        # ls -l
         cd -
     fi
 }

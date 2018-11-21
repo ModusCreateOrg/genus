@@ -3,7 +3,8 @@
 BViewPort   *gViewPort;
 BGameEngine *gGameEngine;
 
-GGame *gGame;
+GGame    *gGame;
+TOptions *gOptions;
 
 /** @file
  * \brief Main entry point for game engine.

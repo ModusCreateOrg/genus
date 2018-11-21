@@ -30,6 +30,13 @@ export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
 
 ######################### Main build ##################################
 
+# FIXME: temp to get stuff working
+#mkdir -p "$BUILD_DIR"
+#tar cvfz "$BUILD_DIR/genus.app.tgz" /bin/bash
+#exit 0
+
+
+
 op=${1:-}
 SKIP_TOOLS_INSTALL=false
 SUDO="sudo"
@@ -39,7 +46,7 @@ export SUDO
 case "$op" in
     clean)
         #clean Moved below installs because ArchLinux needs git installed first
-        ;;    
+        ;;
     docker-build)
         SKIP_TOOLS_INSTALL=true
         ;;
@@ -82,21 +89,21 @@ fi
 case "$op" in
     clean)
         clean
-        ;;    
+        ;;
     docker-build)
         clean
         ;;
 esac
 
+# Prepare dependencies
 ensure_creative_engine
-
-cd "$BASE_DIR"
 checkout_creative_engine_branch
 
+# Build the software and documentation
 build
-
-archive_app
-
+# build_xtensa #GEN-275
 copy_sdl2_libs_to_app
+# "$BASE_DIR/doxygen/build.sh" #GEN-275
 
-"$BASE_DIR"/doxygen/build.sh
+# Archive the artifacts
+archive_app

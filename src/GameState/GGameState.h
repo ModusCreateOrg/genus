@@ -1,9 +1,9 @@
 #ifndef GENUS_GGAMESTATE_H
 #define GENUS_GGAMESTATE_H
 
-#include "Game.h"
+//#include "Game.h"
+#include "Powerups.h"
 #include "GGameBoard.h"
-#include "GGameProcess.h"
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -18,8 +18,8 @@ static const TInt BOARD_X = 18;
 static const TInt BOARD_Y = 34;
 
 // screen coordinates of the bonus timer
-static const TInt TIMER_X = 16;
-static const TInt TIMER_Y = 10;
+static const TInt  TIMER_X = 16;
+static const TInt  TIMER_Y = 10;
 static const TRect TIMER_BORDER(64, 10, 207, 25);
 static const TRect TIMER_INNER(66, 12, 205, 23);
 
@@ -33,11 +33,11 @@ static const TInt LEVEL_Y = 48;
 
 // screen coordinates of moves remaining display
 static const TRect MOVES_BORDER(224, 73, 303, 88);
-static const TRect MOVES_INNER(226, 75, 301,86);
+static const TRect MOVES_INNER(226, 75, 301, 86);
 
 // screen coordinates of Next
-static const TInt NEXT_X = 224;
-static const TInt NEXT_Y = 144;
+static const TInt NEXT_X       = 224;
+static const TInt NEXT_Y       = 144;
 static const TInt NEXT_BLOCK_X = 226;
 static const TInt NEXT_BLOCK_Y = 168;
 
@@ -48,9 +48,9 @@ static const TInt NEXT_BLOCK_Y = 168;
 static const TFloat PLAYER_X     = BOARD_X + 48;
 static const TFloat PLAYER_Y     = BOARD_Y; //  - 32;
 static const TFloat PLAYER_X_MIN = BOARD_X;
-static const TFloat PLAYER_X_MAX = BOARD_X + (VISIBLE_BOARD_COLS - 2) * 16;
+static const TFloat PLAYER_X_MAX = BOARD_X + (BOARD_COLS - 2) * 16;
 static const TFloat PLAYER_Y_MIN = BOARD_Y;
-static const TFloat PLAYER_Y_MAX = BOARD_Y + (VISIBLE_BOARD_ROWS - 2) * 16;
+static const TFloat PLAYER_Y_MAX = BOARD_Y + (BOARD_ROWS - 2) * 16;
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -65,20 +65,28 @@ public:
 public:
   void StartBonusTimer() {
     if (mBonusTimer < 0) {
+//      printf("StartBonusTimer %d\n", mBonusTime);
+      if (mBonusTime > 1000) {
+        printf("bad value\n");
+      }
       mBonusTimer = mBonusTime;
     }
   }
 
+  // make next sprite current sprite, randomize next sprite
+  // maybe randomize powerup if aCanPowerup is true
+  void Next(TBool aCanPowerup);
 protected:
   BBitmap *mBackground;
 protected:
-  GGameProcess *mGameProcess;
+  GNoPowerup *mGameProcess;
 
 public:
-  BFont      *mFont;
+  BFont      *mFont8, *mFont16;
   TBool      mGameOver;
   TInt       mLevel;
   TBCD       mScore;
+  GPlayerSprite *mSprite, *mNextSprite;
   GGameBoard mGameBoard;
 
 public:
@@ -86,15 +94,19 @@ public:
   TInt mBonusTimer;
 
 public:
-  TInt mBlocksThisLevel;  // number of moves this level
-  TInt mBlocksRemaining;  // remaining moves this level
+  TInt  mBlocksThisLevel;  // number of moves this level
+  TInt  mBlocksRemaining;  // remaining moves this level
 
 private:
   // these used by PostRender()
   void RenderTimer();
+
   void RenderScore();
+
   void RenderLevel();
+
   void RenderMovesLeft();
+
   void RenderNext();
 
 public:
@@ -103,9 +115,8 @@ public:
 
   // override PostRender() to draw the scores, etc.
   void PostRender();
-public:
-  void Clear();
 
+public:
   void LoadLevel();
 
 };
