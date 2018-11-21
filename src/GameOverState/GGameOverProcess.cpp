@@ -17,7 +17,7 @@ GGameOverProcess::GGameOverProcess() : BProcess() {
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
   mInitials[NUM_INITIALS] = '\0';
   mHighScoreTable.Load();
-  mScoreIndex = mHighScoreTable.IsHighScore(mHighScoreTable.lastScore);
+  mScoreIndex = mHighScoreTable.IsHighScore(mHighScoreTable.lastScore[gOptions->difficulty]);
   if (mScoreIndex != -1) {
     mState = STATE_INITIALS;
     strcpy(mInitials, "AAA");
@@ -34,7 +34,7 @@ GGameOverProcess::~GGameOverProcess() {
 
 TInt GGameOverProcess::CenterText8(const char *s, TInt aY, TInt aColor, TInt aBackground) {
   TInt x = TInt((320 - (strlen(s) * 8)) / 2);
-  gDisplay.renderBitmap->DrawString(ENull, s, mFont8, x, aY, aColor, aBackground);
+  gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont8, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground);
   return 8;
 }
 
@@ -42,9 +42,9 @@ TInt GGameOverProcess::CenterText16(const char *s, TInt aY, TInt aColor, TInt aB
   TInt width = aBackground == -1 ? 12 : 16;
   TInt x     = TInt((320 - (strlen(s) * width)) / 2);
   if (aBackground != -1) {
-    gDisplay.renderBitmap->DrawString(ENull, s, mFont16, x, aY, aColor, aBackground);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground);
   } else {
-    gDisplay.renderBitmap->DrawString(ENull, s, mFont16, x, aY, aColor, aBackground, -4);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground, -4);
   }
   return 16;
 }
@@ -52,19 +52,7 @@ TInt GGameOverProcess::CenterText16(const char *s, TInt aY, TInt aColor, TInt aB
 TBool GGameOverProcess::HighScoresState() {
   TInt y = TITLE_Y;
   y += CenterText16("HIGH SCORES", y);
-  switch (gOptions->difficulty) {
-    case DIFFICULTY_EASY:
-      y += CenterText8("Beginner", y);
-      break;
-    case DIFFICULTY_INTERMEDIATE:
-      y += CenterText8("Intermediate", y);
-      break;
-    case DIFFICULTY_HARD:
-      y += CenterText8("Hard", y);
-      break;
-    default:
-      Panic("GGameOverProcess: invalid difficulty: %d\n", gOptions->difficulty);
-  }
+  y += CenterText8(gOptions->DifficultyString(), y);
   y += 16;
   mHighScoreTable.Render(gOptions->difficulty, 10, HIGHSCORES_X, y, mFont16, COLOR_TEXT, COLOR_TEXT_SHADOW);
   if (gControls.WasPressed(BUTTON_START)) {
@@ -114,7 +102,7 @@ TBool GGameOverProcess::InitialsState() {
 
   if (gControls.WasPressed(BUTTONA | BUTTONB)) {
     // either A or B pressed
-    mHighScoreTable.InsertScore(gOptions->difficulty, mScoreIndex, mInitials, mHighScoreTable.lastScore);
+    mHighScoreTable.InsertScore(gOptions->difficulty, mScoreIndex, mInitials, mHighScoreTable.lastScore[gOptions->difficulty]);
     mState = STATE_HIGHSCORES;
   }
   return ETrue;

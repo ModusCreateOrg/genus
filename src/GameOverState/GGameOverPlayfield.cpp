@@ -1,7 +1,7 @@
 #include "GGameOverPlayfield.h"
 
 GGameOverPlayfield::GGameOverPlayfield() {
-  gResourceManager.LoadBitmap(MENU_BACKGROUND_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(HIGH_SCORES1_BMP, BKG_SLOT, IMAGE_ENTIRE);
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
   gDisplay.SetPalette(mBackground);
   gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);

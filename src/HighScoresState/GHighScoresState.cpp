@@ -20,7 +20,7 @@ public:
 public:
   TInt CenterText8(const char *s, TInt aY, TInt aColor = COLOR_TEXT, TInt aBackground = -1) {
     TInt x = TInt((320 - (strlen(s) * 8)) / 2);
-    gDisplay.renderBitmap->DrawString(ENull, s, mFont8, x, aY, aColor, aBackground);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont8, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground);
     return 8;
   }
 
@@ -28,9 +28,9 @@ public:
     TInt width = aBackground == -1 ? 12 : 16;
     TInt x     = TInt((320 - (strlen(s) * width)) / 2);
     if (aBackground != -1) {
-      gDisplay.renderBitmap->DrawString(ENull, s, mFont16, x, aY, aColor, aBackground);
+      gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground);
     } else {
-      gDisplay.renderBitmap->DrawString(ENull, s, mFont16, x, aY, aColor, aBackground, -4);
+      gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground, -4);
     }
     return 16;
   }
@@ -40,8 +40,8 @@ public:
   }
 
   TBool RunAfter() {
-    static const TInt16 TITLE_Y      = 10;
-    static const TInt16 HIGHSCORES_X = 80;
+    static const TInt16 TITLE_Y      = 20;
+    static const TInt16 HIGHSCORES_X = 52;
     static const TInt16 HIGHSCORES_Y = TITLE_Y + 32;
 
     if (--mTimer < 0 || gControls.WasPressed(BUTTON_START)) {
@@ -70,7 +70,7 @@ private:
 class GHighScoresPlayfield : public BPlayfield {
 public:
   GHighScoresPlayfield() {
-    gResourceManager.LoadBitmap(MENU_BACKGROUND_BMP, BKG_SLOT, IMAGE_ENTIRE);
+    gResourceManager.LoadBitmap(HIGH_SCORES1_BMP, BKG_SLOT, IMAGE_ENTIRE);
     mBackground = gResourceManager.GetBitmap(BKG_SLOT);
     gDisplay.SetPalette(mBackground);
     gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
