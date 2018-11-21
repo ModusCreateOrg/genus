@@ -57,6 +57,10 @@ protected:
 
 public:
   void ExplodeBlock(TInt aRow, TInt aCol);
+  /**
+   * Return ETrue if tile at row, col is empty.
+   */
+  TBool IsEmpty(TInt aRow, TInt aCol);
 
 public:
 

@@ -23,6 +23,11 @@ void GGameBoard::ExplodeBlock(TInt aRow, TInt aCol) {
   }
 }
 
+TBool GGameBoard::IsEmpty(TInt aRow, TInt aCol) {
+  TUint8 tile = mBoard[aRow][aCol];
+  return tile >= 32;
+}
+
 void GGameBoard::Clear() {
   for (TInt row = 0; row < BOARD_ROWS; row++) {
     for (TInt col = 0; col < BOARD_COLS; col++) {
