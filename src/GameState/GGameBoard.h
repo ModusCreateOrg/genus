@@ -71,8 +71,6 @@ public:
    */
   TBool Combine();
 
-  TUint32 CountScore();
-
   TBool IsGameOver();
 
 public:

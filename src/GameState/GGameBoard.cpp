@@ -36,38 +36,6 @@ void GGameBoard::Clear() {
   }
 }
 
-TUint32 GGameBoard::CountScore() {
-  TUint32 accumulated_score = 0;
-  TUint8  quad[4];
-
-  for (TInt row = 0; row < BOARD_ROWS - 1; row++) {
-    for (TInt col = 0; col < BOARD_COLS - 1; col++) {
-      if (!GetQuad(row, col, quad)) {
-        continue;
-      }
-
-      TInt      score  = 1;
-      // look right
-      for (TInt right  = col + 1; right < BOARD_COLS; right++) {
-        if (!GetQuad(row, right, quad)) {
-          break;
-        }
-        score *= 2;
-      }
-      // look down
-      for (TInt bottom = row + 1; bottom < BOARD_ROWS; bottom++) {
-        if (!GetQuad(bottom, col, quad)) {
-          break;
-        }
-        score *= 2;
-      }
-      accumulated_score += score;
-
-    }
-  }
-  return accumulated_score;
-}
-
 void GGameBoard::Render(TInt aX, TInt aY) {
   // render the board
   TInt      y   = aY;
