@@ -4,6 +4,7 @@
 #include "BTypes.h"
 #include "BFont.h"
 
+static const TInt NUM_DIFFICULTIES = 3;
 static const TInt NUM_INITIALS = 3;
 static const TInt SIZE_INITIALS = (NUM_INITIALS+1);
 static const TInt NUM_SCORES = 10;
@@ -17,7 +18,7 @@ struct THighScoreTable {
   THighScore easy[NUM_SCORES];
   THighScore moderate[NUM_SCORES];
   THighScore hard[NUM_SCORES];
-  TBCD       lastScore;
+  TBCD       lastScore[NUM_DIFFICULTIES];
 
 public:
   THighScoreTable();
@@ -26,7 +27,7 @@ public:
   /**
    * Reset high score table to default values
    */
-  void Reset();
+  void Reset(TBool aSave = ETrue);
 
   /**
    * Check if score belongs in high score table

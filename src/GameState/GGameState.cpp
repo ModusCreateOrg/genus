@@ -103,7 +103,7 @@ void GGameState::Next(TBool aCanPowerup) {
       AddProcess(new GGameStateGameOverProcess());
       THighScoreTable h;
       h.Load();
-      h.lastScore.mValue = mScore.mValue;
+      h.lastScore[gOptions->difficulty].mValue = mScore.mValue;
       h.Save();
     }
     return;
@@ -238,7 +238,8 @@ void GGameState::RenderScore() {
 
 void GGameState::RenderLevel() {
   BBitmap *bm = gDisplay.renderBitmap;
-  TNumber level(mLevel);
+  TBCD level;
+  level.FromUint32(mLevel);
   char    lev[20];
   level.ToString(lev, ENull);
   char out[32];
