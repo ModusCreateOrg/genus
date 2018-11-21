@@ -1,3 +1,4 @@
+#include "GGameStateGameOverProcess.h"
 #include "GNoPowerup.h"
 #include "Game.h"
 
@@ -84,6 +85,8 @@ TBool GNoPowerup::MoveState() {
     MoveUp();
   } else if (TimedControl(JOYDOWN)) {
     MoveDown();
+  } else if (gControls.WasPressed(BUTTON_START)) {
+    mGameState->AddProcess(new GGameStateGameOverProcess(mGameState));
   }
 
   if (gControls.WasPressed(BUTTON_SELECT)) {

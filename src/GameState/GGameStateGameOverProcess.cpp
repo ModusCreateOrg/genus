@@ -1,13 +1,40 @@
 #include "GGameStateGameOverProcess.h"
 #include "Game.h"
 
-GGameStateGameOverProcess::GGameStateGameOverProcess() {
+static ANIMSCRIPT GameOverAnimation[] = {
+  ABITMAP(GAME_OVER_SLOT),
+  ALABEL,
+  ASTEP(30, IMG_GAME_OVER1),
+  ASTEP(3, IMG_GAME_OVER1 + 1),
+  ASTEP(15, IMG_GAME_OVER1),
+  ASTEP(3, IMG_GAME_OVER1 + 1),
+  ASTEP(8, IMG_GAME_OVER1 + 3),
+  ASTEP(15, IMG_GAME_OVER1),
+  ASTEP(3, IMG_GAME_OVER1 + 5),
+  ASTEP(15, IMG_GAME_OVER1),
+  ASTEP(3, IMG_GAME_OVER1 + 1),
+  ASTEP(3, IMG_GAME_OVER1 + 2),
+  ASTEP(8, IMG_GAME_OVER1),
+  ASTEP(3, IMG_GAME_OVER1 + 1),
+  ASTEP(3, IMG_GAME_OVER1 + 4),
+  ALOOP
+};
+
+GGameStateGameOverProcess::GGameStateGameOverProcess(GGameState *aGameState) {
   mFrameCounter = 0;
   mTextColor = 0;
-  mState = STATE_FADEIN;
+  mGameState = aGameState;
+  gResourceManager.LoadBitmap(GAME_OVER_SPRITES1_BMP, GAME_OVER_SLOT, IMAGE_256x64);
+  mSprite = new BAnimSprite(1, GAME_OVER_SLOT);
+  mGameState->AddSprite(mSprite);
+  mSprite->x = 50;
+  mSprite->y = 100;
+  mSprite->StartAnimation(GameOverAnimation);
 }
 
-GGameStateGameOverProcess::~GGameStateGameOverProcess() {}
+GGameStateGameOverProcess::~GGameStateGameOverProcess() {
+  gResourceManager.ReleaseBitmapSlot(GAME_OVER_SLOT);
+}
 
 TBool GGameStateGameOverProcess::RunBefore() {
   if (gControls.WasPressed(BUTTON_ANY)) {
@@ -17,17 +44,6 @@ TBool GGameStateGameOverProcess::RunBefore() {
   return ETrue;
 }
 
-void GGameStateGameOverProcess::Render() {
-  mFrameCounter++;
-  if (mFrameCounter & 4) {
-    gDisplay.SetColor(253, 255, 255, 255);
-    BBitmap *bm = gDisplay.renderBitmap;
-    bm->DrawBitmapTransparent(ENull, gResourceManager.GetBitmap(COMMON_SLOT), TRect(0, 0, 127, 15),
-                              (DISPLAY_WIDTH - 128) / 2, (DISPLAY_HEIGHT - 16) / 2);
-  }
-}
-
 TBool GGameStateGameOverProcess::RunAfter() {
-  Render();
   return ETrue;
 }
