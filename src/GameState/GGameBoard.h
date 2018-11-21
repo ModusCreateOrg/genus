@@ -57,6 +57,10 @@ protected:
 
 public:
   void ExplodeBlock(TInt aRow, TInt aCol);
+  /**
+   * Return ETrue if tile at row, col is empty.
+   */
+  TBool IsEmpty(TInt aRow, TInt aCol);
 
 public:
 
@@ -66,8 +70,6 @@ public:
    * @return ETrue if a new 2x2 was found/made
    */
   TBool Combine();
-
-  TUint32 CountScore();
 
   TBool IsGameOver();
 

@@ -17,9 +17,9 @@ protected:
   TBool Drop();
   void Blink();
 
-  TBool RunBefore();
+  TBool RunBefore() { return ETrue; }
 
-  TBool RunAfter() { return ETrue; }
+  TBool RunAfter();
 
 public:
   // tell process to sleep until signaled
