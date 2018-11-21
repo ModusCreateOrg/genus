@@ -20,6 +20,8 @@ enum {
 // Font Slots
   FONT_8x8_SLOT,
   FONT_16x16_SLOT,
+
+  GAME_OVER_SLOT,
 };
 
 // BRaw slots
@@ -54,6 +56,9 @@ static const TUint16 IMG_DROP3 = 8;
 static const TUint16 IMG_DROP4 = 16;
 static const TUint16 IMG_DROP5 = 24;
 static const TUint16 IMG_DROP6 = 32;
+
+// GAME_OVER_SPRITES1.BMP
+static const TUint16 IMG_GAME_OVER1 = 0;
 
 // COLOR PALETTE INDEXES
 static const TUint8 COLOR_BORDER1 = 153;

@@ -101,8 +101,6 @@ GMainOptionsState::GMainOptionsState() : BGameEngine(gViewPort) {
 }
 
 GMainOptionsState::~GMainOptionsState() {
-  gResourceManager.ReleaseBitmapSlot(FONT_8x8_SLOT);
-  gResourceManager.ReleaseBitmapSlot(FONT_16x16_SLOT);
   delete mFont16;
 }
 

@@ -1,24 +1,20 @@
 #ifndef GENUS_GGAMEOVERPROCESS_H
 #define GENUS_GGAMEOVERPROCESS_H
 
-#include <BProcess.h>
+#include "Game.h"
 
 class GGameStateGameOverProcess : public BProcess {
 public:
-  GGameStateGameOverProcess();
+  GGameStateGameOverProcess(GGameState *aGameState);
   ~GGameStateGameOverProcess();
 public:
   TBool RunBefore();
   TBool RunAfter();
 protected:
-  void Render();
-protected:
   TInt mTextColor;
   TInt mFrameCounter;
-  enum {
-    STATE_FADEIN,
-    STATE_FADEOUT,
-  } mState;
+  BAnimSprite *mSprite;
+  GGameState *mGameState;
 };
 
 #endif //GENUS_GGAMEOVERPROCESS_H

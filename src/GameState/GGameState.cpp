@@ -100,7 +100,7 @@ void GGameState::Next(TBool aCanPowerup) {
     else {
       mGameProcess->Wait();
       mGameOver = ETrue;
-      AddProcess(new GGameStateGameOverProcess());
+      AddProcess(new GGameStateGameOverProcess(this));
       THighScoreTable h;
       h.Load();
       h.lastScore[gOptions->difficulty].mValue = mScore.mValue;
