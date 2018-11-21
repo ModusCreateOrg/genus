@@ -5,18 +5,18 @@
 static ANIMSCRIPT BombAnimation[] = {
   ABITMAP(COMMON_SLOT),
   ALABEL,
-  ASTEP1(IMG_POWERUP_MODUS),
-  ASTEP1(IMG_POWERUP_MODUS + 1),
+  ASTEP1(IMG_POWERUP_MODUS_BOMB),
+  ASTEP1(IMG_POWERUP_MODUS_BOMB + 1),
   ALOOP
 };
 
 static ANIMSCRIPT BombDropAnimation[] = {
   ABITMAP(COMMON_SLOT),
-  ASTEP1(IMG_POWERUP_MODUS + 2),
-  ASTEP1(IMG_POWERUP_MODUS + 3),
-  ASTEP1(IMG_POWERUP_MODUS + 4),
-  ASTEP1(IMG_POWERUP_MODUS + 5),
-  ASTEP1(IMG_POWERUP_MODUS + 6),
+  ASTEP1(IMG_POWERUP_MODUS_BOMB + 2),
+  ASTEP1(IMG_POWERUP_MODUS_BOMB + 3),
+  ASTEP1(IMG_POWERUP_MODUS_BOMB + 4),
+  ASTEP1(IMG_POWERUP_MODUS_BOMB + 5),
+  ASTEP1(IMG_POWERUP_MODUS_BOMB + 6),
   ANULL(1),
   AEND
 };
@@ -67,6 +67,43 @@ TBool GModusBombPowerup::StateMove() {
   return ETrue;
 }
 
+class EmptyExplosion : public BProcess {
+public:
+  EmptyExplosion(TInt aRow, TInt aCol, GGameState *aGameState) : BProcess() {
+    mSprite = new BAnimSprite(0, COMMON_SLOT);
+    aGameState->AddSprite(mSprite);
+    mSprite->x = BOARD_X + aCol * 16;
+    mSprite->y = BOARD_Y + aRow * 16;
+    mSprite->flags |= SFLAG_RENDER;
+    mSprite->StartAnimation(BombDropAnimation);
+    gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
+  }
+  ~EmptyExplosion() {
+    mSprite->Remove();
+    delete mSprite;
+  }
+
+  TBool RunBefore() {
+    return ETrue;
+  }
+  TBool RunAfter() {
+    if (mSprite->AnimDone()) {
+      return EFalse;
+    }
+    return ETrue;
+  }
+protected:
+  BAnimSprite *mSprite;
+};
+void GModusBombPowerup::ExplodeBlock(TInt aRow, TInt aCol) {
+  if (mGameBoard->IsEmpty(aRow, aCol)) {
+    mGameState->AddProcess(new EmptyExplosion(aRow, aCol, mGameState));
+  }
+  else {
+    mGameBoard->ExplodeBlock(aRow, aCol);
+  }
+}
+
 TBool GModusBombPowerup::StateRemove() {
   if (mBombTimer--) {
     return ETrue;
@@ -78,23 +115,23 @@ TBool GModusBombPowerup::StateRemove() {
 
   switch (mBombStep++) {
     case 0:
-      mGameBoard->ExplodeBlock(row, col);
+      ExplodeBlock(row, col);
       return ETrue;
     case 1:
-      mGameBoard->ExplodeBlock(row - 1, col - 1);
-      mGameBoard->ExplodeBlock(row - 1, col);
-      mGameBoard->ExplodeBlock(row - 1, col + 1);
-      mGameBoard->ExplodeBlock(row, col - 1);
-      mGameBoard->ExplodeBlock(row, col + 1);
-      mGameBoard->ExplodeBlock(row + 1, col - 1);
-      mGameBoard->ExplodeBlock(row + 1, col);
-      mGameBoard->ExplodeBlock(row + 1, col + 1);
+      ExplodeBlock(row - 1, col - 1);
+      ExplodeBlock(row - 1, col);
+      ExplodeBlock(row - 1, col + 1);
+      ExplodeBlock(row, col - 1);
+      ExplodeBlock(row, col + 1);
+      ExplodeBlock(row + 1, col - 1);
+      ExplodeBlock(row + 1, col);
+      ExplodeBlock(row + 1, col + 1);
       return ETrue;
     case 2:
-      mGameBoard->ExplodeBlock(row - 2, col);
-      mGameBoard->ExplodeBlock(row, col - 2);
-      mGameBoard->ExplodeBlock(row, col + 2);
-      mGameBoard->ExplodeBlock(row + 2, col);
+      ExplodeBlock(row - 2, col);
+      ExplodeBlock(row, col - 2);
+      ExplodeBlock(row, col + 2);
+      ExplodeBlock(row + 2, col);
       return ETrue;
     default:
       // done!
@@ -112,6 +149,7 @@ TBool GModusBombPowerup::StateWait() {
   }
   return ETrue;
 }
+
 TBool GModusBombPowerup::RunAfter() {
   switch (mState) {
     case STATE_MOVE:

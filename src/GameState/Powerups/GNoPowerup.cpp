@@ -197,7 +197,7 @@ TBool GNoPowerup::WaitState() {
   return ETrue;
 }
 
-TBool GNoPowerup::RunBefore() {
+TBool GNoPowerup::RunAfter() {
   switch (mState) {
     case STATE_MOVE:
       return MoveState();

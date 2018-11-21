@@ -15,6 +15,8 @@ public:
 
 protected:
   TBool Drop();    // actually drop the sprite on the board
+  void ExplodeBlock(TInt aRow, TInt aCol);
+
   TBool StateMove();
 
   TBool StateRemove();

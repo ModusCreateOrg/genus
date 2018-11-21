@@ -46,10 +46,8 @@ static const TUint16 IMG_FRAMEL  = 14;
 static const TUint16 IMG_FRAMER  = 15;
 
 // COMMON.BMP
-static const TUint16 IMG_POWERUP_MODUS     = 16;  // m bomb
-static const TUint16 IMG_POWERUP_COLORSWAP = 24;
-static const TUint16 IMG_POWERUP_COL = 48;
-static const TUint16 IMG_POWERUP_ROW = 56;
+static const TUint16 IMG_POWERUP_MODUS_BOMB = 16;  // m bomb
+static const TUint16 IMG_POWERUP_COLORSWAP  = 24;
 
 // SPLASH_SPRITES.BMP
 static const TUint16 IMG_DROP1 = 0;
