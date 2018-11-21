@@ -27,8 +27,8 @@ GGameStateGameOverProcess::GGameStateGameOverProcess(GGameState *aGameState) {
   gResourceManager.LoadBitmap(GAME_OVER_SPRITES1_BMP, GAME_OVER_SLOT, IMAGE_256x64);
   mSprite = new BAnimSprite(1, GAME_OVER_SLOT);
   mGameState->AddSprite(mSprite);
-  mSprite->x = 50;
-  mSprite->y = 100;
+  mSprite->x = (SCREEN_WIDTH - 227) / 2;
+  mSprite->y = (SCREEN_HEIGHT - 28) / 2;
   mSprite->StartAnimation(GameOverAnimation);
 }
 
