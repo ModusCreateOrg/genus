@@ -117,7 +117,8 @@ TInt THighScoreTable::Render(TInt aDifficulty, TInt aCount, TInt aX, TInt aY, BF
     if (i < 9) {
       buf[0] = ' ';
       buf[1] = '1' + i;
-      strcat(buf, "  ");
+      buf[2] = ' ';
+      buf[3] = ' ';
       strcpy(&buf[4], t[i].name);
     } else {
       TBCD j;
