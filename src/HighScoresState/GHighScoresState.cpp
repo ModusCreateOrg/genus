@@ -48,15 +48,18 @@ public:
       gGame->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;
     }
+
+    if (gControls.WasPressed(BUTTON_MENU)) {
+      gGame->SetState(GAME_STATE_MAIN_OPTIONS);
+      return EFalse;
+    }
+
     TInt y = TITLE_Y;
     y += CenterText16("HIGH SCORES", y);
     y += CenterText8(gOptions->DifficultyString(), y);
     y += 16;
     mHighScoreTable.Render(gOptions->difficulty, 10, HIGHSCORES_X, y, mFont16, COLOR_TEXT, COLOR_TEXT_SHADOW);
-    if (gControls.WasPressed(BUTTON_START)) {
-      gGame->SetState(GAME_STATE_MAIN_MENU);
-      return EFalse;
-    }
+
     return ETrue;
   }
 
