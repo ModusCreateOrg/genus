@@ -54,8 +54,8 @@ GLevelUnderWaterFantasy::GLevelUnderWaterFantasy(GGameState *aGameEngine) {
 
 GLevelUnderWaterFantasy::~GLevelUnderWaterFantasy()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-  gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
-  gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
+  // gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
+  // gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
 
   delete mYOffset;
   delete mXComp;

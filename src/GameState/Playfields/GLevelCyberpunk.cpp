@@ -43,9 +43,13 @@ GLevelCyberpunk::GLevelCyberpunk(GGameState *aGameEngine) {
 }
 
 GLevelCyberpunk::~GLevelCyberpunk()  {
+#ifdef STATIC_GAME_BACKGROUNDS
+  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+#else
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
+#endif
 }
 
 

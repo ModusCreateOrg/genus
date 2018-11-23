@@ -35,11 +35,8 @@ public:
     }
 
     TBool RunAfter() {
-      if (gControls.WasPressed(BUTTON_START)) {
+      if (gControls.WasPressed(BUTTON_MENU)) {
         gGame->SetState(GAME_STATE_MAIN_MENU);
-        return EFalse;
-      } else if (gControls.WasPressed(BUTTON_MENU)) {
-        gGame->SetState(GAME_STATE_CREDITS);
         return EFalse;
       }
       return ETrue;

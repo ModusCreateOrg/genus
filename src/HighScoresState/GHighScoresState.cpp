@@ -1,7 +1,8 @@
 #include "Game.h"
+#include "GHighScoreMessageProcess.h"
 #include <string.h>
 
-static const TInt TIMEOUT = 30 * 4;
+static const TInt TIMEOUT = 30 * 6;
 
 class GHighScoresProcess : public BProcess {
 public:
@@ -40,11 +41,10 @@ public:
   }
 
   TBool RunAfter() {
-    static const TInt16 TITLE_Y      = 20;
+    static const TInt16 TITLE_Y      = 8;
     static const TInt16 HIGHSCORES_X = 52;
-    static const TInt16 HIGHSCORES_Y = TITLE_Y + 32;
 
-    if (--mTimer < 0 || gControls.WasPressed(BUTTON_START)) {
+    if (--mTimer < 0) {
       gGame->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;
     }
@@ -54,10 +54,15 @@ public:
       return EFalse;
     }
 
+    if (gControls.WasPressed(BUTTON_START)) {
+      gGame->SetState(GAME_STATE_GAME);
+      return EFalse;
+    }
+
     TInt y = TITLE_Y;
     y += CenterText16("HIGH SCORES", y);
     y += CenterText8(gOptions->DifficultyString(), y);
-    y += 16;
+    y += 8;
     mHighScoreTable.Render(gOptions->difficulty, 10, HIGHSCORES_X, y, mFont16, COLOR_TEXT, COLOR_TEXT_SHADOW);
 
     return ETrue;
@@ -96,6 +101,7 @@ public:
 GHighScoresState::GHighScoresState() : BGameEngine(gViewPort) {
   mPlayfield = new GHighScoresPlayfield();
   AddProcess(new GHighScoresProcess());
+  AddProcess(new GHighScoreMessageProcess());
 }
 
 GHighScoresState::~GHighScoresState() {

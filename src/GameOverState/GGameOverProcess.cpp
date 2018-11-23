@@ -20,7 +20,7 @@ GGameOverProcess::GGameOverProcess() : BProcess() {
   mScoreIndex = mHighScoreTable.IsHighScore(mHighScoreTable.lastScore[gOptions->difficulty]);
   if (mScoreIndex != -1) {
     mState = STATE_INITIALS;
-    strcpy(mInitials, "AAA");
+    strcpy(mInitials, mHighScoreTable.lastInitials);
     mInitialsPos = 0;
   } else {
     mState = STATE_HIGHSCORES;
