@@ -12,6 +12,7 @@ enum {
 };
 
 struct TOptions {
+  TInt   version;
   TBool  muted;
   TUint  difficulty;
   TFloat music;
@@ -25,7 +26,7 @@ struct TOptions {
 
   void Save();
 
-  TBool Load();
+  void Load();
 
   const char *DifficultyString(TBool aUpperCase = ETrue, TInt aDifficulty = -1) {
     if (aDifficulty == -1) {
