@@ -31,6 +31,9 @@ void BPowerup::MoveLeft() {
   if (mPlayerSprite->x < PLAYER_X_MIN) {
     mPlayerSprite->x = PLAYER_X_MIN;
   }
+  else {
+    gSoundPlayer.SfxMoveBlock();
+  }
   mRepeatTimer = REPEAT_DELAY;
 }
 
@@ -40,9 +43,15 @@ void BPowerup::MoveRight() {
     if (mPlayerSprite->x > (PLAYER_X_MAX + 16)) {
       mPlayerSprite->x = PLAYER_X_MAX + 16;
     }
+    else {
+      gSoundPlayer.SfxMoveBlock();
+    }
   } else {
     if (mPlayerSprite->x > PLAYER_X_MAX) {
       mPlayerSprite->x = PLAYER_X_MAX;
+    }
+    else {
+      gSoundPlayer.SfxMoveBlock();
     }
   }
   mRepeatTimer = REPEAT_DELAY;
@@ -53,6 +62,9 @@ void BPowerup::MoveUp() {
   if (mPlayerSprite->y < PLAYER_Y_MIN) {
     mPlayerSprite->y = PLAYER_Y_MIN;
   }
+  else {
+    gSoundPlayer.SfxMoveBlock();
+  }
   mRepeatTimer = REPEAT_DELAY;
 }
 
@@ -62,9 +74,15 @@ void BPowerup::MoveDown() {
     if (mPlayerSprite->y > (PLAYER_Y_MAX + 16)) {
       mPlayerSprite->y = PLAYER_Y_MAX + 16;
     }
+    else {
+      gSoundPlayer.SfxMoveBlock();
+    }
   } else {
     if (mPlayerSprite->y > PLAYER_Y_MAX) {
       mPlayerSprite->y = PLAYER_Y_MAX;
+    }
+    else {
+      gSoundPlayer.SfxMoveBlock();
     }
   }
   mRepeatTimer = REPEAT_DELAY;
@@ -76,6 +94,7 @@ void BPowerup::RotateLeft() {
   }
   else {
     mPlayerSprite->RotateLeft();
+    gSoundPlayer.SfxRotateLeft();
   }
 }
 
@@ -85,6 +104,7 @@ void BPowerup::RotateRight() {
   }
   else {
     mPlayerSprite->RotateRight();
+    gSoundPlayer.SfxRotateRight();
   }
 }
 

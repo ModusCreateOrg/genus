@@ -76,7 +76,7 @@ public:
     mSprite->y = BOARD_Y + aRow * 16;
     mSprite->flags |= SFLAG_RENDER;
     mSprite->StartAnimation(BombDropAnimation);
-    gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
+    gSoundPlayer.SfxExplodeBlock();
   }
   ~EmptyExplosion() {
     mSprite->Remove();
