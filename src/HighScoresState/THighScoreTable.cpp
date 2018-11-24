@@ -32,6 +32,8 @@ void THighScoreTable::Reset(TBool aSave) {
     lastScore[i] = lastScoreNulled;
   }
 
+  strcpy(lastInitials, "AAA");
+
   if (aSave) {
     Save();
   }
@@ -93,6 +95,8 @@ void THighScoreTable::InsertScore(TInt aDifficulty, TInt aIndex, char *aInitials
 
   t[aIndex].score.mValue = aScore.mValue;
   strcpy(t[aIndex].name, aInitials);
+  strcpy(lastInitials, aInitials);
+
   Save();
 }
 
