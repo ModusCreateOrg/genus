@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GHighScoreMessageProcess.h"
+#include "GHighScoreAnimationProcess.h"
 #include <string.h>
 
 static const TInt TIMEOUT = 30 * 6;
@@ -102,12 +103,14 @@ GHighScoresState::GHighScoresState() : BGameEngine(gViewPort) {
   mPlayfield = new GHighScoresPlayfield();
   AddProcess(new GHighScoresProcess());
   AddProcess(new GHighScoreMessageProcess());
+  AddProcess(new GHighScoreAnimationProcess(this));
 }
 
 GHighScoresState::~GHighScoresState() {
   mFont = ENull;
   delete mPlayfield;
   mPlayfield = ENull;
+  gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
 }
 
 void GHighScoresState::PostRender() {
