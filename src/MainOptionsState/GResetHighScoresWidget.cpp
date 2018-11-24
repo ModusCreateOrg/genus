@@ -1,12 +1,12 @@
-#include "GCancelResetWidget.h"
+#include "GResetHighScoresWidget.h"
 #include "Game.h"
 #include "THighScoreTable.h"
 
-GCancelResetWidget::GCancelResetWidget() : BButtonWidget("CANCEL", COLOR_TEXT, COLOR_TEXT_BG) {}
+GResetHighScoresWidget::GResetHighScoresWidget() : BButtonWidget("HIGHSCORES", COLOR_TEXT, COLOR_TEXT_BG) {}
 
-GCancelResetWidget::~GCancelResetWidget() {}
+GResetHighScoresWidget::~GResetHighScoresWidget() {}
 
-TInt GCancelResetWidget::Render(TInt aX, TInt aY) {
+TInt GResetHighScoresWidget::Render(TInt aX, TInt aY) {
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
 
   if (mActive) {
@@ -31,7 +31,14 @@ TInt GCancelResetWidget::Render(TInt aX, TInt aY) {
   return f->mHeight << 1;
 }
 
-void GCancelResetWidget::Select() {
+void GResetHighScoresWidget::Select() {
+  // Reset High Scores
+  THighScoreTable highScoreTable;
+  highScoreTable.Reset();
+
+  // Play notification sound
+  gSoundPlayer.PlaySound(/*SFX_SCORE_COMBO_WAV*/5, 0, EFalse);
+
   // Go Back
   gGame->SetState(GAME_STATE_MAIN_OPTIONS);
 }

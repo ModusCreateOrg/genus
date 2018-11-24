@@ -1,12 +1,12 @@
-#include "GConfirmResetWidget.h"
+#include "GResetAllWidget.h"
 #include "Game.h"
 #include "THighScoreTable.h"
 
-GConfirmResetWidget::GConfirmResetWidget() : BButtonWidget("RESET", COLOR_TEXT, COLOR_TEXT_BG) {}
+GResetAllWidget::GResetAllWidget() : BButtonWidget("EVERYTHING", COLOR_TEXT, COLOR_TEXT_BG) {}
 
-GConfirmResetWidget::~GConfirmResetWidget() {}
+GResetAllWidget::~GResetAllWidget() {}
 
-TInt GConfirmResetWidget::Render(TInt aX, TInt aY) {
+TInt GResetAllWidget::Render(TInt aX, TInt aY) {
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
 
   if (mActive) {
@@ -28,11 +28,11 @@ TInt GConfirmResetWidget::Render(TInt aX, TInt aY) {
       gWidgetTheme.GetInt(WIDGET_TITLE_BG),
       -6);
 
-  return f->mHeight - 4;
+  return f->mHeight << 1;
 }
 
-void GConfirmResetWidget::Select() {
-  // Reset High Scores and Options
+void GResetAllWidget::Select() {
+  // Reset High Scores and All
   THighScoreTable highScoreTable;
   highScoreTable.Reset();
   gOptions->Reset();
