@@ -1,50 +1,23 @@
 #include "Game.h"
-#include "GConfirmResetWidget.h"
+#include "GResetOptionsWidget.h"
+#include "GResetHighScoresWidget.h"
+#include "GResetAllWidget.h"
 #include "GCancelResetWidget.h"
-
 
 class ResetOptionsContainer : public BDialogWidget {
 public:
     ResetOptionsContainer(TInt aX, TInt aY) : BDialogWidget("RESET GAME", aX, aY) {
-      AddWidget((BWidget &) *new GConfirmResetWidget());
+      AddWidget((BWidget &) *new GResetOptionsWidget());
+      AddWidget((BWidget &) *new GResetHighScoresWidget());
+      AddWidget((BWidget &) *new GResetAllWidget());
       AddWidget((BWidget &) *new GCancelResetWidget());
-    }
-
-    void Run() {
-      for (BWidget *w = (BWidget *) mList.First(); !mList.End(w); w = (BWidget *) mList.Next(w)) {
-        w->Run();
-      }
-      if (gControls.WasPressed(JOYRIGHT)) {
-        mCurrentWidget->Deactivate();
-        if (mCurrentWidget == mList.First()) {
-          mCurrentWidget = (BWidget *) mList.Last();
-        } else {
-          mCurrentWidget = (BWidget *) mList.Prev(mCurrentWidget);
-        }
-        mCurrentWidget->Activate();
-
-        // reset dKeys so next state doesn't react to any keys already pressed
-        gControls.dKeys = 0;
-      }
-      if (gControls.WasPressed(JOYLEFT)) {
-        mCurrentWidget->Deactivate();
-        if (mCurrentWidget == mList.Last()) {
-          mCurrentWidget = (BWidget *) mList.First();
-        } else {
-          mCurrentWidget = (BWidget *) mList.Next(mCurrentWidget);
-        }
-        mCurrentWidget->Activate();
-
-        // reset dKeys so next state doesn't react to any keys already pressed
-        gControls.dKeys = 0;
-      }
     }
 };
 
 class GResetOptionsProcess : public BProcess {
 public:
     GResetOptionsProcess() : BProcess() {
-      mContainer = new ResetOptionsContainer(50, 160);
+      mContainer = new ResetOptionsContainer(80, 92);
     }
 
     ~GResetOptionsProcess() {
@@ -74,7 +47,7 @@ protected:
 class GResetOptionsPlayfield : public BPlayfield {
 public:
     GResetOptionsPlayfield() {
-      gResourceManager.LoadBitmap(MAIN_OPTIONS_RESET1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+      gResourceManager.LoadBitmap(MAIN_OPTIONS1_BMP, BKG_SLOT, IMAGE_ENTIRE);
       mBackground = gResourceManager.GetBitmap(BKG_SLOT);
       gDisplay.SetPalette(mBackground);
     }
@@ -88,33 +61,13 @@ public:
       gDisplay.renderBitmap->CopyPixels(mBackground);
 
       const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
-      const char* str1 = "Are you sure you want to";
-      const char* str2 = "reset all options and";
-      const char* str3 = "highscores?";
+      const char* questionStr = "What would you like to reset?";
       const TInt charWidth = f->mWidth - 6;
 
       gDisplay.renderBitmap->DrawStringShadow(ENull,
-          str1,
+          questionStr,
           f,
-          (SCREEN_WIDTH - strlen(str1) * charWidth) / 2, 100,
-          gWidgetTheme.GetInt(WIDGET_TITLE_FG),
-          COLOR_TEXT_SHADOW,
-          gWidgetTheme.GetInt(WIDGET_TITLE_BG),
-          -6);
-
-      gDisplay.renderBitmap->DrawStringShadow(ENull,
-          str2,
-          f,
-          (SCREEN_WIDTH - strlen(str2) * charWidth) / 2, 120,
-          gWidgetTheme.GetInt(WIDGET_TITLE_FG),
-          COLOR_TEXT_SHADOW,
-          gWidgetTheme.GetInt(WIDGET_TITLE_BG),
-          -6);
-
-      gDisplay.renderBitmap->DrawStringShadow(ENull,
-          str3,
-          f,
-          (SCREEN_WIDTH - strlen(str3) * charWidth) / 2, 140,
+          (SCREEN_WIDTH - strlen(questionStr) * charWidth) / 2, 80,
           gWidgetTheme.GetInt(WIDGET_TITLE_FG),
           COLOR_TEXT_SHADOW,
           gWidgetTheme.GetInt(WIDGET_TITLE_BG),
