@@ -38,7 +38,7 @@ void GResetAllWidget::Select() {
   gOptions->Reset();
 
   // Play notification sound
-  gSoundPlayer.PlaySound(/*SFX_SCORE_COMBO_WAV*/5, 0, EFalse);
+  gSoundPlayer.SfxOptionSelect();
 
   // Go Back
   gGame->SetState(GAME_STATE_MAIN_OPTIONS);

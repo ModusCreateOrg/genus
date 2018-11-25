@@ -88,17 +88,20 @@ TBool GNoPowerup::MoveState() {
 
   if (gControls.WasPressed(BUTTON_SELECT)) {
     if (CanDrop()) {
-      gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
       if (Drop()) {
         // combined!
         // start bonus timer, if not already started
+        gSoundPlayer.SfxCombo();
         mGameState->StartBonusTimer();
         mState = STATE_TIMER;
         return ETrue;
       }
+      else {
+        gSoundPlayer.SfxGoodDrop();
+      }
     } else {
       // can't drop sound:
-      gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
+      gSoundPlayer.SfxBadDrop();
     }
   }
   Blink();
@@ -135,11 +138,11 @@ TBool GNoPowerup::TimerState() {
 
   if (gControls.WasPressed(BUTTON_SELECT)) {
     if (CanDrop()) {
-      gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
+      gSoundPlayer.SfxGoodDrop();
       Drop();
     } else {
       // can't drop sound:
-      gSoundPlayer.PlaySound(/*SFX_BAD_DROP_BLOCK_WAV*/1, 0, EFalse);
+      gSoundPlayer.SfxBadDrop();
     }
   }
 

@@ -44,10 +44,12 @@ TBool GSoundPlayer::LoadEffects() {
     SFX_MOVE_BLOCK_WAV,
     SFX_ROTATE_BLOCK_LEFT_WAV,
     SFX_ROTATE_BLOCK_RIGHT_WAV,
-    SFX_SCORE_COMBO_WAV
+    SFX_SCORE_COMBO_WAV,
+    SFX_OPTION_SELECT_WAV,
+    SFX_EXPLODE_BLOCK_WAV
   };
 
-  for (uint8_t i = 0; i < 6; i++) {
+  for (uint8_t i = 0; i < 9; i++) {
 //    printf("loadEffect(%i)\n", i);
     LoadEffect(mEffectsList[i], i);
   }
@@ -57,4 +59,38 @@ TBool GSoundPlayer::LoadEffects() {
 BRaw *GSoundPlayer::LoadEffectResource(TUint16 aResourceId, TInt16 aSlotNumber) {
   gResourceManager.LoadRaw(aResourceId, SFX1_SLOT + aSlotNumber);
   return gResourceManager.GetRaw(SFX1_SLOT + aSlotNumber);
+}
+
+
+
+void GSoundPlayer::SfxGoodDrop() {
+  PlaySfx(/*SFX_GOOD_DROP_BLOCK_WAV*/0);
+}
+
+void GSoundPlayer::SfxRotateRight() {
+  PlaySfx(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/4);
+}
+
+void GSoundPlayer::SfxRotateLeft() {
+  PlaySfx(/*SFX_ROTATE_BLOCK_LEFT_WAV*/3);
+}
+
+void GSoundPlayer::SfxBadDrop() {
+  gSoundPlayer.PlaySfx(/*SFX_BAD_DROP_BLOCK_WAV*/1);
+}
+
+void GSoundPlayer::SfxCombo() {
+  PlaySfx(/*SFX_SCORE_COMBO_WAV*/5);
+}
+
+void GSoundPlayer::SfxMoveBlock() {
+  PlaySfx(/*SFX_GOOD_DROP_BLOCK_WAV*/2);
+}
+
+void GSoundPlayer::SfxExplodeBlock() {
+  PlaySfx(/*SFX_EXPLODE_BLOCK_WAV*/7);
+}
+
+void GSoundPlayer::SfxOptionSelect() {
+  PlaySfx(/*SFX_OPTION_SELECT_WAV*/6);
 }

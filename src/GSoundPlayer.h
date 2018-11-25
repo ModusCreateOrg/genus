@@ -20,6 +20,16 @@ public:
   TBool LoadEffects() override;
   BRaw* LoadEffectResource(TUint16 aResourceId, TInt16 aSlotNumber) override;
   TBool PlayMusic(TInt16 aResourceId);
+
+  // SFX Methods //
+  void SfxGoodDrop();
+  void SfxRotateRight();
+  void SfxRotateLeft();
+  void SfxBadDrop();
+  void SfxCombo();
+  void SfxMoveBlock();
+  void SfxExplodeBlock();
+  void SfxOptionSelect();
 };
 
 
