@@ -60,6 +60,9 @@ static const TUint16 IMG_DROP6 = 32;
 // GAME_OVER_SPRITES1.BMP
 static const TUint16 IMG_GAME_OVER1 = 0;
 
+// HIGH_SCORES_ANIMATION1.BMP
+static const TUint16 IMG_HIGH_SCORES1 = 0;
+
 // COLOR PALETTE INDEXES
 static const TUint8 COLOR_BORDER1 = 153;
 static const TUint8 COLOR_BORDER2 = 155;
