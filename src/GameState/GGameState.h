@@ -45,7 +45,7 @@ static const TInt NEXT_BLOCK_Y = 168;
  ****************************************************************************************************************
  ****************************************************************************************************************/
 
-static const TFloat PLAYER_X     = BOARD_X + 48;
+static const TFloat PLAYER_X     = BOARD_X + 48 + 32;
 static const TFloat PLAYER_Y     = BOARD_Y; //  - 32;
 static const TFloat PLAYER_X_MIN = BOARD_X;
 static const TFloat PLAYER_X_MAX = BOARD_X + (BOARD_COLS - 2) * 16;
