@@ -34,7 +34,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mSprite->y  = PLAYER_Y;
   mSprite->vy = 0;
 
-  mNextSprite    = new GPlayerSprite();
+  mNextSprite    = new GNextBlockSprite();
   AddSprite(mNextSprite);
   mNextSprite->flags |= SFLAG_RENDER;
   mNextSprite->x = NEXT_BLOCK_X;
