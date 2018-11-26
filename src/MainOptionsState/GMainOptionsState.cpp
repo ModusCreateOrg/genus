@@ -78,7 +78,7 @@ GMainOptionsState::GMainOptionsState() : BGameEngine(gViewPort) {
 
   auto *p = new GMainOptionsProcess();
   AddProcess(p);
-  gSoundPlayer.PlayMusic(SONG0_XM);
+//  gSoundPlayer.PlayMusic(SONG0_XM);
   gWidgetTheme.Configure(
       WIDGET_TEXT_FONT, mFont16,
       WIDGET_TEXT_FG, COLOR_TEXT,
