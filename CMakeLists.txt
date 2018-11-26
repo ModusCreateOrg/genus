@@ -9,10 +9,10 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 if (EXISTS $ENV{CREATIVE_ENGINE_PATH})
    # set ENV variable in CLion project settings
    set(CREATIVE_ENGINE_PATH $ENV{CREATIVE_ENGINE_PATH})
-   message(STATUS "********************************* Using user-defined creative-engine path: ${CREATIVE_ENGINE_PATH}")
+#   message(STATUS "********************************* Using user-defined creative-engine path: ${CREATIVE_ENGINE_PATH}")
 else ()
     set(CREATIVE_ENGINE_PATH "${CMAKE_SOURCE_DIR}/../creative-engine")
-   message(STATUS "<<<<<<<<<<<<<<<<<<<<<<<<<< Falling back to default creative-engine path: ${CREATIVE_ENGINE_PATH}")
+#   message(STATUS "<<<<<<<<<<<<<<<<<<<<<<<<<< Falling back to default creative-engine path: ${CREATIVE_ENGINE_PATH}")
 endif ()
 
 # resource compiler
@@ -74,12 +74,10 @@ file(GLOB_RECURSE CREATIVE_ENGINE ${CREATIVE_ENGINE_PATH}/src/*.cpp)
 
 # gather LibXMP sources
 add_compile_definitions(LIBXMP_CORE_PLAYER=true)
-add_compile_definitions(LIBXMP_CORE_DISABLE_IT=true)
+
 file(
         GLOB LIBXMP_SRC
-        ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/*.h
         ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/*.c
-        ${CREATIVE_ENGINE_PATH}/src/libxmp/*.h
         ${CREATIVE_ENGINE_PATH}/src/libxmp/*.c
 )
 
