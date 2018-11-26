@@ -6,7 +6,7 @@ GSplashPlayfield::GSplashPlayfield() {
   gResourceManager.LoadBitmap(SPLASH_SPRITES_BMP, PLAYER_SLOT, IMAGE_32x32);
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
   gDisplay.SetPalette(mBackground);
-  gSoundPlayer.PlayMusic(SONG0_XM);
+  gSoundPlayer.PlayMusic(MAIN_MENU_XM);
 }
 
 GSplashPlayfield::~GSplashPlayfield() {
