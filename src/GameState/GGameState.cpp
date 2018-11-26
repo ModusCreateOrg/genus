@@ -5,7 +5,7 @@
 #include "Playfields/GLevelCyberpunk.h"
 #include "Playfields/GLevelUnderWater1.h"
 #include "Playfields/GLevelGlacialMountains.h"
-#include "Playfields/GLevelUnderWater1.h"
+#include "Playfields/GLevelUnderWaterFantasy.h"
 #include "Playfields/GLevelSpace.h"
 
 /****************************************************************************************************************
@@ -149,38 +149,38 @@ void GGameState::LoadLevel() {
         mPlayfield = new GLevelCountryside(this);
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(COUNTRYSIDE_XM);
         break;
       case 1:
         mPlayfield = new GLevelUnderWater1(this); // Playfield 2
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(UNDER_WATER_XM);
         break;
       case 2:
         mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(GLACIAL_MOUNTAINS_XM);
         break;
       case 3:
         // TODO: @Jay???
-        mPlayfield = new GLevelUnderWater1(this); // Playfield 2    // temporary TODO: @Jay
+        mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2    // temporary TODO: @Jay
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(UNDER_WATER_XM);
         break;
       case 4:
-        mPlayfield = new GLevelUnderWater1(this); // Playfield 5
+        mPlayfield = new GLevelCyberpunk(this); // Playfield 5
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(CITY_SCAPES_XM);
         break;
       case 5:
-        mPlayfield = new GLevelCyberpunk(this); // Todo: @Mike, this is Level 6
+        mPlayfield = new GLevelSpace(this); // Todo: @Mike, this is Level 6
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(SPAAACE_XM);
         break;
       default:
         Panic("LoadLevel invalid level\n");
