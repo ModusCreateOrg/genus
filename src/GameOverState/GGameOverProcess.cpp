@@ -6,7 +6,7 @@ static const TInt16 NEW_SCORE_Y = 50;
 static const TInt16 INITIALS_X = ((320 - (NUM_INITIALS * 16)) / 2);
 static const TInt16 INITIALS_Y = NEW_SCORE_Y + 24;
 
-static const TInt16 TITLE_Y = 10;
+static const TInt16 TITLE_Y = 8;
 
 static const TInt16 HIGHSCORES_X = 50;
 static const TInt16 HIGHSCORES_Y = TITLE_Y + 32;
@@ -53,7 +53,7 @@ TBool GGameOverProcess::HighScoresState() {
   TInt y = TITLE_Y;
   y += CenterText16("HIGH SCORES", y);
   y += CenterText8(gOptions->DifficultyString(), y);
-  y += 16;
+  y += 8;
   mHighScoreTable.Render(gOptions->difficulty, 10, HIGHSCORES_X, y, mFont16, COLOR_TEXT, COLOR_TEXT_SHADOW);
   if (gControls.WasPressed(BUTTON_START)) {
     gGame->SetState(GAME_STATE_MAIN_MENU);

@@ -5,7 +5,30 @@
 rm -rf build/
 scripts/build.sh
 
-if [[ -f ./build/genus.tgz ]]; then
+
+
+function makeTgz() {
+  if [[ -f ./build/genus.tgz ]]; then
     cp ./build/genus.tgz ~/Downloads/
     open ~/Downloads/
-fi
+  fi
+}
+
+function openApp() {
+  open build/genus.app
+}
+
+for i in "$@"
+do
+  case $i in 
+    -t|--maketgz)
+      makeTgz
+      shift # past argument=value
+      ;;
+
+    -o|--open)
+      openApp
+      shift
+      ;;
+  esac
+done
