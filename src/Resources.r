@@ -66,11 +66,13 @@ BITMAP space_static_bottom_right.bmp
 
 # .-=[  MUSIC  ]=-.
 PATH ../resources/music
-
 RAW EmptySong.xm
-RAW Song0.xm
-RAW Song1.s3m
-#RAW Song2.xm
+RAW Under_Water.xm
+RAW City_Scapes.xm
+RAW Countryside.xm
+RAW Main_Menu.xm
+RAW Spaaace.xm
+RAW Glacial_mountains.xm
 
 # .-=[ Sound Effects ]=-.
 PATH ../resources/sound_effects
