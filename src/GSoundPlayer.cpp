@@ -49,7 +49,7 @@ TBool GSoundPlayer::LoadEffects() {
     SFX_EXPLODE_BLOCK_WAV
   };
 
-  for (uint8_t i = 0; i < 9; i++) {
+  for (uint8_t i = 0; i < 8; i++) {
 //    printf("loadEffect(%i)\n", i);
     LoadEffect(mEffectsList[i], i);
   }
