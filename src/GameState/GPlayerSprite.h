@@ -35,7 +35,7 @@ public:
   void Copy(GPlayerSprite *aOther);
 
 public:
-  TInt   mBlinkTimer;
+  TInt   mBlinkTimer, mLassoTimer;
   TUint8 mBlocks[4];
   TInt   mBlockSize;
   TBool  mGameOver;
