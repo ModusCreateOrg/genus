@@ -104,6 +104,9 @@ TBool GGameOverProcess::InitialsState() {
     // either A or B pressed
     mHighScoreTable.InsertScore(gOptions->difficulty, mScoreIndex, mInitials, mHighScoreTable.lastScore[gOptions->difficulty]);
     mState = STATE_HIGHSCORES;
+
+    // reset dKeys so next state doesn't react to any keys already pressed
+    gControls.dKeys = 0;
   }
   return ETrue;
 }
