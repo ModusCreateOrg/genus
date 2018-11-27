@@ -1,6 +1,8 @@
 #ifndef GENUS_GGAME_H
 #define GENUS_GGAME_H
 
+#define FRAME_RATE_INFO 0
+
 #include "Game.h"
 
 enum {
