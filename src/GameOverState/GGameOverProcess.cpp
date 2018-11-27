@@ -1,4 +1,5 @@
 #include "GGameOverProcess.h"
+#include "GGameOverHighScoreMessageProcess.h"
 
 static const TInt16 NEW_SCORE_X = ((320 - (14 * 16)) / 2);
 static const TInt16 NEW_SCORE_Y = 50;
@@ -116,6 +117,7 @@ TBool GGameOverProcess::RunBefore() {
     case STATE_INITIALS:
       return InitialsState();
     case STATE_HIGHSCORES:
+      gGameEngine->AddProcess(new GGameOverHighScoreMessageProcess());
       return HighScoresState();
     default:
       Panic("GGameOverProcess: invalid mState: %d\n", mState);
