@@ -90,11 +90,13 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
 //      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy);
 //      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy + 16, SFLAG_FLOP);
 //      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy + 16, SFLAG_FLOP);
-      BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UL, xx, yy);
-      BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UR, xx + 16, yy);
-      BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_LL, xx, yy + 16);
-      BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_LR, xx + 16, yy + 16);
 
+      if (!(flags & SFLAG_NEXT_BLOCK)) {
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UL, xx, yy);
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UR, xx + 16, yy);
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_LL, xx, yy + 16);
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_LR, xx + 16, yy + 16);
+      }
     }
     else {
       BAnimSprite::Render(aVP);

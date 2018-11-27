@@ -4,7 +4,6 @@
 //#include "Game.h"
 #include "Powerups.h"
 #include "GGameBoard.h"
-#include "GNextBlockSprite.h"
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -87,8 +86,7 @@ public:
   TBool      mGameOver;
   TInt       mLevel;
   TBCD       mScore;
-  GPlayerSprite *mSprite;
-  GNextBlockSprite *mNextSprite;
+  GPlayerSprite *mSprite, *mNextSprite;
   GGameBoard mGameBoard;
 
 public:
