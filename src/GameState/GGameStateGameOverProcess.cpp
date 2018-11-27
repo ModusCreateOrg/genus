@@ -31,8 +31,6 @@ GGameStateGameOverProcess::GGameStateGameOverProcess(GGameState *aGameState) {
 }
 
 GGameStateGameOverProcess::~GGameStateGameOverProcess() {
-  mSprite->Remove();
-  delete mSprite;
 }
 
 TBool GGameStateGameOverProcess::RunBefore() {

@@ -19,8 +19,6 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mBonusTimer = -1;
 
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
-  gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
-  gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
 
   mFont8 = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
@@ -47,13 +45,6 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 }
 
 GGameState::~GGameState() {
-  mGameProcess->Remove();
-  delete mGameProcess;
-  mNextSprite->Remove();
-  delete mNextSprite;
-  mSprite->Remove();
-  delete mSprite;
-
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
   gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
   delete mFont16;
@@ -73,6 +64,11 @@ GGameState::~GGameState() {
  * @param aCanPowerup true if Next piece can be a powerup
  */
 void GGameState::Next(TBool aCanPowerup) {
+  if (mGameOver) {
+    return;
+  }
+  mSprite->x = PLAYER_X;
+  mSprite->y = PLAYER_Y;
   if (aCanPowerup) {
     if (mBonusTimer > 0) {
       printf("canPowerup with bonus timer running!\n");
@@ -90,8 +86,6 @@ void GGameState::Next(TBool aCanPowerup) {
   }
 
   // NOT a powerup
-  mSprite->x = PLAYER_X;
-  mSprite->y = PLAYER_Y;
   mSprite->Copy(mNextSprite);
   mNextSprite->Randomize();
   mGameProcess->Signal();
@@ -102,7 +96,7 @@ void GGameState::Next(TBool aCanPowerup) {
  ****************************************************************************************************************/
 
 void GGameState::GameOver() {
-  mSprite->flags &= ~SFLAG_RENDER;
+  mSprite->flags &= ~SFLAG_RENDER | SFLAG_ANIMATE;
   mGameProcess->Wait();
   mGameOver = ETrue;
   AddProcess(new GGameStateGameOverProcess(this));

@@ -20,6 +20,7 @@ GHighScoreAnimationProcess::GHighScoreAnimationProcess(GHighScoresState *aHighSc
 }
 
 GHighScoreAnimationProcess::~GHighScoreAnimationProcess() {
+  gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
 }
 
 TBool GHighScoreAnimationProcess::RunBefore() {

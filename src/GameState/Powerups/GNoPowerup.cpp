@@ -18,13 +18,13 @@ void GNoPowerup::Wait() {
 }
 
 void GNoPowerup::Signal() {
-  if (mState == STATE_WAIT) {
-    if (mGameBoard->Combine()) {
-      mGameState->StartBonusTimer();
-      mState = STATE_TIMER;
-    } else {
-      mState = STATE_MOVE;
-    }
+  if (mGameBoard->Combine()) {
+    mGameState->StartBonusTimer();
+    mState = STATE_TIMER;
+  } else if (mGameState->mBonusTimer >= 0) {
+    mState = STATE_TIMER;
+  } else {
+    mState = STATE_MOVE;
   }
 }
 
@@ -58,6 +58,9 @@ TBool GNoPowerup::Drop() {
 }
 
 void GNoPowerup::Blink() {
+  if (mGameState->mGameOver) {
+    return;
+  }
   TBool canDrop = CanDrop();
   mBlinkTimer--;
   if (mBlinkTimer < 0) {
@@ -65,7 +68,7 @@ void GNoPowerup::Blink() {
     if (!canDrop) {
       mPlayerSprite->flags ^= SFLAG_RENDER;
     }
-  } else if (CanDrop()) {
+  } else if (canDrop) {
     mPlayerSprite->flags |= SFLAG_RENDER;
   }
 }
@@ -76,6 +79,7 @@ TBool GNoPowerup::MoveState() {
   if (mGameBoard->IsGameOver()) {
     mGameState->GameOver();
     mState = STATE_WAIT;
+    mPlayerSprite->flags &= SFLAG_RENDER | SFLAG_ANIMATE;
     return ETrue;
   }
 
@@ -102,8 +106,7 @@ TBool GNoPowerup::MoveState() {
         mGameState->StartBonusTimer();
         mState = STATE_TIMER;
         return ETrue;
-      }
-      else {
+      } else {
         gSoundPlayer.SfxGoodDrop();
       }
     } else {
@@ -208,6 +211,9 @@ TBool GNoPowerup::WaitState() {
 }
 
 TBool GNoPowerup::RunAfter() {
+  if (mGameState->mGameOver) {
+    return ETrue;
+  }
   switch (mState) {
     case STATE_MOVE:
       return MoveState();

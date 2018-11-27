@@ -80,8 +80,6 @@ public:
 
 
 GResetOptionsState::GResetOptionsState() : BGameEngine(gViewPort) {
-  gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT);
-  gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT);
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
 
   mPlayfield = new GResetOptionsPlayfield();

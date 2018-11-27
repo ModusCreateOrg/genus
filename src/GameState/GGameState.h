@@ -32,8 +32,8 @@ static const TInt LEVEL_X = 224;
 static const TInt LEVEL_Y = 48;
 
 // screen coordinates of moves remaining display
-static const TRect MOVES_BORDER(224, 73, 303, 88);
-static const TRect MOVES_INNER(226, 75, 301, 86);
+static const TRect MOVES_BORDER(224+4, 73, 303+4, 88);
+static const TRect MOVES_INNER(226+4, 75, 301+4, 86);
 
 // screen coordinates of Next
 static const TInt NEXT_X       = 224;
