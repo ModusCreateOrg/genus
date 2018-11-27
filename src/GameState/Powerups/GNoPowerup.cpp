@@ -39,6 +39,7 @@ TBool GNoPowerup::CanDrop() {
   return ETrue;
 }
 
+
 TBool GNoPowerup::Drop() {
   const TInt   row = mPlayerSprite->BoardRow(),
                col = mPlayerSprite->BoardCol();
@@ -71,6 +72,12 @@ void GNoPowerup::Blink() {
 
 TBool GNoPowerup::MoveState() {
   mRepeatTimer--;
+
+  if (mGameBoard->IsGameOver()) {
+    mGameState->GameOver();
+    mState = STATE_WAIT;
+    return ETrue;
+  }
 
   if (gControls.WasPressed(BUTTONB)) {
     RotateLeft();
@@ -109,6 +116,9 @@ TBool GNoPowerup::MoveState() {
 }
 
 TBool GNoPowerup::TimerState() {
+  if (mGameBoard->IsGameOver()) {
+    mGameState->mBonusTimer = 0;
+  }
   if (mGameState->mBonusTimer >= 0) {
     mGameState->mBonusTimer--;
     if (mGameState->mBonusTimer < 0) {
