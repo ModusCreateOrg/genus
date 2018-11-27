@@ -118,6 +118,7 @@ public:
 
 public:
   void LoadLevel();
+  void GameOver();
 
 };
 

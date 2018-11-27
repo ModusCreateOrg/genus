@@ -2,7 +2,9 @@
 
 class GCreditsProcess : public BProcess {
 public:
-  GCreditsProcess() : BProcess() {}
+  GCreditsProcess() : BProcess() {
+    printf("GCreditsProcess\n");
+  }
 
 public:
   TBool RunBefore() {

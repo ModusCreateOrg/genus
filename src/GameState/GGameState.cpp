@@ -45,13 +45,6 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 }
 
 GGameState::~GGameState() {
-  mGameProcess->Remove();
-  delete mGameProcess;
-  mNextSprite->Remove();
-  delete mNextSprite;
-  mSprite->Remove();
-  delete mSprite;
-
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
   gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
   delete mFont16;
@@ -93,26 +86,24 @@ void GGameState::Next(TBool aCanPowerup) {
   }
 
   // NOT a powerup
-  if (mGameBoard.IsGameOver()) {   // this belongs in game for production!
-    mSprite->flags &= ~SFLAG_RENDER;
-    if (mBonusTimer > 1) {
-      mBonusTimer = 0;
-    }
-    else {
-      mGameProcess->Wait();
-      mGameOver = ETrue;
-      AddProcess(new GGameStateGameOverProcess(this));
-      THighScoreTable h;
-      h.Load();
-      h.lastScore[gOptions->difficulty].mValue = mScore.mValue;
-      h.Save();
-    }
-    return;
-  }
-
   mSprite->Copy(mNextSprite);
   mNextSprite->Randomize();
   mGameProcess->Signal();
+}
+
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
+void GGameState::GameOver() {
+  mSprite->flags &= ~SFLAG_RENDER | SFLAG_ANIMATE;
+  mGameProcess->Wait();
+  mGameOver = ETrue;
+  AddProcess(new GGameStateGameOverProcess(this));
+  THighScoreTable h;
+  h.Load();
+  h.lastScore[gOptions->difficulty].mValue = mScore.mValue;
+  h.Save();
 }
 
 /****************************************************************************************************************
