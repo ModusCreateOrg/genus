@@ -12,7 +12,7 @@ static const TInt BLINK_TIME = 2;
  *                                                                        |_|
  */
 
-GPlayerSprite::GPlayerSprite() : BAnimSprite(0, PLAYER_SLOT) {
+GPlayerSprite::GPlayerSprite() : BAnimSprite(1, PLAYER_SLOT) {
   this->flags        = SFLAG_RENDER;
   this->mGameOver    = EFalse;
   Randomize();
