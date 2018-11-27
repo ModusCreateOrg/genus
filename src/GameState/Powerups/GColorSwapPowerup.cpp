@@ -91,7 +91,6 @@ TBool GColorSwapPowerup::StateRemove() {
         gSoundPlayer.SfxGoodDrop();
 
         mGameBoard->mBoard[p->mRow][p->mCol] = TUint8(mSwapColor == IMG_TILE1 ? IMG_TILE2 : IMG_TILE1);
-        printf("%d,%d = %d\n", p->mRow, p->mCol, mGameBoard->mBoard[p->mRow][p->mCol]);
         stack->Push(new Point(p->mRow - 1, p->mCol));
         stack->Push(new Point(p->mRow + 1, p->mCol));
         stack->Push(new Point(p->mRow, p->mCol - 1));

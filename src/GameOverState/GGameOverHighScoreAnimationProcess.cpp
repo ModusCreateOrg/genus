@@ -20,6 +20,7 @@ GGameOverHighScoreAnimationProcess::GGameOverHighScoreAnimationProcess(GGameOver
 }
 
 GGameOverHighScoreAnimationProcess::~GGameOverHighScoreAnimationProcess() {
+  gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
 }
 
 TBool GGameOverHighScoreAnimationProcess::RunBefore() {

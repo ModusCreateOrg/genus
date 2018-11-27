@@ -95,7 +95,14 @@ public:
 protected:
   BAnimSprite *mSprite;
 };
+
 void GModusBombPowerup::ExplodeBlock(TInt aRow, TInt aCol) {
+  if (aRow < 0 || aRow >= BOARD_ROWS) {
+    return;
+  }
+  if (aCol < 0 || aCol >= BOARD_COLS) {
+    return;
+  }
   if (mGameBoard->IsEmpty(aRow, aCol)) {
     mGameState->AddProcess(new EmptyExplosion(aRow, aCol, mGameState));
   }
