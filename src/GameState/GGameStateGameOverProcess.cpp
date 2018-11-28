@@ -21,8 +21,6 @@ static ANIMSCRIPT GameOverAnimation[] = {
 };
 
 GGameStateGameOverProcess::GGameStateGameOverProcess(GGameState *aGameState) {
-  mFrameCounter = 0;
-  mTextColor = 0;
   mGameState = aGameState;
   gResourceManager.LoadBitmap(GAME_OVER_SPRITES1_BMP, GAME_OVER_SLOT, IMAGE_256x64);
   mSprite = new BAnimSprite(1, GAME_OVER_SLOT);
@@ -33,7 +31,6 @@ GGameStateGameOverProcess::GGameStateGameOverProcess(GGameState *aGameState) {
 }
 
 GGameStateGameOverProcess::~GGameStateGameOverProcess() {
-  gResourceManager.ReleaseBitmapSlot(GAME_OVER_SLOT);
 }
 
 TBool GGameStateGameOverProcess::RunBefore() {

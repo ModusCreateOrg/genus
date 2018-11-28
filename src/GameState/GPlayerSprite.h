@@ -3,6 +3,8 @@
 
 #include <BAnimSprite.h>
 
+#define SFLAG_NEXT_BLOCK (1 << SFLAG_USER_BIT)
+
 enum {
   BLOCKSIZE_2x2,
   BLOCKSIZE_1x1,
@@ -35,7 +37,7 @@ public:
   void Copy(GPlayerSprite *aOther);
 
 public:
-  TInt   mBlinkTimer;
+  TInt   mBlinkTimer, mLassoTimer;
   TUint8 mBlocks[4];
   TInt   mBlockSize;
   TBool  mGameOver;

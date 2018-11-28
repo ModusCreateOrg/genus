@@ -81,7 +81,7 @@ function build {
     # ls -l
     # ls -l ..
     cmake ..
-    make
+    make -j 8
 }
 
 function ensure_esp_idf {

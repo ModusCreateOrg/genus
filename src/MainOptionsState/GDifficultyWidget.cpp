@@ -79,5 +79,6 @@ TInt GDifficultyWidget::Render(TInt aX, TInt aY) {
 
 void GDifficultyWidget::Select(TInt aIndex) {
   gOptions->difficulty = aIndex;
+  gSoundPlayer.SfxOptionSelect();
   gOptions->Save();
 }

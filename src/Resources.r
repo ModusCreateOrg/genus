@@ -9,6 +9,7 @@ BITMAP credits1.bmp
 BITMAP game_over1.bmp
 BITMAP game_over_sprites1.bmp
 BITMAP high_scores1.bmp
+BITMAP high_scores_animation1.bmp
 BITMAP main_menu1.bmp
 BITMAP main_options1.bmp
 BITMAP main_options_reset1.bmp
@@ -65,11 +66,13 @@ BITMAP space_static_bottom_right.bmp
 
 # .-=[  MUSIC  ]=-.
 PATH ../resources/music
-
 RAW EmptySong.xm
-RAW Song0.xm
-RAW Song1.s3m
-#RAW Song2.xm
+RAW Under_Water.xm
+RAW City_Scapes.xm
+RAW Countryside.xm
+RAW Main_Menu.xm
+RAW Spaaace.xm
+RAW Glacial_mountains.xm
 
 # .-=[ Sound Effects ]=-.
 PATH ../resources/sound_effects
@@ -80,3 +83,5 @@ RAW SFX_good_drop_block.wav
 RAW SFX_bad_drop_block.wav
 RAW SFX_move_block.wav
 RAW SFX_score_combo.wav
+RAW SFX_option_select.wav
+RAW SFX_explode_block.wav

@@ -13,7 +13,7 @@ static const TInt BLINK_TIME = 2;
  */
 
 GPlayerSprite::GPlayerSprite() : BAnimSprite(0, PLAYER_SLOT) {
-  this->flags        = SFLAG_RENDER;
+  this->flags        |= SFLAG_RENDER;
   this->mGameOver    = EFalse;
   Randomize();
 }
@@ -44,8 +44,6 @@ void GPlayerSprite::RotateLeft() {
   mBlocks[1] = mBlocks[3];
   mBlocks[3] = mBlocks[2];
   mBlocks[2] = save;
-  // TODO: Jay - this should be in the caller of this method
-  gSoundPlayer.PlaySound(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/4, 0, EFalse);
 }
 
 void GPlayerSprite::RotateRight() {
@@ -55,14 +53,21 @@ void GPlayerSprite::RotateRight() {
   mBlocks[2] = mBlocks[3];
   mBlocks[3] = mBlocks[1];
   mBlocks[1] = save;
-  // TODO: Jay - this should be in the caller of this method
-  gSoundPlayer.PlaySound(/*SFX_ROTATE_BLOCK_LEFT_WAV*/3, 0, EFalse);
 }
 
 void GPlayerSprite::Animate() {
   mBlinkTimer--;
   if (mBlinkTimer < 0) {
     mBlinkTimer = BLINK_TIME;
+  }
+  mLassoTimer++;
+  if (mLassoTimer & 8) {
+    gDisplay.renderBitmap->SetColor(LASSO_1, 255,255,255);
+    gDisplay.renderBitmap->SetColor(LASSO_2, 255,0,255);
+  }
+  else {
+    gDisplay.renderBitmap->SetColor(LASSO_1, 255,0,255);
+    gDisplay.renderBitmap->SetColor(LASSO_2, 255,255,255);
   }
   BAnimSprite::Animate();
 }
@@ -81,10 +86,17 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
       BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[2], xx, yy + 16);
       BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[3], xx + 16, yy + 16);
       // frame
-      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy);
-      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy);
-      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy + 16, SFLAG_FLOP);
-      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy + 16, SFLAG_FLOP);
+//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy);
+//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy);
+//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy + 16, SFLAG_FLOP);
+//      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy + 16, SFLAG_FLOP);
+
+      if (!(flags & SFLAG_NEXT_BLOCK)) {
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UL, xx, yy);
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UR, xx + 16, yy);
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_LL, xx, yy + 16);
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_LR, xx + 16, yy + 16);
+      }
     }
     else {
       BAnimSprite::Render(aVP);

@@ -16,10 +16,7 @@ void GGameBoard::ExplodeBlock(TInt aRow, TInt aCol) {
   TUint8 v = mBoard[aRow][aCol];
   if (v != 255) {
     mBoard[aRow][aCol] = TUint8((v <= 5) ? 8 : 24);
-    // TODO: Jay, add a sound here for the score incrementing as we remove blocks
-    // sound lasts roughly 1/8 second
-    // note: current sound I'm using seems pretty good.
-    gSoundPlayer.PlaySound(/*SFX_GOOD_DROP_BLOCK_WAV*/0, 0, EFalse);
+    gSoundPlayer.SfxExplodeBlock();
   }
 }
 

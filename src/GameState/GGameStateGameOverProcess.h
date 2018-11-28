@@ -11,8 +11,6 @@ public:
   TBool RunBefore();
   TBool RunAfter();
 protected:
-  TInt mTextColor;
-  TInt mFrameCounter;
   BAnimSprite *mSprite;
   GGameState *mGameState;
 };

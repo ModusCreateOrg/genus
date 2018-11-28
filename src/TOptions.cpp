@@ -1,12 +1,14 @@
 #include "TOptions.h"
 
+// bump this each time the struct is edited in IDE/debugger!
+static const TInt VERSION = 1;
+
 TOptions::TOptions() {
-  if (!Load()) {
-    Reset();
-  }
+  Load();
 }
 
 void TOptions::SetDefaults() {
+  version = VERSION;
   muted = EFalse;
   music = 0.5f;
   sfx = 0.875f;
@@ -22,11 +24,16 @@ void TOptions::Reset(TBool aSave) {
 }
 
 void TOptions::Save() {
+  version = VERSION;
   BStore f("Genus");
   f.Set("options", this, sizeof(TOptions));
 }
 
-TBool TOptions::Load() {
+void TOptions::Load() {
   BStore f("Genus");
-  return f.Get("options", this, sizeof(TOptions));
+  if (!f.Get("options", this, sizeof(TOptions))) {
+    Reset();
+  } else if (version != VERSION) {
+    Reset();
+  }
 }

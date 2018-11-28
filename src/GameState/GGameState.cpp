@@ -5,7 +5,7 @@
 #include "Playfields/GLevelCyberpunk.h"
 #include "Playfields/GLevelUnderWater1.h"
 #include "Playfields/GLevelGlacialMountains.h"
-#include "Playfields/GLevelUnderWater1.h"
+#include "Playfields/GLevelUnderWaterFantasy.h"
 #include "Playfields/GLevelSpace.h"
 
 /****************************************************************************************************************
@@ -19,8 +19,6 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mBonusTimer = -1;
 
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
-  gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
-  gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
 
   mFont8 = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
@@ -36,7 +34,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   mNextSprite    = new GPlayerSprite();
   AddSprite(mNextSprite);
-  mNextSprite->flags |= SFLAG_RENDER;
+  mNextSprite->flags |= SFLAG_RENDER | SFLAG_NEXT_BLOCK;
   mNextSprite->x = NEXT_BLOCK_X;
   mNextSprite->y = NEXT_BLOCK_Y;
   mNextSprite->Randomize();
@@ -47,15 +45,6 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 }
 
 GGameState::~GGameState() {
-  mGameProcess->Remove();
-  delete mGameProcess;
-  mNextSprite->Remove();
-  delete mNextSprite;
-  mSprite->Remove();
-  delete mSprite;
-
-  gResourceManager.ReleaseBitmapSlot(FONT_16x16_SLOT);
-  gResourceManager.ReleaseBitmapSlot(FONT_8x8_SLOT);
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
   gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
   delete mFont16;
@@ -75,6 +64,11 @@ GGameState::~GGameState() {
  * @param aCanPowerup true if Next piece can be a powerup
  */
 void GGameState::Next(TBool aCanPowerup) {
+  if (mGameOver) {
+    return;
+  }
+  mSprite->x = PLAYER_X;
+  mSprite->y = PLAYER_Y;
   if (aCanPowerup) {
     if (mBonusTimer > 0) {
       printf("canPowerup with bonus timer running!\n");
@@ -92,28 +86,24 @@ void GGameState::Next(TBool aCanPowerup) {
   }
 
   // NOT a powerup
-  if (mGameBoard.IsGameOver()) {   // this belongs in game for production!
-    mSprite->flags &= ~SFLAG_RENDER;
-    if (mBonusTimer > 1) {
-      mBonusTimer = 0;
-    }
-    else {
-      mGameProcess->Wait();
-      mGameOver = ETrue;
-      AddProcess(new GGameStateGameOverProcess(this));
-      THighScoreTable h;
-      h.Load();
-      h.lastScore[gOptions->difficulty].mValue = mScore.mValue;
-      h.Save();
-    }
-    return;
-  }
-
-  mSprite->x = PLAYER_X;
-  mSprite->y = PLAYER_Y;
   mSprite->Copy(mNextSprite);
   mNextSprite->Randomize();
   mGameProcess->Signal();
+}
+
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
+void GGameState::GameOver() {
+  mSprite->flags &= ~SFLAG_RENDER | SFLAG_ANIMATE;
+  mGameProcess->Wait();
+  mGameOver = ETrue;
+  AddProcess(new GGameStateGameOverProcess(this));
+  THighScoreTable h;
+  h.Load();
+  h.lastScore[gOptions->difficulty].mValue = mScore.mValue;
+  h.Save();
 }
 
 /****************************************************************************************************************
@@ -151,38 +141,38 @@ void GGameState::LoadLevel() {
         mPlayfield = new GLevelCountryside(this);
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(COUNTRYSIDE_XM);
         break;
       case 1:
         mPlayfield = new GLevelUnderWater1(this); // Playfield 2
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(UNDER_WATER_XM);
         break;
       case 2:
         mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(GLACIAL_MOUNTAINS_XM);
         break;
       case 3:
         // TODO: @Jay???
-        mPlayfield = new GLevelUnderWater1(this); // Playfield 2    // temporary TODO: @Jay
+        mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2    // temporary TODO: @Jay
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(UNDER_WATER_XM);
         break;
       case 4:
-        mPlayfield = new GLevelUnderWater1(this); // Playfield 5
+        mPlayfield = new GLevelCyberpunk(this); // Playfield 5
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(CITY_SCAPES_XM);
         break;
       case 5:
-        mPlayfield = new GLevelCyberpunk(this); // Todo: @Mike, this is Level 6
+        mPlayfield = new GLevelSpace(this); // Todo: @Mike, this is Level 6
         gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(SONG1_S3M);
+        gSoundPlayer.PlayMusic(SPAAACE_XM);
         break;
       default:
         Panic("LoadLevel invalid level\n");

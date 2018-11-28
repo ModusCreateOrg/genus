@@ -19,6 +19,7 @@ struct THighScoreTable {
   THighScore moderate[NUM_SCORES];
   THighScore hard[NUM_SCORES];
   TBCD       lastScore[NUM_DIFFICULTIES];
+  char       lastInitials[SIZE_INITIALS];
 
 public:
   THighScoreTable();

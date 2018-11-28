@@ -59,12 +59,16 @@ GLevelGlacialMountains::GLevelGlacialMountains(GGameState *aGameEngine) {
 }
 
 GLevelGlacialMountains::~GLevelGlacialMountains()  {
+#ifdef STATIC_GAME_BACKGROUNDS
+  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+#else
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG4_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG5_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG6_SLOT);
+#endif
 }
 
 

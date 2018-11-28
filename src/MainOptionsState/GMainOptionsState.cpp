@@ -35,11 +35,8 @@ public:
     }
 
     TBool RunAfter() {
-      if (gControls.WasPressed(BUTTON_START)) {
+      if (gControls.WasPressed(BUTTON_MENU)) {
         gGame->SetState(GAME_STATE_MAIN_MENU);
-        return EFalse;
-      } else if (gControls.WasPressed(BUTTON_MENU)) {
-        gGame->SetState(GAME_STATE_CREDITS);
         return EFalse;
       }
       return ETrue;
@@ -73,15 +70,13 @@ public:
 
 
 GMainOptionsState::GMainOptionsState() : BGameEngine(gViewPort) {
-  gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT);
-  gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT);
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
 
   mPlayfield = new GMainOptionsPlayfield();
 
   auto *p = new GMainOptionsProcess();
   AddProcess(p);
-  gSoundPlayer.PlayMusic(SONG0_XM);
+//  gSoundPlayer.PlayMusic(SONG0_XM);
   gWidgetTheme.Configure(
       WIDGET_TEXT_FONT, mFont16,
       WIDGET_TEXT_FG, COLOR_TEXT,

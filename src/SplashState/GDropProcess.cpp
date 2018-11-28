@@ -70,7 +70,7 @@ GDropProcess::GDropProcess(GSplashState *aSplashState, TInt16 aDropNumber ) : BP
 }
 
 void GDropProcess::SetTimer() {
-  mTimer = TInt16(30 + Random(5, 25));
+  mTimer = TInt16(Random(30, 60) + Random(10, 35));
   mSprite->flags &= ~SFLAG_RENDER;
 }
 

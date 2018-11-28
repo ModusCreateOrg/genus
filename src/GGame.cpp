@@ -7,7 +7,7 @@ GGame::GGame() {
   gOptions = new TOptions();
 
   // TODO: Jay - this needs to be in BApplication constructor (I think)
-  gSoundPlayer.Init(3, 6);
+  gSoundPlayer.Init(4, 8);
 
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.CacheBitmapSlot(FONT_8x8_SLOT);
@@ -83,9 +83,14 @@ void GGame::Run() {
     }
     gGameEngine->GameLoop();
     gDisplay.Update();
-    TUint32 now = Milliseconds(), elapsed = now - start;
+    TUint32 now = Milliseconds();
     start = now;
-//    printf("elapsed %4d\r", elapsed);
+
+#ifdef FRAME_RATE_INFO
+    TUint32 elapsed = now - start;
+    printf("elapsed %4d\r", elapsed);
+#endif
+
     if (gControls.WasPressed(BUTTONQ)) {
       done = true;
     }

@@ -8,8 +8,6 @@ GCancelResetWidget::~GCancelResetWidget() {}
 
 TInt GCancelResetWidget::Render(TInt aX, TInt aY) {
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
-  aY -= f->mHeight - 4;
-  aX += 100;
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
@@ -30,7 +28,7 @@ TInt GCancelResetWidget::Render(TInt aX, TInt aY) {
       gWidgetTheme.GetInt(WIDGET_TITLE_BG),
       -6);
 
-  return f->mHeight - 4;
+  return f->mHeight << 1;
 }
 
 void GCancelResetWidget::Select() {

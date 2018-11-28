@@ -48,6 +48,10 @@ static const TUint16 IMG_FRAMER  = 15;
 // COMMON.BMP
 static const TUint16 IMG_POWERUP_MODUS_BOMB = 16;  // m bomb
 static const TUint16 IMG_POWERUP_COLORSWAP  = 24;
+static const TUint16 IMG_LASSO_UL = 8;
+static const TUint16 IMG_LASSO_UR = 9;
+static const TUint16 IMG_LASSO_LL = 10;
+static const TUint16 IMG_LASSO_LR = 11;
 
 // SPLASH_SPRITES.BMP
 static const TUint16 IMG_DROP1 = 0;
@@ -60,6 +64,9 @@ static const TUint16 IMG_DROP6 = 32;
 // GAME_OVER_SPRITES1.BMP
 static const TUint16 IMG_GAME_OVER1 = 0;
 
+// HIGH_SCORES_ANIMATION1.BMP
+static const TUint16 IMG_HIGH_SCORES1 = 0;
+
 // COLOR PALETTE INDEXES
 static const TUint8 COLOR_BORDER1 = 153;
 static const TUint8 COLOR_BORDER2 = 155;
@@ -68,6 +75,8 @@ static const TUint8 COLOR_TIMER_INNER  = 250;
 static const TUint8 COLOR_TIMER_BORDER = 251;
 
 // user interface/widgets colors
+static const TUint8 LASSO_1 = 247;
+static const TUint8 LASSO_2 = 248;
 static const TUint8 COLOR_DIALOG_BG   = 249;
 static const TUint8 COLOR_DIALOG_FG   = 250;
 static const TUint8 COLOR_MENU_TITLE  = 251;

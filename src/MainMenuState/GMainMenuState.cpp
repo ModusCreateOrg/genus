@@ -74,8 +74,8 @@ public:
   void Render() {
     gDisplay.renderBitmap->CopyPixels(mBackground);
     TInt w = mLogo->Width(), h = mLogo->Height();
-    TInt x = (320 - w) / 2 + ((mState & 1) ? -1 : 1);
-    TInt y = 60 + ((mState & 1) ? -1 : 1);
+    TInt x = (320 - w) / 2;
+    TInt y = 60 ;
     gDisplay.renderBitmap->DrawBitmapTransparent(
       ENull,                      // ViewPort
       mLogo,                      // bitmap
