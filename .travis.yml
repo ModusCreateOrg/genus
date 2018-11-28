@@ -11,7 +11,7 @@ env:
 before_install: git clone git@github.com:ModusCreateOrg/creative-engine.git
 install:
     - brew install shellcheck
-before_script: shellcheck --version && find . -name '*.sh' -exec bash -c 'shellcheck -x "$1"' -- {} \;
+before_script: shellcheck --version && find . -path ./creative-engine -prune -o -name '*.sh' -exec bash -c 'shellcheck -x "$1"' -- {} \;
 script: "./scripts/build.sh"
 after_success: true # TODO: Generate docs here.
 deploy:
