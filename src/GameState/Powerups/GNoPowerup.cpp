@@ -136,7 +136,7 @@ TBool GNoPowerup::TimerState() {
   mRepeatTimer--;
 
   if (gControls.WasPressed(BUTTONA)) {
-    RotateLeft();
+    RotateRight();
 //  } else if (gControls.WasPressed(BUTTONB)) {
 //    RotateRight();
   } else if (TimedControl(JOYLEFT)) {

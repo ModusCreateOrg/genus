@@ -5,8 +5,10 @@ BITMAP splash1.bmp
 BITMAP splash_sprites.bmp
 BITMAP menu_background.bmp
 BITMAP genus_logo.bmp
-BITMAP credits1.bmp
-BITMAP game_over1.bmp
+
+BITMAP modus_labs_sprite.bmp
+BITMAP team_sprite.bmp
+
 BITMAP game_over_sprites1.bmp
 BITMAP high_scores1.bmp
 BITMAP high_scores_animation1.bmp

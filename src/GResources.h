@@ -22,6 +22,8 @@ enum {
   FONT_16x16_SLOT,
 
   GAME_OVER_SLOT,
+  CREDITS_TEAM_SLOT,
+  CREDITS_MODUS_LABS_SLOT,
 };
 
 // BRaw slots
