@@ -1,4 +1,5 @@
 #include "GGameOverProcess.h"
+#include "GGameOverHighScoreMessageProcess.h"
 
 static const TInt16 NEW_SCORE_X = ((320 - (14 * 16)) / 2);
 static const TInt16 NEW_SCORE_Y = 50;
@@ -24,6 +25,9 @@ GGameOverProcess::GGameOverProcess() : BProcess() {
     mInitialsPos = 0;
   } else {
     mState = STATE_HIGHSCORES;
+
+    // Spawn new message process
+    gGameEngine->AddProcess(new GGameOverHighScoreMessageProcess());
   }
 }
 
@@ -107,6 +111,9 @@ TBool GGameOverProcess::InitialsState() {
 
     // reset dKeys so next state doesn't react to any keys already pressed
     gControls.dKeys = 0;
+
+    // Spawn new message process
+    gGameEngine->AddProcess(new GGameOverHighScoreMessageProcess());
   }
   return ETrue;
 }
