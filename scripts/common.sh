@@ -7,7 +7,7 @@ SUDO=${SUDO:-}
 function ensure_xcode_installed {
     #Ensure XCode full version is installed and configured,
     #as xcodebuild gets invoked later in the build, and it will fail otherwise
-    if [[ -z "$(which xcodebuild)" ]] || ! xcodebuild --help >/dev/null 2>&1; then
+    if ! command -v xcodebuild >/dev/null 2>&1; then
         cat 1>&2 <<EOF
 Please install XCode from the App Store.
 You will need the full version, not just the command line tools.
@@ -22,7 +22,7 @@ EOF
 
 function ensure_homebrew_installed {
     #Ensure homebrew is installed
-    if [[ -z "$(which brew)" ]]; then
+    if ! command -v brew >/dev/null 2>&1; then
       echo "No homebrew found - installing Homebrew from https://brew.sh"
       /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
@@ -30,18 +30,18 @@ function ensure_homebrew_installed {
 
 function ensure_cmake {
     # Adapted from https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line
-    if [ -d /opt/cmake ]; then
+    if [[ -d /opt/cmake ]]; then
         return
     fi
     local version
-    local build
+    local -i build
     local tmpdir
     local cmake
     version=3.12
     build=3
     tmpdir=$(mktemp -d)
     cmake="cmake-$version.$build-Linux-x86_64"
-    pushd "$tmpdir"
+    cd "$tmpdir" || exit 1
     curl -sSO "https://cmake.org/files/v$version/$cmake.sh"
     $SUDO mkdir /opt/cmake
     yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
@@ -52,7 +52,7 @@ function ensure_cmake {
 
 function ensure_debian_devtools_installed {
     $SUDO apt-get -qq update
-    $SUDO apt-get -qq install build-essential git libsdl2-dev libsdl2-image-dev curl doxygen imagemagick
+    $SUDO apt-get -qq install --no-install-recommends build-essential git libsdl2-dev libsdl2-image-dev curl doxygen imagemagick
     # Ubuntu 18.04 has an old cmake (3.9) so install a newer one from binaries from cmake
     ensure_cmake
 }
@@ -70,13 +70,13 @@ function ensure_creative_engine {
 }
 
 function build {
-    pushd "$BASE_DIR"
+    cd "$BASE_DIR" || exit 1
     if [[ ! -d creative-engine ]]; then
         # rm -f creative-engine
         ln -sf ../creative-engine .
     fi
     mkdir -p "$BUILD_DIR"
-    pushd "$BUILD_DIR"
+    cd "$BUILD_DIR" || exit 1
     # pwd
     # ls -l
     # ls -l ..
@@ -85,24 +85,21 @@ function build {
 }
 
 function ensure_esp_idf {
-    set +u
-    if [[ ! -z "$IDF_PATH" ]]; then
+    if [[ -n "${IDF_PATH:-}" ]]; then
         echo "XTENSA is already installed, nothing to do."
-        set -u
         return
     fi
-    set -u
 
     echo "Attempting to install XTENSA on: $OS"
 
-    pushd "$BASE_DIR"
+    cd "$BASE_DIR" || exit 1
     OS="$(uname)"
-    if [ "$OS" == "Darwin" ]; then
+    if [[ "$OS" == "Darwin" ]]; then
         cp sdkconfig.osx sdkconfig
         mkdir esp
-        pushd esp
+        cd esp || exit 1
         git clone --recursive https://github.com/espressif/esp-idf.git
-        pushd esp-idf
+        cd esp-idf || exit 1
         git submodule update --init --recursive
         export IDF_PATH="$BASE_DIR/esp/esp-idf"
         python -m pip install --user -r "$IDF_PATH/requirements.txt"
@@ -122,7 +119,7 @@ function build_xtensa {
         return
     fi
 
-    pushd "$BASE_DIR"
+    cd "$BASE_DIR" || exit 1
 
     if [[ ! -d creative-engine ]]; then
         rm -f creative-engine
@@ -133,7 +130,7 @@ function build_xtensa {
 }
 
 function clean {
-    pushd "$CREATIVE_ENGINE_DIR"
+    cd "$CREATIVE_ENGINE_DIR" || exit 1
     git clean -fdx
     rm -rf "$BASE_DIR/build"
 }
@@ -141,7 +138,7 @@ function clean {
 # TODO: Use otool -L and some foo to find the dependencies
 #		The sentinel is "/usr/local/opt"
 function copy_sdl2_libs_to_app {
-    if [ "$OS" == "Darwin" ]; then
+    if [[ "$OS" == "Darwin" ]]; then
         export APP_DIR="$BASE_DIR/build/genus.app"
         export APP_CNT_DIR="$APP_DIR/Contents"
         export APP_RES_DIR="$APP_CNT_DIR/Resources"
@@ -217,7 +214,7 @@ function copy_sdl2_libs_to_app {
 function checkout_creative_engine_branch {
     DEFAULT_BRANCH="master"
     GENUS_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    pushd "$BASE_DIR"
+    cd "$BASE_DIR" || exit 1
     echo "The current genus branch is: $GENUS_BRANCH"
     if (cd "$CREATIVE_ENGINE_DIR" && git checkout "$GENUS_BRANCH"); then
         echo "Checked out creatine-engine branch: $GENUS_BRANCH"
@@ -225,19 +222,19 @@ function checkout_creative_engine_branch {
         echo "Checked out creatine-engine branch: $DEFAULT_BRANCH"
     else
         echo "Faied to checkout a branch for creatine-engine!"
-        exit -1
+        exit 1
     fi
-    popd
+    cd - || exit 1
 }
 
 
 function archive_app {
-    if [ "$OS" == "Darwin" ]; then
+    if [[ "$OS" == "Darwin" ]]; then
         echo "Archiving app"
-        pushd "$BUILD_DIR"
+        cd "$BUILD_DIR" || exit 1
         # tar czvfp genus.tgz genus-docs genus.app Genus.bin Genus.elf Genus.map
         tar czvfp genus.tgz genus.app
         # ls -l
-        popd
+        cd - || exit 1
     fi
 }
