@@ -58,7 +58,7 @@ TBool GModusBombPowerup::StateMove() {
     MoveDown();
   }
 
-  if (gControls.WasPressed(BUTTON_SELECT)) {
+  if (gControls.WasPressed(BUTTONB)) {
     Drop();
     mState = STATE_REMOVE;
     mPlayerSprite->StartAnimation(BombDropAnimation);

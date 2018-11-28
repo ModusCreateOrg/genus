@@ -83,11 +83,11 @@ TBool GNoPowerup::MoveState() {
     return ETrue;
   }
 
-  if (gControls.WasPressed(BUTTONB)) {
-    RotateLeft();
-  } else if (gControls.WasPressed(BUTTONA)) {
+  if (gControls.WasPressed(BUTTONA)) {
     RotateRight();
-  } else if (TimedControl(JOYLEFT)) {
+//  } else if (gControls.WasPressed(BUTTONB)) {
+//    RotateLeft();
+  }else if (TimedControl(JOYLEFT)) {
     MoveLeft();
   } else if (TimedControl(JOYRIGHT)) {
     MoveRight();
@@ -97,7 +97,7 @@ TBool GNoPowerup::MoveState() {
     MoveDown();
   }
 
-  if (gControls.WasPressed(BUTTON_SELECT)) {
+  if (gControls.WasPressed(BUTTONB)) {
     if (CanDrop()) {
       if (Drop()) {
         // combined!
@@ -136,9 +136,9 @@ TBool GNoPowerup::TimerState() {
   mRepeatTimer--;
 
   if (gControls.WasPressed(BUTTONA)) {
-    RotateLeft();
-  } else if (gControls.WasPressed(BUTTONB)) {
     RotateRight();
+//  } else if (gControls.WasPressed(BUTTONB)) {
+//    RotateRight();
   } else if (TimedControl(JOYLEFT)) {
     MoveLeft();
   } else if (TimedControl(JOYRIGHT)) {
@@ -149,7 +149,7 @@ TBool GNoPowerup::TimerState() {
     MoveDown();
   }
 
-  if (gControls.WasPressed(BUTTON_SELECT)) {
+  if (gControls.WasPressed(BUTTONB)) {
     if (CanDrop()) {
       gSoundPlayer.SfxGoodDrop();
       Drop();
@@ -177,9 +177,15 @@ TBool GNoPowerup::RemoveState() {
       mRemoveRow++;
       if (mRemoveRow >= BOARD_ROWS) {
         // all done, game resumes
-        mPlayerSprite->flags |= SFLAG_RENDER;
         gControls.dKeys = 0;  // in case user pressed a key during removing blocks
-        mState = STATE_MOVE;
+        if (mGameBoard->IsGameOver()) {
+          mState = STATE_WAIT;
+          mPlayerSprite->flags &= ~SFLAG_RENDER;
+        }
+        else {
+          mPlayerSprite->flags |= SFLAG_RENDER;
+          mState = STATE_MOVE;
+        }
         return ETrue;
       }
     }
@@ -202,11 +208,26 @@ TBool GNoPowerup::RemoveState() {
     }
     mRemoveCol++;
   }
-  mState = STATE_MOVE;
+  gControls.dKeys = 0;  // in case user pressed a key during removing blocks
+  if (mGameBoard->IsGameOver()) {
+    mState = STATE_WAIT;
+    mPlayerSprite->flags &= ~SFLAG_RENDER;
+  }
+  else {
+    mPlayerSprite->flags |= SFLAG_RENDER;
+    mState = STATE_MOVE;
+  }
   return ETrue;
 }
 
 TBool GNoPowerup::WaitState() {
+  return ETrue;
+}
+
+TBool GNoPowerup::RunBefore() {
+  if (mGameState->mGameOver) {
+    mPlayerSprite->flags &= ~SFLAG_RENDER;
+  }
   return ETrue;
 }
 
