@@ -11,6 +11,8 @@ public:
 
 public:
   void Render();
+public:
+  void StartText();
 
 protected:
   BBitmap *mBackground;
