@@ -28,7 +28,7 @@
 #include "HighScoresState/GHighScoresState.h"
 #include "MainOptionsState/GMainOptionsState.h"
 #include "MainOptionsState/GResetOptionsState.h"
-#include "GCreditsState.h"
+#include "CreditsState/GCreditsState.h"
 
 // globals
 extern BViewPort   *gViewPort;

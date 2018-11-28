@@ -1,5 +1,11 @@
 #include "Game.h"
 
+// 48,32  team
+// 48, 144  modus labs
+// #6d6d6d background color
+
+//
+
 class GCreditsProcess : public BProcess {
 public:
   GCreditsProcess() : BProcess() {
@@ -22,6 +28,11 @@ public:
     }
     return ETrue;
   }
+protected:
+  enum {
+    STATE_MOVE,
+    STATE_
+  };
 };
 
 class GCreditsPlayfield : public BPlayfield {
