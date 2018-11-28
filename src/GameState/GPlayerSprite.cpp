@@ -61,14 +61,16 @@ void GPlayerSprite::Animate() {
     mBlinkTimer = BLINK_TIME;
   }
   mLassoTimer++;
-  if (mLassoTimer & 8) {
-    gDisplay.renderBitmap->SetColor(LASSO_1, 255,255,255);
-    gDisplay.renderBitmap->SetColor(LASSO_2, 255,0,255);
-  }
-  else {
-    gDisplay.renderBitmap->SetColor(LASSO_1, 255,0,255);
-    gDisplay.renderBitmap->SetColor(LASSO_2, 255,255,255);
-  }
+//    gDisplay.renderBitmap->SetColor(LASSO_1, 255,255,255);
+//    gDisplay.renderBitmap->SetColor(LASSO_2, 255,255,255);
+//  if (mLassoTimer & 8) {
+//    gDisplay.renderBitmap->SetColor(LASSO_1, 255,255,255);
+//    gDisplay.renderBitmap->SetColor(LASSO_2, 255,0,255);
+//  }
+//  else {
+//    gDisplay.renderBitmap->SetColor(LASSO_1, 255,0,255);
+//    gDisplay.renderBitmap->SetColor(LASSO_2, 255,255,255);
+//  }
   BAnimSprite::Animate();
 }
 
@@ -92,10 +94,12 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
 //      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy + 16, SFLAG_FLOP);
 
       if (!(flags & SFLAG_NEXT_BLOCK)) {
-        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UL, xx, yy);
-        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UR, xx + 16, yy);
-        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_LL, xx, yy + 16);
-        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_LR, xx + 16, yy + 16);
+        TInt animationFrame = mLassoTimer & 8 ? 4 : 0;
+        gDisplay.renderBitmap->SetColor(LASSO_1, 255,255,255);
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UL + animationFrame, xx, yy);
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UR + animationFrame, xx + 16, yy);
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_LL + animationFrame, xx, yy + 16);
+        BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_LR + animationFrame, xx + 16, yy + 16);
       }
     }
     else {

@@ -6,6 +6,120 @@
 
 //
 
+#if 1
+static const TInt TOP_Y = 24;
+
+class CreditsProcess : public BProcess {
+public:
+  CreditsProcess() {
+    mFont = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
+    mY    = 240;
+  }
+
+  TInt RenderString(const char *aString, TInt aY) {
+    if (aY > 0 && aY < 240) {
+      TInt width = TInt(strlen(aString) * 12);
+      TInt x     = (320 - width) / 2;
+      gDisplay.renderBitmap->DrawString(ENull, aString, mFont, x, aY, COLOR_TEXT, -1, -4);
+    }
+    return 18;
+  }
+
+  void RenderCredits() {
+    gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
+    TInt y = mY;
+    y += RenderString("GAME DESIGN", y) + 8;
+    y += RenderString("Jonathan Van Dalen", y);
+    y += RenderString("Dmytro Kovalenko", y);
+    y += 32;
+    y += RenderString("VISUAL DESIGN", y) + 8;
+    y += RenderString("Dmytro Kovalenko", y);
+    y += RenderString("Lorena Vargas", y);
+    y += RenderString("Jonathan Van Dalen", y);
+    y += RenderString("Drew Griffith", y);
+    y += 32;
+    y += RenderString("PROGRAMMING", y) + 8;
+    y += RenderString("Mike Schwartz", y);
+    y += RenderString("Michael Tintiuc", y);
+    y += RenderString("Jay Garcia", y);
+    y += RenderString("Don Anderson", y);
+    y += 32;
+    y += RenderString("CONTINUOUS INTEGRATION", y) + 8;
+    y += RenderString("Don Anderson", y);
+    y += RenderString("Richard Bullington-McGuire", y);
+    y += RenderString("Haneez Haroon", y);
+    y += RenderString("Housni Yakoob", y);
+    y += 32;
+    y += RenderString("PROJECT MANAGER", y) + 8;
+    y += RenderString("Dave Collins", y);
+    y += 32;
+    y += RenderString("MUSIC AND SOUND EFFECTS", y) + 8;
+    y += RenderString("Jay Garcia", y);
+    y += 32;
+    y += RenderString("DIRECTOR", y) + 8;
+    y += RenderString("Jay Garcia", y);
+    y += 64;
+    gDisplay.renderBitmap->DrawBitmapTransparent(ENull, gResourceManager.GetBitmap(CREDITS_TEAM_SLOT), TRect(0,0, 223, 95), 48, y);
+    y += 24+96;
+    gDisplay.renderBitmap->DrawBitmapTransparent(ENull, gResourceManager.GetBitmap(CREDITS_MODUS_LABS_SLOT), TRect(0,0, 223, 63), 48, y);
+  }
+
+  TBool RunBefore() {
+    if (mY > -700) {
+      mY -= 2;
+    }
+    RenderCredits();
+    return ETrue;
+  }
+
+  TBool RunAfter() {
+    if (gControls.WasPressed(BUTTON_ANY)) {
+      gGame->SetState(GAME_STATE_MAIN_MENU);
+      return EFalse;
+    }
+    return ETrue;
+  }
+
+  BFont *mFont;
+  TInt  mY;
+};
+
+class GCreditsPlayfield : public BPlayfield {
+public:
+  GCreditsPlayfield() {
+    gResourceManager.LoadBitmap(MODUS_LABS_SPRITE_BMP, CREDITS_MODUS_LABS_SLOT, IMAGE_ENTIRE);
+    gResourceManager.LoadBitmap(TEAM_SPRITE_BMP, CREDITS_TEAM_SLOT, IMAGE_ENTIRE);
+    mBackground = gResourceManager.GetBitmap(CREDITS_TEAM_SLOT);
+    gDisplay.SetPalette(mBackground);
+    gDisplay.SetColor(0, 109, 109, 109);
+  }
+
+  virtual ~GCreditsPlayfield() {
+    gResourceManager.ReleaseBitmapSlot(CREDITS_MODUS_LABS_SLOT);
+    gResourceManager.ReleaseBitmapSlot(CREDITS_TEAM_SLOT);
+  }
+
+public:
+  void Render() {
+    gDisplay.renderBitmap->Clear(0);
+  }
+
+public:
+  BBitmap *mBackground;
+};
+
+GCreditsState::GCreditsState() : BGameEngine(gViewPort) {
+  mPlayfield = new GCreditsPlayfield();
+  AddProcess(new CreditsProcess());
+//  AddProcess(new TeamProcess(this));
+//  AddProcess(new ModusLabsProcess(this));
+}
+
+GCreditsState::~GCreditsState() {
+//  delete mPlayfield;
+}
+
+#else
 class TeamProcess : public BProcess {
 public:
   TeamProcess(GCreditsState *aCreditsState) {
@@ -328,3 +442,5 @@ GCreditsState::~GCreditsState() {
 void GCreditsState::StartText() {
   AddProcess(new TextProcess());
 }
+#endif
+
