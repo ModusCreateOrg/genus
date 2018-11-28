@@ -9,7 +9,7 @@ env:
     # GITHUB_OAUTH_TOKEN
     - secure: "Tom3Fc8wFA1eWCaOdi7f9bAr+rcIyjZPt9Ksg6iCFZwHb8Vt54xIW0ZpPYL2rRGETuJrwZiRfRcx4V+g0Trpjx26tJlev+/R13kjVqLee9shdVBRVBRPAldm+KINlPNmwv9zd7YxADx8Ao6XzW4sa/xGySFhziNZnnaAOzHXLWGE6pjA0tqiNtyicp8yjZPyV1UMkqLZjju5tUdjl0SskMazaKHPOSWHMAzGYStGsctcuohT1cuDGrwe4tCvQ0Y69viMBmnj1UVg/oot2FEOsnpltT6Lofc1r+I7Dnz0QELzLIq53S69iCnlebAFJD+c1PZNGforUn3xi1asP6ajAU5zr/3Uuxz2Eiqc1YiPzwOKjqNzZQglMXC4mRdtzdndBn8pEutR1xp5XqfaoeoY+RlCHpH4kCCRjz/2AkBhwIJW0n8vkwPrHxz4xrKKB/EXBBLzxCwV04tOysfP/EG+K6OqRg2EgCd2PH3X1CApIIwtNYitOtU/7WK/SiZwiCzr3ScEWemC9T3bXU1ateF74zVchJPFBVLR+uFzKSYY+Ays8OPHCm3YPJNLByFnYWl5uF9idE3kSpjI+Ht8Fcu0RUjxpYGNdCB/37K7RtYHQdlL/FWgxwakxb7RmDwSlTtq6eXs1kZChvIoWlF+vyaloN1vsYU+WdLSO3Cu99xPYzw="
 before_install: git clone git@github.com:ModusCreateOrg/creative-engine.git
-before_script: find ./ -name '*.sh' | xargs shellcheck -x
+before_script: find . -name '*.sh' -exec bash -c 'shellcheck -x "$1"' -- {} \;
 script: "./scripts/build.sh"
 after_success: true # TODO: Generate docs here.
 deploy:
