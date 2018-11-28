@@ -6,13 +6,10 @@ BITMAP splash_sprites.bmp
 BITMAP menu_background.bmp
 BITMAP genus_logo.bmp
 BITMAP credits1.bmp
-BITMAP game_over1.bmp
 BITMAP game_over_sprites1.bmp
 BITMAP high_scores1.bmp
 BITMAP high_scores_animation1.bmp
-BITMAP main_menu1.bmp
 BITMAP main_options1.bmp
-BITMAP main_options_reset1.bmp
 
 BITMAP charset_8x8.bmp
 BITMAP charset_16x16.bmp
