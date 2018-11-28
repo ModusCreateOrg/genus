@@ -83,11 +83,11 @@ TBool GNoPowerup::MoveState() {
     return ETrue;
   }
 
-  if (gControls.WasPressed(BUTTONB)) {
-    RotateLeft();
-  } else if (gControls.WasPressed(BUTTONA)) {
+  if (gControls.WasPressed(BUTTONA)) {
     RotateRight();
-  } else if (TimedControl(JOYLEFT)) {
+//  } else if (gControls.WasPressed(BUTTONB)) {
+//    RotateLeft();
+  }else if (TimedControl(JOYLEFT)) {
     MoveLeft();
   } else if (TimedControl(JOYRIGHT)) {
     MoveRight();
@@ -97,7 +97,7 @@ TBool GNoPowerup::MoveState() {
     MoveDown();
   }
 
-  if (gControls.WasPressed(BUTTON_SELECT)) {
+  if (gControls.WasPressed(BUTTONB)) {
     if (CanDrop()) {
       if (Drop()) {
         // combined!
@@ -137,8 +137,8 @@ TBool GNoPowerup::TimerState() {
 
   if (gControls.WasPressed(BUTTONA)) {
     RotateLeft();
-  } else if (gControls.WasPressed(BUTTONB)) {
-    RotateRight();
+//  } else if (gControls.WasPressed(BUTTONB)) {
+//    RotateRight();
   } else if (TimedControl(JOYLEFT)) {
     MoveLeft();
   } else if (TimedControl(JOYRIGHT)) {
@@ -149,7 +149,7 @@ TBool GNoPowerup::TimerState() {
     MoveDown();
   }
 
-  if (gControls.WasPressed(BUTTON_SELECT)) {
+  if (gControls.WasPressed(BUTTONB)) {
     if (CanDrop()) {
       gSoundPlayer.SfxGoodDrop();
       Drop();
