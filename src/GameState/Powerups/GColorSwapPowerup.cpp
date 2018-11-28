@@ -119,7 +119,7 @@ TBool GColorSwapPowerup::StateMove() {
     MoveDown();
   }
 
-  if (gControls.WasPressed(BUTTON_SELECT)) {
+  if (gControls.WasPressed(BUTTONB)) {
     if (mGameBoard->mBoard[mPlayerSprite->BoardRow()][mPlayerSprite->BoardCol()] != 255) {
       Drop();
       mState = STATE_REMOVE;

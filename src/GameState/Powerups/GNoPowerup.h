@@ -18,7 +18,7 @@ protected:
   void Blink();
 
 public:
-  TBool RunBefore() { return ETrue; }
+  TBool RunBefore();
 
   TBool RunAfter();
 
