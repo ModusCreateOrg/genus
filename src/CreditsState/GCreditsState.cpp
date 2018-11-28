@@ -101,6 +101,7 @@ public:
       case STATE_LEAVE:
         return StateLeave();
     }
+    return ETrue;
   }
 
 protected:
