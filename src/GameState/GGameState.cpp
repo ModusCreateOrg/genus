@@ -64,7 +64,7 @@ GGameState::~GGameState() {
  * @param aCanPowerup true if Next piece can be a powerup
  */
 void GGameState::Next(TBool aCanPowerup) {
-  if (mGameOver) {
+  if (mGameOver || mGameBoard.IsGameOver()) {
     return;
   }
   mSprite->x = PLAYER_X;

@@ -177,9 +177,15 @@ TBool GNoPowerup::RemoveState() {
       mRemoveRow++;
       if (mRemoveRow >= BOARD_ROWS) {
         // all done, game resumes
-        mPlayerSprite->flags |= SFLAG_RENDER;
         gControls.dKeys = 0;  // in case user pressed a key during removing blocks
-        mState = STATE_MOVE;
+        if (mGameBoard->IsGameOver()) {
+          mState = STATE_WAIT;
+          mPlayerSprite->flags &= ~SFLAG_RENDER;
+        }
+        else {
+          mPlayerSprite->flags |= SFLAG_RENDER;
+          mState = STATE_MOVE;
+        }
         return ETrue;
       }
     }
@@ -202,11 +208,26 @@ TBool GNoPowerup::RemoveState() {
     }
     mRemoveCol++;
   }
-  mState = STATE_MOVE;
+  gControls.dKeys = 0;  // in case user pressed a key during removing blocks
+  if (mGameBoard->IsGameOver()) {
+    mState = STATE_WAIT;
+    mPlayerSprite->flags &= ~SFLAG_RENDER;
+  }
+  else {
+    mPlayerSprite->flags |= SFLAG_RENDER;
+    mState = STATE_MOVE;
+  }
   return ETrue;
 }
 
 TBool GNoPowerup::WaitState() {
+  return ETrue;
+}
+
+TBool GNoPowerup::RunBefore() {
+  if (mGameState->mGameOver) {
+    mPlayerSprite->flags &= ~SFLAG_RENDER;
+  }
   return ETrue;
 }
 
