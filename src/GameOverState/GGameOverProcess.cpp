@@ -25,6 +25,9 @@ GGameOverProcess::GGameOverProcess() : BProcess() {
     mInitialsPos = 0;
   } else {
     mState = STATE_HIGHSCORES;
+
+    // Spawn new message process
+    gGameEngine->AddProcess(new GGameOverHighScoreMessageProcess());
   }
 }
 
@@ -108,6 +111,9 @@ TBool GGameOverProcess::InitialsState() {
 
     // reset dKeys so next state doesn't react to any keys already pressed
     gControls.dKeys = 0;
+
+    // Spawn new message process
+    gGameEngine->AddProcess(new GGameOverHighScoreMessageProcess());
   }
   return ETrue;
 }
@@ -117,7 +123,6 @@ TBool GGameOverProcess::RunBefore() {
     case STATE_INITIALS:
       return InitialsState();
     case STATE_HIGHSCORES:
-      gGameEngine->AddProcess(new GGameOverHighScoreMessageProcess());
       return HighScoresState();
     default:
       Panic("GGameOverProcess: invalid mState: %d\n", mState);

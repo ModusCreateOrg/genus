@@ -1,13 +1,10 @@
 #include "GGameOverHighScoreMessageProcess.h"
 
-static const char *splash_message1 = "Press START button";
-static const char *splash_message2 = "";
-
 GGameOverHighScoreMessageProcess::GGameOverHighScoreMessageProcess() : BProcess() {
   mColor = 0;
   mState = STATE_FADEIN;
   mFont = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
-  mCurrentText = splash_message1;
+  mCurrentText = "Press START button";
 }
 
 GGameOverHighScoreMessageProcess::~GGameOverHighScoreMessageProcess() {
@@ -40,7 +37,6 @@ TBool GGameOverHighScoreMessageProcess::FadeOutState() {
   gDisplay.SetColor(COLOR_DIALOG_FG, mColor, mColor, mColor);
   if (mColor == 0) {
     mState = STATE_FADEIN;
-    mCurrentText = mCurrentText == splash_message1 ? splash_message2 : splash_message1;
   }
   return ETrue;
 }
