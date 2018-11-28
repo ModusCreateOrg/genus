@@ -41,7 +41,7 @@ function ensure_cmake {
     build=3
     tmpdir=$(mktemp -d)
     cmake="cmake-$version.$build-Linux-x86_64"
-    cd "$tmpdir" || exit 1
+    pushd "$tmpdir"
     curl -sSO "https://cmake.org/files/v$version/$cmake.sh"
     $SUDO mkdir /opt/cmake
     yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
@@ -70,13 +70,13 @@ function ensure_creative_engine {
 }
 
 function build {
-    cd "$BASE_DIR" || exit 1
+    pushd "$BASE_DIR"
     if [[ ! -d creative-engine ]]; then
         # rm -f creative-engine
         ln -sf ../creative-engine .
     fi
     mkdir -p "$BUILD_DIR"
-    cd "$BUILD_DIR" || exit 1
+    pushd "$BUILD_DIR"
     # pwd
     # ls -l
     # ls -l ..
@@ -95,17 +95,17 @@ function ensure_esp_idf {
 
     echo "Attempting to install XTENSA on: $OS"
 
-    cd "$BASE_DIR"
+    pushd "$BASE_DIR"
     OS="$(uname)"
     if [ "$OS" == "Darwin" ]; then
         cp sdkconfig.osx sdkconfig
         mkdir esp
-        cd esp
+        pushd esp
         git clone --recursive https://github.com/espressif/esp-idf.git
-        cd esp-idf
+        pushd esp-idf
         git submodule update --init --recursive
         export IDF_PATH="$BASE_DIR/esp/esp-idf"
-        python -m pip install --user -r $IDF_PATH/requirements.txt
+        python -m pip install --user -r "$IDF_PATH/requirements.txt"
     else
         echo "Can't install XTENSA on: $OS"
     fi
@@ -117,12 +117,12 @@ function build_xtensa {
         return
     fi
     ensure_esp_idf
-    if [ -z "$IDF_PATH" ]; then
+    if [[ -z "$IDF_PATH" ]]; then
         Echo "ESP_IDF is not installed!"
         return
     fi
 
-    cd "$BASE_DIR" || exit 1
+    pushd "$BASE_DIR"
 
     if [[ ! -d creative-engine ]]; then
         rm -f creative-engine
@@ -133,7 +133,7 @@ function build_xtensa {
 }
 
 function clean {
-    cd "$CREATIVE_ENGINE_DIR" || exit 1
+    pushd "$CREATIVE_ENGINE_DIR"
     git clean -fdx
     rm -rf "$BASE_DIR/build"
 }
@@ -146,69 +146,69 @@ function copy_sdl2_libs_to_app {
         export APP_CNT_DIR="$APP_DIR/Contents"
         export APP_RES_DIR="$APP_CNT_DIR/Resources"
         export APP_MACOSX_DIR="$APP_CNT_DIR/MacOS"
-        if [ -d $APP_DIR ]; then
-        	rm -rf $APP_MACOSX_DIR/libs
-        	mkdir -p $APP_MACOSX_DIR/libs
+        if [[ -d "$APP_DIR" ]]; then
+        	rm -rf "$APP_MACOSX_DIR/libs"
+        	mkdir -p "$APP_MACOSX_DIR/libs"
 
-            cp /usr/local/opt/sdl2/lib/libSDL2.dylib $APP_MACOSX_DIR/libs/
-            cp /usr/local/opt/sdl2_image/lib/libSDL2_image.dylib $APP_MACOSX_DIR/libs/
-            cp /usr/local/opt/libpng/lib/libpng.dylib $APP_MACOSX_DIR/libs/
-            cp /usr/local/opt/jpeg/lib/libjpeg.dylib $APP_MACOSX_DIR/libs/
-            cp /usr/local/opt/libtiff/lib/libtiff.dylib $APP_MACOSX_DIR/libs/
-            cp /usr/local/opt/webp/lib/libwebp.dylib $APP_MACOSX_DIR/libs/
-            chmod 755 $APP_MACOSX_DIR/libs/*
+            cp /usr/local/opt/sdl2/lib/libSDL2.dylib "$APP_MACOSX_DIR/libs/"
+            cp /usr/local/opt/sdl2_image/lib/libSDL2_image.dylib "$APP_MACOSX_DIR/libs/"
+            cp /usr/local/opt/libpng/lib/libpng.dylib "$APP_MACOSX_DIR/libs/"
+            cp /usr/local/opt/jpeg/lib/libjpeg.dylib "$APP_MACOSX_DIR/libs/"
+            cp /usr/local/opt/libtiff/lib/libtiff.dylib "$APP_MACOSX_DIR/libs/"
+            cp /usr/local/opt/webp/lib/libwebp.dylib "$APP_MACOSX_DIR/libs/"
+            chmod 0755 "$APP_MACOSX_DIR"/libs/*
 
             # FIX Genus
             install_name_tool -change \
             	/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
              	./libs/libSDL2.dylib \
-             	$APP_MACOSX_DIR/genus
+             	"$APP_MACOSX_DIR/genus"
             install_name_tool -change \
             	/usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib \
             	./libs/libSDL2_image.dylib \
-            	$APP_MACOSX_DIR/genus
+            	"$APP_MACOSX_DIR/genus"
 
             # FIX SDL2_image
             install_name_tool -change \
             	/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
             	./libs/libSDL2.dylib \
-            	$APP_MACOSX_DIR/libs/libSDL2_image.dylib
+            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
             install_name_tool -change \
             	/usr/local/opt/libpng/lib/libpng16.16.dylib \
             	./libs/libpng.dylib \
-            	$APP_MACOSX_DIR/libs/libSDL2_image.dylib
+            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
            	install_name_tool -change \
             	/usr/local/opt/jpeg/lib/libjpeg.9.dylib \
             	./libs/libjpeg.dylib \
-            	$APP_MACOSX_DIR/libs/libSDL2_image.dylib
+            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
             install_name_tool -change \
             	/usr/local/opt/libtiff/lib/libtiff.5.dylib \
             	./libs/libtiff.dylib \
-            	$APP_MACOSX_DIR/libs/libSDL2_image.dylib
+            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
             install_name_tool -change \
             	/usr/local/opt/webp/lib/libwebp.7.dylib \
             	./libs/libwebp.dylib \
-            	$APP_MACOSX_DIR/libs/libSDL2_image.dylib
+            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
 
             # FIX TIFF
             install_name_tool -change \
             	/usr/local/opt/jpeg/lib/libjpeg.9.dylib \
             	./libs/libjpeg.dylib \
-            	$APP_MACOSX_DIR/libs/libtiff.dylib
+            	"$APP_MACOSX_DIR/libs/libtiff.dylib"
 
             # CREATE WRAPPER
-            mv $APP_MACOSX_DIR/genus $APP_MACOSX_DIR/genus.bin
-            tee $APP_MACOSX_DIR/genus <<-"EOF"
+            mv "$APP_MACOSX_DIR/genus" "$APP_MACOSX_DIR/genus.bin"
+            tee "$APP_MACOSX_DIR/genus" <<-"EOF"
 				#!/usr/bin/env bash
 				MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
 				(cd $MY_DIR && ./genus.bin)
 				EOF
-            chmod 755 $BASE_DIR/build/genus.app/Contents/MacOS/genus
+            chmod 0755 "$BASE_DIR/build/genus.app/Contents/MacOS/genus"
 
             # INSTALL APP.PLIST & ETC
-            cp $BASE_DIR/resources/info.plist $APP_CNT_DIR
-            mkdir -p $APP_RES_DIR
-            cp $BASE_DIR/resources/GenusIcon.icns $APP_RES_DIR
+            cp "$BASE_DIR/resources/info.plist" "$APP_CNT_DIR"
+            mkdir -p "$APP_RES_DIR"
+            cp "$BASE_DIR/resources/GenusIcon.icns" "$APP_RES_DIR"
 
         fi
     fi
@@ -216,27 +216,28 @@ function copy_sdl2_libs_to_app {
 
 function checkout_creative_engine_branch {
     DEFAULT_BRANCH="master"
-    GENUS_BRANCH=$(git branch | grep \* | cut -d ' ' -f2)
-    cd "$BASE_DIR"
+    GENUS_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    pushd "$BASE_DIR"
     echo "The current genus branch is: $GENUS_BRANCH"
-    if (cd $CREATIVE_ENGINE_DIR && git checkout $GENUS_BRANCH); then
+    if (cd "$CREATIVE_ENGINE_DIR" && git checkout "$GENUS_BRANCH"); then
         echo "Checked out creatine-engine branch: $GENUS_BRANCH"
-    elif (cd $CREATIVE_ENGINE_DIR && git checkout $DEFAULT_BRANCH); then
+    elif (cd "$CREATIVE_ENGINE_DIR" && git checkout "$DEFAULT_BRANCH"); then
         echo "Checked out creatine-engine branch: $DEFAULT_BRANCH"
     else
         echo "Faied to checkout a branch for creatine-engine!"
         exit -1
     fi
+    popd
 }
 
 
 function archive_app {
     if [ "$OS" == "Darwin" ]; then
         echo "Archiving app"
-        cd "$BUILD_DIR"
+        pushd "$BUILD_DIR"
         # tar czvfp genus.tgz genus-docs genus.app Genus.bin Genus.elf Genus.map
         tar czvfp genus.tgz genus.app
         # ls -l
-        cd -
+        popd
     fi
 }
