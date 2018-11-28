@@ -25,7 +25,7 @@ GENUS_POWERUPS=$(GENUS_SRC_PATH)/GameState/Powerups
 
 EXTRA_COMPONENT_DIRS=${CREATIVE_ENGINE_PATH} ${PROJECT_PATH}/src $(GENUS_STATES) $(GENUS_POWERUPS)
 
-# include $(IDF_PATH)/make/project.mk
+include $(IDF_PATH)/make/project.mk
 
 # Temporary until RCOMP is folded into the music/sfx workflow
 gen_sound_headers: gen_music_headers gen_sfx_headers FORCE
