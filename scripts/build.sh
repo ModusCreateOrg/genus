@@ -66,9 +66,9 @@ elif [ "$OS" == "Darwin" ]; then
     brew upgrade cmake || true
 elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
-    if [[ -n "$(which apt-get 2>/dev/null)" ]]; then
+    if ! command -v apt-get >/dev/null 2>&1; then
         ensure_debian_devtools_installed
-    elif [[ -n "$(which pacman 2>/dev/null)" ]]; then
+    elif ! command -v pacman >/dev/null 2>&1; then
         ensure_arch_devtools_installed
     else
         echo "Only debian/ubuntu and arch Linux are supported targets, sorry."
