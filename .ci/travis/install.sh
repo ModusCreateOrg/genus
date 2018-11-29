@@ -39,7 +39,7 @@ esac
 # You can now do:
 #   $ GEN_GITHUB_HOSTNAME=github.com-alternative ./before_install.sh
 # That will cause Git to use the '~/.ssh/id_rsa-alternative.pub' key.
-if [[ ! -v GEN_GITHUB_HOSTNAME ]]; then
+if [[ -z "${GEN_GITHUB_HOSTNAME:-}" ]]; then
   GEN_GITHUB_HOSTNAME="github.com"
 fi
 git clone git@"$GEN_GITHUB_HOSTNAME":ModusCreateOrg/creative-engine.git
