@@ -32,7 +32,7 @@ set -o pipefail
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 # If using Travis, output is 0, else 1
-function using_travis? {
+function using_travis {
   if [[ "${TRAVIS:-}" == "true" ]]; then
     echo 0
   else
@@ -45,7 +45,7 @@ function using_travis? {
 function get_os {
   local -i on_travis
   local os
-  on_travis=$(using_travis?)
+  on_travis=$(using_travis)
 
   if [[ $on_travis -eq 0 ]]; then
     printf "%s" "$TRAVIS_OS_NAME"
