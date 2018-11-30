@@ -94,3 +94,7 @@ void GSoundPlayer::SfxExplodeBlock() {
 void GSoundPlayer::SfxOptionSelect() {
   PlaySfx(/*SFX_OPTION_SELECT_WAV*/6);
 }
+
+void GSoundPlayer::SfxMenuNav() {
+  PlaySfx(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/4);
+}
