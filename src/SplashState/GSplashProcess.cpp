@@ -63,8 +63,7 @@ void GSplashProcess::RenderText() {
 
 TBool GSplashProcess::RunAfter() {
   if (gControls.WasPressed(BUTTON_ANY)) { // } || --mTimer <= 0) {
-//    gGame->SetState(GAME_STATE_MAIN_MENU);
-    gGame->SetState(GAME_STATE_CREDITS);
+    gGame->SetState(GAME_STATE_MAIN_MENU);
     return EFalse;
   }
   switch (mState) {
