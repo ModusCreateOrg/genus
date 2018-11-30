@@ -8,6 +8,12 @@ public:
   GMainMenuState();
 
   virtual ~GMainMenuState();
+
+public:
+  BProcess *mMainMenuProcess;
+
+private:
+  BFont *mFont16;
 };
 
 #endif //GENUS_GMAINMENUSTATE_H

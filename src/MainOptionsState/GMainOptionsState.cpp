@@ -15,6 +15,13 @@ public:
       AddWidget((BWidget &) *new GResetWidget());
       AddWidget((BWidget &) *new GExitWidget());
     }
+
+    TBool Run() {
+      if (BDialogWidget::Run()) {
+        gSoundPlayer.SfxMenuNav();
+      }
+      return ETrue;
+    }
 };
 
 class GMainOptionsProcess : public BProcess {
@@ -35,7 +42,7 @@ public:
     }
 
     TBool RunAfter() {
-      if (gControls.WasPressed(BUTTON_MENU)) {
+      if (gControls.WasPressed(BUTTON_MENU | BUTTON_START)) {
         gGame->SetState(GAME_STATE_MAIN_MENU);
         return EFalse;
       }

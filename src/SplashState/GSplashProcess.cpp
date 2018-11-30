@@ -58,7 +58,7 @@ void GSplashProcess::RenderText() {
   }
   TInt width = TInt(strlen(mCurrentText) * 12);
   TInt x = (320-width)/2;
-  gDisplay.renderBitmap->DrawString(ENull, mCurrentText, mFont, x, 200, COLOR_TEXT, COLOR_TEXT_BG, -4);
+  gDisplay.renderBitmap->DrawString(ENull, mCurrentText, mFont, x, 200, COLOR_TEXT, -1, -4);
 }
 
 TBool GSplashProcess::RunAfter() {

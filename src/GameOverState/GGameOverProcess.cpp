@@ -1,5 +1,4 @@
 #include "GGameOverProcess.h"
-#include "GGameOverHighScoreMessageProcess.h"
 
 static const TInt16 NEW_SCORE_X = ((320 - (14 * 16)) / 2);
 static const TInt16 NEW_SCORE_Y = 50;
@@ -7,7 +6,7 @@ static const TInt16 NEW_SCORE_Y = 50;
 static const TInt16 INITIALS_X = ((320 - (NUM_INITIALS * 16)) / 2);
 static const TInt16 INITIALS_Y = NEW_SCORE_Y + 24;
 
-static const TInt16 TITLE_Y = 8;
+static const TInt16 TITLE_Y = 12;
 
 static const TInt16 HIGHSCORES_X = 50;
 static const TInt16 HIGHSCORES_Y = TITLE_Y + 32;
@@ -25,9 +24,6 @@ GGameOverProcess::GGameOverProcess() : BProcess() {
     mInitialsPos = 0;
   } else {
     mState = STATE_HIGHSCORES;
-
-    // Spawn new message process
-    gGameEngine->AddProcess(new GGameOverHighScoreMessageProcess());
   }
 }
 
@@ -56,10 +52,11 @@ TInt GGameOverProcess::CenterText16(const char *s, TInt aY, TInt aColor, TInt aB
 TBool GGameOverProcess::HighScoresState() {
   TInt y = TITLE_Y;
   y += CenterText16("HIGH SCORES", y);
+  y += TITLE_Y;
   y += CenterText8(gOptions->DifficultyString(), y);
-  y += 8;
+  y += TITLE_Y;
   mHighScoreTable.Render(gOptions->difficulty, 10, HIGHSCORES_X, y, mFont16, COLOR_TEXT, COLOR_TEXT_SHADOW);
-  if (gControls.WasPressed(BUTTON_START)) {
+  if (gControls.WasPressed(BUTTON_ANY)) {
     gGame->SetState(GAME_STATE_MAIN_MENU);
     return EFalse;
   }
@@ -111,9 +108,6 @@ TBool GGameOverProcess::InitialsState() {
 
     // reset dKeys so next state doesn't react to any keys already pressed
     gControls.dKeys = 0;
-
-    // Spawn new message process
-    gGameEngine->AddProcess(new GGameOverHighScoreMessageProcess());
   }
   return ETrue;
 }

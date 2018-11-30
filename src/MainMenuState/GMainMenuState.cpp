@@ -1,15 +1,50 @@
 #include "Game.h"
+#include "GStartWidget.h"
+#include "GOptionsWidget.h"
+#include "GCreditsWidget.h"
 
 static const TInt TIMEOUT = 30 * 5;
+static TBool RESET_TIMER = EFalse;
+
+class MenuContainer : public BDialogWidget {
+public:
+  MenuContainer(TInt aX, TInt aY) : BDialogWidget("Menu", aX, aY) {
+    AddWidget((BWidget &) *new GStartWidget());
+    AddWidget((BWidget &) *new GOptionsWidget());
+    AddWidget((BWidget &) *new GCreditsWidget());
+  }
+
+  TBool Run() {
+    if (BDialogWidget::Run()) {
+      RESET_TIMER = ETrue;
+      gSoundPlayer.SfxMenuNav();
+    } else {
+      RESET_TIMER = EFalse;
+    }
+    return ETrue;
+  }
+};
 
 class GMainMenuProcess : public BProcess {
 public:
   GMainMenuProcess() : BProcess() {
     mTimer = TIMEOUT;
+    mContainer = new MenuContainer(0, 0);
+  }
+
+  ~GMainMenuProcess() {
+    delete mContainer;
   }
 
 public:
   TBool RunBefore() {
+    mContainer->Render(120, 148);
+    mContainer->Run();
+
+    if (RESET_TIMER) {
+      mTimer = TIMEOUT;
+    }
+
     return ETrue;
   }
 
@@ -32,6 +67,7 @@ public:
 
 private:
   TInt mTimer;
+  MenuContainer *mContainer;
 };
 
 class GMainMenuPlayfield : public BPlayfield {
@@ -74,17 +110,16 @@ public:
   void Render() {
     gDisplay.renderBitmap->CopyPixels(mBackground);
     TInt w = mLogo->Width(), h = mLogo->Height();
-    TInt x = (320 - w) / 2;
+    TInt x = (SCREEN_WIDTH - w) / 2;
     TInt y = 60 ;
+
     gDisplay.renderBitmap->DrawBitmapTransparent(
       ENull,                      // ViewPort
       mLogo,                      // bitmap
       TRect(0, 0, w - 1, h - 1),  // src rect
       x, y                        // destination point
     );
-    y = 160;
-    y += CenterText16("Press Menu for Options", y, COLOR_TEXT) + 8;
-    CenterText16("Or Start to play", y, COLOR_TEXT);
+
     mState++;
   }
 
@@ -96,13 +131,29 @@ public:
 };
 
 GMainMenuState::GMainMenuState() : BGameEngine(gViewPort) {
+  mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
   mPlayfield = new GMainMenuPlayfield();
   auto *p = new GMainMenuProcess();
+  mMainMenuProcess = p;
+
   AddProcess(p);
+
+  gWidgetTheme.Configure(
+      WIDGET_TEXT_BG, COLOR_TEXT_BG,
+      WIDGET_TITLE_FONT, mFont16,
+      WIDGET_TITLE_FG, COLOR_TEXT,
+      WIDGET_TITLE_BG, -1,
+      WIDGET_WINDOW_BG, gDisplay.renderBitmap->TransparentColor(),
+      WIDGET_WINDOW_FG, gDisplay.renderBitmap->TransparentColor(),
+      WIDGET_END_TAG);
+
+  gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
+  gDisplay.SetColor(COLOR_TEXT_BG, 255, 92, 93);
 }
 
 GMainMenuState::~GMainMenuState() {
   delete mPlayfield;
+  delete mFont16;
   mPlayfield = ENull;
 }
 

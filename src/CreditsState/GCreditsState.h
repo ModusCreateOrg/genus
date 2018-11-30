@@ -11,10 +11,10 @@ public:
 
 public:
   void Render();
+
 protected:
   BBitmap *mBackground;
 };
-
 
 
 #endif //GENUS_GCREDITSSTATE_H
