@@ -114,7 +114,7 @@ TInt THighScoreTable::Render(TInt aDifficulty, TInt aCount, TInt aX, TInt aY, BF
   TBool checkPlayerHighScore = *lastScore[gOptions->difficulty] > 0;
 
   for (TInt i   = 0; i < aCount; i++) {
-    if (y + aFont->mHeight > 320) {
+    if (y + aFont->mHeight > SCREEN_HEIGHT) {
       break;
     }
 

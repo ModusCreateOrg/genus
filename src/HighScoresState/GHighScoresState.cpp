@@ -1,5 +1,4 @@
 #include "Game.h"
-#include "GHighScoreMessageProcess.h"
 #include "GHighScoreAnimationProcess.h"
 #include <string.h>
 
@@ -42,7 +41,7 @@ public:
   }
 
   TBool RunAfter() {
-    static const TInt16 TITLE_Y      = 8;
+    static const TInt16 TITLE_Y      = 12;
     static const TInt16 HIGHSCORES_X = 52;
 
     if (--mTimer < 0) {
@@ -50,20 +49,16 @@ public:
       return EFalse;
     }
 
-    if (gControls.WasPressed(BUTTON_MENU)) {
-      gGame->SetState(GAME_STATE_MAIN_OPTIONS);
-      return EFalse;
-    }
-
-    if (gControls.WasPressed(BUTTON_START)) {
-      gGame->SetState(GAME_STATE_GAME);
+    if (gControls.WasPressed(BUTTON_ANY)) {
+      gGame->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;
     }
 
     TInt y = TITLE_Y;
     y += CenterText16("HIGH SCORES", y);
+    y += TITLE_Y;
     y += CenterText8(gOptions->DifficultyString(), y);
-    y += 8;
+    y += TITLE_Y;
     mHighScoreTable.Render(gOptions->difficulty, 10, HIGHSCORES_X, y, mFont16, COLOR_TEXT, COLOR_TEXT_SHADOW);
 
     return ETrue;
@@ -102,7 +97,6 @@ public:
 GHighScoresState::GHighScoresState() : BGameEngine(gViewPort) {
   mPlayfield = new GHighScoresPlayfield();
   AddProcess(new GHighScoresProcess());
-  AddProcess(new GHighScoreMessageProcess());
   AddProcess(new GHighScoreAnimationProcess(this));
 }
 
