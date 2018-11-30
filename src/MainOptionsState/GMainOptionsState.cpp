@@ -15,6 +15,13 @@ public:
       AddWidget((BWidget &) *new GResetWidget());
       AddWidget((BWidget &) *new GExitWidget());
     }
+
+    TBool Run() {
+      if (BDialogWidget::Run()) {
+        gSoundPlayer.SfxMenuNav();
+      }
+      return ETrue;
+    }
 };
 
 class GMainOptionsProcess : public BProcess {
