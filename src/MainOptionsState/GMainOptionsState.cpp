@@ -15,9 +15,9 @@
 #define WIDGE_CONTAINER_Y 60
 #endif
 
-class OptionsContainer : public BDialogWidget {
+class OptionsContainer : public GDialogWidget {
 public:
-    OptionsContainer(TInt aX, TInt aY) : BDialogWidget("Options", aX, aY) {
+    OptionsContainer(TInt aX, TInt aY) : GDialogWidget("Options", aX, aY) {
       AddWidget((BWidget &) *new GDifficultyWidget());
 #ifdef __XTENSA__
       AddWidget((BWidget &) *new GBrightnessWidget());
@@ -26,13 +26,6 @@ public:
       AddWidget((BWidget &) *new GSfxWidget());
       AddWidget((BWidget &) *new GResetWidget());
       AddWidget((BWidget &) *new GExitWidget());
-    }
-
-    TBool Run() {
-      if (BDialogWidget::Run()) {
-        gSoundPlayer.SfxMenuNav();
-      }
-      return ETrue;
     }
 };
 

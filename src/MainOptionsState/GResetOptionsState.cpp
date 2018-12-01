@@ -4,9 +4,9 @@
 #include "GResetAllWidget.h"
 #include "GCancelResetWidget.h"
 
-class ResetOptionsContainer : public BDialogWidget {
+class ResetOptionsContainer : public GDialogWidget {
 public:
-    ResetOptionsContainer(TInt aX, TInt aY) : BDialogWidget("RESET GAME", aX, aY) {
+    ResetOptionsContainer(TInt aX, TInt aY) : GDialogWidget("RESET GAME", aX, aY) {
       AddWidget((BWidget &) *new GResetOptionsWidget());
       AddWidget((BWidget &) *new GResetHighScoresWidget());
       AddWidget((BWidget &) *new GResetAllWidget());

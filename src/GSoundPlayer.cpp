@@ -95,6 +95,10 @@ void GSoundPlayer::SfxOptionSelect() {
   PlaySfx(/*SFX_OPTION_SELECT_WAV*/6);
 }
 
-void GSoundPlayer::SfxMenuNav() {
+void GSoundPlayer::SfxMenuNavUp() {
+  PlaySfx(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/3);
+}
+
+void GSoundPlayer::SfxMenuNavDown() {
   PlaySfx(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/4);
 }

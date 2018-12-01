@@ -104,7 +104,6 @@ GHighScoresState::~GHighScoresState() {
   mFont = ENull;
   delete mPlayfield;
   mPlayfield = ENull;
-  gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
 }
 
 void GHighScoresState::PostRender() {
