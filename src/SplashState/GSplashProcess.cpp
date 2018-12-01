@@ -1,7 +1,7 @@
 #include "GSplashProcess.h"
 
-static const char *splash_message1 = "Happy Holidays 2018";
-static const char *splash_message2 = "Press a button";
+static const char *splash_message1 = "Happy Holidays";
+static const char *splash_message2 = "From Modus Create";
 
 GSplashProcess::GSplashProcess() : BProcess() {
   mColor = 0;
