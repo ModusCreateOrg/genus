@@ -4,7 +4,6 @@
 #include "GCreditsWidget.h"
 
 static const TInt TIMEOUT = 30 * 5;
-static TBool RESET_TIMER = EFalse;
 
 class MenuContainer : public BDialogWidget {
 public:
@@ -12,16 +11,6 @@ public:
     AddWidget((BWidget &) *new GStartWidget());
     AddWidget((BWidget &) *new GOptionsWidget());
     AddWidget((BWidget &) *new GCreditsWidget());
-  }
-
-  TBool Run() {
-    if (BDialogWidget::Run()) {
-      RESET_TIMER = ETrue;
-      gSoundPlayer.SfxMenuNav();
-    } else {
-      RESET_TIMER = EFalse;
-    }
-    return ETrue;
   }
 };
 
@@ -38,11 +27,14 @@ public:
 
 public:
   TBool RunBefore() {
+    TUint16 keys = gControls.dKeys;
+
     mContainer->Render(120, 148);
     mContainer->Run();
 
-    if (RESET_TIMER) {
+    if (keys & (JOYUP | JOYDOWN)) {
       mTimer = TIMEOUT;
+      gSoundPlayer.SfxMenuNav();
     }
 
     return ETrue;

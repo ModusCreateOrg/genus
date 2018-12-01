@@ -15,13 +15,6 @@ public:
       AddWidget((BWidget &) *new GResetWidget());
       AddWidget((BWidget &) *new GExitWidget());
     }
-
-    TBool Run() {
-      if (BDialogWidget::Run()) {
-        gSoundPlayer.SfxMenuNav();
-      }
-      return ETrue;
-    }
 };
 
 class GMainOptionsProcess : public BProcess {
@@ -36,8 +29,15 @@ public:
 
 public:
     TBool RunBefore() {
+      TUint16 keys = gControls.dKeys;
+
       mContainer->Render(30, 20);
       mContainer->Run();
+
+      if (keys & (JOYUP | JOYDOWN)) {
+        gSoundPlayer.SfxMenuNav();
+      }
+
       return ETrue;
     }
 
