@@ -7,7 +7,11 @@ GExitWidget::GExitWidget() : BButtonWidget("EXIT", COLOR_TEXT, COLOR_TEXT_BG) {}
 GExitWidget::~GExitWidget() {}
 
 TInt GExitWidget::Render(TInt aX, TInt aY) {
+#ifdef __XTENSA__
+  aY += 16;
+#else
   aY += 20;
+#endif
 
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
 

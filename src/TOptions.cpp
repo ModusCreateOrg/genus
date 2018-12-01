@@ -13,6 +13,7 @@ void TOptions::SetDefaults() {
   music = 0.5f;
   sfx = 0.875f;
   difficulty = 1;
+  brightness = 0.875f;
 }
 
 void TOptions::Reset(TBool aSave) {
