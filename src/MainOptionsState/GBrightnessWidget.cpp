@@ -17,9 +17,18 @@ TInt GBrightnessWidget::Render(TInt aX, TInt aY) {
 }
 
 void GBrightnessWidget::Select(TInt aVal) {
-  gOptions->brightness = aVal * 0.125;
+
+  gOptions->brightness = aVal * 0.125f;
   gOptions->Save();
 
-  // TODO: @Jay to implement SetBrightness
-  // gDisplay.SetBrightness(gOptions->brightness);
+#ifdef __XTENSA__
+   if (aVal < 1) {
+     aVal = 1;
+   }
+   else {
+     aVal += 2;
+   }
+
+   gDisplay.SetBrightness(0x1fff *  (aVal * .1));
+#endif
 }
