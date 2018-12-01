@@ -5,11 +5,11 @@
 
 class GMainMenuProcess;
 
-class GMainMenuContainer : public BDialogWidget {
+class GMainMenuContainer : public GDialogWidget {
 public:
   GMainMenuContainer(TInt aX, TInt aY, GMainMenuProcess *aProcess);
   ~GMainMenuContainer();
-  void Run();
+  TBool OnNavigate(TUint16 bits);
 
 public:
   GMainMenuProcess *mProcess;

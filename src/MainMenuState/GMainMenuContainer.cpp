@@ -4,24 +4,17 @@
 #include "GCreditsWidget.h"
 #include "GMainMenuProcess.h"
 
-GMainMenuContainer::GMainMenuContainer(TInt aX, TInt aY, GMainMenuProcess *aProcess) : BDialogWidget("Menu", aX, aY) {
+GMainMenuContainer::GMainMenuContainer(TInt aX, TInt aY, GMainMenuProcess *aProcess) : GDialogWidget("Menu", aX, aY) {
   mProcess = aProcess;
   AddWidget((BWidget &) *new GStartWidget());
   AddWidget((BWidget &) *new GOptionsWidget());
   AddWidget((BWidget &) *new GCreditsWidget());
 }
 
-GMainMenuContainer::~GMainMenuContainer() {
+GMainMenuContainer::~GMainMenuContainer() {}
 
-}
-
-void GMainMenuContainer::Run() {
-  TUint16 keys = gControls.dKeys;
-
-  BDialogWidget::Run();
-
-  if (keys & (JOYUP | JOYDOWN)) {
-    mProcess->ResetTimer();
-    gSoundPlayer.SfxMenuNav();
-  }
+TBool GMainMenuContainer::OnNavigate(TUint16 bits) {
+  GDialogWidget::OnNavigate(bits);
+  mProcess->ResetTimer();
+  return ETrue;
 }
