@@ -17,6 +17,7 @@ struct TOptions {
   TUint  difficulty;
   TFloat music;
   TFloat sfx;
+  TFloat brightness;
 
   TOptions();
 

@@ -37,12 +37,20 @@ TInt GSoundSliderWidget::RenderTitle(TInt aX, TInt aY, TBool aActive) {
       gWidgetTheme.GetInt(WIDGET_TITLE_BG),
       -6);
 
+#ifdef __XTENSA__
+  return f->mHeight;
+#else
   return f->mHeight + 4;
+#endif
 }
 
 TInt GSoundSliderWidget::Render(TInt aX, TInt aY) {
-  aY -= 20;
   aX += 82;
+#ifdef __XTENSA__
+  aY -= 16;
+#else
+  aY -= 20;
+#endif
 
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
   const TInt  fg = gWidgetTheme.GetInt(WIDGET_SLIDER_FG),
