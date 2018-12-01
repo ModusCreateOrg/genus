@@ -2,7 +2,6 @@
 #include "GMainMenuProcess.h"
 #include "GMainMenuPlayfield.h"
 
-
 GMainMenuState::GMainMenuState() : BGameEngine(gViewPort) {
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
   mPlayfield = new GMainMenuPlayfield();

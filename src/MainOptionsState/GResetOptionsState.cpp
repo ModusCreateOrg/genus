@@ -12,6 +12,16 @@ public:
       AddWidget((BWidget &) *new GResetAllWidget());
       AddWidget((BWidget &) *new GCancelResetWidget());
     }
+
+    void Run() {
+      TUint16 keys = gControls.dKeys;
+
+      BDialogWidget::Run();
+
+      if (keys & (JOYUP | JOYDOWN)) {
+        gSoundPlayer.SfxMenuNav();
+      }
+    }
 };
 
 class GResetOptionsProcess : public BProcess {

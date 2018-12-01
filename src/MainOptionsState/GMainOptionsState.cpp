@@ -27,6 +27,16 @@ public:
       AddWidget((BWidget &) *new GResetWidget());
       AddWidget((BWidget &) *new GExitWidget());
     }
+
+    void Run() {
+      TUint16 keys = gControls.dKeys;
+
+      BDialogWidget::Run();
+
+      if (keys & (JOYUP | JOYDOWN)) {
+        gSoundPlayer.SfxMenuNav();
+      }
+    }
 };
 
 class GMainOptionsProcess : public BProcess {
@@ -41,15 +51,8 @@ public:
 
 public:
     TBool RunBefore() {
-      TUint16 keys = gControls.dKeys;
-
       mContainer->Render(30, 20);
       mContainer->Run();
-
-      if (keys & (JOYUP | JOYDOWN)) {
-        gSoundPlayer.SfxMenuNav();
-      }
-
       return ETrue;
     }
 
