@@ -9,6 +9,9 @@ GGame::GGame() {
   // TODO: Jay - this needs to be in BApplication constructor (I think)
   gSoundPlayer.Init(4, 8);
 
+  // TODO: Jay - Init display brightness
+  // gDisplay.SetBrightness(gOptions->brightness);
+
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.CacheBitmapSlot(FONT_8x8_SLOT);
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
