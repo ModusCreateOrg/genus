@@ -39,13 +39,6 @@ GLevelCountryside::GLevelCountryside(GGameState *aGameEngine) {
   mBackground3 = gResourceManager.GetBitmap(BKG4_SLOT);
   mBackground4 = gResourceManager.GetBitmap(BKG5_SLOT);
   mBackground5 = gResourceManager.GetBitmap(BKG6_SLOT);
-
-  printf("mBackground0 dimensions: %i x %i\n", mBackground0->Width(), mBackground0->Height());
-  printf("mBackground1 dimensions: %i x %i\n", mBackground1->Width(), mBackground1->Height());
-  printf("mBackground2 dimensions: %i x %i\n", mBackground2->Width(), mBackground2->Height());
-  printf("mBackground3 dimensions: %i x %i\n", mBackground3->Width(), mBackground3->Height());
-  printf("mBackground4 dimensions: %i x %i\n", mBackground4->Width(), mBackground4->Height());
-  printf("mBackground4 dimensions: %i x %i\n", mBackground5->Width(), mBackground5->Height());
 #endif
 }
 
@@ -101,8 +94,6 @@ void GLevelCountryside::Animate() {
 
 void GLevelCountryside::Render() {
 
-//  printf("%i\n", gDisplay.renderBitmap->Height() - mBackground4->Height() + 1);
-//  memset(gDisplay.renderBitmap->mPixels, 0, 320*240); // debug purposes
 #ifdef STATIC_GAME_BACKGROUNDS
   gDisplay.renderBitmap->CopyPixels(mBackground0);
 #else

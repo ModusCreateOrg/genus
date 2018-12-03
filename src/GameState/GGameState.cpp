@@ -70,9 +70,6 @@ void GGameState::Next(TBool aCanPowerup) {
   mSprite->x = PLAYER_X;
   mSprite->y = PLAYER_Y;
   if (aCanPowerup) {
-    if (mBonusTimer > 0) {
-      printf("canPowerup with bonus timer running!\n");
-    }
     TInt maybe = Random(15, 20);
     if (maybe == 16) {
       mGameProcess->Wait();
@@ -206,8 +203,7 @@ void GGameState::RenderTimer() {
     const TFloat pct         = TFloat(mBonusTimer) / TFloat(mBonusTime);
     const TInt   width       = TInt(pct * timer_width);
     if (width > (TIMER_INNER.x2 - TIMER_INNER.x1 + 1)) {
-      printf("BUG!  mBonusTimer: %d, mBonusTime: %d\n", mBonusTimer, mBonusTime);
-      Panic("Aborting\n");
+      Panic("BUG!  mBonusTimer: %d, mBonusTime: %d\n", mBonusTimer, mBonusTime);
     }
     bm->FillRect(ENull, TIMER_INNER.x1, TIMER_INNER.y1, TIMER_INNER.x1 + width, TIMER_INNER.y2, COLOR_TIMER_INNER);
   }
