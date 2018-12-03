@@ -105,7 +105,7 @@ protected:
     y += RenderString("of the same color on", y);
     y += RenderString("the board.", y) + 16;
     y += RenderString("The matched blocks", y);
-    y += RenderString("turn dark and the.", y);
+    y += RenderString("turn dark and the", y);
     y += RenderString("timer starts.", y);
     return y;
   }
