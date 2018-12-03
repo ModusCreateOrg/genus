@@ -20,6 +20,9 @@ public:
   void Render() {
     gDisplay.renderBitmap->Clear();
     RenderString("HOW TO PLAY", 4);
+    gDisplay.renderBitmap->DrawString(ENull, "<", mFont, 0, 240-16, COLOR_TEXT, -1, -4);
+    gDisplay.renderBitmap->DrawString(ENull, ">", mFont, 320-16, 240-16, COLOR_TEXT, -1, -4);
+
   }
 
   BFont *mFont;
@@ -173,11 +176,13 @@ protected:
     mSprite->flags &= ~SFLAG_RENDER;
     TInt x = 160-48-16;
     TInt y = 40;
-    y += RenderString("When timer runs out,", y);
-    y += RenderString("the dark blocks are", y);
-    y += RenderString("removed from the board.", y)+16;
-    y += RenderString("The more blocks removed,", y);
-    y += RenderString("the higher your score.", y);
+    y += RenderString("Increase level by", y);
+    y += RenderString("removing enough", y);
+    y += RenderString("dark blocks.", y) + 16;
+    y += RenderString("Game is over when", y);
+    y += RenderString("the board has no", y);
+    y += RenderString("space to drop another", y);
+    y += RenderString("2x2.", y)+16;
     return y;
   }
 protected:
@@ -200,19 +205,23 @@ protected:
       case 4:
         Text5();
         break;
+      case 5:
+        Text6();
+        break;
     }
     if (gControls.WasPressed(JOYLEFT)) {
       mState--;
       if (mState < 0) {
-        mState = 4;
+        mState = 5;
       }
     }
     if (gControls.WasPressed(JOYRIGHT)) {
       mState++;
-      if (mState > 4) {
+      if (mState > 5) {
         mState = 0;
       }
     }
+    // TODO: michael - navigate to main screen
     return ETrue;
   }
 
