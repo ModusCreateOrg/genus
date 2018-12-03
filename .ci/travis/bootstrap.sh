@@ -67,3 +67,32 @@ function get_os {
     esac
   fi
 }
+
+function get_merge_release_filename {
+  shopt -s nocasematch
+  local pattern
+  pattern="(gen[^0-9]+[0-9]+)[^0-9]*"
+  if [[ "${TRAVIS_COMMIT_MESSAGE:-}" =~ $pattern ]]; then
+    local jira_ticket_id
+    # convert to upper case.
+    # NOTE: don't use anything fancy here since osx on Travis uses Bash 3.x so
+    #       version 4.x's way of doing this won't work here.
+    jira_ticket_id=$(echo "${BASH_REMATCH[1]}" | tr '[:lower:]' '[:upper:]')
+    jira_ticket_id="${jira_ticket_id}.app"
+    echo "${jira_ticket_id// /-}" # replace spaces with hyphens
+  else
+    echo "ERROR: Unable to get JIRA branch name from the merge to master."
+    set -x && exit 1
+  fi
+}
+
+function get_release_filename {
+  if [[ "${TRAVIS_BRANCH:-}" == "master" ]]; then
+    # On merge to 'master', generate [jira_ticket_id].app.tgz release.
+    # Ticket name can safely be assumed based on the regexp /(gen[^0-9]+[0-9]+)/i.
+    printf "%s" "$(get_merge_release_filename)"
+  elif [[ -n "${TRAVIS_TAG:-}" ]]; then
+    # On tag, generate [GIT_TAG].tgz release
+    printf "%s" "${TRAVIS_TAG}"
+  fi
+}
