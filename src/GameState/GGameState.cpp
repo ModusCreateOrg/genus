@@ -8,6 +8,40 @@
 #include "Playfields/GLevelUnderWaterFantasy.h"
 #include "Playfields/GLevelSpace.h"
 
+
+/***************************
+**DEBUG CODE PLEASE REMOVE**
+***************************/
+class GGameState;
+class ChickenModeProcess : public BProcess {
+  public:
+    ChickenModeProcess(GGameState *aState) : BProcess() {
+      mState = aState;
+    }
+
+    ~ChickenModeProcess() {}
+
+    TBool RunBefore() {
+      if (gControls.WasPressed(BUTTON_SELECT)) {
+        while (mState->mLevel % 5 > 0) {
+          mState->mLevel++;
+        }
+        mState->mBlocksRemaining = 0;
+      }
+      return ETrue;
+    }
+
+    TBool RunAfter() {
+      return ETrue;
+    }
+
+    GGameState *mState;
+};
+/***************************
+****** END DEBUG CODE ******
+***************************/
+
+
 /****************************************************************************************************************
  ****************************************************************************************************************
  ****************************************************************************************************************/
@@ -41,6 +75,15 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   mGameProcess = new GNoPowerup(mSprite, this);
   AddProcess(mGameProcess);
+
+/***************************
+**DEBUG CODE PLEASE REMOVE**
+***************************/
+  AddProcess(new ChickenModeProcess(this));
+/***************************
+****** END DEBUG CODE ******
+***************************/
+
   Next(EFalse);
 }
 

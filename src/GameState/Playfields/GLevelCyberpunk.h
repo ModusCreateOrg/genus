@@ -8,6 +8,12 @@
 #include "GameState/GGameState.h"
 #include "GScrollingLevel.h"
 
+class BuildingLights;
+class TowersLights;
+class ModusNeonLamp;
+class BottleNeonLamp;
+class ModusEasterEgg;
+
 class GLevelCyberpunk : public GScrollingLevel {
 public:
   GLevelCyberpunk(GGameState *aGameEngine);
@@ -31,6 +37,13 @@ public:
 #endif
 
   TUint8 mTextColor;
+
+  // Process list
+  BuildingLights *mBuildingLightsProcess;
+  TowersLights   *mTowerLightsProcess;
+  ModusNeonLamp  *mModusNeonLampProcess;
+  BottleNeonLamp *mBottleNeonLampProcess;
+  ModusEasterEgg *mModusEasterEggProcess;
 };
 
 
