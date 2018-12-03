@@ -30,6 +30,7 @@
 #include "MainOptionsState/GMainOptionsState.h"
 #include "MainOptionsState/GResetOptionsState.h"
 #include "CreditsState/GCreditsState.h"
+#include "RulesState/GRulesState.h"
 
 // globals
 extern BViewPort   *gViewPort;
