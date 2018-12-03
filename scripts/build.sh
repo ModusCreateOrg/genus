@@ -4,9 +4,6 @@
 
 # Set bash unofficial strict mode http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
-# our traps need access to some vars to do their job properly.
-set -o errtrace
-set -o functrace
 IFS=$'\n\t'
 
 # Enable for enhanced debugging
@@ -23,10 +20,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BASE_DIR="$DIR/.."
 BUILD_DIR="$BASE_DIR/build"
 TOP_DIR="$BASE_DIR/.."
-CREATIVE_ENGINE_DIR="${CREATIVE_ENGINE_PATH:-$TOP_DIR/creative-engine}"
+CREATIVE_ENGINE_DIR=${CREATIVE_ENGINE_PATH:-"$TOP_DIR/creative-engine"}
 export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
-# shellcheck source=scripts/common.sh
-source "$DIR/common.sh"
+#shellcheck disable=SC1090
+. "$DIR/common.sh"
 
 ######################### Main build ##################################
 
@@ -46,7 +43,7 @@ export SUDO
 case "$op" in
     clean)
         #clean Moved below installs because ArchLinux needs git installed first
-        ;;
+        ;;    
     docker-build)
         SKIP_TOOLS_INSTALL=true
         ;;
@@ -66,9 +63,9 @@ elif [ "$OS" == "Darwin" ]; then
     brew upgrade cmake || true
 elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
-    if ! command -v apt-get >/dev/null 2>&1; then
+    if [[ -n "$(which apt-get 2>/dev/null)" ]]; then
         ensure_debian_devtools_installed
-    elif ! command -v pacman >/dev/null 2>&1; then
+    elif [[ -n "$(which pacman 2>/dev/null)" ]]; then
         ensure_arch_devtools_installed
     else
         echo "Only debian/ubuntu and arch Linux are supported targets, sorry."
@@ -89,7 +86,7 @@ fi
 case "$op" in
     clean)
         clean
-        ;;
+        ;;    
     docker-build)
         clean
         ;;
@@ -107,3 +104,8 @@ copy_sdl2_libs_to_app
 
 # Archive the artifacts
 archive_app
+
+
+
+
+

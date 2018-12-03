@@ -22,7 +22,7 @@ BUILD_DIR="$BASE_DIR/build"
 TOP_DIR="$BASE_DIR/.."
 CREATIVE_ENGINE_DIR="$TOP_DIR/creative-engine"
 export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
-# shellcheck source=scripts/common.sh
+#shellcheck disable=SC1090
 . "$DIR/common.sh"
 
 ######################### Main build ##################################
