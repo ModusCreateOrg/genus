@@ -260,11 +260,18 @@ GLevelCyberpunk::GLevelCyberpunk(GGameState *aGameEngine) {
 
   mGameEngine = aGameEngine;
   mTextColor  = 0;
-  mGameEngine->AddProcess(new BuildingLights());
-  mGameEngine->AddProcess(new TowersLights());
-  mGameEngine->AddProcess(new ModusNeonLamp());
-  mGameEngine->AddProcess(new BottleNeonLamp());
-  mGameEngine->AddProcess(new ModusEasterEgg());
+
+  mBuildingLightsProcess = new BuildingLights();
+  mTowerLightsProcess = new TowersLights();
+  mModusNeonLampProcess = new ModusNeonLamp();
+  mBottleNeonLampProcess = new BottleNeonLamp();
+  mModusEasterEggProcess = new ModusEasterEgg();
+
+  mGameEngine->AddProcess(mBuildingLightsProcess);
+  mGameEngine->AddProcess(mTowerLightsProcess);
+  mGameEngine->AddProcess(mModusNeonLampProcess);
+  mGameEngine->AddProcess(mBottleNeonLampProcess);
+  mGameEngine->AddProcess(mModusEasterEggProcess);
 }
 
 GLevelCyberpunk::~GLevelCyberpunk()  {
@@ -272,11 +279,17 @@ GLevelCyberpunk::~GLevelCyberpunk()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
 #else
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-  gProcessList.Genocide();
 
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
 #endif
+
+  // Stop all processes
+  mBuildingLightsProcess->Remove();
+  mTowerLightsProcess->Remove();
+  mModusNeonLampProcess->Remove();
+  mBottleNeonLampProcess->Remove();
+  mModusEasterEggProcess->Remove();
 }
 
 
