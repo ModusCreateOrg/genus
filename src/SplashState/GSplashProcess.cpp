@@ -1,7 +1,7 @@
 #include "GSplashProcess.h"
 
-static const char *splash_message1 = "Happy Holidays 2018";
-static const char *splash_message2 = "Press a button";
+static const char *splash_message1 = "Happy Holidays";
+static const char *splash_message2 = "From Modus Create";
 
 GSplashProcess::GSplashProcess() : BProcess() {
   mColor = 0;
@@ -63,8 +63,7 @@ void GSplashProcess::RenderText() {
 
 TBool GSplashProcess::RunAfter() {
   if (gControls.WasPressed(BUTTON_ANY)) { // } || --mTimer <= 0) {
-//    gGame->SetState(GAME_STATE_MAIN_MENU);
-    gGame->SetState(GAME_STATE_CREDITS);
+    gGame->SetState(GAME_STATE_MAIN_MENU);
     return EFalse;
   }
   switch (mState) {

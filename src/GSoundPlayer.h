@@ -30,7 +30,8 @@ public:
   void SfxMoveBlock();
   void SfxExplodeBlock();
   void SfxOptionSelect();
-  void SfxMenuNav();
+  void SfxMenuNavUp();
+  void SfxMenuNavDown();
 };
 
 

@@ -19,6 +19,7 @@
 #include "GResources.h"
 #include "GGame.h"
 #include "TOptions.h"
+#include "GDialogWidget.h"
 
 // GGameEngine states
 #include "SplashState/GSplashState.h"
