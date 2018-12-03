@@ -2,7 +2,7 @@
 .*
 ~*
 
-# Include the Travis build config and it's scripts
+# Include the Travis build config and its scripts
 !.travis.yml
 !.ci
 
