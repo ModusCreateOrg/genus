@@ -31,6 +31,5 @@ TInt GStartWidget::Render(TInt aX, TInt aY) {
 }
 
 void GStartWidget::Select() {
-//  gGame->SetState(GAME_STATE_GAME);
-  gGame->SetState(GAME_STATE_RULES);
+  gGame->SetState(GAME_STATE_GAME);
 }

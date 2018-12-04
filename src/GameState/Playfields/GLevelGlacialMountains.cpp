@@ -20,7 +20,6 @@ GLevelGlacialMountains::GLevelGlacialMountains(GGameState *aGameEngine) {
 
 
 #ifdef STATIC_GAME_BACKGROUNDS
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(GLACIAL_MOUNTAINS_STATIC_BMP, BKG_SLOT, IMAGE_ENTIRE);
   mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
 

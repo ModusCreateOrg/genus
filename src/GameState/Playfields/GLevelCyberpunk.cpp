@@ -11,16 +11,28 @@
 
 /*************************************************************************/
 
-
-class BuildingLights : public BProcess {
+class CyberpunkProcess : public BProcess {
 public:
-  BuildingLights() : BProcess() {
+  CyberpunkProcess() : BProcess() {}
+  void Stop() {
+    mStopped = ETrue;
+  }
+  TBool mStopped = EFalse;
+};
+
+class BuildingLights : public CyberpunkProcess {
+public:
+  BuildingLights() : CyberpunkProcess() {
     mTimer = TIME;
     mColor = COLOR1;
   }
 
 public:
   TBool RunBefore() {
+    if (mStopped) {
+      return EFalse;
+    }
+
     if (--mTimer < 0) {
       mTimer = TIME;
       mColor = mColor == COLOR1 ? COLOR2 : COLOR1;
@@ -46,9 +58,9 @@ private:
 
 /*************************************************************************/
 
-class TowersLights : public BProcess {
+class TowersLights : public CyberpunkProcess {
 public:
-  TowersLights() : BProcess() {
+  TowersLights() : CyberpunkProcess() {
     mTimer  = TIME;
     mColor1 = COLOR1;
     mColor2 = COLOR2;
@@ -56,6 +68,10 @@ public:
 
 public:
   TBool RunBefore() {
+    if (mStopped) {
+      return EFalse;
+    }
+
     if (--mTimer < 0) {
       mTimer  = TIME;
       mColor1 = mColor1 == COLOR1 ? COLOR2 : COLOR1;
@@ -85,9 +101,9 @@ private:
 
 /*************************************************************************/
 
-class ModusNeonLamp : public BProcess {
+class ModusNeonLamp : public CyberpunkProcess {
 public:
-  ModusNeonLamp() : BProcess() {
+  ModusNeonLamp() : CyberpunkProcess() {
     mTimer  = TIME1;
     mColor1 = COLOR1;
     mColor2 = COLOR3;
@@ -95,6 +111,10 @@ public:
 
 public:
   TBool RunBefore() {
+    if (mStopped) {
+      return EFalse;
+    }
+
     if (--mTimer < 0) {
       mColor1 = mColor1 == COLOR1 ? COLOR2 : COLOR1;
       mColor2 = mColor2 == COLOR3 ? COLOR4 : COLOR3;
@@ -127,9 +147,9 @@ private:
 
 /*************************************************************************/
 
-class BottleNeonLamp : public BProcess {
+class BottleNeonLamp : public CyberpunkProcess {
 public:
-  BottleNeonLamp() : BProcess() {
+  BottleNeonLamp() : CyberpunkProcess() {
     mTimer  = TIME1;
     mColor1 = COLOR1;
     mColor2 = COLOR3;
@@ -139,6 +159,10 @@ public:
 
 public:
   TBool RunBefore() {
+    if (mStopped) {
+      return EFalse;
+    }
+
     if (--mTimer < 0) {
       mColor1 = mColor1 == COLOR1 ? COLOR2 : COLOR1;
       mColor2 = mColor2 == COLOR3 ? COLOR4 : COLOR3;
@@ -183,9 +207,9 @@ private:
 
 /*************************************************************************/
 
-class ModusEasterEgg : public BProcess {
+class ModusEasterEgg : public CyberpunkProcess {
 public:
-  ModusEasterEgg() : BProcess() {
+  ModusEasterEgg() : CyberpunkProcess() {
     mTimer  = TIME1;
     mColor1 = COLOR1;
     mColor2 = COLOR3;
@@ -194,6 +218,10 @@ public:
 
 public:
   TBool RunBefore() {
+    if (mStopped) {
+      return EFalse;
+    }
+
     if (--mTimer < 0) {
       mColor1 = mColor1 == COLOR1 ? COLOR2 : COLOR1;
       mColor2 = mColor2 == COLOR3 ? COLOR4 : COLOR3;
@@ -281,11 +309,11 @@ GLevelCyberpunk::~GLevelCyberpunk()  {
 #endif
 
   // Stop all processes
-  mBuildingLightsProcess->Remove();
-  mTowerLightsProcess->Remove();
-  mModusNeonLampProcess->Remove();
-  mBottleNeonLampProcess->Remove();
-  mModusEasterEggProcess->Remove();
+  mBuildingLightsProcess->Stop();
+  mTowerLightsProcess->Stop();
+  mModusNeonLampProcess->Stop();
+  mBottleNeonLampProcess->Stop();
+  mModusEasterEggProcess->Stop();
 }
 
 
