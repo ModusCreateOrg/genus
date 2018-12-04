@@ -8,6 +8,40 @@
 #include "Playfields/GLevelUnderWaterFantasy.h"
 #include "Playfields/GLevelSpace.h"
 
+
+/***************************
+**DEBUG CODE PLEASE REMOVE**
+***************************/
+class GGameState;
+class ChickenModeProcess : public BProcess {
+  public:
+    ChickenModeProcess(GGameState *aState) : BProcess() {
+      mState = aState;
+    }
+
+    ~ChickenModeProcess() {}
+
+    TBool RunBefore() {
+      if (gControls.WasPressed(BUTTON_SELECT)) {
+        while (mState->mLevel % 5 > 0) {
+          mState->mLevel++;
+        }
+        mState->mBlocksRemaining = 0;
+      }
+      return ETrue;
+    }
+
+    TBool RunAfter() {
+      return ETrue;
+    }
+
+    GGameState *mState;
+};
+/***************************
+****** END DEBUG CODE ******
+***************************/
+
+
 /****************************************************************************************************************
  ****************************************************************************************************************
  ****************************************************************************************************************/
@@ -41,6 +75,15 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   mGameProcess = new GNoPowerup(mSprite, this);
   AddProcess(mGameProcess);
+
+/***************************
+**DEBUG CODE PLEASE REMOVE**
+***************************/
+  AddProcess(new ChickenModeProcess(this));
+/***************************
+****** END DEBUG CODE ******
+***************************/
+
   Next(EFalse);
 }
 
@@ -70,9 +113,6 @@ void GGameState::Next(TBool aCanPowerup) {
   mSprite->x = PLAYER_X;
   mSprite->y = PLAYER_Y;
   if (aCanPowerup) {
-    if (mBonusTimer > 0) {
-      printf("canPowerup with bonus timer running!\n");
-    }
     TInt maybe = Random(15, 20);
     if (maybe == 16) {
       mGameProcess->Wait();
@@ -135,42 +175,41 @@ void GGameState::LoadLevel() {
         mBonusTime = 10 * 30;
         break;
     }
-    //
-    switch ((mLevel / 5) % 5) {
+
+    // Release only if bitmap was loaded
+    if (gResourceManager.GetBitmap(PLAYER_SLOT)) {
+      gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
+    }
+
+    switch ((mLevel / 5) % 6) {
       case 0:
         mPlayfield = new GLevelCountryside(this);
-        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(COUNTRYSIDE_XM);
         break;
       case 1:
         mPlayfield = new GLevelUnderWater1(this); // Playfield 2
-        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDER_WATER_XM);
         break;
       case 2:
         mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
-        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(GLACIAL_MOUNTAINS_XM);
         break;
       case 3:
         // TODO: @Jay???
         mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2    // temporary TODO: @Jay
-        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDER_WATER_XM);
         break;
       case 4:
         mPlayfield = new GLevelCyberpunk(this); // Playfield 5
-        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(CITY_SCAPES_XM);
         break;
       case 5:
         mPlayfield = new GLevelSpace(this); // Todo: @Mike, this is Level 6
-        gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
         gResourceManager.LoadBitmap(LEVEL6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SPAAACE_XM);
         break;
@@ -205,10 +244,6 @@ void GGameState::RenderTimer() {
     const TInt   timer_width = TIMER_INNER.x2 - TIMER_INNER.x1;
     const TFloat pct         = TFloat(mBonusTimer) / TFloat(mBonusTime);
     const TInt   width       = TInt(pct * timer_width);
-    if (width > (TIMER_INNER.x2 - TIMER_INNER.x1 + 1)) {
-      printf("BUG!  mBonusTimer: %d, mBonusTime: %d\n", mBonusTimer, mBonusTime);
-      Panic("Aborting\n");
-    }
     bm->FillRect(ENull, TIMER_INNER.x1, TIMER_INNER.y1, TIMER_INNER.x1 + width, TIMER_INNER.y2, COLOR_TIMER_INNER);
   }
 }

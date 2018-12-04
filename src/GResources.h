@@ -85,6 +85,9 @@ static const TUint8 COLOR_MENU_TITLE  = 251;
 static const TUint8 COLOR_TEXT        = 252;
 static const TUint8 COLOR_TEXT_SHADOW = 253;
 static const TUint8 COLOR_TEXT_BG     = 254;
-static const TUint8 COLOR_GAMEOVER    = 255;
+
+// special characters
+static const char *STR_LEFT_ARROW  = "\xf";
+static const char *STR_RIGHT_ARROW = "\xe";
 
 #endif //GRESOURCES_H

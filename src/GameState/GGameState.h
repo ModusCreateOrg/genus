@@ -65,10 +65,6 @@ public:
 public:
   void StartBonusTimer() {
     if (mBonusTimer < 0) {
-//      printf("StartBonusTimer %d\n", mBonusTime);
-      if (mBonusTime > 1000) {
-        printf("bad value\n");
-      }
       mBonusTimer = mBonusTime;
     }
   }

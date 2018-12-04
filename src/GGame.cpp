@@ -28,6 +28,7 @@ GGame::GGame() {
 }
 
 GGame::~GGame() {
+  delete gOptions;
   delete gGameEngine;
   delete gViewPort;
 }
@@ -76,6 +77,10 @@ void GGame::Run() {
         case GAME_STATE_CREDITS:
           delete gGameEngine;
           gGameEngine = new GCreditsState();
+          break;
+        case GAME_STATE_RULES:
+          delete gGameEngine;
+          gGameEngine = new GRulesState();
           break;
         default:
           continue;

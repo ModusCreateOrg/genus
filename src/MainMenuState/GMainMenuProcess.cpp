@@ -14,14 +14,13 @@ void GMainMenuProcess::ResetTimer() {
 }
 
 TBool GMainMenuProcess::RunBefore() {
-  mContainer->Render(120, 148);
+  mContainer->Render(120, 120);
   mContainer->Run();
   return ETrue;
 }
 
 TBool GMainMenuProcess::RunAfter() {
   if (gControls.WasPressed(BUTTON_START)) {
-    printf("Difficulty: %d\n", gOptions->difficulty);
     gGame->SetState(GAME_STATE_GAME);
     return EFalse;
   } else if (gControls.WasPressed(BUTTON_MENU)) {

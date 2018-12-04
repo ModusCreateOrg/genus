@@ -14,7 +14,7 @@ TOptions *gOptions;
 extern "C" void app_main() {
   gGame = new GGame();
   gGame->Run();
-  printf("Exiting\n");
+  delete gGame;
 }
 
 #ifndef __XTENSA__
