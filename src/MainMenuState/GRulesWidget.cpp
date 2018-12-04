@@ -1,11 +1,11 @@
-#include "GCreditsWidget.h"
+#include "GRulesWidget.h"
 #include "Game.h"
 
-GCreditsWidget::GCreditsWidget() : BButtonWidget("CREDITS", COLOR_TEXT, COLOR_TEXT_BG) {}
+GRulesWidget::GRulesWidget() : BButtonWidget("RULES", COLOR_TEXT, COLOR_TEXT_BG) {}
 
-GCreditsWidget::~GCreditsWidget() {}
+GRulesWidget::~GRulesWidget() {}
 
-TInt GCreditsWidget::Render(TInt aX, TInt aY) {
+TInt GRulesWidget::Render(TInt aX, TInt aY) {
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
 
   if (mActive) {
@@ -30,6 +30,6 @@ TInt GCreditsWidget::Render(TInt aX, TInt aY) {
   return f->mHeight + 10;
 }
 
-void GCreditsWidget::Select() {
-  gGame->SetState(GAME_STATE_CREDITS);
+void GRulesWidget::Select() {
+  gGame->SetState(GAME_STATE_RULES);
 }
