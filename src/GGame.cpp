@@ -28,6 +28,7 @@ GGame::GGame() {
 }
 
 GGame::~GGame() {
+  delete gOptions;
   delete gGameEngine;
   delete gViewPort;
 }

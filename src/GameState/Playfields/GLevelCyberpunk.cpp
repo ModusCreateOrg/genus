@@ -290,6 +290,12 @@ GLevelCyberpunk::~GLevelCyberpunk()  {
   mModusNeonLampProcess->Remove();
   mBottleNeonLampProcess->Remove();
   mModusEasterEggProcess->Remove();
+
+  delete mBuildingLightsProcess;
+  delete mTowerLightsProcess;
+  delete mModusNeonLampProcess;
+  delete mBottleNeonLampProcess;
+  delete mModusEasterEggProcess;
 }
 
 

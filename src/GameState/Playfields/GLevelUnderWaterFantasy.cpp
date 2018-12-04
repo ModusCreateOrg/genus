@@ -18,8 +18,6 @@
 
 
 GLevelUnderWaterFantasy::GLevelUnderWaterFantasy(GGameState *aGameEngine) {
-
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(UNDER_WATER_FANTASY_BMP, BKG_SLOT, IMAGE_ENTIRE);
 //  gResourceManager.LoadBitmap(UNDER_WATER_FANTASY0_BMP, BKG_SLOT, IMAGE_ENTIRE);
 //  gResourceManager.LoadBitmap(UNDER_WATER_FANTASY1_BMP, BKG2_SLOT, IMAGE_ENTIRE);
@@ -59,6 +57,7 @@ GLevelUnderWaterFantasy::~GLevelUnderWaterFantasy()  {
 
   delete mYOffset;
   delete mXComp;
+  delete mCanvasBitmap;
 }
 
 
