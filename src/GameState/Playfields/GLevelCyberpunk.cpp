@@ -33,10 +33,6 @@ public:
       return EFalse;
     }
 
-    if (mStopped) {
-      return EFalse;
-    }
-
     if (--mTimer < 0) {
       mTimer = TIME;
       mColor = mColor == COLOR1 ? COLOR2 : COLOR1;
@@ -72,10 +68,6 @@ public:
 
 public:
   TBool RunBefore() {
-    if (mStopped) {
-      return EFalse;
-    }
-
     if (mStopped) {
       return EFalse;
     }
