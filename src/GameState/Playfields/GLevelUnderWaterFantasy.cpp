@@ -43,11 +43,6 @@ GLevelUnderWaterFantasy::GLevelUnderWaterFantasy(GGameState *aGameEngine) {
   mFrame   = 0.0f;
   mXComp   = (int8_t *)AllocMem(320, MEMF_SLOW);
   mYOffset = (int8_t *)AllocMem(240, MEMF_SLOW);
-
-  printf("mBackground0 dimensions: %i x %i\n", mBackground0->Width(), mBackground0->Height());
-//  printf("mBackground1 dimensions: %i x %i\n", mBackground1->Width(), mBackground1->Height());
-//  printf("mBackground2 dimensions: %i x %i\n", mBackground2->Width(), mBackground2->Height());
-//  printf("mCanvasBitmap dimensions: %i x %i\n", mCanvasBitmap->Width(), mCanvasBitmap->Height());
 }
 
 GLevelUnderWaterFantasy::~GLevelUnderWaterFantasy()  {
@@ -185,7 +180,6 @@ void GLevelUnderWaterFantasy::DrawScrolledBackground(BBitmap *aBitmap, TFloat aO
 
 
     if (drawWidth == 0) {
-//      printf("drawWidth == 0!\n");
       return;
     }
 

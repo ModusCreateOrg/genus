@@ -15,7 +15,6 @@ extern "C" void app_main() {
   gGame = new GGame();
   gGame->Run();
   delete gGame;
-  printf("Exiting\n");
 }
 
 #ifndef __XTENSA__

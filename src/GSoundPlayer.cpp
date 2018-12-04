@@ -50,7 +50,6 @@ TBool GSoundPlayer::LoadEffects() {
   };
 
   for (uint8_t i = 0; i < 8; i++) {
-//    printf("loadEffect(%i)\n", i);
     LoadEffect(mEffectsList[i], i);
   }
   return ETrue;

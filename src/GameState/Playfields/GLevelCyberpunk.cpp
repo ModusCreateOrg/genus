@@ -252,10 +252,6 @@ GLevelCyberpunk::GLevelCyberpunk(GGameState *aGameEngine) {
   mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
   mBackground1 = gResourceManager.GetBitmap(BKG2_SLOT);
   mBackground2 = gResourceManager.GetBitmap(BKG3_SLOT);
-
-  printf("mBackground0 dimensions: %i x %i\n", mBackground0->Width(), mBackground0->Height());
-  printf("mBackground1 dimensions: %i x %i\n", mBackground1->Width(), mBackground1->Height());
-  printf("mBackground2 dimensions: %i x %i\n", mBackground2->Width(), mBackground2->Height());
 #endif
 
   mGameEngine = aGameEngine;
