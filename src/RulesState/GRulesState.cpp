@@ -1,44 +1,78 @@
 #include "Game.h"
 
+static const TUint8 ARROW_TIMER = 3;
+static const TUint8 BLOCK_TIMER = 15;
+static const TUint8 ARROW_X = 4;
+static const TUint8 BLOCK_X = 96;
+static const TUint8 BLOCK_Y = 50;
+static const TUint8 TEXT_Y = 100;
+
 class GRulesPlayfield : public BPlayfield {
 public:
   GRulesPlayfield() {
     mFont = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
+
+    gResourceManager.LoadBitmap(HIGH_SCORES1_BMP, BKG_SLOT, IMAGE_ENTIRE);
+    gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
+    gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+
+    mBackground = gResourceManager.GetBitmap(BKG_SLOT);
+    BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
+
+    gDisplay.SetPalette(mBackground, 0, 128);
+    gDisplay.SetPalette(playerBitmap, 128, 128);
+    gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
+    gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
+    gDisplay.SetColor(COLOR_TEXT_BG, 255, 92, 93);
   }
 
   ~GRulesPlayfield() {
     delete mFont;
+    gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+    gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
+    gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
   }
 
   TInt RenderString(const char *aString, TInt aY) {
     TInt width = TInt(strlen(aString) * 12);
     TInt x     = (SCREEN_WIDTH - width) / 2;
-    gDisplay.renderBitmap->DrawString(ENull, aString, mFont, x, aY, COLOR_TEXT, -1, -4);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, aString, mFont, x, aY, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -4);
     return 18;
   }
 
   void Render() {
-    gDisplay.renderBitmap->Clear();
-    RenderString("HOW TO PLAY", 4);
-    gDisplay.renderBitmap->DrawString(ENull, "<", mFont, 0, SCREEN_HEIGHT - mFont->mHeight, COLOR_TEXT, -1, -4);
-    gDisplay.renderBitmap->DrawString(ENull, ">", mFont, SCREEN_WIDTH - mFont->mWidth, SCREEN_HEIGHT - mFont->mHeight, COLOR_TEXT, -1, -4);
+    gDisplay.renderBitmap->CopyPixels(mBackground);
+    RenderString("HOW TO PLAY", 12);
 
+    // Left arrow
+    gDisplay.renderBitmap->DrawString(ENull, STR_LEFT_ARROW, mFont, ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mLeftArrowColor, -1);
+
+    // Right arrow
+    gDisplay.renderBitmap->DrawString(ENull, STR_RIGHT_ARROW, mFont, SCREEN_WIDTH - mFont->mWidth - ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mRightArrowColor, -1);
   }
 
   BFont *mFont;
+  BBitmap *mBackground;
+  TUint8 mLeftArrowColor = COLOR_TEXT;
+  TUint8 mRightArrowColor = COLOR_TEXT;
 };
 
 class RulesProcess : public BProcess {
 public:
-  RulesProcess(GRulesState *aRulesState) {
+  RulesProcess(GRulesState *aRulesState, GRulesPlayfield *aRulesPlayfield) {
+    mRulesState = aRulesState;
+    mRulesPlayfield = aRulesPlayfield;
+
     mFont   = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
     mSprite = new GPlayerSprite();
-    mSprite->x = 160 - 16;
-    mSprite->y = 48;
-    aRulesState->AddSprite(mSprite);
-    mState     = 0;
-    mNextTimer = 3 * 30;
-    mTimer     = 15;
+
+    mSprite->x = BLOCK_X + 48;
+    mSprite->y = BLOCK_Y;
+    mRulesState->AddSprite(mSprite);
+
+    mState      = 0;
+    mNextTimer  = 3 * 30;
+    mArrowTimer = 0;
   }
 
   ~RulesProcess() {
@@ -49,16 +83,16 @@ protected:
   TInt RenderString(const char *aString, TInt aY) {
     TInt width = TInt(strlen(aString) * 12);
     TInt x     = (SCREEN_WIDTH - width) / 2;
-    gDisplay.renderBitmap->DrawString(ENull, aString, mFont, x, aY, COLOR_TEXT, -1, -4);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, aString, mFont, x, aY, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -4);
     return 18;
   }
 
 protected:
   TInt Text1() {
     mSprite->flags |= SFLAG_RENDER;
-    TInt y = 96;
+    TInt y = TEXT_Y;
     y += RenderString("Move the 2x2 blocks", y);
-    y += RenderString("with the joystick.", y) + 32;
+    y += RenderString("with the joystick.", y) + 16;
     y += RenderString("Drop blocks on board", y);
     y += RenderString("with the A button.", y);
     return y;
@@ -66,13 +100,13 @@ protected:
 
   TInt Text2() {
     mSprite->flags |= SFLAG_RENDER;
-    TInt y = 96;
+    TInt y = TEXT_Y;
     y += RenderString("The B button rotates", y);
     y += RenderString("the blocks.", y);
     mTimer--;
     if (mTimer < 0) {
       mSprite->RotateRight();
-      mTimer = 15;
+      mTimer = BLOCK_TIMER;
     }
     return y;
   }
@@ -84,8 +118,8 @@ protected:
 
   TInt Text3() {
     mSprite->flags &= ~SFLAG_RENDER;
-    TInt x = 160-48;
-    TInt y = 40;
+    TInt x = BLOCK_X;
+    TInt y = BLOCK_Y;
     DrawBlock(0, x, y, 0, 0);
     DrawBlock(16, x, y, 0, 1);
     DrawBlock(21, x, y, 0, 2);
@@ -100,7 +134,7 @@ protected:
     DrawBlock(0, x, y, 1, 4);
     DrawBlock(16, x, y, 1, 5);
 
-    y = 88;
+    y = TEXT_Y;
     y += RenderString("Object is to get 2x2", y);
     y += RenderString("of the same color on", y);
     y += RenderString("the board.", y) + 16;
@@ -112,8 +146,8 @@ protected:
 
   TInt Text4() {
     mSprite->flags &= ~SFLAG_RENDER;
-    TInt x = 160-48-16;
-    TInt y = 40;
+    TInt x = BLOCK_X;
+    TInt y = BLOCK_Y;
     DrawBlock(0, x, y, 0, 0);
     DrawBlock(16, x, y, 0, 1);
     DrawBlock(21, x, y, 0, 2);
@@ -132,8 +166,7 @@ protected:
     DrawBlock(21, x, y, 1, 6);
     DrawBlock(21, x, y, 1, 7);
 
-
-    y = 88;
+    y = TEXT_Y;
     y += RenderString("Increase score by", y);
     y += RenderString("matching more while", y);
     y += RenderString("timer runs.", y);
@@ -142,8 +175,8 @@ protected:
 
   TInt Text5() {
     mSprite->flags &= ~SFLAG_RENDER;
-    TInt x = 160-48-16;
-    TInt y = 40;
+    TInt x = BLOCK_X;
+    TInt y = BLOCK_Y;
 
     DrawBlock(0, x, y, 0, 0);
     DrawBlock(16, x, y, 0, 1);
@@ -152,10 +185,10 @@ protected:
     DrawBlock(0, x, y, 1, 1);
     DrawBlock(0, x, y, 1, 4);
 
-    y = 88;
+    y = TEXT_Y;
     y += RenderString("When timer runs out,", y);
     y += RenderString("the dark blocks are", y);
-    y += RenderString("removed from the board.", y)+16;
+    y += RenderString("removed from the board.", y) + 16;
     y += RenderString("The more blocks removed,", y);
     y += RenderString("the higher your score.", y);
     return y;
@@ -163,15 +196,14 @@ protected:
 
   TInt Text6() {
     mSprite->flags &= ~SFLAG_RENDER;
-    TInt x = 160-48-16;
-    TInt y = 40;
+    TInt y = TEXT_Y - 36;
     y += RenderString("Increase level by", y);
     y += RenderString("removing enough", y);
     y += RenderString("dark blocks.", y) + 16;
     y += RenderString("Game is over when", y);
     y += RenderString("the board has no", y);
     y += RenderString("space to drop another", y);
-    y += RenderString("2x2.", y)+16;
+    y += RenderString("2x2.", y) + 16;
     return y;
   }
 protected:
@@ -199,12 +231,21 @@ protected:
         break;
     }
 
+    // Highlitght the arrows
+    if (!mArrowTimer--) {
+      mRulesPlayfield->mLeftArrowColor = COLOR_TEXT;
+      mRulesPlayfield->mRightArrowColor = COLOR_TEXT;
+    }
+
     // Previous screen
     if (gControls.WasPressed(JOYLEFT | JOYUP)) {
       mState--;
       if (mState < 0) {
         mState = 5;
       }
+      mArrowTimer = ARROW_TIMER;
+      mRulesPlayfield->mLeftArrowColor = COLOR_TEXT_BG;
+      gSoundPlayer.SfxMenuNavUp();
     }
 
     // Next screen
@@ -213,10 +254,13 @@ protected:
       if (mState > 5) {
         mState = 0;
       }
+      mArrowTimer = ARROW_TIMER;
+      mRulesPlayfield->mRightArrowColor = COLOR_TEXT_BG;
+      gSoundPlayer.SfxMenuNavDown();
     }
 
     // Exit
-    if (gControls.WasPressed(BUTTON_START)) {
+    if (gControls.WasPressed(BUTTON_ANY)) {
       gGame->SetState(GAME_STATE_MAIN_MENU);
       return EFalse;
     }
@@ -225,28 +269,17 @@ protected:
   }
 
 protected:
-  TInt          mState;
-  TInt          mNextTimer, mTimer;
-  BFont         *mFont;
-  GPlayerSprite *mSprite;
+  TInt            mState;
+  TInt            mNextTimer, mTimer, mArrowTimer;
+  BFont           *mFont;
+  GPlayerSprite   *mSprite;
+  GRulesState     *mRulesState;
+  GRulesPlayfield *mRulesPlayfield;
 };
 
 GRulesState::GRulesState() : BGameEngine(gViewPort) {
-  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-  gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
-  BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
-  // TODO: Jay - this logic can be moved to BPlayfield children
-  // this assumes BKG_SLOT bmp has the correct palette for the display
-  gDisplay.SetPalette(playerBitmap, 128, 128);
-  gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
-  gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
   mPlayfield = new GRulesPlayfield();
-  AddProcess(new RulesProcess(this));
+  AddProcess(new RulesProcess(this, (GRulesPlayfield*) mPlayfield));
 }
 
-GRulesState::~GRulesState() {
-  gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
-  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-}
-
+GRulesState::~GRulesState() {}
