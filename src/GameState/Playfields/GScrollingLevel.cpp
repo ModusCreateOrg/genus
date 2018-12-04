@@ -89,7 +89,6 @@ void GScrollingLevel::DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, 
 
 
     if (drawWidth == 0) {
-//      printf("drawWidth == 0!\n");
       return;
     }
 
