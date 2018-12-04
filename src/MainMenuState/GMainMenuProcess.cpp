@@ -21,8 +21,9 @@ TBool GMainMenuProcess::RunBefore() {
 
 TBool GMainMenuProcess::RunAfter() {
   if (gControls.WasPressed(BUTTON_START)) {
-    printf("Difficulty: %d\n", gOptions->difficulty);
-    gGame->SetState(GAME_STATE_GAME);
+    // @michael Fix this
+    gGame->SetState(GAME_STATE_RULES);
+//    gGame->SetState(GAME_STATE_GAME);
     return EFalse;
   } else if (gControls.WasPressed(BUTTON_MENU)) {
     gGame->SetState(GAME_STATE_MAIN_OPTIONS);

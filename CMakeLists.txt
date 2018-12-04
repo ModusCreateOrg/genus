@@ -90,7 +90,7 @@ add_executable(
     ${LIBXMP_SRC}
     ${CREATIVE_ENGINE}
     ${GENUS_SRC}
-)
+        src/RulesState/GRulesState.cpp src/RulesState/GRulesState.h)
 
 # make genus.app
 if (APPLE)
