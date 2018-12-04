@@ -12,7 +12,7 @@ public:
 
   TInt RenderString(const char *aString, TInt aY) {
     TInt width = TInt(strlen(aString) * 12);
-    TInt x     = (320 - width) / 2;
+    TInt x     = (SCREEN_WIDTH - width) / 2;
     gDisplay.renderBitmap->DrawString(ENull, aString, mFont, x, aY, COLOR_TEXT, -1, -4);
     return 18;
   }
@@ -20,8 +20,8 @@ public:
   void Render() {
     gDisplay.renderBitmap->Clear();
     RenderString("HOW TO PLAY", 4);
-    gDisplay.renderBitmap->DrawString(ENull, "<", mFont, 0, 240-16, COLOR_TEXT, -1, -4);
-    gDisplay.renderBitmap->DrawString(ENull, ">", mFont, 320-16, 240-16, COLOR_TEXT, -1, -4);
+    gDisplay.renderBitmap->DrawString(ENull, "<", mFont, 0, SCREEN_HEIGHT - mFont->mHeight, COLOR_TEXT, -1, -4);
+    gDisplay.renderBitmap->DrawString(ENull, ">", mFont, SCREEN_WIDTH - mFont->mWidth, SCREEN_HEIGHT - mFont->mHeight, COLOR_TEXT, -1, -4);
 
   }
 
@@ -48,7 +48,7 @@ public:
 protected:
   TInt RenderString(const char *aString, TInt aY) {
     TInt width = TInt(strlen(aString) * 12);
-    TInt x     = (320 - width) / 2;
+    TInt x     = (SCREEN_WIDTH - width) / 2;
     gDisplay.renderBitmap->DrawString(ENull, aString, mFont, x, aY, COLOR_TEXT, -1, -4);
     return 18;
   }
@@ -144,24 +144,13 @@ protected:
     mSprite->flags &= ~SFLAG_RENDER;
     TInt x = 160-48-16;
     TInt y = 40;
+
     DrawBlock(0, x, y, 0, 0);
     DrawBlock(16, x, y, 0, 1);
-//    DrawBlock(21, x, y, 0, 2);
-//    DrawBlock(21, x, y, 0, 3);
     DrawBlock(0, x, y, 0, 4);
-//    DrawBlock(21, x, y, 0, 5);
-//    DrawBlock(21, x, y, 0, 6);
-//    DrawBlock(21, x, y, 0, 7);
-
     DrawBlock(0, x, y, 1, 0);
     DrawBlock(0, x, y, 1, 1);
-//    DrawBlock(21, x, y, 1, 2);
-//    DrawBlock(21, x, y, 1, 3);
     DrawBlock(0, x, y, 1, 4);
-//    DrawBlock(21, x, y, 1, 5);
-//    DrawBlock(21, x, y, 1, 6);
-//    DrawBlock(21, x, y, 1, 7);
-
 
     y = 88;
     y += RenderString("When timer runs out,", y);
@@ -209,19 +198,29 @@ protected:
         Text6();
         break;
     }
-    if (gControls.WasPressed(JOYLEFT)) {
+
+    // Previous screen
+    if (gControls.WasPressed(JOYLEFT | JOYUP)) {
       mState--;
       if (mState < 0) {
         mState = 5;
       }
     }
-    if (gControls.WasPressed(JOYRIGHT)) {
+
+    // Next screen
+    if (gControls.WasPressed(JOYRIGHT | JOYDOWN)) {
       mState++;
       if (mState > 5) {
         mState = 0;
       }
     }
-    // TODO: michael - navigate to main screen
+
+    // Exit
+    if (gControls.WasPressed(BUTTON_START)) {
+      gGame->SetState(GAME_STATE_MAIN_MENU);
+      return EFalse;
+    }
+
     return ETrue;
   }
 
@@ -247,6 +246,7 @@ GRulesState::GRulesState() : BGameEngine(gViewPort) {
 }
 
 GRulesState::~GRulesState() {
-
+  gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
+  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
 }
 

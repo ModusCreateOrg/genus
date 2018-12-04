@@ -30,7 +30,7 @@ INCLUDE_DIRECTORIES(
         ${CMAKE_SOURCE_DIR}/src/MainMenuState
         ${CMAKE_SOURCE_DIR}/src/MainOptionsState
         ${CMAKE_SOURCE_DIR}/src/SplashState
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/RulesState
         ${CMAKE_BINARY_DIR} /usr/local/include
         ${CREATIVE_ENGINE_PATH}/src
         ${CREATIVE_ENGINE_PATH}/src/Widgets
@@ -90,7 +90,7 @@ add_executable(
     ${LIBXMP_SRC}
     ${CREATIVE_ENGINE}
     ${GENUS_SRC}
-        src/RulesState/GRulesState.cpp src/RulesState/GRulesState.h)
+)
 
 # make genus.app
 if (APPLE)
