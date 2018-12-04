@@ -15,6 +15,7 @@ GMainMenuPlayfield::GMainMenuPlayfield() {
 
 GMainMenuPlayfield::~GMainMenuPlayfield() {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
 }
 
 TInt GMainMenuPlayfield::CenterText8(const char *s, TInt aY, TInt aColor, TInt aBackground) {
@@ -37,7 +38,7 @@ void GMainMenuPlayfield::Render() {
   gDisplay.renderBitmap->CopyPixels(mBackground);
   TInt w = mLogo->Width(), h = mLogo->Height();
   TInt x = (SCREEN_WIDTH - w) / 2;
-  TInt y = 60 ;
+  TInt y = 36;
 
   gDisplay.renderBitmap->DrawBitmapTransparent(
       ENull,                      // ViewPort
