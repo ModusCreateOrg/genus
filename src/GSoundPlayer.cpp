@@ -18,6 +18,7 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
   PlayMusic(EMPTYSONG_XM);
   SetMusicVolume(gOptions->music);
   SetEffectsVolume(gOptions->sfx);
+  MuteMusic(gOptions->muted);
 }
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
