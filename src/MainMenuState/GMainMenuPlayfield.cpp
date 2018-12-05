@@ -16,6 +16,8 @@ GMainMenuPlayfield::GMainMenuPlayfield() {
 GMainMenuPlayfield::~GMainMenuPlayfield() {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
+  delete mFont8;
+  delete mFont16;
 }
 
 TInt GMainMenuPlayfield::CenterText8(const char *s, TInt aY, TInt aColor, TInt aBackground) {
