@@ -12,23 +12,18 @@ GBrightnessWidget::GBrightnessWidget() : GSoundSliderWidget("SCREEN", &brightnes
 GBrightnessWidget::~GBrightnessWidget() {}
 
 TInt GBrightnessWidget::Render(TInt aX, TInt aY) {
-  mSelectedValue = gOptions->brightness / 0.125;
+  mSelectedValue = MAX(0, (gOptions->brightness / 0.125) - 2);
   return GSoundSliderWidget::Render(aX, aY);
 }
 
 void GBrightnessWidget::Select(TInt aVal) {
-
+  aVal = MAX(1, aVal + 2);
   gOptions->brightness = aVal * 0.125f;
   gOptions->Save();
 
 #ifdef __XTENSA__
-   if (aVal < 1) {
-     aVal = 1;
-   }
-   else {
-     aVal += 2;
-   }
-
-   gDisplay.SetBrightness(0x1fff *  (aVal * .1));
+  // This widget shouldn't be added to non-xtensa devices
+  // but let's be safe just in case
+  gDisplay.SetBrightness(0x1fff * gOptions->brightness);
 #endif
 }

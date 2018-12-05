@@ -6,11 +6,12 @@ GGame::GGame() {
   // Load Game Options
   gOptions = new TOptions();
 
+#ifdef __XTENSA__
+  gDisplay.SetBrightness(0x1fff * gOptions->brightness);
+#endif
+
   // TODO: Jay - this needs to be in BApplication constructor (I think)
   gSoundPlayer.Init(4, 8);
-
-  // TODO: Jay - Init display brightness
-  // gDisplay.SetBrightness(gOptions->brightness);
 
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.CacheBitmapSlot(FONT_8x8_SLOT);
