@@ -1,5 +1,8 @@
 #include "GDifficultyWidget.h"
 
+// special characters
+static const char *STR_RIGHT_ARROW = "\xe";
+
 static const TSelectOption difficulty_options[] = {
     {gOptions->DifficultyString(EFalse, DIFFICULTY_EASY), 1},
     {gOptions->DifficultyString(EFalse, DIFFICULTY_INTERMEDIATE), 2},
@@ -24,7 +27,7 @@ TInt GDifficultyWidget::RenderTitle(TInt aX, TInt aY, TBool aActive) {
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
-        "\xe",
+        STR_RIGHT_ARROW,
         f,
         aX - 16, aY,
         gWidgetTheme.GetInt(WIDGET_TEXT_BG),

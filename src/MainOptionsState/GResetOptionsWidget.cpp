@@ -1,6 +1,9 @@
 #include "GResetOptionsWidget.h"
 #include "Game.h"
 
+// special characters
+static const char *STR_RIGHT_ARROW = "\xe";
+
 GResetOptionsWidget::GResetOptionsWidget() : BButtonWidget("OPTIONS", COLOR_TEXT, COLOR_TEXT_BG) {}
 
 GResetOptionsWidget::~GResetOptionsWidget() {}
@@ -10,7 +13,7 @@ TInt GResetOptionsWidget::Render(TInt aX, TInt aY) {
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
-        "\xe",
+        STR_RIGHT_ARROW,
         f,
         aX - 16, aY,
         gWidgetTheme.GetInt(WIDGET_TEXT_BG),
