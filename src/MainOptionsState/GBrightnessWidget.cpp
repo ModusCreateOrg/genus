@@ -5,6 +5,11 @@ static const TRange brightness_options = {
   0, 8, 1
 };
 
+#ifdef __XTENSA__
+static const TInt MAX_BRIGHTNESS = 0x1fff;
+static const TInt MIN_BRIGHTNESS = 0x50;
+#endif
+
 GBrightnessWidget::GBrightnessWidget() : GSoundSliderWidget("SCREEN", &brightness_options, COLOR_TEXT, COLOR_TEXT_BG) {
   mHeight = 24;
 }
@@ -17,18 +22,12 @@ TInt GBrightnessWidget::Render(TInt aX, TInt aY) {
 }
 
 void GBrightnessWidget::Select(TInt aVal) {
-
   gOptions->brightness = aVal * 0.125f;
   gOptions->Save();
 
 #ifdef __XTENSA__
-   if (aVal < 1) {
-     aVal = 1;
-   }
-   else {
-     aVal += 2;
-   }
-
-   gDisplay.SetBrightness(0x1fff *  (aVal * .1));
+  // This widget shouldn't be added to non-xtensa devices
+  // but let's be safe just in case
+  gDisplay.SetBrightness(MAX(MIN_BRIGHTNESS, MAX_BRIGHTNESS * gOptions->brightness));
 #endif
 }
