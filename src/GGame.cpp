@@ -18,6 +18,11 @@ GGame::GGame() {
   // TODO: Jay - this needs to be in BApplication constructor (I think)
   gSoundPlayer.Init(4, 8);
 
+  // preload bitmaps
+  for (TInt16 slot=0; slot<26; slot++) {  // 26 is the last BMP in Resources.h (plus one)
+    gResourceManager.PreloadBitmap(slot);
+  }
+
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.CacheBitmapSlot(FONT_8x8_SLOT);
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
