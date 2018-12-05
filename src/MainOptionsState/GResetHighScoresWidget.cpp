@@ -2,6 +2,9 @@
 #include "Game.h"
 #include "THighScoreTable.h"
 
+// special characters
+static const char *STR_RIGHT_ARROW = "\xe";
+
 GResetHighScoresWidget::GResetHighScoresWidget() : BButtonWidget("HIGHSCORES", COLOR_TEXT, COLOR_TEXT_BG) {}
 
 GResetHighScoresWidget::~GResetHighScoresWidget() {}
@@ -11,7 +14,7 @@ TInt GResetHighScoresWidget::Render(TInt aX, TInt aY) {
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
-        "\xe",
+        STR_RIGHT_ARROW,
         f,
         aX - 16, aY,
         gWidgetTheme.GetInt(WIDGET_TEXT_BG),

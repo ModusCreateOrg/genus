@@ -2,6 +2,9 @@
 #include "Game.h"
 #include "THighScoreTable.h"
 
+// special characters
+static const char *STR_RIGHT_ARROW = "\xe";
+
 GResetWidget::GResetWidget() : BButtonWidget("RESET GAME", COLOR_TEXT, COLOR_TEXT_BG) {}
 
 GResetWidget::~GResetWidget() {}
@@ -11,7 +14,7 @@ TInt GResetWidget::Render(TInt aX, TInt aY) {
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
-        "\xe",
+        STR_RIGHT_ARROW,
         f,
         aX - 16, aY,
         gWidgetTheme.GetInt(WIDGET_TEXT_BG),
