@@ -107,7 +107,8 @@ GGameState::~GGameState() {
  * @param aCanPowerup true if Next piece can be a powerup
  */
 void GGameState::Next(TBool aCanPowerup) {
-  if (mGameOver || mGameBoard.IsGameOver()) {
+  if (mGameOver) { //  || mGameBoard.IsGameOver()) {
+    // TODO @michaeltintiuc I think this fixes the bugs, but causes sprite to show for a split second before game over
     return;
   }
   mSprite->x = PLAYER_X;
