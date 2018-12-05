@@ -33,8 +33,8 @@ GLevelUnderWater1::GLevelUnderWater1(GGameState *aGameEngine) {
 GLevelUnderWater1::~GLevelUnderWater1()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
 
-  delete mYOffset;
-  delete mXComp;
+  FreeMem(mYOffset);
+  FreeMem(mXComp);
 }
 
 void GLevelUnderWater1::Animate() {

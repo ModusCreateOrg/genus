@@ -50,8 +50,8 @@ GLevelUnderWaterFantasy::~GLevelUnderWaterFantasy()  {
   // gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
   // gResourceManager.ReleaseBitmapSlot(BKG3_SLOT);
 
-  delete mYOffset;
-  delete mXComp;
+  FreeMem(mYOffset);
+  FreeMem(mXComp);
   delete mCanvasBitmap;
 }
 
