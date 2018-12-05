@@ -2,15 +2,21 @@
 
 static TUint32 start;
 
+#ifdef __XTENSA__
+static const TInt MAX_BRIGHTNESS = 0x1fff;
+static const TInt MIN_BRIGHTNESS = 0x50;
+#endif
+
 GGame::GGame() {
   // Load Game Options
   gOptions = new TOptions();
 
+#ifdef __XTENSA__
+  gDisplay.SetBrightness(MAX(MIN_BRIGHTNESS, MAX_BRIGHTNESS * gOptions->brightness));
+#endif
+
   // TODO: Jay - this needs to be in BApplication constructor (I think)
   gSoundPlayer.Init(4, 8);
-
-  // TODO: Jay - Init display brightness
-  // gDisplay.SetBrightness(gOptions->brightness);
 
   gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
   gResourceManager.CacheBitmapSlot(FONT_8x8_SLOT);

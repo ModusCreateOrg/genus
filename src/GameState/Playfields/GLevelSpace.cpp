@@ -44,17 +44,15 @@ GLevelSpace::GLevelSpace(GGameState *aGameEngine) {
     );
   }
 
-
-  gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
   gResourceManager.LoadBitmap(SPACE_STATIC_TOP_LEFT_BMP, BKG_SLOT, IMAGE_ENTIRE);
   gResourceManager.LoadBitmap(SPACE_STATIC_BOTTOM_RIGHT_BMP, BKG2_SLOT, IMAGE_ENTIRE);
 
   mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
   mBackground1 = gResourceManager.GetBitmap(BKG2_SLOT);
-
 }
 
 GLevelSpace::~GLevelSpace()  {
+  FreeMem(mStars);
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
   gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
 }

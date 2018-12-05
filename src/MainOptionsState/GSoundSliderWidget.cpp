@@ -1,6 +1,9 @@
 #include "GSoundSliderWidget.h"
 #include "Game.h"
 
+// special characters
+static const char *STR_RIGHT_ARROW = "\xe";
+
 GSoundSliderWidget::GSoundSliderWidget(char *aTitle, const TRange *aRange, TInt aForeground, TInt aBackground)
     : BSliderWidget(aTitle, aRange, aForeground, aBackground) {
 }
@@ -20,7 +23,7 @@ TInt GSoundSliderWidget::RenderTitle(TInt aX, TInt aY, TBool aActive) {
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
-        "\xe",
+        STR_RIGHT_ARROW,
         f,
         aX - 16, aY,
         gWidgetTheme.GetInt(WIDGET_TEXT_BG),
