@@ -78,8 +78,6 @@ TBool GNoPowerup::MoveState() {
 
   if (mGameBoard->IsGameOver()) {
     mGameState->GameOver();
-    mState = STATE_WAIT;
-    mPlayerSprite->flags &= SFLAG_RENDER | SFLAG_ANIMATE;
     return ETrue;
   }
 

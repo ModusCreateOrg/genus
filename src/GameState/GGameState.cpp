@@ -136,8 +136,9 @@ void GGameState::Next(TBool aCanPowerup) {
  ****************************************************************************************************************/
 
 void GGameState::GameOver() {
-  mSprite->flags &= ~SFLAG_RENDER | SFLAG_ANIMATE;
+  mSprite->flags &= ~(SFLAG_RENDER | SFLAG_ANIMATE);
   mGameProcess->Wait();
+  mBonusTimer = -1;
   mGameOver = ETrue;
   AddProcess(new GGameStateGameOverProcess(this));
   THighScoreTable h;
