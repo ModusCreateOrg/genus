@@ -2,12 +2,17 @@
 
 static TUint32 start;
 
+#ifdef __XTENSA__
+static const TInt MAX_BRIGHTNESS = 0x1fff;
+static const TInt MIN_BRIGHTNESS = 0x50;
+#endif
+
 GGame::GGame() {
   // Load Game Options
   gOptions = new TOptions();
 
 #ifdef __XTENSA__
-  gDisplay.SetBrightness(0x1fff * gOptions->brightness);
+  gDisplay.SetBrightness(MAX(MIN_BRIGHTNESS, MAX_BRIGHTNESS * gOptions->brightness));
 #endif
 
   // TODO: Jay - this needs to be in BApplication constructor (I think)
