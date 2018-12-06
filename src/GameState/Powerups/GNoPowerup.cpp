@@ -207,13 +207,8 @@ TBool GNoPowerup::RemoveState() {
     mRemoveCol++;
   }
   gControls.dKeys = 0;  // in case user pressed a key during removing blocks
-  if (mGameBoard->IsGameOver()) {
-    mGameState->GameOver();
-  }
-  else {
     mPlayerSprite->flags |= SFLAG_RENDER;
     mState = STATE_MOVE;
-  }
   return ETrue;
 }
 
