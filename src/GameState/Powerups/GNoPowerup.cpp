@@ -29,14 +29,16 @@ void GNoPowerup::Signal() {
 }
 
 TBool GNoPowerup::CanDrop() {
-  TInt row = mPlayerSprite->BoardRow(),
-       col = mPlayerSprite->BoardCol();
+  TBool overlaps = EFalse;
+  TInt row       = mPlayerSprite->BoardRow(),
+       col       = mPlayerSprite->BoardCol();
 
-  if (mGameBoard->mBoard[row][col] != 255 || mGameBoard->mBoard[row][col + 1] != 255 ||
-      mGameBoard->mBoard[row + 1][col] != 255 || mGameBoard->mBoard[row + 1][col + 1] != 255) {
-    return EFalse;
-  }
-  return ETrue;
+  overlaps |= mPlayerSprite->mBlocksOverlap[0] = mGameBoard->mBoard[row][col] != 255;
+  overlaps |= mPlayerSprite->mBlocksOverlap[1] = mGameBoard->mBoard[row][col + 1] != 255;
+  overlaps |= mPlayerSprite->mBlocksOverlap[2] = mGameBoard->mBoard[row + 1][col] != 255;
+  overlaps |= mPlayerSprite->mBlocksOverlap[3] = mGameBoard->mBoard[row + 1][col + 1] != 255;
+
+  return !overlaps;
 }
 
 
