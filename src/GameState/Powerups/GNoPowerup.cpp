@@ -190,7 +190,7 @@ TBool GNoPowerup::RemoveState() {
         // all done, game resumes
         gControls.dKeys = 0;  // in case user pressed a key during removing blocks
         mPlayerSprite->flags |= SFLAG_RENDER;
-        mGameState->Next(EFalse);
+//        mGameState->Next(EFalse);
         mState = STATE_MOVE;
         return ETrue;
       }
@@ -217,7 +217,7 @@ TBool GNoPowerup::RemoveState() {
   gControls.dKeys = 0;  // in case user pressed a key during removing blocks
   mPlayerSprite->flags |= SFLAG_RENDER;
   mState = STATE_MOVE;
-  mGameState->Next(EFalse);
+//  mGameState->Next(EFalse);
   return ETrue;
 }
 
