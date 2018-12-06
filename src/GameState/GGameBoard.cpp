@@ -146,4 +146,12 @@ TBool GGameBoard::IsGameOver() {
   return ETrue;
 }
 
-
+void GGameBoard::Dump() {
+  for (TInt row = 0; row < BOARD_ROWS; row++) {
+    printf("Row %2d: ", row);
+    for (TInt col = 0; col < BOARD_COLS; col++) {
+      printf("%3d ", mBoard[row][col]);
+    }
+    printf("\n");
+  }
+}

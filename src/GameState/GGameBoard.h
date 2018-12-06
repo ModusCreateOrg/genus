@@ -73,6 +73,8 @@ public:
 
   TBool IsGameOver();
 
+  void Dump();
+
 public:
   TUint8 mBoard[BOARD_ROWS][BOARD_COLS];
 };

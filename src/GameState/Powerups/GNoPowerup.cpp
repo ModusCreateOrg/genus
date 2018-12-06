@@ -77,6 +77,7 @@ TBool GNoPowerup::MoveState() {
   mRepeatTimer--;
 
   if (mGameBoard->IsGameOver()) {
+    mGameBoard->Dump();
     mGameState->GameOver();
     return ETrue;
   }
@@ -85,7 +86,7 @@ TBool GNoPowerup::MoveState() {
     RotateRight();
 //  } else if (gControls.WasPressed(BUTTONB)) {
 //    RotateLeft();
-  }else if (TimedControl(JOYLEFT)) {
+  } else if (TimedControl(JOYLEFT)) {
     MoveLeft();
   } else if (TimedControl(JOYRIGHT)) {
     MoveRight();
@@ -179,8 +180,7 @@ TBool GNoPowerup::RemoveState() {
         if (mGameBoard->IsGameOver()) {
           mState = STATE_WAIT;
           mPlayerSprite->flags &= ~SFLAG_RENDER;
-        }
-        else {
+        } else {
           mPlayerSprite->flags |= SFLAG_RENDER;
           mState = STATE_MOVE;
         }
@@ -207,8 +207,8 @@ TBool GNoPowerup::RemoveState() {
     mRemoveCol++;
   }
   gControls.dKeys = 0;  // in case user pressed a key during removing blocks
-    mPlayerSprite->flags |= SFLAG_RENDER;
-    mState = STATE_MOVE;
+  mPlayerSprite->flags |= SFLAG_RENDER;
+  mState = STATE_MOVE;
   return ETrue;
 }
 
