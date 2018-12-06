@@ -69,8 +69,10 @@ void GNoPowerup::Blink() {
   if (mGameState->mGameOver) {
     return;
   }
+#ifndef BLINK
+  CanDrop();
+#else
   TBool canDrop = CanDrop();
-#ifdef BLINK
   mBlinkTimer--;
   if (mBlinkTimer < 0) {
     mBlinkTimer = BLINK_TIME;
