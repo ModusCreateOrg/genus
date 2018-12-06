@@ -3,7 +3,8 @@
 
 #include <BAnimSprite.h>
 
-#define SFLAG_NEXT_BLOCK (1 << SFLAG_USER_BIT)
+#define SFLAG_NEXT_BLOCK  (1 << SFLAG_USER_BIT)
+#define SFLAG_RULES_BLOCK (2 << SFLAG_USER_BIT)
 
 enum {
   BLOCKSIZE_2x2,
