@@ -72,6 +72,8 @@ public:
 
     mSprite->x = BLOCK_X + 48;
     mSprite->y = BLOCK_Y;
+    mSprite->flags |= SFLAG_RULES_BLOCK;
+
     mRulesState->AddSprite(mSprite);
 
     mState      = 0;
