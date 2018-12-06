@@ -108,6 +108,8 @@ GGameState::~GGameState() {
  */
 void GGameState::Next(TBool aCanPowerup) {
   if (mGameOver || mGameBoard.IsGameOver()) {
+    mSprite->Copy(mNextSprite);
+    mNextSprite->Randomize();
     mGameProcess->Signal();
     // TODO @michaeltintiuc I think this fixes the bugs, but causes sprite to show for a split second before game over
     return;
