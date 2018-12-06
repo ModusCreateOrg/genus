@@ -33,8 +33,8 @@ void GNoPowerup::Signal() {
 
 TBool GNoPowerup::CanDrop() {
   TBool overlaps = EFalse;
-  TInt row       = mPlayerSprite->BoardRow(),
-       col       = mPlayerSprite->BoardCol();
+  TInt  row      = mPlayerSprite->BoardRow(),
+        col      = mPlayerSprite->BoardCol();
 
   overlaps |= mPlayerSprite->mBlocksOverlap[0] = mGameBoard->mBoard[row][col] != 255;
   overlaps |= mPlayerSprite->mBlocksOverlap[1] = mGameBoard->mBoard[row][col + 1] != 255;
@@ -184,13 +184,8 @@ TBool GNoPowerup::RemoveState() {
       if (mRemoveRow >= BOARD_ROWS) {
         // all done, game resumes
         gControls.dKeys = 0;  // in case user pressed a key during removing blocks
-        if (mGameBoard->IsGameOver()) {
-          mState = STATE_WAIT;
-          mPlayerSprite->flags &= ~SFLAG_RENDER;
-        } else {
-          mPlayerSprite->flags |= SFLAG_RENDER;
-          mState = STATE_MOVE;
-        }
+        mPlayerSprite->flags |= SFLAG_RENDER;
+        mState = STATE_MOVE;
         return ETrue;
       }
     }
