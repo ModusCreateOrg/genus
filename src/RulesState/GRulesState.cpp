@@ -46,7 +46,15 @@ public:
 
   void Render() {
     gDisplay.renderBitmap->CopyPixels(mBackground);
-    RenderString("HOW TO PLAY", 12);
+
+    // Page x of y
+    char pagination[12];
+    strcpy(&pagination[0], "Page ");
+    pagination[5]  = '0' + mCurrentPage;
+    strcpy(&pagination[6], " of ");
+    pagination[10] = '0' + mTotalPages;
+    pagination[11] = '\0';
+    RenderString((const char*)pagination, 12);
 
     // Left arrow
     gDisplay.renderBitmap->DrawString(ENull, STR_LEFT_ARROW, mFont, ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mLeftArrowColor, -1);
@@ -59,6 +67,8 @@ public:
   BBitmap *mBackground;
   TUint8 mLeftArrowColor = COLOR_TEXT;
   TUint8 mRightArrowColor = COLOR_TEXT;
+  TUint mCurrentPage = 1;
+  TUint mTotalPages = 6;
 };
 
 class RulesProcess : public BProcess {
@@ -264,6 +274,8 @@ protected:
       mRulesPlayfield->mRightArrowColor = COLOR_TEXT_BG;
       gSoundPlayer.SfxMenuNavDown();
     }
+
+    mRulesPlayfield->mCurrentPage = mState + 1;
 
     // Exit
     if (gControls.WasPressed(BUTTON_ANY)) {
