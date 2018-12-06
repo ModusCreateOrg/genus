@@ -1,6 +1,9 @@
 #include "GNoPowerup.h"
 #include "Game.h"
 
+#define DEBUGME
+#undef DEBUGME
+
 #define BLINK
 #undef BLINK
 
@@ -84,7 +87,9 @@ TBool GNoPowerup::MoveState() {
   mRepeatTimer--;
 
   if (mGameBoard->IsGameOver()) {
+#ifdef DEBUGME
     mGameBoard->Dump();
+#endif
     mGameState->GameOver();
     return ETrue;
   }
