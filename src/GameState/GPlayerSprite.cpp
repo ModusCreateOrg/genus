@@ -118,6 +118,17 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
 //      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy + 16, SFLAG_FLOP);
 
       if (!(flags & SFLAG_NEXT_BLOCK)) {
+        BBitmap *bm = gDisplay.renderBitmap;
+        TInt linesColor = 192;
+        TInt maxBoardX = BOARD_COLS * 16;
+        TInt maxBoardY = BOARD_ROWS * 16;
+
+        bm->DrawFastHLine(gViewPort, BOARD_X, yy, maxBoardX, linesColor);
+        bm->DrawFastHLine(gViewPort, BOARD_X, yy + 32, maxBoardX, linesColor);
+
+        bm->DrawFastVLine(gViewPort, xx, BOARD_Y, maxBoardY, linesColor);
+        bm->DrawFastVLine(gViewPort, xx + 32, BOARD_Y, maxBoardY, linesColor);
+
         TInt animationFrame = mLassoTimer & 8 ? 4 : 0;
         gDisplay.renderBitmap->SetColor(LASSO_1, 255,255,255);
         BSprite::DrawSprite(gViewPort, COMMON_SLOT, IMG_LASSO_UL + animationFrame, xx, yy);

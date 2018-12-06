@@ -1,6 +1,9 @@
 #include "GNoPowerup.h"
 #include "Game.h"
 
+#define BLINK
+#undef BLINK
+
 static const TInt BLINK_TIME = 2;
 
 GNoPowerup::GNoPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPowerup(aSprite, aGameState) {
@@ -64,6 +67,7 @@ void GNoPowerup::Blink() {
     return;
   }
   TBool canDrop = CanDrop();
+#ifdef BLINK
   mBlinkTimer--;
   if (mBlinkTimer < 0) {
     mBlinkTimer = BLINK_TIME;
@@ -73,6 +77,7 @@ void GNoPowerup::Blink() {
   } else if (canDrop) {
     mPlayerSprite->flags |= SFLAG_RENDER;
   }
+#endif
 }
 
 TBool GNoPowerup::MoveState() {
