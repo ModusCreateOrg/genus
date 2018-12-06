@@ -1,6 +1,12 @@
 #include "GNoPowerup.h"
 #include "Game.h"
 
+#define DEBUGME
+#undef DEBUGME
+
+#define BLINK
+#undef BLINK
+
 static const TInt BLINK_TIME = 2;
 
 GNoPowerup::GNoPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPowerup(aSprite, aGameState) {
@@ -29,14 +35,16 @@ void GNoPowerup::Signal() {
 }
 
 TBool GNoPowerup::CanDrop() {
-  TInt row = mPlayerSprite->BoardRow(),
-       col = mPlayerSprite->BoardCol();
+  TBool overlaps = EFalse;
+  TInt  row      = mPlayerSprite->BoardRow(),
+        col      = mPlayerSprite->BoardCol();
 
-  if (mGameBoard->mBoard[row][col] != 255 || mGameBoard->mBoard[row][col + 1] != 255 ||
-      mGameBoard->mBoard[row + 1][col] != 255 || mGameBoard->mBoard[row + 1][col + 1] != 255) {
-    return EFalse;
-  }
-  return ETrue;
+  overlaps |= mPlayerSprite->mBlocksOverlap[0] = mGameBoard->mBoard[row][col] != 255;
+  overlaps |= mPlayerSprite->mBlocksOverlap[1] = mGameBoard->mBoard[row][col + 1] != 255;
+  overlaps |= mPlayerSprite->mBlocksOverlap[2] = mGameBoard->mBoard[row + 1][col] != 255;
+  overlaps |= mPlayerSprite->mBlocksOverlap[3] = mGameBoard->mBoard[row + 1][col + 1] != 255;
+
+  return !overlaps;
 }
 
 
@@ -62,6 +70,7 @@ void GNoPowerup::Blink() {
     return;
   }
   TBool canDrop = CanDrop();
+#ifdef BLINK
   mBlinkTimer--;
   if (mBlinkTimer < 0) {
     mBlinkTimer = BLINK_TIME;
@@ -71,15 +80,17 @@ void GNoPowerup::Blink() {
   } else if (canDrop) {
     mPlayerSprite->flags |= SFLAG_RENDER;
   }
+#endif
 }
 
 TBool GNoPowerup::MoveState() {
   mRepeatTimer--;
 
   if (mGameBoard->IsGameOver()) {
+#ifdef DEBUGME
+    mGameBoard->Dump();
+#endif
     mGameState->GameOver();
-    mState = STATE_WAIT;
-    mPlayerSprite->flags &= SFLAG_RENDER | SFLAG_ANIMATE;
     return ETrue;
   }
 
@@ -87,7 +98,7 @@ TBool GNoPowerup::MoveState() {
     RotateRight();
 //  } else if (gControls.WasPressed(BUTTONB)) {
 //    RotateLeft();
-  }else if (TimedControl(JOYLEFT)) {
+  } else if (TimedControl(JOYLEFT)) {
     MoveLeft();
   } else if (TimedControl(JOYRIGHT)) {
     MoveRight();
@@ -178,14 +189,9 @@ TBool GNoPowerup::RemoveState() {
       if (mRemoveRow >= BOARD_ROWS) {
         // all done, game resumes
         gControls.dKeys = 0;  // in case user pressed a key during removing blocks
-        if (mGameBoard->IsGameOver()) {
-          mState = STATE_WAIT;
-          mPlayerSprite->flags &= ~SFLAG_RENDER;
-        }
-        else {
-          mPlayerSprite->flags |= SFLAG_RENDER;
-          mState = STATE_MOVE;
-        }
+        mPlayerSprite->flags |= SFLAG_RENDER;
+        mGameState->Next(EFalse);
+        mState = STATE_MOVE;
         return ETrue;
       }
     }
@@ -209,14 +215,9 @@ TBool GNoPowerup::RemoveState() {
     mRemoveCol++;
   }
   gControls.dKeys = 0;  // in case user pressed a key during removing blocks
-  if (mGameBoard->IsGameOver()) {
-    mState = STATE_WAIT;
-    mPlayerSprite->flags &= ~SFLAG_RENDER;
-  }
-  else {
-    mPlayerSprite->flags |= SFLAG_RENDER;
-    mState = STATE_MOVE;
-  }
+  mPlayerSprite->flags |= SFLAG_RENDER;
+  mState = STATE_MOVE;
+  mGameState->Next(EFalse);
   return ETrue;
 }
 

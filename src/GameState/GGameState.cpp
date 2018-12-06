@@ -108,6 +108,8 @@ GGameState::~GGameState() {
  */
 void GGameState::Next(TBool aCanPowerup) {
   if (mGameOver || mGameBoard.IsGameOver()) {
+    mGameProcess->Signal();
+    // TODO @michaeltintiuc I think this fixes the bugs, but causes sprite to show for a split second before game over
     return;
   }
   mSprite->x = PLAYER_X;
@@ -136,8 +138,9 @@ void GGameState::Next(TBool aCanPowerup) {
  ****************************************************************************************************************/
 
 void GGameState::GameOver() {
-  mSprite->flags &= ~SFLAG_RENDER | SFLAG_ANIMATE;
+  mSprite->flags &= ~(SFLAG_RENDER | SFLAG_ANIMATE);
   mGameProcess->Wait();
+  mBonusTimer = -1;
   mGameOver = ETrue;
   AddProcess(new GGameStateGameOverProcess(this));
   THighScoreTable h;
