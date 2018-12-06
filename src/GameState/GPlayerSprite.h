@@ -36,9 +36,12 @@ public:
 
   void Copy(GPlayerSprite *aOther);
 
+  void ResetOverlappingBlocks();
+
 public:
   TInt   mBlinkTimer, mLassoTimer;
   TUint8 mBlocks[4];
+  TBool  mBlocksOverlap[4];
   TInt   mBlockSize;
   TBool  mGameOver;
 };
