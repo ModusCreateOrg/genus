@@ -100,14 +100,14 @@ protected:
     y += RenderString("Move the 2x2 blocks", y);
     y += RenderString("with the joystick.", y) + 16;
     y += RenderString("Drop blocks on board", y);
-    y += RenderString("with the A button.", y);
+    y += RenderString("with the B button.", y);
     return y;
   }
 
   TInt Text2() {
     mSprite->flags |= SFLAG_RENDER;
     TInt y = TEXT_Y;
-    y += RenderString("The B button rotates", y);
+    y += RenderString("The A button rotates", y);
     y += RenderString("the blocks.", y);
     mTimer--;
     if (mTimer < 0) {
@@ -255,7 +255,7 @@ protected:
     }
 
     // Next screen
-    if (gControls.WasPressed(JOYRIGHT | JOYDOWN)) {
+    if (gControls.WasPressed(JOYRIGHT | JOYDOWN | BUTTON_SELECT)) {
       mState++;
       if (mState > 5) {
         mState = 0;
