@@ -107,15 +107,16 @@ GGameState::~GGameState() {
  * @param aCanPowerup true if Next piece can be a powerup
  */
 void GGameState::Next(TBool aCanPowerup) {
+  mSprite->x = PLAYER_X;
+  mSprite->y = PLAYER_Y;
+
   if (mGameOver || mGameBoard.IsGameOver()) {
     mSprite->Copy(mNextSprite);
     mNextSprite->Randomize();
     mGameProcess->Signal();
-    // TODO @michaeltintiuc I think this fixes the bugs, but causes sprite to show for a split second before game over
     return;
   }
-  mSprite->x = PLAYER_X;
-  mSprite->y = PLAYER_Y;
+
   if (aCanPowerup) {
     TInt maybe = Random(15, 20);
     if (maybe == 16) {
