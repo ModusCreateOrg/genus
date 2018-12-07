@@ -15,6 +15,7 @@ static const TInt BLINK_TIME = 2;
 GPlayerSprite::GPlayerSprite() : BAnimSprite(0, PLAYER_SLOT) {
   this->flags        |= SFLAG_RENDER;
   this->mGameOver    = EFalse;
+  this->mBlinkTimer  = BLINK_TIME;
   Randomize();
   ResetOverlappingBlocks();
 }
@@ -119,7 +120,7 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
 
       if (!(flags & (SFLAG_NEXT_BLOCK | SFLAG_RULES_BLOCK))) {
         BBitmap *bm = gDisplay.renderBitmap;
-        TInt linesColor = 192;
+        TInt linesColor = COLOR_BORDER1;
         TInt maxBoardX = BOARD_COLS * 16;
         TInt maxBoardY = BOARD_ROWS * 16;
 

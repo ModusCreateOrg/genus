@@ -46,7 +46,15 @@ public:
 
   void Render() {
     gDisplay.renderBitmap->CopyPixels(mBackground);
-    RenderString("HOW TO PLAY", 12);
+
+    // Page x of y
+    char pagination[12];
+    strcpy(&pagination[0], "Page ");
+    pagination[5]  = '0' + mCurrentPage;
+    strcpy(&pagination[6], " of ");
+    pagination[10] = '0' + mTotalPages;
+    pagination[11] = '\0';
+    RenderString((const char*)pagination, 12);
 
     // Left arrow
     gDisplay.renderBitmap->DrawString(ENull, STR_LEFT_ARROW, mFont, ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mLeftArrowColor, -1);
@@ -59,6 +67,8 @@ public:
   BBitmap *mBackground;
   TUint8 mLeftArrowColor = COLOR_TEXT;
   TUint8 mRightArrowColor = COLOR_TEXT;
+  TUint mCurrentPage = 1;
+  TUint mTotalPages = 6;
 };
 
 class RulesProcess : public BProcess {
@@ -100,14 +110,14 @@ protected:
     y += RenderString("Move the 2x2 blocks", y);
     y += RenderString("with the joystick.", y) + 16;
     y += RenderString("Drop blocks on board", y);
-    y += RenderString("with the A button.", y);
+    y += RenderString("with the B button.", y);
     return y;
   }
 
   TInt Text2() {
     mSprite->flags |= SFLAG_RENDER;
     TInt y = TEXT_Y;
-    y += RenderString("The B button rotates", y);
+    y += RenderString("The A button rotates", y);
     y += RenderString("the blocks.", y);
     mTimer--;
     if (mTimer < 0) {
@@ -255,7 +265,7 @@ protected:
     }
 
     // Next screen
-    if (gControls.WasPressed(JOYRIGHT | JOYDOWN)) {
+    if (gControls.WasPressed(JOYRIGHT | JOYDOWN | BUTTON_SELECT)) {
       mState++;
       if (mState > 5) {
         mState = 0;
@@ -264,6 +274,8 @@ protected:
       mRulesPlayfield->mRightArrowColor = COLOR_TEXT_BG;
       gSoundPlayer.SfxMenuNavDown();
     }
+
+    mRulesPlayfield->mCurrentPage = mState + 1;
 
     // Exit
     if (gControls.WasPressed(BUTTON_ANY)) {
