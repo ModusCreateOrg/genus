@@ -37,4 +37,5 @@ TInt GResetWidget::Render(TInt aX, TInt aY) {
 void GResetWidget::Select() {
   // Trigger popup - confirmation game state
   gGame->SetState(GAME_STATE_MAIN_OPTIONS_RESET);
+  gSoundPlayer.SfxMenuAccept();
 }

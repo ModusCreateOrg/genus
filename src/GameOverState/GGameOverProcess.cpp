@@ -58,6 +58,7 @@ TBool GGameOverProcess::HighScoresState() {
   mHighScoreTable.Render(gOptions->difficulty, 10, HIGHSCORES_X, y, mFont16, COLOR_TEXT, COLOR_TEXT_SHADOW);
   if (gControls.WasPressed(BUTTON_ANY)) {
     gGame->SetState(GAME_STATE_MAIN_MENU);
+    gSoundPlayer.SfxMenuCancel();
     return EFalse;
   }
   return ETrue;
@@ -80,25 +81,29 @@ TBool GGameOverProcess::InitialsState() {
     } else {
       mInitials[mInitialsPos]--;
     }
+    gSoundPlayer.SfxMenuNavUp();
   }
-  if (gControls.WasPressed(JOYDOWN)) {
+  if (gControls.WasPressed(JOYDOWN | BUTTON_SELECT)) {
     if (mInitials[mInitialsPos] == 'Z') {
       mInitials[mInitialsPos] = 'A';
     } else {
       mInitials[mInitialsPos]++;
     }
+    gSoundPlayer.SfxMenuNavDown();
   }
   if (gControls.WasPressed(JOYRIGHT)) {
     mInitialsPos++;
     if (mInitialsPos > NUM_INITIALS - 1) {
       mInitialsPos = 0;
     }
+    gSoundPlayer.SfxOptionSelect();
   }
   if (gControls.WasPressed(JOYLEFT)) {
     mInitialsPos--;
     if (mInitialsPos < 0) {
       mInitialsPos = NUM_INITIALS - 1;
     }
+    gSoundPlayer.SfxOptionSelect();
   }
 
   if (gControls.WasPressed(BUTTONA | BUTTONB)) {
@@ -108,6 +113,7 @@ TBool GGameOverProcess::InitialsState() {
 
     // reset dKeys so next state doesn't react to any keys already pressed
     gControls.dKeys = 0;
+    gSoundPlayer.SfxMenuAccept();
   }
   return ETrue;
 }
