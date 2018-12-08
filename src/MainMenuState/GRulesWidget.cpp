@@ -32,4 +32,5 @@ TInt GRulesWidget::Render(TInt aX, TInt aY) {
 
 void GRulesWidget::Select() {
   gGame->SetState(GAME_STATE_RULES);
+  gSoundPlayer.SfxMenuAccept();
 }

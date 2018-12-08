@@ -32,4 +32,5 @@ TInt GOptionsWidget::Render(TInt aX, TInt aY) {
 
 void GOptionsWidget::Select() {
   gGame->SetState(GAME_STATE_MAIN_OPTIONS);
+  gSoundPlayer.SfxMenuAccept();
 }

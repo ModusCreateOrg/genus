@@ -32,6 +32,8 @@ public:
   void SfxOptionSelect();
   void SfxMenuNavUp();
   void SfxMenuNavDown();
+  void SfxMenuAccept();
+  void SfxMenuCancel();
 };
 
 

@@ -154,6 +154,7 @@ protected:
   TBool RunBefore() {
     if (gControls.WasPressed(BUTTON_ANY)) {
       gGame->SetState(GAME_STATE_MAIN_MENU);
+      gSoundPlayer.SfxMenuCancel();
       return EFalse;
     }
     return ETrue;
