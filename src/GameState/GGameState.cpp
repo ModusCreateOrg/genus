@@ -8,10 +8,7 @@
 #include "Playfields/GLevelUnderWaterFantasy.h"
 #include "Playfields/GLevelSpace.h"
 
-
-/***************************
-**DEBUG CODE PLEASE REMOVE**
-***************************/
+#ifdef CHICKEN_MODE
 class GGameState;
 class ChickenModeProcess : public BProcess {
   public:
@@ -37,10 +34,7 @@ class ChickenModeProcess : public BProcess {
 
     GGameState *mState;
 };
-/***************************
-****** END DEBUG CODE ******
-***************************/
-
+#endif
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -76,13 +70,9 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mGameProcess = new GNoPowerup(mSprite, this);
   AddProcess(mGameProcess);
 
-/***************************
-**DEBUG CODE PLEASE REMOVE**
-***************************/
+#ifdef CHICKEN_MODE
   AddProcess(new ChickenModeProcess(this));
-/***************************
-****** END DEBUG CODE ******
-***************************/
+#endif
 
   Next(EFalse);
 }
