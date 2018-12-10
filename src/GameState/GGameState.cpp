@@ -108,9 +108,23 @@ void GGameState::Next(TBool aCanPowerup) {
   }
 
   if (aCanPowerup) {
-    TInt maybe = Random(15, 20);
+    TInt maybe;
+
+    switch (gOptions->difficulty) {
+      case DIFFICULTY_EASY:
+        maybe = Random(15, 20);
+        break;
+      case DIFFICULTY_INTERMEDIATE:
+        maybe = Random(15, 22);
+        break;
+      case DIFFICULTY_HARD:
+        maybe = Random(15, 24);
+        break;
+      default:
+        Panic("DifficultyString: invalid difficulty %d", gOptions->difficulty);
+    }
+
     if (maybe == 16) {
-      mGameProcess->Wait();
       if (Random() & 1) {
         AddProcess(new GModusBombPowerup(mSprite, this));
       } else {

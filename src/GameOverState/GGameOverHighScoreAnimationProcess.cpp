@@ -15,14 +15,12 @@ GGameOverHighScoreAnimationProcess::GGameOverHighScoreAnimationProcess(GGameOver
   mSprite = new BAnimSprite(1, COMMON_SLOT);
   mSprite->x = 240;
   mSprite->y = 124;
-  mSprite->StartAnimation(HighScoresAnimation);
   mGameOverState->AddSprite(mSprite);
+  mSprite->StartAnimation(HighScoresAnimation);
 }
 
 GGameOverHighScoreAnimationProcess::~GGameOverHighScoreAnimationProcess() {
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
-  mGameOverState->RemoveSprite(mSprite);
-  delete mSprite;
 }
 
 TBool GGameOverHighScoreAnimationProcess::RunBefore() {

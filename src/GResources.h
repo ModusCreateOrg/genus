@@ -42,6 +42,8 @@ enum {
 // SPRITES.BMP
 static const TUint16 IMG_TILE1 = 0;   // pink
 static const TUint16 IMG_TILE2 = 16;   // green
+static const TUint16 IMG_TILE3 = 5;   // green
+static const TUint16 IMG_TILE4 = 21;   // green
 
 static const TUint16 IMG_BGTILE1 = 6; // this is the grid background tile
 static const TUint16 IMG_FRAMEL  = 14;
