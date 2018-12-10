@@ -82,6 +82,9 @@ TBool GColorSwapPowerup::StateRemove() {
   if (mColorSwapTimer--) {
     return ETrue;
   }
+
+  mGameState->MainStateWait();
+
   mColorSwapTimer = 30 / 8;        // 1/8 second
 
   auto         *stack = (PointStack *) mPointStack;
@@ -90,7 +93,12 @@ TBool GColorSwapPowerup::StateRemove() {
       if (mGameBoard->mBoard[p->mRow][p->mCol] == mSwapColor) {
         gSoundPlayer.SfxGoodDrop();
 
-        mGameBoard->mBoard[p->mRow][p->mCol] = TUint8(mSwapColor == IMG_TILE1 ? IMG_TILE2 : IMG_TILE1);
+        if (mSwapColor & (IMG_TILE3 | IMG_TILE4)) {
+          mGameBoard->mBoard[p->mRow][p->mCol] = TUint8(mSwapColor == IMG_TILE3 ? IMG_TILE4 : IMG_TILE3);
+        } else {
+          mGameBoard->mBoard[p->mRow][p->mCol] = TUint8(mSwapColor == IMG_TILE1 ? IMG_TILE2 : IMG_TILE1);
+        }
+
         stack->Push(new Point(p->mRow - 1, p->mCol));
         stack->Push(new Point(p->mRow + 1, p->mCol));
         stack->Push(new Point(p->mRow, p->mCol - 1));
@@ -107,20 +115,8 @@ TBool GColorSwapPowerup::StateRemove() {
 
 
 TBool GColorSwapPowerup::StateMove() {
-  mRepeatTimer--;
-
-  if (TimedControl(JOYLEFT)) {
-    MoveLeft();
-  } else if (TimedControl(JOYRIGHT)) {
-    MoveRight();
-  } else if (TimedControl(JOYUP)) {
-    MoveUp();
-  } else if (TimedControl(JOYDOWN)) {
-    MoveDown();
-  }
-
   if (gControls.WasPressed(BUTTONB)) {
-    if (mGameBoard->mBoard[mPlayerSprite->BoardRow()][mPlayerSprite->BoardCol()] != 255) {
+    if (mGameState->MainState() != STATE_REMOVE && mGameBoard->mBoard[mPlayerSprite->BoardRow()][mPlayerSprite->BoardCol()] != 255) {
       Drop();
       mState = STATE_REMOVE;
     }
