@@ -12,7 +12,6 @@
 class GSoundPlayer : public BSoundPlayer {
 
 
-
 public:
   void Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots);
 

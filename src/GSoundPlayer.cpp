@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "GSoundPlayer.h"
 #include "GResources.h"
+#include "Memory.h"
 
 #define DISABLE_AUDIO
 #undef DISABLE_AUDIO
@@ -12,8 +13,33 @@
 
 GSoundPlayer gSoundPlayer;
 
+
 void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
   BSoundPlayer::Init(aNumberFxChannels, aNumberFxSlots);
+
+  mMaxSongs = 7;
+  mSongSlots = (SongSlot *)AllocMem(sizeof(SongSlot) * mMaxSongs, MEMF_SLOW);
+
+  const uint16_t allSongs[] = {
+    EMPTYSONG_XM,
+    UNDER_WATER_XM,
+    CITY_SCAPES_XM,
+    COUNTRYSIDE_XM,
+    MAIN_MENU_XM,
+    SPAAACE_XM,
+    GLACIAL_MOUNTAINS_XM,
+  };
+
+  for (uint8_t i = 0; i < mMaxSongs; i++) {
+    auto *slot = (SongSlot *)AllocMem(sizeof(SongSlot), MEMF_SLOW);
+
+    gResourceManager.LoadRaw(allSongs[i], SONG0_SLOT + i);
+    slot->resourceNumber = allSongs[i];
+    slot->raw = gResourceManager.GetRaw(SONG0_SLOT + i);
+
+    mSongSlots[i] = *slot;
+  }
+  
 
   PlayMusic(EMPTYSONG_XM);
   SetMusicVolume(gOptions->music);
@@ -29,13 +55,15 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 
 TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
 
-  gResourceManager.ReleaseRawSlot(SONG_SLOT);
+  for (TUint8 i = 0; i < mMaxSongs; i++) {
+    if (mSongSlots[i].resourceNumber == aResourceId) {
+      return LoadSong(mSongSlots[i].raw);
+    }
+  }
 
-  gResourceManager.LoadRaw(aResourceId, SONG_SLOT);
-  BRaw *song = gResourceManager.GetRaw(SONG_SLOT);
-
-  return LoadSong(song);
+  return false;
 }
+
 
 TBool GSoundPlayer::LoadEffects() {
   // Load effects
@@ -55,6 +83,8 @@ TBool GSoundPlayer::LoadEffects() {
   }
   return ETrue;
 }
+
+
 
 BRaw *GSoundPlayer::LoadEffectResource(TUint16 aResourceId, TInt16 aSlotNumber) {
   gResourceManager.LoadRaw(aResourceId, SFX1_SLOT + aSlotNumber);
