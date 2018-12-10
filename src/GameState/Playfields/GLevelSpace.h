@@ -8,6 +8,36 @@
 #include "GGameState.h"
 #include "GScrollingLevel.h"
 
+#if 1
+const int NUM_STARS = 120;
+
+class GLevelSpace : public GScrollingLevel {
+public:
+  GLevelSpace(GGameState *aGameEngine);
+
+  ~GLevelSpace();
+
+protected:
+  void InitStar(TInt aIndex) {
+    mStarX[aIndex] = 256 - Random(0, 512);
+    mStarY[aIndex] = 256 - Random(0, 512);
+    mStarZ[aIndex] = mCameraZ + Random(200, 512);
+  }
+
+protected:
+  void Animate();
+  void Render();
+protected:
+  TInt       mStarX[NUM_STARS],
+             mStarY[NUM_STARS];
+  TFloat     mStarZ[NUM_STARS],
+             mCameraZ, mOldCameraZ;
+protected:
+  GGameState *mGameEngine;
+  BBitmap *mBackground0, *mBackground1;
+};
+
+#else
 class Star {
 public:
   float mX, mY, mZ;
@@ -43,8 +73,7 @@ public:
   BBitmap *mBackground0;
   BBitmap *mBackground1;
 };
-
-
+#endif
 
 
 #endif //GENUS_GLEVELSPACE_H
