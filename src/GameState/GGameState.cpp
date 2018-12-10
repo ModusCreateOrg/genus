@@ -108,7 +108,7 @@ void GGameState::Next(TBool aCanPowerup) {
   }
 
   if (aCanPowerup) {
-    TInt maybe;
+    TInt maybe = 0;
 
     switch (gOptions->difficulty) {
       case DIFFICULTY_EASY:
