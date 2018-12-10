@@ -96,9 +96,17 @@ void GSoundPlayer::SfxOptionSelect() {
 }
 
 void GSoundPlayer::SfxMenuNavUp() {
-  PlaySfx(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/3);
+  PlaySfx(/*SFX_ROTATE_BLOCK_LEFT_WAV*/3);
 }
 
 void GSoundPlayer::SfxMenuNavDown() {
   PlaySfx(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/4);
+}
+
+void GSoundPlayer::SfxMenuAccept() {
+  gSoundPlayer.PlaySfx(/*SFX_BAD_DROP_BLOCK_WAV*/1);
+}
+
+void GSoundPlayer::SfxMenuCancel() {
+  gSoundPlayer.PlaySfx(/*SFX_GOOD_DROP_BLOCK_WAV*/0);
 }

@@ -8,10 +8,7 @@
 #include "Playfields/GLevelUnderWaterFantasy.h"
 #include "Playfields/GLevelSpace.h"
 
-
-/***************************
-**DEBUG CODE PLEASE REMOVE**
-***************************/
+#ifdef CHICKEN_MODE
 class GGameState;
 class ChickenModeProcess : public BProcess {
   public:
@@ -37,10 +34,7 @@ class ChickenModeProcess : public BProcess {
 
     GGameState *mState;
 };
-/***************************
-****** END DEBUG CODE ******
-***************************/
-
+#endif
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -76,13 +70,9 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mGameProcess = new GNoPowerup(mSprite, this);
   AddProcess(mGameProcess);
 
-/***************************
-**DEBUG CODE PLEASE REMOVE**
-***************************/
+#ifdef CHICKEN_MODE
   AddProcess(new ChickenModeProcess(this));
-/***************************
-****** END DEBUG CODE ******
-***************************/
+#endif
 
   Next(EFalse);
 }
@@ -107,19 +97,34 @@ GGameState::~GGameState() {
  * @param aCanPowerup true if Next piece can be a powerup
  */
 void GGameState::Next(TBool aCanPowerup) {
+  mSprite->x = PLAYER_X;
+  mSprite->y = PLAYER_Y;
+
   if (mGameOver || mGameBoard.IsGameOver()) {
     mSprite->Copy(mNextSprite);
     mNextSprite->Randomize();
     mGameProcess->Signal();
-    // TODO @michaeltintiuc I think this fixes the bugs, but causes sprite to show for a split second before game over
     return;
   }
-  mSprite->x = PLAYER_X;
-  mSprite->y = PLAYER_Y;
+
   if (aCanPowerup) {
-    TInt maybe = Random(15, 20);
+    TInt maybe = 0;
+
+    switch (gOptions->difficulty) {
+      case DIFFICULTY_EASY:
+        maybe = Random(15, 20);
+        break;
+      case DIFFICULTY_INTERMEDIATE:
+        maybe = Random(15, 22);
+        break;
+      case DIFFICULTY_HARD:
+        maybe = Random(15, 24);
+        break;
+      default:
+        Panic("DifficultyString: invalid difficulty %d", gOptions->difficulty);
+    }
+
     if (maybe == 16) {
-      mGameProcess->Wait();
       if (Random() & 1) {
         AddProcess(new GModusBombPowerup(mSprite, this));
       } else {

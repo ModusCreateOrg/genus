@@ -42,4 +42,5 @@ TInt GExitWidget::Render(TInt aX, TInt aY) {
 
 void GExitWidget::Select() {
   gGame->SetState(GAME_STATE_MAIN_MENU);
+  gSoundPlayer.SfxMenuCancel();
 }

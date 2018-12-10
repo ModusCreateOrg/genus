@@ -31,11 +31,14 @@ GGameStateGameOverProcess::GGameStateGameOverProcess(GGameState *aGameState) {
 }
 
 GGameStateGameOverProcess::~GGameStateGameOverProcess() {
+  gResourceManager.ReleaseBitmapSlot(GAME_OVER_SLOT);
+  mGameState->RemoveSprite(mSprite);
 }
 
 TBool GGameStateGameOverProcess::RunBefore() {
   if (gControls.WasPressed(BUTTON_ANY)) {
     gGame->SetState(GAME_STATE_GAMEOVER);
+    gSoundPlayer.SfxMenuAccept();
     return EFalse;
   }
   return ETrue;
