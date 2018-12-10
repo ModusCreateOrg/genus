@@ -33,7 +33,6 @@ GGameStateGameOverProcess::GGameStateGameOverProcess(GGameState *aGameState) {
 GGameStateGameOverProcess::~GGameStateGameOverProcess() {
   gResourceManager.ReleaseBitmapSlot(GAME_OVER_SLOT);
   mGameState->RemoveSprite(mSprite);
-  delete mSprite;
 }
 
 TBool GGameStateGameOverProcess::RunBefore() {

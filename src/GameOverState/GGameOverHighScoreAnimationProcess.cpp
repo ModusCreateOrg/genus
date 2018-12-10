@@ -22,7 +22,6 @@ GGameOverHighScoreAnimationProcess::GGameOverHighScoreAnimationProcess(GGameOver
 GGameOverHighScoreAnimationProcess::~GGameOverHighScoreAnimationProcess() {
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
   mGameOverState->RemoveSprite(mSprite);
-  delete mSprite;
 }
 
 TBool GGameOverHighScoreAnimationProcess::RunBefore() {
