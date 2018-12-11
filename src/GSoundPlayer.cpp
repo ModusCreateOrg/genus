@@ -33,13 +33,15 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
   for (uint8_t i = 0; i < mMaxSongs; i++) {
     auto *slot = (SongSlot *)AllocMem(sizeof(SongSlot), MEMF_SLOW);
 
-    gResourceManager.LoadRaw(allSongs[i], SONG0_SLOT + i);
-    slot->resourceNumber = allSongs[i];
-    slot->raw = gResourceManager.GetRaw(SONG0_SLOT + i);
+    slot->mResourceNumber = allSongs[i];
+    slot->mSlotNumber = SONG0_SLOT + i;
+
+    gResourceManager.LoadRaw(allSongs[i], slot->mSlotNumber);
+    slot->mRaw = gResourceManager.GetRaw(slot->mSlotNumber);
 
     mSongSlots[i] = *slot;
   }
-  
+
 
   PlayMusic(EMPTYSONG_XM);
   SetMusicVolume(gOptions->music);
@@ -56,8 +58,8 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
 
   for (TUint8 i = 0; i < mMaxSongs; i++) {
-    if (mSongSlots[i].resourceNumber == aResourceId) {
-      return LoadSong(mSongSlots[i].raw);
+    if (mSongSlots[i].mResourceNumber == aResourceId) {
+      return LoadSong(mSongSlots[i].mRaw);
     }
   }
 
@@ -68,14 +70,14 @@ TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
 TBool GSoundPlayer::LoadEffects() {
   // Load effects
   const uint16_t mEffectsList[] = {
-    SFX_GOOD_DROP_BLOCK_WAV,
-    SFX_BAD_DROP_BLOCK_WAV,
-    SFX_MOVE_BLOCK_WAV,
-    SFX_ROTATE_BLOCK_LEFT_WAV,
-    SFX_ROTATE_BLOCK_RIGHT_WAV,
-    SFX_SCORE_COMBO_WAV,
-    SFX_OPTION_SELECT_WAV,
-    SFX_EXPLODE_BLOCK_WAV
+          SFX_GOOD_DROP_BLOCK_WAV,
+          SFX_BAD_DROP_BLOCK_WAV,
+          SFX_MOVE_BLOCK_WAV,
+          SFX_ROTATE_BLOCK_LEFT_WAV,
+          SFX_ROTATE_BLOCK_RIGHT_WAV,
+          SFX_SCORE_COMBO_WAV,
+          SFX_OPTION_SELECT_WAV,
+          SFX_EXPLODE_BLOCK_WAV
   };
 
   for (uint8_t i = 0; i < 8; i++) {
