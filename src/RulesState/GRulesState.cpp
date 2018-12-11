@@ -87,7 +87,7 @@ public:
     mRulesState->AddSprite(mSprite);
 
     mState      = 0;
-    mNextTimer  = 3 * 30;
+    mTimer      = 0;
     mArrowTimer = 0;
   }
 
@@ -96,6 +96,13 @@ public:
   }
 
 protected:
+  void ResetSprite() {
+    mSprite->mBlocks[0] = 16;
+    mSprite->mBlocks[1] = 0;
+    mSprite->mBlocks[2] = 16;
+    mSprite->mBlocks[3] = 0;
+  }
+
   TInt RenderString(const char *aString, TInt aY) {
     TInt width = TInt(strlen(aString) * 12);
     TInt x     = (SCREEN_WIDTH - width) / 2;
@@ -106,6 +113,8 @@ protected:
 protected:
   TInt Text1() {
     mSprite->flags |= SFLAG_RENDER;
+    ResetSprite();
+
     TInt y = TEXT_Y;
     y += RenderString("Move the 2x2 blocks", y);
     y += RenderString("with the joystick.", y) + 16;
@@ -116,6 +125,8 @@ protected:
 
   TInt Text2() {
     mSprite->flags |= SFLAG_RENDER;
+    ResetSprite();
+
     TInt y = TEXT_Y;
     y += RenderString("The A button rotates", y);
     y += RenderString("the blocks.", y);
@@ -289,7 +300,7 @@ protected:
 
 protected:
   TInt            mState;
-  TInt            mNextTimer, mTimer, mArrowTimer;
+  TInt            mTimer, mArrowTimer;
   BFont           *mFont;
   GPlayerSprite   *mSprite;
   GRulesState     *mRulesState;
