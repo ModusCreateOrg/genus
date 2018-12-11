@@ -274,14 +274,22 @@ void GGameState::RenderScore() {
 void GGameState::RenderLevel() {
   BBitmap *bm = gDisplay.renderBitmap;
   TBCD level;
-  level.FromUint32(mLevel);
+  level.FromUint32(9999);
   char    lev[20];
   level.ToString(lev, ENull);
   char out[32];
-  if (strlen(lev) == 1) {
-    strcpy(out, "Level  ");
-  } else {
-    strcpy(out, "Level ");
+  switch (strlen(lev)) {
+    case 1:
+      strcpy(out, "LVL    ");
+      break;
+    case 2:
+      strcpy(out, "LVL   ");
+      break;
+    case 3:
+      strcpy(out, "LVL  ");
+      break;
+    default:
+      strcpy(out, "LVL ");
   }
   strcat(out, lev);
 
