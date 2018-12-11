@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "GSoundPlayer.h"
 #include "GResources.h"
+#include "Memory.h"
 
 #define DISABLE_AUDIO
 #undef DISABLE_AUDIO
@@ -12,8 +13,35 @@
 
 GSoundPlayer gSoundPlayer;
 
+
 void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
   BSoundPlayer::Init(aNumberFxChannels, aNumberFxSlots);
+
+  mMaxSongs = 7;
+  mSongSlots = (SongSlot *)AllocMem(sizeof(SongSlot) * mMaxSongs, MEMF_SLOW);
+
+  const uint16_t allSongs[] = {
+    EMPTYSONG_XM,
+    UNDER_WATER_XM,
+    CITY_SCAPES_XM,
+    COUNTRYSIDE_XM,
+    MAIN_MENU_XM,
+    SPAAACE_XM,
+    GLACIAL_MOUNTAINS_XM,
+  };
+
+  for (uint8_t i = 0; i < mMaxSongs; i++) {
+    auto *slot = (SongSlot *)AllocMem(sizeof(SongSlot), MEMF_SLOW);
+
+    slot->mResourceNumber = allSongs[i];
+    slot->mSlotNumber = SONG0_SLOT + i;
+
+    gResourceManager.LoadRaw(allSongs[i], slot->mSlotNumber);
+    slot->mRaw = gResourceManager.GetRaw(slot->mSlotNumber);
+
+    mSongSlots[i] = *slot;
+  }
+
 
   PlayMusic(EMPTYSONG_XM);
   SetMusicVolume(gOptions->music);
@@ -29,25 +57,27 @@ TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
 
 TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
 
-  gResourceManager.ReleaseRawSlot(SONG_SLOT);
+  for (TUint8 i = 0; i < mMaxSongs; i++) {
+    if (mSongSlots[i].mResourceNumber == aResourceId) {
+      return LoadSong(mSongSlots[i].mRaw);
+    }
+  }
 
-  gResourceManager.LoadRaw(aResourceId, SONG_SLOT);
-  BRaw *song = gResourceManager.GetRaw(SONG_SLOT);
-
-  return LoadSong(song);
+  return false;
 }
+
 
 TBool GSoundPlayer::LoadEffects() {
   // Load effects
   const uint16_t mEffectsList[] = {
-    SFX_GOOD_DROP_BLOCK_WAV,
-    SFX_BAD_DROP_BLOCK_WAV,
-    SFX_MOVE_BLOCK_WAV,
-    SFX_ROTATE_BLOCK_LEFT_WAV,
-    SFX_ROTATE_BLOCK_RIGHT_WAV,
-    SFX_SCORE_COMBO_WAV,
-    SFX_OPTION_SELECT_WAV,
-    SFX_EXPLODE_BLOCK_WAV
+          SFX_GOOD_DROP_BLOCK_WAV,
+          SFX_BAD_DROP_BLOCK_WAV,
+          SFX_MOVE_BLOCK_WAV,
+          SFX_ROTATE_BLOCK_LEFT_WAV,
+          SFX_ROTATE_BLOCK_RIGHT_WAV,
+          SFX_SCORE_COMBO_WAV,
+          SFX_OPTION_SELECT_WAV,
+          SFX_EXPLODE_BLOCK_WAV
   };
 
   for (uint8_t i = 0; i < 8; i++) {
@@ -55,6 +85,8 @@ TBool GSoundPlayer::LoadEffects() {
   }
   return ETrue;
 }
+
+
 
 BRaw *GSoundPlayer::LoadEffectResource(TUint16 aResourceId, TInt16 aSlotNumber) {
   gResourceManager.LoadRaw(aResourceId, SFX1_SLOT + aSlotNumber);
