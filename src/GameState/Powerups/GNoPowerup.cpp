@@ -11,8 +11,9 @@ static const TInt BLINK_TIME = 2;
 
 GNoPowerup::GNoPowerup(GPlayerSprite *aSprite, GGameState *aGameState) : BPowerup(aSprite, aGameState) {
   mPlayerSprite->mBlockSize = BLOCKSIZE_2x2;
-  mState      = STATE_MOVE;
+  mState      = STATE_TIMER;
   mBlinkTimer = BLINK_TIME;
+  mGameState->StartBonusTimer();
 }
 
 GNoPowerup::~GNoPowerup() {

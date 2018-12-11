@@ -85,7 +85,7 @@ TBool GColorSwapPowerup::StateRemove() {
 
   mGameState->MainStateWait();
 
-  mColorSwapTimer = 30 / 8;        // 1/8 second
+  mColorSwapTimer = 30 / 30;        // 1/8 second
 
   auto         *stack = (PointStack *) mPointStack;
   while (Point *p     = stack->Pop()) {
