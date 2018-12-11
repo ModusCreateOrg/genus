@@ -274,7 +274,7 @@ void GGameState::RenderScore() {
 void GGameState::RenderLevel() {
   BBitmap *bm = gDisplay.renderBitmap;
   TBCD level;
-  level.FromUint32(9999);
+  level.FromUint32(mLevel);
   char    lev[20];
   level.ToString(lev, ENull);
   char out[32];
