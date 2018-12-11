@@ -85,11 +85,11 @@ TBool GColorSwapPowerup::StateRemove() {
 
   mGameState->MainStateWait();
 
-  mColorSwapTimer = 30 / 30;        // 1/8 second
+  mColorSwapTimer = 30 / 8;        // 1/8 second
 
   auto         *stack = (PointStack *) mPointStack;
   while (Point *p     = stack->Pop()) {
-    if (p->mRow >= 0 && p->mRow <= BOARD_ROWS && p->mCol >= 0 && p->mCol < BOARD_COLS) {
+    if (p->mRow >= 0 && p->mRow < BOARD_ROWS && p->mCol >= 0 && p->mCol < BOARD_COLS) {
       if (mGameBoard->mBoard[p->mRow][p->mCol] == mSwapColor) {
         gSoundPlayer.SfxGoodDrop();
 

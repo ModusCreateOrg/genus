@@ -25,27 +25,6 @@ class ChickenModeProcess : public BProcess {
         }
         mState->mBlocksRemaining = 0;
       }
-
-      if (gControls.WasPressed(BUTTON_MENU)) {
-
-        for (TInt row = 0; row < BOARD_ROWS-2; row++) {
-          for (TInt col = 0; col < BOARD_COLS; col++) {
-            mState->mGameBoard.mBoard[row][col] = 0;
-          }
-        }
-            mState->mGameBoard.mBoard[BOARD_ROWS-2][0] = 0;
-            mState->mGameBoard.mBoard[BOARD_ROWS-1][0] = 0;
-            mState->mGameBoard.mBoard[BOARD_ROWS-2][1] = 0;
-            mState->mGameBoard.mBoard[BOARD_ROWS-1][1] = 0;
-
-            mState->mGameBoard.mBoard[BOARD_ROWS-2][2] = 0;
-            mState->mGameBoard.mBoard[BOARD_ROWS-1][2] = 0;
-            mState->mGameBoard.mBoard[BOARD_ROWS-2][3] = 0;
-            mState->mGameBoard.mBoard[BOARD_ROWS-1][3] = 0;
-
-
-        mState->Next(ETrue);
-      }
       return ETrue;
     }
 
@@ -131,11 +110,9 @@ void GGameState::Next(TBool aCanPowerup) {
   if (aCanPowerup) {
     TInt maybe = 0;
 
-        AddProcess(new GColorSwapPowerup(mSprite, this));
-        return;
     switch (gOptions->difficulty) {
       case DIFFICULTY_EASY:
-        maybe = Random(15, 16);
+        maybe = Random(15, 20);
         break;
       case DIFFICULTY_INTERMEDIATE:
         maybe = Random(15, 22);
