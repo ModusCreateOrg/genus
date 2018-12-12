@@ -67,12 +67,15 @@ BITMAP space_static_bottom_right.bmp
 # .-=[  MUSIC  ]=-.
 PATH ../resources/music
 RAW EmptySong.xm
-RAW Under_Water.xm
-RAW City_Scapes.xm
 RAW Countryside.xm
+RAW Cyberpunk.xm
+RAW GameOver.xm
+RAW Glacial_mountains.xm
 RAW Main_Menu.xm
 RAW Spaaace.xm
-RAW Glacial_mountains.xm
+RAW UnderWaterFantasy.xm
+RAW Under_Water.xm
+
 
 # .-=[ Sound Effects ]=-.
 PATH ../resources/sound_effects

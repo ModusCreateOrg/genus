@@ -89,11 +89,11 @@ TBool GColorSwapPowerup::StateRemove() {
 
   auto         *stack = (PointStack *) mPointStack;
   while (Point *p     = stack->Pop()) {
-    if (p->mRow >= 0 && p->mRow <= BOARD_ROWS && p->mCol >= 0 && p->mCol < BOARD_COLS) {
+    if (p->mRow >= 0 && p->mRow < BOARD_ROWS && p->mCol >= 0 && p->mCol < BOARD_COLS) {
       if (mGameBoard->mBoard[p->mRow][p->mCol] == mSwapColor) {
         gSoundPlayer.SfxGoodDrop();
 
-        if (mSwapColor & (IMG_TILE3 | IMG_TILE4)) {
+        if (mSwapColor == IMG_TILE3 || mSwapColor == IMG_TILE4) {
           mGameBoard->mBoard[p->mRow][p->mCol] = TUint8(mSwapColor == IMG_TILE3 ? IMG_TILE4 : IMG_TILE3);
         } else {
           mGameBoard->mBoard[p->mRow][p->mCol] = TUint8(mSwapColor == IMG_TILE1 ? IMG_TILE2 : IMG_TILE1);
