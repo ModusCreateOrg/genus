@@ -304,6 +304,7 @@ void GGameState::RenderNext() {
   BBitmap *bm = gDisplay.renderBitmap;
   bm->DrawStringShadow(ENull, "Next", mFont16, NEXT_X, NEXT_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
 
+  // On HARD difficulty draw a "?" over a filled block
   if (gOptions->difficulty == DIFFICULTY_HARD) {
     bm->DrawStringShadow(ENull, "?", mFont16, NEXT_BLOCK_X + 8, NEXT_BLOCK_Y + 8, COLOR_TEXT, COLOR_TEXT_SHADOW, -1);
   }

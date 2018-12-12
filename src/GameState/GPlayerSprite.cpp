@@ -90,6 +90,7 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
     if (mBlockSize == BLOCKSIZE_2x2) {
       TInt8 blocks[4];
 
+      // On HARD difficulty we show a filled NEXT block to the player
       if (gOptions->difficulty == DIFFICULTY_HARD && (flags & SFLAG_NEXT_BLOCK)) {
         memset(blocks, 0, sizeof(blocks));
       } else {
