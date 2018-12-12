@@ -40,6 +40,7 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
     slot->mRaw = gResourceManager.GetRaw(slot->mSlotNumber);
 
     mSongSlots[i] = *slot;
+    FreeMem(slot);
   }
 
 
