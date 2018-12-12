@@ -274,24 +274,28 @@ void GGameState::RenderScore() {
 void GGameState::RenderLevel() {
   BBitmap *bm = gDisplay.renderBitmap;
   TBCD level;
-  level.FromUint32(9999);
+  level.FromUint32(mLevel);
   char    lev[20];
   level.ToString(lev, ENull);
   char out[32];
   switch (strlen(lev)) {
     case 1:
-      strcpy(out, "LVL    ");
+      strcpy(out, "Level  ");
+      strcat(out, lev);
       break;
     case 2:
-      strcpy(out, "LVL   ");
+      strcpy(out, "Level ");
+      strcat(out, lev);
       break;
     case 3:
-      strcpy(out, "LVL  ");
+      strcpy(out, "Level");
+      strcat(out, lev);
       break;
     default:
-      strcpy(out, "LVL ");
+      // Levels are limited to 999 in UI
+      strcpy(out, "Level");
+      strcat(out, "999");
   }
-  strcat(out, lev);
 
   bm->DrawStringShadow(ENull, out, mFont16, LEVEL_X, LEVEL_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
 }
