@@ -89,22 +89,27 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
   if (flags & SFLAG_RENDER) {
     if (mBlockSize == BLOCKSIZE_2x2) {
       TInt8 blocks[4];
-      memcpy(blocks, mBlocks, sizeof(mBlocks));
 
-      if (mBlocksOverlap[0]) {
-        blocks[0] = blocks[0] == 0 ? 22 : 23;
-      }
+      if (gOptions->difficulty == DIFFICULTY_HARD && (flags & SFLAG_NEXT_BLOCK)) {
+        memset(blocks, 0, sizeof(blocks));
+      } else {
+        memcpy(blocks, mBlocks, sizeof(mBlocks));
 
-      if (mBlocksOverlap[1]) {
-        blocks[1] = blocks[1] == 0 ? 22 : 23;
-      }
+        if (mBlocksOverlap[0]) {
+          blocks[0] = blocks[0] == 0 ? 22 : 23;
+        }
 
-      if (mBlocksOverlap[2]) {
-        blocks[2] = blocks[2] == 0 ? 22 : 23;
-      }
+        if (mBlocksOverlap[1]) {
+          blocks[1] = blocks[1] == 0 ? 22 : 23;
+        }
 
-      if (mBlocksOverlap[3]) {
-        blocks[3] = blocks[3] == 0 ? 22 : 23;
+        if (mBlocksOverlap[2]) {
+          blocks[2] = blocks[2] == 0 ? 22 : 23;
+        }
+
+        if (mBlocksOverlap[3]) {
+          blocks[3] = blocks[3] == 0 ? 22 : 23;
+        }
       }
 
       BSprite::DrawSprite(gViewPort, PLAYER_SLOT, blocks[0], xx, yy);
