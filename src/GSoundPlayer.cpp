@@ -82,10 +82,11 @@ TBool GSoundPlayer::LoadEffects() {
     SFX_ROTATE_BLOCK_RIGHT_WAV,
     SFX_SCORE_COMBO_WAV,
     SFX_OPTION_SELECT_WAV,
-    SFX_EXPLODE_BLOCK_WAV
+    SFX_EXPLODE_BLOCK_WAV,
+    SFX_NEXT_LEVEL_WAV
   };
 
-  for (uint8_t i = 0; i < 8; i++) {
+  for (uint8_t i = 0; i < 9; i++) {
     LoadEffect(mEffectsList[i], i);
   }
   return ETrue;
@@ -146,4 +147,7 @@ void GSoundPlayer::SfxMenuAccept() {
 
 void GSoundPlayer::SfxMenuCancel() {
   gSoundPlayer.PlaySfx(/*SFX_GOOD_DROP_BLOCK_WAV*/0);
+}
+void GSoundPlayer::SfxNextStage() {
+  gSoundPlayer.PlaySfx(/*SFX_NEXT_LEVEL*/8);
 }

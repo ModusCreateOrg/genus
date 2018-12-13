@@ -88,3 +88,4 @@ RAW SFX_move_block.wav
 RAW SFX_score_combo.wav
 RAW SFX_option_select.wav
 RAW SFX_explode_block.wav
+RAW SFX_next_level.wav
