@@ -1,11 +1,12 @@
 #include "Game.h"
 
-static const TUint8 ARROW_TIMER = 3;
-static const TUint8 BLOCK_TIMER = 15;
-static const TUint8 ARROW_X = 4;
-static const TUint8 BLOCK_X = 96;
-static const TUint8 BLOCK_Y = 50;
-static const TUint8 TEXT_Y = 100;
+static const TUint8 ARROW_TIMER      = 3;
+static const TUint8 BLOCK_TIMER      = 15;
+static const TUint8 BLOCK_TIMER_INIT = 7;
+static const TUint8 ARROW_X          = 4;
+static const TUint8 BLOCK_X          = 96;
+static const TUint8 BLOCK_Y          = 50;
+static const TUint8 TEXT_Y           = 100;
 
 // special characters
 static const char *STR_LEFT_ARROW  = "\xf";
@@ -87,8 +88,8 @@ public:
     mRulesState->AddSprite(mSprite);
 
     mState      = 0;
-    mNextTimer  = 3 * 30;
     mArrowTimer = 0;
+    mTimer      = BLOCK_TIMER_INIT;
   }
 
   ~RulesProcess() {
@@ -96,6 +97,13 @@ public:
   }
 
 protected:
+  void ResetSprite() {
+    mSprite->mBlocks[0] = 16;
+    mSprite->mBlocks[1] = 0;
+    mSprite->mBlocks[2] = 16;
+    mSprite->mBlocks[3] = 0;
+  }
+
   TInt RenderString(const char *aString, TInt aY) {
     TInt width = TInt(strlen(aString) * 12);
     TInt x     = (SCREEN_WIDTH - width) / 2;
@@ -106,6 +114,8 @@ protected:
 protected:
   TInt Text1() {
     mSprite->flags |= SFLAG_RENDER;
+    ResetSprite();
+
     TInt y = TEXT_Y;
     y += RenderString("Move the 2x2 blocks", y);
     y += RenderString("with the joystick.", y) + 16;
@@ -116,6 +126,7 @@ protected:
 
   TInt Text2() {
     mSprite->flags |= SFLAG_RENDER;
+
     TInt y = TEXT_Y;
     y += RenderString("The A button rotates", y);
     y += RenderString("the blocks.", y);
@@ -234,6 +245,9 @@ protected:
         Text2();
         break;
       case 2:
+        // Reset sprite rotation and timer from previous page
+        mTimer = BLOCK_TIMER_INIT;
+        ResetSprite();
         Text3();
         break;
       case 3:
@@ -289,7 +303,7 @@ protected:
 
 protected:
   TInt            mState;
-  TInt            mNextTimer, mTimer, mArrowTimer;
+  TInt            mTimer, mArrowTimer;
   BFont           *mFont;
   GPlayerSprite   *mSprite;
   GRulesState     *mRulesState;
