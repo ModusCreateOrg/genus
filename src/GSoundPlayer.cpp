@@ -54,7 +54,11 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
   TBool music = BSoundPlayer::PlayMusic(aResourceId);
-//  MuteMusic(gOptions->muted);
+
+  // BSoundPlayer::PlayMusic un-mutes the music
+  // We have to re-mute it in case of mute == true
+  MuteMusic(gOptions->muted);
+
   return music;
 }
 
