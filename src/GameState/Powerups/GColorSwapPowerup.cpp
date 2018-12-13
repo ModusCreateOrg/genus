@@ -83,8 +83,6 @@ TBool GColorSwapPowerup::StateRemove() {
     return ETrue;
   }
 
-  mGameState->MainStateWait();
-
   mColorSwapTimer = 30 / 8;        // 1/8 second
 
   auto         *stack = (PointStack *) mPointStack;
@@ -118,6 +116,7 @@ TBool GColorSwapPowerup::StateMove() {
     if (mGameState->MainState() != STATE_REMOVE && (currentColor == 0 || currentColor == 16)) {
       Drop();
       mState = STATE_REMOVE;
+      mGameState->MainStateWait();
     }
     else {
       // make bad drop sound
