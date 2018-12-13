@@ -33,6 +33,7 @@ public:
   void SfxMenuNavDown();
   void SfxMenuAccept();
   void SfxMenuCancel();
+  void SfxNextLevel();
   void SfxNextStage();
 };
 
