@@ -196,32 +196,27 @@ void GGameState::LoadLevel() {
         mPlayfield = new GLevelCountryside(this); // Playfield 1
         gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(COUNTRYSIDE_XM);
-        gSoundPlayer.SfxNextStage();
         break;
       case 1:
         mPlayfield = new GLevelUnderWater1(this); // Playfield 2
         gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDER_WATER_XM);
-        gSoundPlayer.SfxNextStage();
         break;
       case 2:
         mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
         gResourceManager.LoadBitmap(LEVEL3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(GLACIAL_MOUNTAINS_XM);
-        gSoundPlayer.SfxNextStage();
         break;
       case 3:
         // TODO: @Jay???
         mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2
         gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDERWATERFANTASY_XM);
-        gSoundPlayer.SfxNextStage();
         break;
       case 4:
         mPlayfield = new GLevelCyberpunk(this); // Playfield 5
         gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(CYBERPUNK_XM);
-        gSoundPlayer.SfxNextStage();
         break;
       case 5:
         mPlayfield = new GLevelSpace(this); // Playfield 6
@@ -233,6 +228,11 @@ void GGameState::LoadLevel() {
         Panic("LoadLevel invalid level\n");
     }
   }
+
+  if (mLevel > 1) {
+    gSoundPlayer.SfxNextStage();
+  }
+
   BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
   // TODO: Jay - this logic can be moved to BPlayfield children
