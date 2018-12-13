@@ -17,6 +17,8 @@ GGameOverHighScoreAnimationProcess::GGameOverHighScoreAnimationProcess(GGameOver
   mSprite->y = 124;
   mSprite->StartAnimation(HighScoresAnimation);
   mGameOverState->AddSprite(mSprite);
+
+  gSoundPlayer.PlayMusic(GAMEOVER_XM);
 }
 
 GGameOverHighScoreAnimationProcess::~GGameOverHighScoreAnimationProcess() {
