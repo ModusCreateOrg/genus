@@ -17,17 +17,19 @@ GSoundPlayer gSoundPlayer;
 void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
   BSoundPlayer::Init(aNumberFxChannels, aNumberFxSlots);
 
-  mMaxSongs = 7;
+  mMaxSongs = 9;
   mSongSlots = (SongSlot *)AllocMem(sizeof(SongSlot) * mMaxSongs, MEMF_SLOW);
 
   const uint16_t allSongs[] = {
     EMPTYSONG_XM,
     UNDER_WATER_XM,
-    CITY_SCAPES_XM,
+    CYBERPUNK_XM,
     COUNTRYSIDE_XM,
     MAIN_MENU_XM,
     SPAAACE_XM,
     GLACIAL_MOUNTAINS_XM,
+    GAMEOVER_XM,
+    UNDERWATERFANTASY_XM
   };
 
   for (uint8_t i = 0; i < mMaxSongs; i++) {
@@ -52,7 +54,7 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
   TBool music = BSoundPlayer::PlayMusic(aResourceId);
-  MuteMusic(gOptions->muted);
+//  MuteMusic(gOptions->muted);
   return music;
 }
 
@@ -64,6 +66,8 @@ TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
     }
   }
 
+  printf("WARNING :: Could not find song %i\n", aResourceId);
+
   return false;
 }
 
@@ -71,14 +75,14 @@ TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
 TBool GSoundPlayer::LoadEffects() {
   // Load effects
   const uint16_t mEffectsList[] = {
-          SFX_GOOD_DROP_BLOCK_WAV,
-          SFX_BAD_DROP_BLOCK_WAV,
-          SFX_MOVE_BLOCK_WAV,
-          SFX_ROTATE_BLOCK_LEFT_WAV,
-          SFX_ROTATE_BLOCK_RIGHT_WAV,
-          SFX_SCORE_COMBO_WAV,
-          SFX_OPTION_SELECT_WAV,
-          SFX_EXPLODE_BLOCK_WAV
+    SFX_GOOD_DROP_BLOCK_WAV,
+    SFX_BAD_DROP_BLOCK_WAV,
+    SFX_MOVE_BLOCK_WAV,
+    SFX_ROTATE_BLOCK_LEFT_WAV,
+    SFX_ROTATE_BLOCK_RIGHT_WAV,
+    SFX_SCORE_COMBO_WAV,
+    SFX_OPTION_SELECT_WAV,
+    SFX_EXPLODE_BLOCK_WAV
   };
 
   for (uint8_t i = 0; i < 8; i++) {

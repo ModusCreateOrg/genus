@@ -193,7 +193,7 @@ void GGameState::LoadLevel() {
 
     switch ((mLevel / 5) % 6) {
       case 0:
-        mPlayfield = new GLevelCountryside(this);
+        mPlayfield = new GLevelCountryside(this); // Playfield 1
         gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(COUNTRYSIDE_XM);
         break;
@@ -209,17 +209,17 @@ void GGameState::LoadLevel() {
         break;
       case 3:
         // TODO: @Jay???
-        mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2    // temporary TODO: @Jay
+        mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2
         gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(UNDER_WATER_XM);
+        gSoundPlayer.PlayMusic(UNDERWATERFANTASY_XM);
         break;
       case 4:
         mPlayfield = new GLevelCyberpunk(this); // Playfield 5
         gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(CITY_SCAPES_XM);
+        gSoundPlayer.PlayMusic(CYBERPUNK_XM);
         break;
       case 5:
-        mPlayfield = new GLevelSpace(this); // Todo: @Mike, this is Level 6
+        mPlayfield = new GLevelSpace(this); // Playfield 6
         gResourceManager.LoadBitmap(LEVEL6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SPAAACE_XM);
         break;
