@@ -193,35 +193,41 @@ void GGameState::LoadLevel() {
 
     switch ((mLevel / 5) % 6) {
       case 0:
-        mPlayfield = new GLevelCountryside(this);
+        mPlayfield = new GLevelCountryside(this); // Playfield 1
         gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(COUNTRYSIDE_XM);
+        gSoundPlayer.SfxNextStage();
         break;
       case 1:
         mPlayfield = new GLevelUnderWater1(this); // Playfield 2
         gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDER_WATER_XM);
+        gSoundPlayer.SfxNextStage();
         break;
       case 2:
         mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
         gResourceManager.LoadBitmap(LEVEL3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(GLACIAL_MOUNTAINS_XM);
+        gSoundPlayer.SfxNextStage();
         break;
       case 3:
         // TODO: @Jay???
-        mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2    // temporary TODO: @Jay
+        mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2
         gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(UNDER_WATER_XM);
+        gSoundPlayer.PlayMusic(UNDERWATERFANTASY_XM);
+        gSoundPlayer.SfxNextStage();
         break;
       case 4:
         mPlayfield = new GLevelCyberpunk(this); // Playfield 5
         gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(CITY_SCAPES_XM);
+        gSoundPlayer.PlayMusic(CYBERPUNK_XM);
+        gSoundPlayer.SfxNextStage();
         break;
       case 5:
-        mPlayfield = new GLevelSpace(this); // Todo: @Mike, this is Level 6
+        mPlayfield = new GLevelSpace(this); // Playfield 6
         gResourceManager.LoadBitmap(LEVEL6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SPAAACE_XM);
+        gSoundPlayer.SfxNextStage();
         break;
       default:
         Panic("LoadLevel invalid level\n");
@@ -303,6 +309,11 @@ void GGameState::RenderLevel() {
 void GGameState::RenderNext() {
   BBitmap *bm = gDisplay.renderBitmap;
   bm->DrawStringShadow(ENull, "Next", mFont16, NEXT_X, NEXT_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+
+  // On HARD difficulty draw a "?" over a filled block
+  if (gOptions->difficulty == DIFFICULTY_HARD) {
+    bm->DrawStringShadow(ENull, "?", mFont16, NEXT_BLOCK_X + 8, NEXT_BLOCK_Y + 8, COLOR_TEXT, COLOR_TEXT_SHADOW, -1);
+  }
 }
 
 void GGameState::RenderMovesLeft() {

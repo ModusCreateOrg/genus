@@ -1,11 +1,12 @@
 #include "Game.h"
 
-static const TUint8 ARROW_TIMER = 3;
-static const TUint8 BLOCK_TIMER = 15;
-static const TUint8 ARROW_X = 4;
-static const TUint8 BLOCK_X = 96;
-static const TUint8 BLOCK_Y = 50;
-static const TUint8 TEXT_Y = 100;
+static const TUint8 ARROW_TIMER      = 3;
+static const TUint8 BLOCK_TIMER      = 15;
+static const TUint8 BLOCK_TIMER_INIT = 7;
+static const TUint8 ARROW_X          = 4;
+static const TUint8 BLOCK_X          = 96;
+static const TUint8 BLOCK_Y          = 50;
+static const TUint8 TEXT_Y           = 100;
 
 // special characters
 static const char *STR_LEFT_ARROW  = "\xf";
@@ -87,8 +88,8 @@ public:
     mRulesState->AddSprite(mSprite);
 
     mState      = 0;
-    mTimer      = 0;
     mArrowTimer = 0;
+    mTimer      = BLOCK_TIMER_INIT;
   }
 
   ~RulesProcess() {
@@ -125,7 +126,6 @@ protected:
 
   TInt Text2() {
     mSprite->flags |= SFLAG_RENDER;
-    ResetSprite();
 
     TInt y = TEXT_Y;
     y += RenderString("The A button rotates", y);
@@ -245,6 +245,9 @@ protected:
         Text2();
         break;
       case 2:
+        // Reset sprite rotation and timer from previous page
+        mTimer = BLOCK_TIMER_INIT;
+        ResetSprite();
         Text3();
         break;
       case 3:
