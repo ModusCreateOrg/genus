@@ -75,6 +75,7 @@ RAW Main_Menu.xm
 RAW Spaaace.xm
 RAW UnderWaterFantasy.xm
 RAW Under_Water.xm
+RAW EnterCredits.xm
 
 
 # .-=[ Sound Effects ]=-.

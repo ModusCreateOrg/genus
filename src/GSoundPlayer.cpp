@@ -17,7 +17,7 @@ GSoundPlayer gSoundPlayer;
 void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
   BSoundPlayer::Init(aNumberFxChannels, aNumberFxSlots);
 
-  mMaxSongs = 9;
+  mMaxSongs = 11;
   mSongSlots = (SongSlot *)AllocMem(sizeof(SongSlot) * mMaxSongs, MEMF_SLOW);
 
   const uint16_t allSongs[] = {
@@ -29,7 +29,9 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
     SPAAACE_XM,
     GLACIAL_MOUNTAINS_XM,
     GAMEOVER_XM,
-    UNDERWATERFANTASY_XM
+    UNDERWATERFANTASY_XM,
+    GAMEOVER_XM,
+    ENTERCREDITS_XM
   };
 
   for (uint8_t i = 0; i < mMaxSongs; i++) {
@@ -54,7 +56,7 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
   TBool music = BSoundPlayer::PlayMusic(aResourceId);
-
+//  printf("%s %i\n", __PRETTY_FUNCTION__, aResourceId);
   // BSoundPlayer::PlayMusic un-mutes the music
   // We have to re-mute it in case of mute == true
   MuteMusic(gOptions->muted);

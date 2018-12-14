@@ -25,6 +25,8 @@ GGameOverProcess::GGameOverProcess() : BProcess() {
   } else {
     mState = STATE_HIGHSCORES;
   }
+  gSoundPlayer.PlayMusic(ENTERCREDITS_XM);
+
 }
 
 GGameOverProcess::~GGameOverProcess() {
