@@ -3,7 +3,7 @@
 #include "GGameStateGameOverProcess.h"
 #include "Playfields/GLevelCountryside.h"
 #include "Playfields/GLevelCyberpunk.h"
-#include "Playfields/GLevelUnderWater1.h"
+#include "Playfields/GLevelUnderWaterOne.h"
 #include "Playfields/GLevelGlacialMountains.h"
 #include "Playfields/GLevelUnderWaterFantasy.h"
 #include "Playfields/GLevelSpace.h"
@@ -203,7 +203,7 @@ void GGameState::LoadLevel() {
         newStage = true;
         break;
       case 1:
-        mPlayfield = new GLevelUnderWater1(this); // Playfield 2
+        mPlayfield = new GLevelUnderWaterOne(this); // Playfield 2
         gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDER_WATER_XM);
         newStage = true;

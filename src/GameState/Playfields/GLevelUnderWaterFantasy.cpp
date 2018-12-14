@@ -1,10 +1,6 @@
-//
-// Created by Jesus Garcia on 11/5/18.
-//
-
-
 #include "GLevelUnderWaterFantasy.h"
 #include "Game.h"
+#include "PrecalcSines.h"
 
 #ifdef __XTENSA__
 #include <math.h>
@@ -32,15 +28,14 @@ GLevelUnderWaterFantasy::GLevelUnderWaterFantasy(GGameState *aGameEngine) {
   mGameEngine = aGameEngine;
   mTextColor = 0;
 
-  bgOffset0 = 0;
-  bgOffset1 = 0;
-  bgOffset2 = 0;
 
   mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
 //  mBackground1 = gResourceManager.GetBitmap(BKG2_SLOT);
 //  mBackground2 = gResourceManager.GetBitmap(BKG3_SLOT);
 
-  mFrame   = 0.0f;
+  mXSinIndex = 0;
+  mYSinIndex = 0;
+
   mXComp   = (int8_t *)AllocMem(320, MEMF_SLOW);
   mYOffset = (int8_t *)AllocMem(240, MEMF_SLOW);
 }
@@ -62,39 +57,42 @@ void GLevelUnderWaterFantasy::Animate() {
 //  mTextColor %= 64;
 //  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
-
   // This block will setup x and y offsets
-  mFrame++;
+  int workingXSinIndex = mXSinIndex;
   for (int x = 0; x < 320; x++) {
 //    xOffset[x] = sin(mFrame * 0.15 + x * 0.06) * 4;
-    mXComp[x] = sin(mFrame * 0.11 + x * 0.12) * 3.0f;
+//    mXComp[x] = sin(mFrame * 0.11 + x * 0.12) * 3.0f;
+
+    mXComp[x] = xSin[workingXSinIndex];
+    workingXSinIndex++;
+    if (workingXSinIndex > 319) {
+      workingXSinIndex = 0;
+    }
   }
 
+  int workingYSinIndex = mYSinIndex;
   for (int y = 0; y < 240; y++) {
-    mYOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 2.0f;
+//    mYOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 2.0f;
 //    yComp[y] = sin(mFrame * 0.07 + y * 0.15) * 4;
+
+    mYOffset[y] = ySin[workingYSinIndex];
+    workingYSinIndex++;
+    if (workingYSinIndex > 239) {
+      workingYSinIndex = 0;
+    }
   }
 
-//  // Base background
-//  bgOffset0 += .005;
-//  if ((int)bgOffset0 >= mBackground0->Width()) {
-//    bgOffset0= 0;
-//  }
-//
-//  bgOffset1 += .008;
-//  if ((int)bgOffset1 >= mBackground1->Width()) {
-//    bgOffset1 = 0;
-//  }
-//
-//  bgOffset2 += .5;// .01;
-//  if ((int)bgOffset2 >= mBackground2->Width()) {
-//    bgOffset2 = 0;
-//  }
+  mXSinIndex++;
+  if (mXSinIndex > 319) {
+    mXSinIndex = 0;
+  }
 
+  mYSinIndex++;
+  if (mYSinIndex > 239) {
+    mYSinIndex = 0;
+  }
 
 }
-
-
 
 
 
