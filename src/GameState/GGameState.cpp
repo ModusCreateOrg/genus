@@ -154,6 +154,7 @@ void GGameState::GameOver() {
   h.Load();
   h.lastScore[gOptions->difficulty].mValue = mScore.mValue;
   h.Save();
+  gSoundPlayer.PlayMusic(GAMEOVER_XM);
 }
 
 /****************************************************************************************************************
