@@ -94,6 +94,9 @@ TBool GSoundPlayer::LoadEffects() {
   for (uint8_t i = 0; i < 10; i++) {
     LoadEffect(mEffectsList[i], i);
   }
+
+  SetMusicVolume(gOptions->music);
+  SetEffectsVolume(gOptions->sfx);
   return ETrue;
 }
 
