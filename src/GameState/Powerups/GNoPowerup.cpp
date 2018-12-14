@@ -165,7 +165,9 @@ TBool GNoPowerup::TimerState() {
   if (gControls.WasPressed(BUTTONB)) {
     if (CanDrop()) {
       gSoundPlayer.SfxGoodDrop();
-      Drop();
+      if (Drop()) {
+        gSoundPlayer.SfxCombo();
+      }
     } else {
       // can't drop sound:
       gSoundPlayer.SfxBadDrop();

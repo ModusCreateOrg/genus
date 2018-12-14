@@ -45,6 +45,9 @@ enum {
   SFX5_SLOT,
   SFX6_SLOT,
   SFX7_SLOT,
+  SFX8_SLOT,
+  SFX9_SLOT,
+  SFX10_SLOT,
 };
 
 // image numbers on sprite sheets
