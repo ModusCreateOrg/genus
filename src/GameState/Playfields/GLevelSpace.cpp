@@ -13,7 +13,83 @@
 #endif
 
 
+#if 1
+const TFloat VELOCITY = 4.5;
 
+GLevelSpace::GLevelSpace(GGameState *aGameEngine) {
+  mGameEngine = aGameEngine;
+  mOldCameraZ = 0.0;
+  mCameraZ    = 0.0;
+
+  for (TInt i = 0; i < NUM_STARS; i++) {
+    InitStar(i);
+  }
+
+  gResourceManager.LoadBitmap(SPACE_STATIC_TOP_LEFT_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(SPACE_STATIC_BOTTOM_RIGHT_BMP, BKG2_SLOT, IMAGE_ENTIRE);
+
+  mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
+  mBackground1 = gResourceManager.GetBitmap(BKG2_SLOT);
+  mCameraZ += VELOCITY;
+}
+
+GLevelSpace::~GLevelSpace() {
+  gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
+  gResourceManager.ReleaseBitmapSlot(BKG2_SLOT);
+}
+
+void GLevelSpace::Animate() {
+  mOldCameraZ += VELOCITY;
+  mCameraZ += VELOCITY;
+}
+
+void GLevelSpace::Render() {
+  gDisplay.renderBitmap->Clear(86);
+  TRect rect = TRect(0, 0, mBackground0->Width() - 1, mBackground0->Height() - 1);
+  gDisplay.renderBitmap->DrawBitmapTransparent(ENull, mBackground0, rect, 0, 0);
+
+  TFloat cz  = mOldCameraZ,
+         czz = mCameraZ;
+
+  for (TInt i = 0; i < NUM_STARS; i++) {
+    TFloat zz  = (mStarZ[i] - cz) * 2,
+           zzz = (mStarZ[i] - czz) * 2;
+
+    if (zz < 0 || zzz < 0) {
+      InitStar(i);
+      zz = (mStarZ[i] - cz) * 2;
+      zzz = (mStarZ[i] - czz) * 2;
+    }
+    TFloat ratioX = SCREEN_WIDTH / (zz + SCREEN_WIDTH);
+    TFloat ratioX2 = SCREEN_WIDTH / (zzz + SCREEN_WIDTH);
+    TFloat ratioY = SCREEN_HEIGHT / (zz + SCREEN_HEIGHT);
+    TFloat ratioY2= SCREEN_HEIGHT / (zzz + SCREEN_HEIGHT);
+    TInt   x      = (SCREEN_WIDTH / 2) - (mStarX[i] - 0) * ratioX;
+    TInt   x2     = (SCREEN_WIDTH / 2) - (mStarX[i] - 0) * ratioX2;
+    TInt   y      = (SCREEN_HEIGHT / 2) - (mStarY[i] - 0) * ratioY;
+    TInt   y2     = (SCREEN_HEIGHT / 2) - (mStarY[i] - 0) * ratioY2;
+
+    if (x > 320 || x < 0 || y > 240 || y < 0 || (x == (320 >> 1) && y == (240 >> 1))) {
+      InitStar(i);
+    } else {
+//      gDisplay.renderBitmap->WritePixel(x, y, 100);
+      gDisplay.renderBitmap->DrawLine(ENull, x,y, x2, y2, 100);
+    }
+  }
+  rect = TRect(0, 0, mBackground1->Width() - 1, mBackground1->Height() - 1);
+  gDisplay.renderBitmap->DrawBitmapTransparent(
+    ENull,
+    mBackground1,
+    rect,
+    gDisplay.renderBitmap->Width() - mBackground1->Width(),
+    gDisplay.renderBitmap->Height() - mBackground1->Height()
+  );
+
+
+  mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
+}
+
+#else
 #define STAR_SPEED_MIN 10 // Minimum movement in pixels per update. (value is inclusive)
 #define STAR_SPEED_MAX 30 // Maximum movement in pixels per update. (value is inclusive)
 
@@ -189,4 +265,5 @@ void GLevelSpace::Render() {
   mGameEngine->mGameBoard.Render(BOARD_X, BOARD_Y);
 }
 
+#endif
 

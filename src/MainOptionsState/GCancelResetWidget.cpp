@@ -35,6 +35,6 @@ TInt GCancelResetWidget::Render(TInt aX, TInt aY) {
 }
 
 void GCancelResetWidget::Select() {
-  // Go Back
   gGame->SetState(GAME_STATE_MAIN_OPTIONS);
+  gSoundPlayer.SfxMenuCancel();
 }

@@ -28,7 +28,18 @@ enum {
 
 // BRaw slots
 enum {
-  SONG_SLOT,
+  SONG0_SLOT,
+  SONG1_SLOT,
+  SONG2_SLOT,
+  SONG3_SLOT,
+  SONG4_SLOT,
+  SONG5_SLOT,
+  SONG6_SLOT,
+  SONG7_SLOT,
+  SONG8_SLOT,
+  SONG9_SLOT,
+  SONG10_SLOT,
+  SONG11_SLOT,
   SFX1_SLOT,
   SFX2_SLOT,
   SFX3_SLOT,
@@ -36,12 +47,17 @@ enum {
   SFX5_SLOT,
   SFX6_SLOT,
   SFX7_SLOT,
+  SFX8_SLOT,
+  SFX9_SLOT,
+  SFX10_SLOT,
 };
 
 // image numbers on sprite sheets
 // SPRITES.BMP
 static const TUint16 IMG_TILE1 = 0;   // pink
 static const TUint16 IMG_TILE2 = 16;   // green
+static const TUint16 IMG_TILE3 = 5;   // green
+static const TUint16 IMG_TILE4 = 21;   // green
 
 static const TUint16 IMG_BGTILE1 = 6; // this is the grid background tile
 static const TUint16 IMG_FRAMEL  = 14;

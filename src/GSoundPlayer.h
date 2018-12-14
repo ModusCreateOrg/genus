@@ -12,7 +12,6 @@
 class GSoundPlayer : public BSoundPlayer {
 
 
-
 public:
   void Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots);
 
@@ -32,6 +31,10 @@ public:
   void SfxOptionSelect();
   void SfxMenuNavUp();
   void SfxMenuNavDown();
+  void SfxMenuAccept();
+  void SfxMenuCancel();
+  void SfxNextLevel();
+  void SfxNextStage();
 };
 
 

@@ -15,14 +15,19 @@ static const TInt BLINK_TIME = 2;
 GPlayerSprite::GPlayerSprite() : BAnimSprite(0, PLAYER_SLOT) {
   this->flags        |= SFLAG_RENDER;
   this->mGameOver    = EFalse;
+  this->mBlinkTimer  = BLINK_TIME;
   Randomize();
+  ResetOverlappingBlocks();
 }
 
 GPlayerSprite::~GPlayerSprite() {}
 
+void GPlayerSprite::ResetOverlappingBlocks() {
+  memset(mBlocksOverlap, EFalse, sizeof(mBlocksOverlap));
+}
+
 TInt GPlayerSprite::BoardRow() {
   return TInt(y - BOARD_Y) / 16;
-
 }
 
 TInt GPlayerSprite::BoardCol() {
@@ -83,15 +88,54 @@ TBool GPlayerSprite::Render(BViewPort *aVP) {
 
   if (flags & SFLAG_RENDER) {
     if (mBlockSize == BLOCKSIZE_2x2) {
-      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[0], xx, yy);
-      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[1], xx + 16, yy);
-      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[2], xx, yy + 16);
-      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, mBlocks[3], xx + 16, yy + 16);
+      TInt8 blocks[4];
+
+      // On HARD difficulty we show a filled NEXT block to the player
+      if (gOptions->difficulty == DIFFICULTY_HARD && (flags & SFLAG_NEXT_BLOCK)) {
+        memset(blocks, 0, sizeof(blocks));
+      } else {
+        memcpy(blocks, mBlocks, sizeof(mBlocks));
+
+        if (mBlocksOverlap[0]) {
+          blocks[0] = blocks[0] == 0 ? 22 : 23;
+        }
+
+        if (mBlocksOverlap[1]) {
+          blocks[1] = blocks[1] == 0 ? 22 : 23;
+        }
+
+        if (mBlocksOverlap[2]) {
+          blocks[2] = blocks[2] == 0 ? 22 : 23;
+        }
+
+        if (mBlocksOverlap[3]) {
+          blocks[3] = blocks[3] == 0 ? 22 : 23;
+        }
+      }
+
+      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, blocks[0], xx, yy);
+      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, blocks[1], xx + 16, yy);
+      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, blocks[2], xx, yy + 16);
+      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, blocks[3], xx + 16, yy + 16);
+
       // frame
 //      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy);
 //      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy);
 //      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMEL, xx, yy + 16, SFLAG_FLOP);
 //      BSprite::DrawSprite(gViewPort, PLAYER_SLOT, IMG_FRAMER, xx + 16, yy + 16, SFLAG_FLOP);
+
+      if (!(flags & (SFLAG_NEXT_BLOCK | SFLAG_RULES_BLOCK))) {
+        BBitmap *bm = gDisplay.renderBitmap;
+        TInt linesColor = COLOR_BORDER1;
+        TInt maxBoardX = BOARD_COLS * 16;
+        TInt maxBoardY = BOARD_ROWS * 16;
+
+        bm->DrawFastHLine(gViewPort, BOARD_X, yy - 1, maxBoardX, linesColor);
+        bm->DrawFastHLine(gViewPort, BOARD_X, yy + 32, maxBoardX, linesColor);
+
+        bm->DrawFastVLine(gViewPort, xx - 1, BOARD_Y, maxBoardY, linesColor);
+        bm->DrawFastVLine(gViewPort, xx + 32, BOARD_Y, maxBoardY, linesColor);
+      }
 
       if (!(flags & SFLAG_NEXT_BLOCK)) {
         TInt animationFrame = mLassoTimer & 8 ? 4 : 0;

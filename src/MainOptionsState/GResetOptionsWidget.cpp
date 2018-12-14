@@ -37,11 +37,11 @@ void GResetOptionsWidget::Select() {
   // Reset options
   gOptions->Reset();
 
-  // Play notification sound
-  gSoundPlayer.SfxOptionSelect();
-
   // Go Back
   gGame->SetState(GAME_STATE_MAIN_OPTIONS);
+
+  // Play notification sound
+  gSoundPlayer.SfxMenuAccept();
 
   // Make sure we hear the reset in music volume immediately
   gSoundPlayer.SetMusicVolume(gOptions->music);

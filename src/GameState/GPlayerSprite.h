@@ -3,7 +3,8 @@
 
 #include <BAnimSprite.h>
 
-#define SFLAG_NEXT_BLOCK (1 << SFLAG_USER_BIT)
+#define SFLAG_NEXT_BLOCK  (1 << SFLAG_USER_BIT)
+#define SFLAG_RULES_BLOCK (2 << SFLAG_USER_BIT)
 
 enum {
   BLOCKSIZE_2x2,
@@ -36,9 +37,12 @@ public:
 
   void Copy(GPlayerSprite *aOther);
 
+  void ResetOverlappingBlocks();
+
 public:
   TInt   mBlinkTimer, mLassoTimer;
   TUint8 mBlocks[4];
+  TBool  mBlocksOverlap[4];
   TInt   mBlockSize;
   TBool  mGameOver;
 };

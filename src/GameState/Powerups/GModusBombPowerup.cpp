@@ -46,22 +46,15 @@ TBool GModusBombPowerup::Drop() {
 }
 
 TBool GModusBombPowerup::StateMove() {
-  mRepeatTimer--;
-
-  if (TimedControl(JOYLEFT)) {
-    MoveLeft();
-  } else if (TimedControl(JOYRIGHT)) {
-    MoveRight();
-  } else if (TimedControl(JOYUP)) {
-    MoveUp();
-  } else if (TimedControl(JOYDOWN)) {
-    MoveDown();
-  }
-
   if (gControls.WasPressed(BUTTONB)) {
-    Drop();
-    mState = STATE_REMOVE;
-    mPlayerSprite->StartAnimation(BombDropAnimation);
+    if (mGameState->MainState() != STATE_REMOVE) {
+      Drop();
+      mState = STATE_REMOVE;
+      mGameState->MainStateWait();
+      mPlayerSprite->StartAnimation(BombDropAnimation);
+    } else {
+      gSoundPlayer.SfxBadDrop();
+    }
   }
 
   return ETrue;
@@ -115,8 +108,8 @@ TBool GModusBombPowerup::StateRemove() {
   if (mBombTimer--) {
     return ETrue;
   }
-  mBombTimer = 30 / 4;        // 1/8 second
 
+  mBombTimer = 30 / 4;        // 1/8 second
   TInt row = mBombRow,
        col = mBombCol;
 

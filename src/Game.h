@@ -5,6 +5,13 @@
 #define STATIC_GAME_BACKGROUNDS (1)
 //#undef STATIC_GAME_BACKGROUNDS
 
+#define FRAME_RATE_INFO 0
+#undef FRAME_RATE_INFO
+
+// Enable level skipping via SELECT button
+//#define CHICKEN_MODE
+//#undef CHICKEN_MODE
+
 #include <stdio.h>
 #include <unistd.h>
 #include <time.h>

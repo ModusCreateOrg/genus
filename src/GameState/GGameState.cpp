@@ -3,15 +3,12 @@
 #include "GGameStateGameOverProcess.h"
 #include "Playfields/GLevelCountryside.h"
 #include "Playfields/GLevelCyberpunk.h"
-#include "Playfields/GLevelUnderWater1.h"
+#include "Playfields/GLevelUnderWaterOne.h"
 #include "Playfields/GLevelGlacialMountains.h"
 #include "Playfields/GLevelUnderWaterFantasy.h"
 #include "Playfields/GLevelSpace.h"
 
-
-/***************************
-**DEBUG CODE PLEASE REMOVE**
-***************************/
+#ifdef CHICKEN_MODE
 class GGameState;
 class ChickenModeProcess : public BProcess {
   public:
@@ -37,10 +34,7 @@ class ChickenModeProcess : public BProcess {
 
     GGameState *mState;
 };
-/***************************
-****** END DEBUG CODE ******
-***************************/
-
+#endif
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -76,13 +70,9 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mGameProcess = new GNoPowerup(mSprite, this);
   AddProcess(mGameProcess);
 
-/***************************
-**DEBUG CODE PLEASE REMOVE**
-***************************/
+#ifdef CHICKEN_MODE
   AddProcess(new ChickenModeProcess(this));
-/***************************
-****** END DEBUG CODE ******
-***************************/
+#endif
 
   Next(EFalse);
 }
@@ -107,15 +97,34 @@ GGameState::~GGameState() {
  * @param aCanPowerup true if Next piece can be a powerup
  */
 void GGameState::Next(TBool aCanPowerup) {
-  if (mGameOver || mGameBoard.IsGameOver()) {
-    return;
-  }
   mSprite->x = PLAYER_X;
   mSprite->y = PLAYER_Y;
+
+  if (mGameOver || mGameBoard.IsGameOver()) {
+    mSprite->Copy(mNextSprite);
+    mNextSprite->Randomize();
+    mGameProcess->Signal();
+    return;
+  }
+
   if (aCanPowerup) {
-    TInt maybe = Random(15, 20);
+    TInt maybe = 0;
+
+    switch (gOptions->difficulty) {
+      case DIFFICULTY_EASY:
+        maybe = Random(15, 20);
+        break;
+      case DIFFICULTY_INTERMEDIATE:
+        maybe = Random(15, 22);
+        break;
+      case DIFFICULTY_HARD:
+        maybe = Random(15, 24);
+        break;
+      default:
+        Panic("DifficultyString: invalid difficulty %d", gOptions->difficulty);
+    }
+
     if (maybe == 16) {
-      mGameProcess->Wait();
       if (Random() & 1) {
         AddProcess(new GModusBombPowerup(mSprite, this));
       } else {
@@ -136,14 +145,16 @@ void GGameState::Next(TBool aCanPowerup) {
  ****************************************************************************************************************/
 
 void GGameState::GameOver() {
-  mSprite->flags &= ~SFLAG_RENDER | SFLAG_ANIMATE;
+  mSprite->flags &= ~(SFLAG_RENDER | SFLAG_ANIMATE);
   mGameProcess->Wait();
+  mBonusTimer = -1;
   mGameOver = ETrue;
   AddProcess(new GGameStateGameOverProcess(this));
   THighScoreTable h;
   h.Load();
   h.lastScore[gOptions->difficulty].mValue = mScore.mValue;
   h.Save();
+  gSoundPlayer.PlayMusic(GAMEOVER_XM);
 }
 
 /****************************************************************************************************************
@@ -159,6 +170,8 @@ void GGameState::PreRender() {
  ****************************************************************************************************************/
 
 void GGameState::LoadLevel() {
+  bool newStage = false;
+
   if ((mLevel % 5) == 1) {  // every 5th level
     delete mPlayfield;
     // difficulty
@@ -181,42 +194,61 @@ void GGameState::LoadLevel() {
       gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
     }
 
+
     switch ((mLevel / 5) % 6) {
       case 0:
-        mPlayfield = new GLevelCountryside(this);
+        mPlayfield = new GLevelCountryside(this); // Playfield 1
         gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(COUNTRYSIDE_XM);
+        newStage = true;
         break;
       case 1:
-        mPlayfield = new GLevelUnderWater1(this); // Playfield 2
+        mPlayfield = new GLevelUnderWaterOne(this); // Playfield 2
         gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDER_WATER_XM);
+        newStage = true;
         break;
       case 2:
         mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
         gResourceManager.LoadBitmap(LEVEL3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(GLACIAL_MOUNTAINS_XM);
+        newStage = true;
         break;
       case 3:
         // TODO: @Jay???
-        mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2    // temporary TODO: @Jay
+        mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2
         gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(UNDER_WATER_XM);
+        gSoundPlayer.PlayMusic(UNDERWATERFANTASY_XM);
+        newStage = true;
         break;
       case 4:
         mPlayfield = new GLevelCyberpunk(this); // Playfield 5
         gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
-        gSoundPlayer.PlayMusic(CITY_SCAPES_XM);
+        gSoundPlayer.PlayMusic(CYBERPUNK_XM);
+        newStage = true;
         break;
       case 5:
-        mPlayfield = new GLevelSpace(this); // Todo: @Mike, this is Level 6
+        mPlayfield = new GLevelSpace(this); // Playfield 6
         gResourceManager.LoadBitmap(LEVEL6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SPAAACE_XM);
+        newStage = true;
         break;
       default:
         Panic("LoadLevel invalid level\n");
     }
+
+
   }
+
+
+  if (newStage && mLevel > 1) {
+    gSoundPlayer.SfxNextStage();
+  }
+  else if (mLevel > 1) {
+    gSoundPlayer.SfxNextLevel();
+  }
+
+
   BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
   // TODO: Jay - this logic can be moved to BPlayfield children
@@ -268,12 +300,24 @@ void GGameState::RenderLevel() {
   char    lev[20];
   level.ToString(lev, ENull);
   char out[32];
-  if (strlen(lev) == 1) {
-    strcpy(out, "Level  ");
-  } else {
-    strcpy(out, "Level ");
+  switch (strlen(lev)) {
+    case 1:
+      strcpy(out, "Level  ");
+      strcat(out, lev);
+      break;
+    case 2:
+      strcpy(out, "Level ");
+      strcat(out, lev);
+      break;
+    case 3:
+      strcpy(out, "Level");
+      strcat(out, lev);
+      break;
+    default:
+      // Levels are limited to 999 in UI
+      strcpy(out, "Level");
+      strcat(out, "999");
   }
-  strcat(out, lev);
 
   bm->DrawStringShadow(ENull, out, mFont16, LEVEL_X, LEVEL_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
 }
@@ -281,6 +325,11 @@ void GGameState::RenderLevel() {
 void GGameState::RenderNext() {
   BBitmap *bm = gDisplay.renderBitmap;
   bm->DrawStringShadow(ENull, "Next", mFont16, NEXT_X, NEXT_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+
+  // On HARD difficulty draw a "?" over a filled block
+  if (gOptions->difficulty == DIFFICULTY_HARD) {
+    bm->DrawStringShadow(ENull, "?", mFont16, NEXT_BLOCK_X + 8, NEXT_BLOCK_Y + 8, COLOR_TEXT, COLOR_TEXT_SHADOW, -1);
+  }
 }
 
 void GGameState::RenderMovesLeft() {

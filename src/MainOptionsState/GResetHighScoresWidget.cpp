@@ -39,9 +39,9 @@ void GResetHighScoresWidget::Select() {
   THighScoreTable highScoreTable;
   highScoreTable.Reset();
 
-  // Play notification sound
-  gSoundPlayer.SfxOptionSelect();
-
   // Go Back
   gGame->SetState(GAME_STATE_MAIN_OPTIONS);
+
+  // Play notification sound
+  gSoundPlayer.SfxMenuAccept();
 }
