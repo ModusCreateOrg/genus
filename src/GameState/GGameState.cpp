@@ -51,7 +51,13 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mFont8 = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
 
-  mGameBoard.Clear();
+  mLevel = gOptions->gameProgress.level;
+  mBonusTimer = gOptions->gameProgress.bonusTimer;
+  mBlocksRemaining = gOptions->gameProgress.blocksRemaining;
+  mScore = gOptions->gameProgress.score;
+  memcpy(mGameBoard.mBoard, gOptions->gameProgress.board, sizeof(mGameBoard.mBoard));
+
+  // mGameBoard.Clear();
   LoadLevel();
 
   mSprite = new GPlayerSprite();
@@ -78,6 +84,15 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 }
 
 GGameState::~GGameState() {
+  if (!mGameOver) {
+    gOptions->gameProgress.level = mLevel;
+    gOptions->gameProgress.bonusTimer = mBonusTimer;
+    gOptions->gameProgress.blocksRemaining = mBlocksRemaining;
+    gOptions->gameProgress.score = mScore;
+    memcpy(gOptions->gameProgress.board, mGameBoard.mBoard, sizeof(mGameBoard.mBoard));
+    gOptions->Save();
+  }
+
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
   gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
   delete mFont16;
@@ -173,9 +188,11 @@ void GGameState::LoadLevel() {
   bool newStage = false;
 
   if ((mLevel % 5) == 1) {  // every 5th level
-    delete mPlayfield;
+    if (mPlayfield) {
+      delete mPlayfield;
+    }
+
     // difficulty
-    // TODO: Jay tweak until you are satisfied!
     mBlocksThisLevel = 20 + mLevel*5 + gOptions->difficulty * 10;
     switch(gOptions->difficulty) {
       case DIFFICULTY_EASY:

@@ -14,6 +14,7 @@ void TOptions::SetDefaults() {
   sfx = 0.875f;
   difficulty = 1;
   brightness = 0.875f;
+  gameProgress = GameProgress();
 }
 
 void TOptions::Reset(TBool aSave) {

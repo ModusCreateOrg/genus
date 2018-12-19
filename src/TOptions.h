@@ -4,11 +4,28 @@
 #include "BTypes.h"
 #include "BStore.h"
 #include "Panic.h"
+#include "GGameBoard.h"
 
 enum {
   DIFFICULTY_EASY,
   DIFFICULTY_INTERMEDIATE,
   DIFFICULTY_HARD
+};
+
+struct GameProgress {
+  TInt level;
+  TInt bonusTimer;
+  TInt blocksRemaining;
+  TBCD score;
+  TUint8 board[BOARD_ROWS][BOARD_COLS];
+
+  GameProgress() {
+    level = 1;
+    bonusTimer = -1;
+    blocksRemaining = -1;
+    score = TBCD(TUint32(0));
+    memset(board, 255, sizeof(board));
+  }
 };
 
 struct TOptions {
@@ -18,6 +35,7 @@ struct TOptions {
   TFloat music;
   TFloat sfx;
   TFloat brightness;
+  GameProgress gameProgress;
 
   TOptions();
 
