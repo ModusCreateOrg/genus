@@ -37,11 +37,8 @@ public:
 
   int8_t *mYOffset;
   int8_t *mXComp;
-  TFloat mFrame;
-
-  TFloat bgOffset0;
-  TFloat bgOffset1;
-  TFloat bgOffset2;
+  int mYSinIndex;
+  int mXSinIndex;
 
   TUint8 mTextColor;
 };

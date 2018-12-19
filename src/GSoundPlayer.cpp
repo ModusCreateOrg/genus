@@ -17,7 +17,7 @@ GSoundPlayer gSoundPlayer;
 void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
   BSoundPlayer::Init(aNumberFxChannels, aNumberFxSlots);
 
-  mMaxSongs = 9;
+  mMaxSongs = 11;
   mSongSlots = (SongSlot *)AllocMem(sizeof(SongSlot) * mMaxSongs, MEMF_SLOW);
 
   const uint16_t allSongs[] = {
@@ -29,7 +29,9 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
     SPAAACE_XM,
     GLACIAL_MOUNTAINS_XM,
     GAMEOVER_XM,
-    UNDERWATERFANTASY_XM
+    UNDERWATERFANTASY_XM,
+    GAMEOVER_XM,
+    ENTERCREDITS_XM
   };
 
   for (uint8_t i = 0; i < mMaxSongs; i++) {
@@ -54,7 +56,7 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
   TBool music = BSoundPlayer::PlayMusic(aResourceId);
-
+//  printf("%s %i\n", __PRETTY_FUNCTION__, aResourceId);
   // BSoundPlayer::PlayMusic un-mutes the music
   // We have to re-mute it in case of mute == true
   MuteMusic(gOptions->muted);
@@ -87,12 +89,16 @@ TBool GSoundPlayer::LoadEffects() {
     SFX_SCORE_COMBO_WAV,
     SFX_OPTION_SELECT_WAV,
     SFX_EXPLODE_BLOCK_WAV,
-    SFX_NEXT_LEVEL_WAV
+    SFX_NEXT_LEVEL_WAV,
+    SFX_NEXT_STAGE_WAV
   };
 
-  for (uint8_t i = 0; i < 9; i++) {
+  for (uint8_t i = 0; i < 10; i++) {
     LoadEffect(mEffectsList[i], i);
   }
+
+  SetMusicVolume(gOptions->music);
+  SetEffectsVolume(gOptions->sfx);
   return ETrue;
 }
 
@@ -152,6 +158,9 @@ void GSoundPlayer::SfxMenuAccept() {
 void GSoundPlayer::SfxMenuCancel() {
   gSoundPlayer.PlaySfx(/*SFX_GOOD_DROP_BLOCK_WAV*/0);
 }
-void GSoundPlayer::SfxNextStage() {
+void GSoundPlayer::SfxNextLevel() {
   gSoundPlayer.PlaySfx(/*SFX_NEXT_LEVEL*/8);
+}
+void GSoundPlayer::SfxNextStage() {
+  gSoundPlayer.PlaySfx(/*SFX_NEXT_LEVEL*/9);
 }

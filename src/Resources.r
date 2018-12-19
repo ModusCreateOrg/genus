@@ -75,6 +75,7 @@ RAW Main_Menu.xm
 RAW Spaaace.xm
 RAW UnderWaterFantasy.xm
 RAW Under_Water.xm
+RAW EnterCredits.xm
 
 
 # .-=[ Sound Effects ]=-.
@@ -89,3 +90,4 @@ RAW SFX_score_combo.wav
 RAW SFX_option_select.wav
 RAW SFX_explode_block.wav
 RAW SFX_next_level.wav
+RAW SFX_next_stage.wav

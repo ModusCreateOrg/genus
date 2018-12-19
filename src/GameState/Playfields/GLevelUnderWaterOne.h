@@ -3,10 +3,10 @@
 
 #include "GameState/GGameState.h"
 
-class GLevelUnderWater1 : public BPlayfield {
+class GLevelUnderWaterOne : public BPlayfield {
 public:
-    GLevelUnderWater1(GGameState *aGameEngine);
-    ~GLevelUnderWater1();
+    GLevelUnderWaterOne(GGameState *aGameEngine);
+    ~GLevelUnderWaterOne();
 
 public:
     void Animate();
@@ -16,9 +16,10 @@ public:
   BBitmap *mBackground;
 //    TInt8 *mYOffset;
 //    TInt8 *mXComp;
+  int mYSinIndex;
+  int mXSinIndex;
   int8_t *mYOffset;
   int8_t *mXComp;
-  TInt64 mFrame;
   TUint8 mTextColor;
 };
 

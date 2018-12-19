@@ -1,5 +1,7 @@
 #include "Game.h"
-#include "GLevelUnderWater1.h"
+#include "GLevelUnderWaterOne.h"
+#include "PrecalcSines.h"
+
 
 #ifdef __XTENSA__
 #include <math.h>
@@ -12,16 +14,13 @@
 //int8_t *yComp;
 
 
-GLevelUnderWater1::GLevelUnderWater1(GGameState *aGameEngine) {
+GLevelUnderWaterOne::GLevelUnderWaterOne(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(UNDER_WATER_BMP, BKG_SLOT, IMAGE_ENTIRE);
-
-//  gDisplay.renderBitmap->SetPalette(mBackground, 0, 128);
-
   mGameEngine = aGameEngine;
   mTextColor = 0;
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  mFrame = 0; // TODO: mFrame could be TFloat
-
+  mYSinIndex = 0;
+  mXSinIndex = 0;
 
 //  xOffset = (int8_t *)AllocMem(320, MEMF_SLOW);
   mXComp   = (int8_t *)AllocMem(320, MEMF_SLOW);
@@ -30,33 +29,58 @@ GLevelUnderWater1::GLevelUnderWater1(GGameState *aGameEngine) {
 
 }
 
-GLevelUnderWater1::~GLevelUnderWater1()  {
+GLevelUnderWaterOne::~GLevelUnderWaterOne()  {
   gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
 
   FreeMem(mYOffset);
   FreeMem(mXComp);
 }
 
-void GLevelUnderWater1::Animate() {
+
+
+void GLevelUnderWaterOne::Animate() {
 //  mTextColor += 1;
 //  mTextColor %= 64;
 //  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
   // This block will setup x and y offsets
-  mFrame++;
+  int workingXSinIndex = mXSinIndex;
   for (int x = 0; x < 320; x++) {
 //    xOffset[x] = sin(mFrame * 0.15 + x * 0.06) * 4;
-    mXComp[x] = sin(mFrame * 0.11 + x * 0.12) * 3.0f;
+//    mXComp[x] = sin(mFrame * 0.11 + x * 0.12) * 3.0f;
+
+    mXComp[x] = xSin[workingXSinIndex];
+    workingXSinIndex++;
+    if (workingXSinIndex > 319) {
+      workingXSinIndex = 0;
+    }
   }
 
+  int workingYSinIndex = mYSinIndex;
   for (int y = 0; y < 240; y++) {
-    mYOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 2.0f;
+//    mYOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 2.0f;
 //    yComp[y] = sin(mFrame * 0.07 + y * 0.15) * 4;
+
+    mYOffset[y] = ySin[workingYSinIndex];
+    workingYSinIndex++;
+    if (workingYSinIndex > 239) {
+      workingYSinIndex = 0;
+    }
+  }
+
+  mXSinIndex++;
+  if (mXSinIndex > 319) {
+    mXSinIndex = 0;
+  }
+
+  mYSinIndex++;
+  if (mYSinIndex > 239) {
+    mYSinIndex = 0;
   }
 
 }
 
-void GLevelUnderWater1::Render() {
+void GLevelUnderWaterOne::Render() {
   uint8_t *src = mBackground->GetPixels(),
           *dest = gDisplay.renderBitmap->GetPixels();
 
