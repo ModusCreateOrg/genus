@@ -14,7 +14,7 @@ void GMainMenuProcess::ResetTimer() {
 }
 
 TBool GMainMenuProcess::RunBefore() {
-  mContainer->Render(120, 120);
+  mContainer->Render(120, gOptions->gameProgress.savedState ? 106 : 120);
   mContainer->Run();
   return ETrue;
 }

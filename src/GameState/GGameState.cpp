@@ -48,16 +48,15 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
 
-  mFont8 = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
+  mFont8  = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
 
-  mLevel = gOptions->gameProgress.level;
-  mBonusTimer = gOptions->gameProgress.bonusTimer;
-  mBlocksRemaining = gOptions->gameProgress.blocksRemaining;
-  mScore = gOptions->gameProgress.score;
-  memcpy(mGameBoard.mBoard, gOptions->gameProgress.board, sizeof(mGameBoard.mBoard));
+  if (gOptions->gameProgress.savedState) {
+    LoadState();
+  } else {
+    mGameBoard.Clear();
+  }
 
-  // mGameBoard.Clear();
   LoadLevel();
 
   mSprite = new GPlayerSprite();
@@ -66,7 +65,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mSprite->y  = PLAYER_Y;
   mSprite->vy = 0;
 
-  mNextSprite    = new GPlayerSprite();
+  mNextSprite = new GPlayerSprite();
   AddSprite(mNextSprite);
   mNextSprite->flags |= SFLAG_RENDER | SFLAG_NEXT_BLOCK;
   mNextSprite->x = NEXT_BLOCK_X;
@@ -80,19 +79,15 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   AddProcess(new ChickenModeProcess(this));
 #endif
 
-  Next(EFalse);
+  if (gOptions->gameProgress.savedState) {
+    LoadPlayerState();
+    mGameProcess->Signal();
+  } else {
+    Next(EFalse);
+  }
 }
 
 GGameState::~GGameState() {
-  if (!mGameOver) {
-    gOptions->gameProgress.level = mLevel;
-    gOptions->gameProgress.bonusTimer = mBonusTimer;
-    gOptions->gameProgress.blocksRemaining = mBlocksRemaining;
-    gOptions->gameProgress.score = mScore;
-    memcpy(gOptions->gameProgress.board, mGameBoard.mBoard, sizeof(mGameBoard.mBoard));
-    gOptions->Save();
-  }
-
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
   gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
   delete mFont16;
@@ -141,18 +136,24 @@ void GGameState::Next(TBool aCanPowerup) {
 
     if (maybe == 16) {
       if (Random() & 1) {
+        gOptions->gameProgress.playerType = PLAYER_MODUS_BOMB;
         AddProcess(new GModusBombPowerup(mSprite, this));
       } else {
+        gOptions->gameProgress.playerType = PLAYER_COLOR_SWAP;
         AddProcess(new GColorSwapPowerup(mSprite, this));
       }
+      SaveState();
       return;
     }
+  } else {
+    gOptions->gameProgress.playerType = PLAYER_NO_POWERUP;
   }
 
   // NOT a powerup
   mSprite->Copy(mNextSprite);
   mNextSprite->Randomize();
   mGameProcess->Signal();
+  SaveState();
 }
 
 /****************************************************************************************************************
@@ -170,6 +171,9 @@ void GGameState::GameOver() {
   h.lastScore[gOptions->difficulty].mValue = mScore.mValue;
   h.Save();
   gSoundPlayer.PlayMusic(GAMEOVER_XM);
+
+  // Reset the game state and save it
+  SaveState();
 }
 
 /****************************************************************************************************************
@@ -379,3 +383,48 @@ void GGameState::PostRender() {
   RenderNext();
 }
 
+void GGameState::SaveState() {
+  if (mGameOver) {
+    gOptions->ResetGameProgress();
+    gOptions->Save();
+    return;
+  }
+
+  gOptions->gameProgress.savedState = ETrue;
+  gOptions->gameProgress.level = mLevel;
+  gOptions->gameProgress.bonusTimer = mBonusTimer;
+  gOptions->gameProgress.blocksRemaining = mBlocksRemaining;
+  gOptions->gameProgress.score = mScore;
+
+  memcpy(gOptions->gameProgress.board, mGameBoard.mBoard, sizeof(mGameBoard.mBoard));
+  memcpy(gOptions->gameProgress.playerBlocks, mSprite->mBlocks, sizeof(mSprite->mBlocks));
+  memcpy(gOptions->gameProgress.nextBlocks, mNextSprite->mBlocks, sizeof(mNextSprite->mBlocks));
+
+  gOptions->Save();
+}
+
+void GGameState::LoadState() {
+  mLevel = gOptions->gameProgress.level;
+  mBonusTimer = gOptions->gameProgress.bonusTimer;
+  mBlocksRemaining = gOptions->gameProgress.blocksRemaining;
+  mScore = gOptions->gameProgress.score;
+
+  memcpy(mGameBoard.mBoard, gOptions->gameProgress.board, sizeof(mGameBoard.mBoard));
+}
+
+void GGameState::LoadPlayerState() {
+  memcpy(mSprite->mBlocks, gOptions->gameProgress.playerBlocks, sizeof(mSprite->mBlocks));
+  memcpy(mNextSprite->mBlocks, gOptions->gameProgress.nextBlocks, sizeof(mNextSprite->mBlocks));
+
+  switch (gOptions->gameProgress.playerType) {
+    case PLAYER_MODUS_BOMB:
+      AddProcess(new GModusBombPowerup(mSprite, this));
+      break;
+    case PLAYER_COLOR_SWAP:
+      AddProcess(new GColorSwapPowerup(mSprite, this));
+      break;
+    case PLAYER_NO_POWERUP:
+    default:
+      return;
+  }
+}

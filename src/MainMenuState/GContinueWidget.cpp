@@ -1,11 +1,11 @@
-#include "GStartWidget.h"
+#include "GContinueWidget.h"
 #include "Game.h"
 
-GStartWidget::GStartWidget() : BButtonWidget(gOptions->gameProgress.savedState ? "RESTART" : "START", COLOR_TEXT, COLOR_TEXT_BG) {}
+GContinueWidget::GContinueWidget() : BButtonWidget("CONTINUE", COLOR_TEXT, COLOR_TEXT_BG) {}
 
-GStartWidget::~GStartWidget() {}
+GContinueWidget::~GContinueWidget() {}
 
-TInt GStartWidget::Render(TInt aX, TInt aY) {
+TInt GContinueWidget::Render(TInt aX, TInt aY) {
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
 
   if (mActive) {
@@ -30,7 +30,6 @@ TInt GStartWidget::Render(TInt aX, TInt aY) {
   return f->mHeight + 10;
 }
 
-void GStartWidget::Select() {
-  gOptions->ResetGameProgress();
+void GContinueWidget::Select() {
   gGame->SetState(GAME_STATE_GAME);
 }

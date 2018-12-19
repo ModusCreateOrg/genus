@@ -77,6 +77,10 @@ public:
     mGameProcess->Wait();
   }
 
+  void SaveState();
+  void LoadState();
+  void LoadPlayerState();
+
   // make next sprite current sprite, randomize next sprite
   // maybe randomize powerup if aCanPowerup is true
   void Next(TBool aCanPowerup);
