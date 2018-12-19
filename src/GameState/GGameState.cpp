@@ -395,6 +395,7 @@ void GGameState::SaveState() {
   gOptions->gameProgress.bonusTimer = mBonusTimer;
   gOptions->gameProgress.blocksRemaining = mBlocksRemaining;
   gOptions->gameProgress.score = mScore;
+  gOptions->gameProgress.difficulty = gOptions->difficulty;
 
   memcpy(gOptions->gameProgress.board, mGameBoard.mBoard, sizeof(mGameBoard.mBoard));
   memcpy(gOptions->gameProgress.playerBlocks, mSprite->mBlocks, sizeof(mSprite->mBlocks));
@@ -408,6 +409,9 @@ void GGameState::LoadState() {
   mBonusTimer = gOptions->gameProgress.bonusTimer;
   mBlocksRemaining = gOptions->gameProgress.blocksRemaining;
   mScore = gOptions->gameProgress.score;
+
+  // Reset previous game state's difficulty
+  gOptions->difficulty = gOptions->gameProgress.difficulty;
 
   memcpy(mGameBoard.mBoard, gOptions->gameProgress.board, sizeof(mGameBoard.mBoard));
 }
