@@ -77,6 +77,8 @@ public:
     mGameProcess->Wait();
   }
 
+  void SetBlocksPerLevel();
+
   void SaveState();
   void LoadState();
   void LoadPlayerState();
