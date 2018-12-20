@@ -39,14 +39,25 @@ function ensure_cmake {
     local cmake
     version=3.12
     build=3
+    arch=$(arch)
     tmpdir=$(mktemp -d)
-    cmake="cmake-$version.$build-Linux-x86_64"
-    cd "$tmpdir" || exit 1
-    curl -sSO "https://cmake.org/files/v$version/$cmake.sh"
-    $SUDO mkdir /opt/cmake
-    yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
-    $SUDO rm -f /usr/local/bin/cmake
-    $SUDO ln -s "/opt/cmake/$cmake/bin/cmake" /usr/local/bin/cmake
+    cmake="cmake-$version.$build-Linux-$arch"
+    cd "$tmpdir"
+    curl -fsSO "https://cmake.org/files/v$version/$cmake.sh"
+    if [[ -f "$cmake" ]]; then
+        $SUDO mkdir -p /opt/cmake
+        yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
+        $SUDO rm -f /usr/local/bin/cmake
+        $SUDO ln -s "/opt/cmake/$cmake/bin/cmake" /usr/local/bin/cmake
+    else
+        cmake="cmake-$version.$build"
+        curl -fsSO "https://cmake.org/files/v$version/$cmake.tar.gz"
+        tar xfz "$cmake.tar.gz"
+        cd "$cmake"
+        ./configure
+        make
+        $SUDO make install
+    fi
     rm -rf "$tmpdir"
 }
 
