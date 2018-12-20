@@ -40,8 +40,9 @@ function ensure_cmake {
     version=3.12
     build=3
     arch=$(arch)
+    uname=$(uname -s)
     tmpdir=$(mktemp -d)
-    cmake="cmake-$version.$build-Linux-$arch"
+    cmake="cmake-$version.$build-$uname-$arch"
     cd "$tmpdir"
     curl -fsSO "https://cmake.org/files/v$version/$cmake.sh"
     if [[ -f "$cmake" ]]; then
@@ -55,10 +56,11 @@ function ensure_cmake {
         tar xfz "$cmake.tar.gz"
         cd "$cmake"
         ./configure
-        make
+	make -j $(nproc --all)
         $SUDO make install
     fi
-    rm -rf "$tmpdir"
+    # TODO: re-enable after cmake source build works
+    # rm -rf "$tmpdir"
 }
 
 function ensure_debian_devtools_installed {
