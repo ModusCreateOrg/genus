@@ -30,7 +30,7 @@ function ensure_homebrew_installed {
 
 function ensure_cmake {
     # Adapted from https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line
-    if [[ -d /opt/cmake ]]; then
+    if [[ -x /usr/local/bin/cmake ]]; then
         return
     fi
     local version
@@ -44,8 +44,7 @@ function ensure_cmake {
     tmpdir=$(mktemp -d)
     cmake="cmake-$version.$build-$uname-$arch"
     cd "$tmpdir"
-    curl -fsSO "https://cmake.org/files/v$version/$cmake.sh"
-    if [[ -f "$cmake" ]]; then
+    if curl -fsSO "https://cmake.org/files/v$version/$cmake.sh"; then
         $SUDO mkdir -p /opt/cmake
         yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
         $SUDO rm -f /usr/local/bin/cmake
