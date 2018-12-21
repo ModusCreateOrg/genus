@@ -56,7 +56,7 @@ function ensure_cmake {
         tar xfz "$cmake.tar.gz"
         cd "$cmake"
         ./configure
-	make -j $(nproc --all)
+	make
         $SUDO make install
     fi
     # TODO: re-enable after cmake source build works
