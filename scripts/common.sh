@@ -45,21 +45,22 @@ function ensure_cmake {
     cmake="cmake-$version.$build-$uname-$arch"
     cd "$tmpdir"
     if curl -fsSO "https://cmake.org/files/v$version/$cmake.sh"; then
+        # Install binary package if we could retrieve it
         $SUDO mkdir -p /opt/cmake
         yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
         $SUDO rm -f /usr/local/bin/cmake
         $SUDO ln -s "/opt/cmake/$cmake/bin/cmake" /usr/local/bin/cmake
     else
+        # Install from source (on Raspberry Pi with Rasbian 9.6 (stretch) for example.
         cmake="cmake-$version.$build"
         curl -fsSO "https://cmake.org/files/v$version/$cmake.tar.gz"
         tar xfz "$cmake.tar.gz"
         cd "$cmake"
         ./configure
-	make
+        make
         $SUDO make install
     fi
-    # TODO: re-enable after cmake source build works
-    # rm -rf "$tmpdir"
+    rm -rf "$tmpdir"
 }
 
 function ensure_debian_devtools_installed {
@@ -148,7 +149,7 @@ function clean {
 }
 
 # TODO: Use otool -L and some foo to find the dependencies
-#		The sentinel is "/usr/local/opt"
+#        The sentinel is "/usr/local/opt"
 function copy_sdl2_libs_to_app {
     if [[ "$OS" == "Darwin" ]]; then
         export APP_DIR="$BASE_DIR/build/genus.app"
@@ -156,8 +157,8 @@ function copy_sdl2_libs_to_app {
         export APP_RES_DIR="$APP_CNT_DIR/Resources"
         export APP_MACOSX_DIR="$APP_CNT_DIR/MacOS"
         if [[ -d "$APP_DIR" ]]; then
-        	rm -rf "$APP_MACOSX_DIR/libs"
-        	mkdir -p "$APP_MACOSX_DIR/libs"
+            rm -rf "$APP_MACOSX_DIR/libs"
+            mkdir -p "$APP_MACOSX_DIR/libs"
 
             cp /usr/local/opt/sdl2/lib/libSDL2.dylib "$APP_MACOSX_DIR/libs/"
             cp /usr/local/opt/sdl2_image/lib/libSDL2_image.dylib "$APP_MACOSX_DIR/libs/"
@@ -169,49 +170,49 @@ function copy_sdl2_libs_to_app {
 
             # FIX Genus
             install_name_tool -change \
-            	/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
-             	./libs/libSDL2.dylib \
-             	"$APP_MACOSX_DIR/genus"
+                /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
+                 ./libs/libSDL2.dylib \
+                 "$APP_MACOSX_DIR/genus"
             install_name_tool -change \
-            	/usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib \
-            	./libs/libSDL2_image.dylib \
-            	"$APP_MACOSX_DIR/genus"
+                /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib \
+                ./libs/libSDL2_image.dylib \
+                "$APP_MACOSX_DIR/genus"
 
             # FIX SDL2_image
             install_name_tool -change \
-            	/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
-            	./libs/libSDL2.dylib \
-            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+                /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
+                ./libs/libSDL2.dylib \
+                "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
             install_name_tool -change \
-            	/usr/local/opt/libpng/lib/libpng16.16.dylib \
-            	./libs/libpng.dylib \
-            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
-           	install_name_tool -change \
-            	/usr/local/opt/jpeg/lib/libjpeg.9.dylib \
-            	./libs/libjpeg.dylib \
-            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+                /usr/local/opt/libpng/lib/libpng16.16.dylib \
+                ./libs/libpng.dylib \
+                "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+               install_name_tool -change \
+                /usr/local/opt/jpeg/lib/libjpeg.9.dylib \
+                ./libs/libjpeg.dylib \
+                "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
             install_name_tool -change \
-            	/usr/local/opt/libtiff/lib/libtiff.5.dylib \
-            	./libs/libtiff.dylib \
-            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+                /usr/local/opt/libtiff/lib/libtiff.5.dylib \
+                ./libs/libtiff.dylib \
+                "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
             install_name_tool -change \
-            	/usr/local/opt/webp/lib/libwebp.7.dylib \
-            	./libs/libwebp.dylib \
-            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+                /usr/local/opt/webp/lib/libwebp.7.dylib \
+                ./libs/libwebp.dylib \
+                "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
 
             # FIX TIFF
             install_name_tool -change \
-            	/usr/local/opt/jpeg/lib/libjpeg.9.dylib \
-            	./libs/libjpeg.dylib \
-            	"$APP_MACOSX_DIR/libs/libtiff.dylib"
+                /usr/local/opt/jpeg/lib/libjpeg.9.dylib \
+                ./libs/libjpeg.dylib \
+                "$APP_MACOSX_DIR/libs/libtiff.dylib"
 
             # CREATE WRAPPER
             mv "$APP_MACOSX_DIR/genus" "$APP_MACOSX_DIR/genus.bin"
             tee "$APP_MACOSX_DIR/genus" <<-"EOF"
-				#!/usr/bin/env bash
-				MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
-				(cd $MY_DIR && ./genus.bin)
-				EOF
+                #!/usr/bin/env bash
+                MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
+                (cd $MY_DIR && ./genus.bin)
+                EOF
             chmod 0755 "$BASE_DIR/build/genus.app/Contents/MacOS/genus"
 
             # INSTALL APP.PLIST & ETC
