@@ -10,7 +10,7 @@ set -o functrace
 IFS=$'\n\t'
 
 # Enable for enhanced debugging
-#set -vx
+${DEBUG:-false} && set -vx
 
 # Credit to https://stackoverflow.com/a/17805088
 # and http://wiki.bash-hackers.org/scripting/debuggingtips
@@ -66,9 +66,9 @@ elif [ "$OS" == "Darwin" ]; then
     brew upgrade cmake || true
 elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
-    if ! command -v apt-get >/dev/null 2>&1; then
+    if command -v apt-get >/dev/null 2>&1; then
         ensure_debian_devtools_installed
-    elif ! command -v pacman >/dev/null 2>&1; then
+    elif command -v pacman >/dev/null 2>&1; then
         ensure_arch_devtools_installed
     else
         echo "Only debian/ubuntu and arch Linux are supported targets, sorry."
