@@ -128,7 +128,7 @@ public:
   void PostRender();
 
 public:
-  void LoadLevel();
+  void LoadLevel(TBool aForceStageLoad = EFalse);
   void GameOver();
 
 };
