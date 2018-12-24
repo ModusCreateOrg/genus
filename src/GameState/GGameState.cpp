@@ -205,7 +205,7 @@ void GGameState::LoadLevel() {
     }
   }
 
-  switch ((mLevel / 6) % 6) {
+  switch ((mLevel / 5) % 6) {
     case 0:
       mPlayfield = new GLevelCountryside(this); // Playfield 1
       gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);

@@ -3,6 +3,7 @@
 GMainMenuProcess::GMainMenuProcess() : BProcess() {
   mTimer = TIMEOUT;
   mShowHighScores = ETrue;
+  mSwitchContainer = EFalse;
   mContainer = new GMainMenuContainer(0, 0, this);
 }
 
