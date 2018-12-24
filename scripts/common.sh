@@ -30,7 +30,7 @@ function ensure_homebrew_installed {
 
 function ensure_cmake {
     # Adapted from https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line
-    if [[ -d /opt/cmake ]]; then
+    if [[ -x /usr/local/bin/cmake ]]; then
         return
     fi
     local version
@@ -39,15 +39,27 @@ function ensure_cmake {
     local cmake
     version=3.12
     build=3
+    arch=$(arch)
+    uname=$(uname -s)
     tmpdir=$(mktemp -d)
-    cmake="cmake-$version.$build-Linux-x86_64"
-    cd "$tmpdir" || exit 1
-    curl -sSO "https://cmake.org/files/v$version/$cmake.sh"
-    $SUDO mkdir /opt/cmake
-    yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
-    $SUDO rm -f /usr/local/bin/cmake
-    $SUDO ln -s "/opt/cmake/$cmake/bin/cmake" /usr/local/bin/cmake
-    rm -rf "$tmpdir"
+    cmake="cmake-$version.$build-$uname-$arch"
+    cd "$tmpdir"
+    if curl -fsSO "https://cmake.org/files/v$version/$cmake.sh"; then
+        $SUDO mkdir -p /opt/cmake
+        yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
+        $SUDO rm -f /usr/local/bin/cmake
+        $SUDO ln -s "/opt/cmake/$cmake/bin/cmake" /usr/local/bin/cmake
+    else
+        cmake="cmake-$version.$build"
+        curl -fsSO "https://cmake.org/files/v$version/$cmake.tar.gz"
+        tar xfz "$cmake.tar.gz"
+        cd "$cmake"
+        ./configure
+	make
+        $SUDO make install
+    fi
+    # TODO: re-enable after cmake source build works
+    # rm -rf "$tmpdir"
 }
 
 function ensure_debian_devtools_installed {
