@@ -196,7 +196,7 @@ void GGameState::PreRender() {
 void GGameState::LoadLevel(TBool aForceStageLoad) {
   TBool newStage = EFalse;
 
-  if ((mLevel % 5) == 1) {  // every 5th level
+  if ((mLevel % 5) == 1) {  // every 6th level
     newStage = ETrue;
 
     if (mPlayfield) {
@@ -211,8 +211,10 @@ void GGameState::LoadLevel(TBool aForceStageLoad) {
     }
   }
 
-  if (newStage || aForceStageLoad) {  // every 5th level
-    switch ((mLevel / 5) % 6) {
+  if (newStage || aForceStageLoad) {
+    TUint8 levelToLoad = mLevel <= 0 || newStage ? (mLevel / 5) % 6 : ((mLevel - 1) / 5) % 6;
+
+    switch (levelToLoad) {
       case 0:
         mPlayfield = new GLevelCountryside(this); // Playfield 1
         gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
