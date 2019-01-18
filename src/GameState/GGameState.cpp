@@ -128,7 +128,7 @@ void GGameState::Next(TBool aCanPowerup) {
       if (Random() & 1) {
         AddProcess(new GModusBombPowerup(mSprite, this));
         return;
-      } else if (mGameBoard.CountColorSwappableBlocks() > 0) {
+      } else if (mGameBoard.HasColorSwappableBlocks()) {
         AddProcess(new GColorSwapPowerup(mSprite, this));
         return;
       }

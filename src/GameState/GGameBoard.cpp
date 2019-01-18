@@ -156,17 +156,15 @@ void GGameBoard::Dump() {
   }
 }
 
-TInt GGameBoard::CountColorSwappableBlocks() {
-  TInt swappableBlocks = 0;
-
+TBool GGameBoard::HasColorSwappableBlocks() {
   for (TInt row = 0; row < BOARD_ROWS; row++) {
     for (TInt col = 0; col < BOARD_COLS; col++) {
       TUint8 v = mBoard[row][col];
       if (v == IMG_TILE1 || v == IMG_TILE2) {
-        swappableBlocks++;
+        return ETrue;
       }
     }
   }
 
-  return swappableBlocks;
+  return EFalse;
 }

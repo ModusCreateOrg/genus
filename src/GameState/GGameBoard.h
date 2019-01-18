@@ -65,7 +65,7 @@ public:
   /**
    * Return how many color-swappable blocks are there on the playefield
    */
-  TInt CountColorSwappableBlocks();
+  TBool HasColorSwappableBlocks();
 
 public:
 
