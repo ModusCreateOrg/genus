@@ -62,6 +62,11 @@ public:
    */
   TBool IsEmpty(TInt aRow, TInt aCol);
 
+  /**
+   * Return how many color-swappable blocks are there on the playefield
+   */
+  TInt CountColorSwappableBlocks();
+
 public:
 
   /**
