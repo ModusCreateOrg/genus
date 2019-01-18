@@ -1,7 +1,7 @@
 #include "GRulesWidget.h"
 #include "Game.h"
 
-GRulesWidget::GRulesWidget() : BButtonWidget("RULES", COLOR_TEXT, COLOR_TEXT_BG) {}
+GRulesWidget::GRulesWidget() : BButtonWidget("HOW TO PLAY", COLOR_TEXT, COLOR_TEXT_BG) {}
 
 GRulesWidget::~GRulesWidget() {}
 

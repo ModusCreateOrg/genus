@@ -6,7 +6,7 @@ static const TUint8 BLOCK_TIMER_INIT = 7;
 static const TUint8 ARROW_X          = 4;
 static const TUint8 BLOCK_X          = 96;
 static const TUint8 BLOCK_Y          = 50;
-static const TUint8 TEXT_Y           = 100;
+static const TUint8 TEXT_Y           = 107;
 
 // special characters
 static const char *STR_LEFT_ARROW  = "\xf";
@@ -69,7 +69,7 @@ public:
   TUint8 mLeftArrowColor = COLOR_TEXT;
   TUint8 mRightArrowColor = COLOR_TEXT;
   TUint mCurrentPage = 1;
-  TUint mTotalPages = 6;
+  TUint mTotalPages = 5;
 };
 
 class RulesProcess : public BProcess {
@@ -117,10 +117,11 @@ protected:
     ResetSprite();
 
     TInt y = TEXT_Y;
-    y += RenderString("Move the 2x2 blocks", y);
-    y += RenderString("with the joystick.", y) + 16;
-    y += RenderString("Drop blocks on board", y);
-    y += RenderString("with the B button.", y);
+    y += RenderString("Blocks enter at the", y);
+    y += RenderString("top of the game.", y) + 16;
+    y += RenderString("You'll need to move", y);
+    y += RenderString("them around with the", y);
+    y += RenderString("directional pad.", y);
     return y;
   }
 
@@ -129,7 +130,12 @@ protected:
 
     TInt y = TEXT_Y;
     y += RenderString("The A button rotates", y);
-    y += RenderString("the blocks.", y);
+    y += RenderString("the blocks clockwise.", y) + 16;
+    y += RenderString("Place the blocks on", y);
+    y += RenderString("the board with the", y);
+    y += RenderString("B button.", y);
+//    y += RenderString("to create matches.", y);
+
     mTimer--;
     if (mTimer < 0) {
       mSprite->RotateRight();
@@ -162,12 +168,14 @@ protected:
     DrawBlock(16, x, y, 1, 5);
 
     y = TEXT_Y;
-    y += RenderString("Object is to get 2x2", y);
-    y += RenderString("of the same color on", y);
-    y += RenderString("the board.", y) + 16;
-    y += RenderString("The matched blocks", y);
-    y += RenderString("turn dark and the", y);
-    y += RenderString("timer starts.", y);
+    y += RenderString("Clear the board by", y);
+    y += RenderString("grouping the same color", y);
+    y += RenderString("in a 2x2 pattern.", y) + 16;
+//    y += RenderString("clear to create ", y);
+
+    y += RenderString("Grouped blocks will", y);
+    y += RenderString("darken and start the", y);
+    y += RenderString("bonus timer.", y);
     return y;
   }
 
@@ -194,9 +202,10 @@ protected:
     DrawBlock(21, x, y, 1, 7);
 
     y = TEXT_Y;
-    y += RenderString("Increase score by", y);
-    y += RenderString("matching more while", y);
-    y += RenderString("timer runs.", y);
+    y += RenderString("Increase your score by", y);
+    y += RenderString("creating additional", y);
+    y += RenderString("groups before the bonus", y);
+    y += RenderString("timer runs out.", y);
     return y;
   }
 
@@ -213,24 +222,24 @@ protected:
     DrawBlock(0, x, y, 1, 4);
 
     y = TEXT_Y;
-    y += RenderString("When timer runs out,", y);
-    y += RenderString("the dark blocks are", y);
-    y += RenderString("removed from the board.", y) + 16;
-    y += RenderString("The more blocks removed,", y);
-    y += RenderString("the higher your score.", y);
+    y += RenderString("Difficulty increases as", y);
+    y += RenderString("you progress levels.", y) + 16;
+
+    y += RenderString("Play until you run out", y);
+    y += RenderString("of space to place", y);
+    y += RenderString("incoming blocks.", y);
     return y;
   }
 
   TInt Text6() {
     mSprite->flags &= ~SFLAG_RENDER;
     TInt y = TEXT_Y - 36;
-    y += RenderString("Increase level by", y);
-    y += RenderString("removing enough", y);
-    y += RenderString("dark blocks.", y) + 16;
-    y += RenderString("Game is over when", y);
-    y += RenderString("the board has no", y);
-    y += RenderString("space to drop another", y);
-    y += RenderString("2x2.", y) + 16;
+    y += RenderString("Difficulty increases as", y);
+    y += RenderString("your level progresses.", y) + 16;
+
+    y += RenderString("Play until you run", y);
+    y += RenderString("out of playable space.", y);
+
     return y;
   }
 protected:
@@ -256,9 +265,9 @@ protected:
       case 4:
         Text5();
         break;
-      case 5:
-        Text6();
-        break;
+//      case 5:
+//        Text6();
+//        break;
     }
 
     // Highlitght the arrows
@@ -271,7 +280,7 @@ protected:
     if (gControls.WasPressed(JOYLEFT | JOYUP)) {
       mState--;
       if (mState < 0) {
-        mState = 5;
+        mState = 4;
       }
       mArrowTimer = ARROW_TIMER;
       mRulesPlayfield->mLeftArrowColor = COLOR_TEXT_BG;
@@ -281,12 +290,17 @@ protected:
     // Next screen
     if (gControls.WasPressed(JOYRIGHT | JOYDOWN | BUTTON_SELECT)) {
       mState++;
-      if (mState > 5) {
+
+      if (mState > 4) {
         mState = 0;
+
+        gGame->SetState(GAME_STATE_MAIN_MENU);
+        gSoundPlayer.SfxMenuCancel();
+        return EFalse;
       }
-      mArrowTimer = ARROW_TIMER;
-      mRulesPlayfield->mRightArrowColor = COLOR_TEXT_BG;
-      gSoundPlayer.SfxMenuNavDown();
+//      mArrowTimer = ARROW_TIMER;
+//      mRulesPlayfield->mRightArrowColor = COLOR_TEXT_BG;
+//      gSoundPlayer.SfxMenuNavDown();
     }
 
     mRulesPlayfield->mCurrentPage = mState + 1;
