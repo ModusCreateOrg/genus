@@ -9,7 +9,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Enable for enhanced debugging
-#set -vx
+DEBUG=${DEBUG:-/bin/false}
+"$DEBUG" && set -vx
 
 # Credit to https://stackoverflow.com/a/17805088
 # and http://wiki.bash-hackers.org/scripting/debuggingtips
@@ -44,5 +45,19 @@ if [[ -L creative-engine ]]; then
     cp -a "$CREATIVE_ENGINE_DIR" .
 fi
 #shellcheck disable=SC2086,SC2048
-docker build . -t genus -f "$DIR/Dockerfile"
+case $(arch) in
+    armv7l)
+        DOCKERFILE="$DIR/Dockerfile-arm.tmp"
+        sed -e 's/ubuntu:18.04/schachr\/raspbian-stretch:latest/' < "$DIR/Dockerfile" >"$DOCKERFILE" 
+        ;;
+    x86_64)
+        DOCKERFILE="$DIR/Dockerfile"
+        ;;
+    *)
+        echo "Unsupported architecture $(arch)"
+        exit 1
+        ;;
+esac
+
+docker build -t genus -f "$DOCKERFILE" .
 
