@@ -65,7 +65,7 @@ function ensure_cmake {
 
 function ensure_debian_devtools_installed {
     $SUDO apt-get -qq update
-    $SUDO apt-get -qq install --no-install-recommends build-essential git libsdl2-dev libsdl2-image-dev curl doxygen imagemagick
+    $SUDO apt-get -qq install --no-install-recommends build-essential git libsdl2-dev libsdl2-image-dev curl doxygen imagemagick ca-certificates openssl
     # Ubuntu 18.04 has an old cmake (3.9) so install a newer one from binaries from cmake
     ensure_cmake
 }
