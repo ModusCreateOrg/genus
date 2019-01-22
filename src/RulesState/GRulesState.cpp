@@ -117,11 +117,10 @@ protected:
     ResetSprite();
 
     TInt y = TEXT_Y;
-    y += RenderString("Blocks enter at the", y);
-    y += RenderString("top of the game.", y) + 16;
-    y += RenderString("You'll need to move", y);
-    y += RenderString("them around with the", y);
-    y += RenderString("directional pad.", y);
+    y += RenderString("Use the directional", y);
+    y += RenderString("pad to move the blocks", y);
+    y += RenderString("as they enter at the", y);
+    y += RenderString("top of the game board.", y);
     return y;
   }
 
@@ -129,11 +128,12 @@ protected:
     mSprite->flags |= SFLAG_RENDER;
 
     TInt y = TEXT_Y;
-    y += RenderString("The A button rotates", y);
-    y += RenderString("the blocks clockwise.", y) + 16;
+    y += RenderString("Pressing the A button", y);
+    y += RenderString("will rotate the blocks", y);
+    y += RenderString("clockwise.", y) + 16;
     y += RenderString("Place the blocks on", y);
-    y += RenderString("the board with the", y);
-    y += RenderString("B button.", y);
+    y += RenderString("the board by pressing", y);
+    y += RenderString("the B button.", y);
 //    y += RenderString("to create matches.", y);
 
     mTimer--;
@@ -202,10 +202,11 @@ protected:
     DrawBlock(21, x, y, 1, 7);
 
     y = TEXT_Y;
-    y += RenderString("Increase your score by", y);
-    y += RenderString("creating additional", y);
-    y += RenderString("groups before the bonus", y);
-    y += RenderString("timer runs out.", y);
+    y += RenderString("While the bonus timer", y);
+    y += RenderString("is ticking, you can", y);
+    y += RenderString("create more color", y);
+    y += RenderString("combinations to increase", y);
+    y += RenderString("your score!", y);
     return y;
   }
 
@@ -231,17 +232,6 @@ protected:
     return y;
   }
 
-  TInt Text6() {
-    mSprite->flags &= ~SFLAG_RENDER;
-    TInt y = TEXT_Y - 36;
-    y += RenderString("Difficulty increases as", y);
-    y += RenderString("your level progresses.", y) + 16;
-
-    y += RenderString("Play until you run", y);
-    y += RenderString("out of playable space.", y);
-
-    return y;
-  }
 protected:
   TBool RunBefore() { return ETrue; }
 
@@ -265,9 +255,6 @@ protected:
       case 4:
         Text5();
         break;
-//      case 5:
-//        Text6();
-//        break;
     }
 
     // Highlitght the arrows
@@ -299,8 +286,8 @@ protected:
         return EFalse;
       }
 //      mArrowTimer = ARROW_TIMER;
-//      mRulesPlayfield->mRightArrowColor = COLOR_TEXT_BG;
-//      gSoundPlayer.SfxMenuNavDown();
+      mRulesPlayfield->mRightArrowColor = COLOR_TEXT_BG;
+      gSoundPlayer.SfxMenuNavDown();
     }
 
     mRulesPlayfield->mCurrentPage = mState + 1;
