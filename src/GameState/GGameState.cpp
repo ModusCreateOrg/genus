@@ -127,14 +127,15 @@ void GGameState::Next(TBool aCanPowerup) {
     if (maybe == 16) {
       if (Random() & 1) {
         AddProcess(new GModusBombPowerup(mSprite, this));
-      } else {
+        return;
+      } else if (mGameBoard.HasColorSwappableBlocks()) {
         AddProcess(new GColorSwapPowerup(mSprite, this));
+        return;
       }
-      return;
     }
   }
 
-  // NOT a powerup
+  // NOT a powerup or powerup criteria not met
   mSprite->Copy(mNextSprite);
   mNextSprite->Randomize();
   mGameProcess->Signal();

@@ -51,6 +51,7 @@ function ensure_cmake {
         $SUDO rm -f /usr/local/bin/cmake
         $SUDO ln -s "/opt/cmake/$cmake/bin/cmake" /usr/local/bin/cmake
     else
+
         # Install from source (on Raspberry Pi with Rasbian 9.6 (stretch) for example.
         cmake="cmake-$version.$build"
         curl -fsSO "https://cmake.org/files/v$version/$cmake.tar.gz"
