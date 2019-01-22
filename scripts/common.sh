@@ -43,7 +43,7 @@ function ensure_cmake {
     uname=$(uname -s)
     tmpdir=$(mktemp -d)
     cmake="cmake-$version.$build-$uname-$arch"
-    cd "$tmpdir"
+    cd "$tmpdir" || exit 1
     if curl -fsSO "https://cmake.org/files/v$version/$cmake.sh"; then
         # Install binary package if we could retrieve it
         $SUDO mkdir -p /opt/cmake
@@ -56,7 +56,7 @@ function ensure_cmake {
         cmake="cmake-$version.$build"
         curl -fsSO "https://cmake.org/files/v$version/$cmake.tar.gz"
         tar xfz "$cmake.tar.gz"
-        cd "$cmake"
+        cd "$cmake" || exit 1
         ./configure
         make
         $SUDO make install
@@ -210,10 +210,10 @@ function copy_sdl2_libs_to_app {
             # CREATE WRAPPER
             mv "$APP_MACOSX_DIR/genus" "$APP_MACOSX_DIR/genus.bin"
             tee "$APP_MACOSX_DIR/genus" <<-"EOF"
-                #!/usr/bin/env bash
-                MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
-                (cd $MY_DIR && ./genus.bin)
-                EOF
+		#!/usr/bin/env bash
+		MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
+		(cd $MY_DIR && ./genus.bin)
+		EOF
             chmod 0755 "$BASE_DIR/build/genus.app/Contents/MacOS/genus"
 
             # INSTALL APP.PLIST & ETC
