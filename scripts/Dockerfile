@@ -5,4 +5,8 @@ RUN /bin/bash /opt/genus/scripts/docker-install-debian-prerequisites.sh
 RUN rm -rf /opt/genus/scripts
 COPY . /opt/genus
 RUN ln -s /opt/genus/creative-engine /opt/creative-engine
-RUN /bin/bash /opt/genus/scripts/build.sh docker-build
+RUN /bin/bash /opt/genus/scripts/build.sh docker-build && \
+    mkdir -p /opt/genus/bin && \
+    mv /opt/genus/build/genus /opt/genus/bin && \
+    rm -rf $(ls /opt/genus | grep -v ^bin$)
+ENTRYPOINT /opt/genus/bin/genus
