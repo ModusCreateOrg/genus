@@ -27,14 +27,6 @@ export DIR BUILD_DIR TOP_DIR CREATIVE_ENGINE_DIR
 
 ######################### Main build ##################################
 
-# FIXME: temp to get stuff working
-mkdir -p "$BUILD_DIR"
-echo "bar" > "$BUILD_DIR/foo"
-exit 0
-#tar cvfz "$BUILD_DIR/genus.app.tgz" /bin/bash
-
-
-
 op=${1:-}
 SKIP_TOOLS_INSTALL=false
 SUDO="sudo"
