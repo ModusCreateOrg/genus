@@ -1,56 +1,8 @@
-# Genus
 
-[![Modus Create](./readme-images/modus.logo.svg)](https://moduscreate.com)
-
-[![Build Status](https://ci.moduscreate.com/buildStatus/icon?job=ModusCreateOrg/genus/master&build=1)](https://ci.moduscreate.com/job/ModusCreateOrg/job/genus/job/master/1/)
+# Developing
 
 
-Genus a puzzle game created by (Modus Create)[https://moduscreate.com] for the 2018 and runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), an ESP32-based platform.  Genus runs on macOS and Linux by implementing [SDL2](https://www.libsdl.org/download-2.0.php).  
-
-
-
-## How to Play
-Genus is a simple puzzle game where the objective is to match colors in 2x2 patterns. Once a 2x2 pattern is found, the blocks will be darken as they are marked for clearing. A bonus timer will appear. As the timer runs out, you can create additional color matches. Themore matches you create, the higher your score will be.  Play until you run out of spaces to place new blocks.  
-
-
-![genus-gameplay.gif](./readme-images/genus-gameplay.gif)
-
-The game's difficulty increases as you progress through levels. There are a total of five stages in the game, each with different backgrounds, songs and color themes.
-
-On the ODROID GO, 
-
-
-
-
-##Keymap for computer-based players:
-
-## Global (all screens)
-`Q` : Quits the game
-`2` : Mute / Unmute audio
-`3` : Move menu cursor down
-
-### Main Menu
-`1`   : Shortcut to enter Options from the main menu
-`↑ ↓` : Move menu cursor
-`4` `return` `X` `Z` `Space` : Select item in the menu
-
-### Options Screen
-`1` : Exit options
-
-### Instructions screens
-`← →` : Navigate how to play screens
-
-
-### Game
-`← → ↑ ↓` : moves the bocks
-`Z` : Rotate the blocks
-`X` `SPACE` : Place blocks on the gameboard
-
-
-
-
-## Quick Start
-
+##Quick Start
 On macOS or Ubuntu 16.04 (and later), with git installed, run:
 
     git clone https://github.com/ModusCreateOrg/genus.git # Clone src
@@ -101,5 +53,3 @@ The only way code makes it into master in the main repo is if we merge a PR.
 # ModusCreateOrg GitHub Guidelines
 
 > Modus Create team members should refer to [ModusCreateOrg GitHub Guidelines](https://docs.google.com/document/d/1eBFta4gP3-eZ4Gcpx0ww9SHAH6GrOoPSLmTFZ7R8foo/edit#heading=h.sjyqpqnsjmjl)
-
-
