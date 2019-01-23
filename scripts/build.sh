@@ -64,9 +64,9 @@ elif [ "$OS" == "Darwin" ]; then
     brew upgrade cmake || true
 elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
-    if [[ -n "$(which apt-get 2>/dev/null)" ]]; then
+    if [[ -n "$(command -v apt-get 2>/dev/null)" ]]; then
         ensure_debian_devtools_installed
-    elif [[ -n "$(which pacman 2>/dev/null)" ]]; then
+    elif [[ -n "$(command -v pacman 2>/dev/null)" ]]; then
         ensure_arch_devtools_installed
     else
         echo "Only debian/ubuntu and arch Linux are supported targets, sorry."
@@ -104,8 +104,3 @@ copy_sdl2_libs_to_app
 
 # Archive the artifacts
 archive_app
-
-
-
-
-
