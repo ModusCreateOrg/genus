@@ -11,8 +11,11 @@ GENUS_STATES=$(GENUS_SRC_PATH)/GameState
 GENUS_STATES+=$(GENUS_SRC_PATH)/HighScoreState
 GENUS_STATES+=$(GENUS_SRC_PATH)/MainOptionsState
 GENUS_STATES+=$(GENUS_SRC_PATH)/SplashState
+GENUS_STATES+=$(GENUS_SRC_PATH)/CreditsState
 
-EXTRA_COMPONENT_DIRS=${CREATIVE_ENGINE_PATH} ${PROJECT_PATH}/src $(GENUS_STATES)
+GENUS_POWERUPS=$(GENUS_SRC_PATH)/GameState/Powerups
+
+EXTRA_COMPONENT_DIRS=${CREATIVE_ENGINE_PATH} ${PROJECT_PATH}/src $(GENUS_STATES) $(GENUS_POWERUPS)
 
 include $(IDF_PATH)/make/project.mk
 
@@ -37,6 +40,10 @@ rcomp: FORCE
 resources: rcomp FORCE
 	echo "Compiling resources"
 	cd src && ${CREATIVE_ENGINE_PATH}/tools/rcomp Resources.r
+
+reset: FORCE
+	echo "Resetting high score table (and options)"
+	 rm -f cmake-build-debug/genus.app/Contents/MacOS/*.store
 
 FORCE:
 

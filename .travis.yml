@@ -1,8 +1,13 @@
-sudo: enabled
+---
 os: osx
 language: cpp
-before_install: git clone git@github.com:ModusCreateOrg/creative-engine.git
-script: "./scripts/build.sh"
+sudo: enabled
+git:
+  depth: 1
+install: ./.ci/travis/install_deps.sh
+before_script: ./.ci/travis/lint.sh
+script: ./scripts/build.sh
+before_deploy: ./.ci/create_release.sh
 deploy:
   provider: releases
   skip_cleanup: true
@@ -12,3 +17,13 @@ deploy:
   on:
     tags: true
     repo: ModusCreateOrg/genus
+  file_glob: true
+  file: build/*.tgz
+  skip_cleanup: true
+  overwrite: true
+  on:
+    tags: true 
+    repo: ModusCreateOrg/genus
+    # create release on merge to 'master' and on a tag.
+    condition: $TRAVIS_BRANCH == "master" || -n $TRAVIS_TAG
+    # TODO: Post to Slack

@@ -4,8 +4,8 @@
 	${CREATIVE_ENGINE_PATH}/tools/rcomp Resources.r
 
 COMPONENT_NAME = Genus
-COMPONENT_PRIV_INCLUDEDIRS=../src/GameState ../src
-COMPONENT_EXTRA_INCLUDES=${CREATIVE_ENGINE_PATH}/src ${CREATIVE_ENGINE_PATH}/src/Widgets
+#COMPONENT_PRIV_INCLUDEDIRS=${PROJECT_PATH}/src/GameState ${PROJECT_PATH}/src/GameState/Powerups ${PROJECT_PATH}/src
+COMPONENT_EXTRA_INCLUDES=${CREATIVE_ENGINE_PATH}/src ${CREATIVE_ENGINE_PATH}/src/Widgets ${PROJECT_PATH}/src/GameState ${PROJECT_PATH}/src/GameState/Powerups ${PROJECT_PATH}/src
 COMPONENT_EMBED_FILES := Resources.bin
 
 #WAVFILES = $(shell ls ${PROJECT_PATH}/resources/sound_effects/*.wav)

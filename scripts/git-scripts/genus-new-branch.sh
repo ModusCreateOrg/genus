@@ -2,6 +2,7 @@
 
 MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
 
+# shellcheck source=scripts/env.sh
 source "$MY_DIR/../env.sh"
 
 if [ "$#" -ne 1 ]; then
@@ -10,6 +11,6 @@ if [ "$#" -ne 1 ]; then
     exit
 fi
 
-(cd $GENUS_ROOT && git checkout master)
-(cd $GENUS_ROOT && git pull upstream master)
-(cd $GENUS_ROOT && git checkout -b $1)
+(cd "$GENUS_ROOT" && git checkout master)
+(cd "$GENUS_ROOT" && git pull upstream master)
+(cd "$GENUS_ROOT" && git checkout -b "$1")

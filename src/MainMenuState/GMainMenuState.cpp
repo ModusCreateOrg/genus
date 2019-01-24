@@ -1,67 +1,32 @@
 #include "Game.h"
-
-static const TInt TIMEOUT = 30*5;
-
-class GMainMenuProcess : public BProcess {
-public:
-  GMainMenuProcess() : BProcess() {
-    mTimer = TIMEOUT;
-  }
-
-public:
-  TBool RunBefore() {
-    return ETrue;
-  }
-
-  TBool RunAfter() {
-    if (gControls.WasPressed(BUTTON_START)) {
-      gGame->SetState(GAME_STATE_GAME);
-      return EFalse;
-    }
-    else if (gControls.WasPressed(BUTTON_MENU)) {
-      gGame->SetState(GAME_STATE_MAIN_OPTIONS);
-      return EFalse;
-    }
-    mTimer--;
-    if (mTimer < 0) {
-      gGame->SetState(GAME_STATE_HIGH_SCORES);
-      return EFalse;
-    }
-    return ETrue;
-  }
-private:
-  TInt mTimer;
-};
-
-class GMainMenuPlayfield : public BPlayfield {
-public:
-  GMainMenuPlayfield() {
-    gResourceManager.LoadBitmap(MAIN_MENU1_BMP, BKG_SLOT, IMAGE_ENTIRE);
-    mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-    gDisplay.SetPalette(mBackground);
-  }
-  virtual ~GMainMenuPlayfield() {
-    gResourceManager.ReleaseBitmapSlot(BKG_SLOT);
-  }
-
-public:
-  void Render() {
-    gDisplay.renderBitmap->CopyPixels(mBackground);
-  }
-
-public:
-  BBitmap *mBackground;
-
-};
+#include "GMainMenuProcess.h"
+#include "GMainMenuPlayfield.h"
 
 GMainMenuState::GMainMenuState() : BGameEngine(gViewPort) {
+  mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
   mPlayfield = new GMainMenuPlayfield();
   auto *p = new GMainMenuProcess();
+
   AddProcess(p);
+
+  gWidgetTheme.Configure(
+      WIDGET_TEXT_BG, COLOR_TEXT_BG,
+      WIDGET_TITLE_FONT, mFont16,
+      WIDGET_TITLE_FG, COLOR_TEXT,
+      WIDGET_TITLE_BG, -1,
+      WIDGET_WINDOW_BG, gDisplay.renderBitmap->TransparentColor(),
+      WIDGET_WINDOW_FG, gDisplay.renderBitmap->TransparentColor(),
+      WIDGET_END_TAG);
+
+  gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
+  gDisplay.SetColor(COLOR_TEXT_BG, 255, 92, 93);
+  gSoundPlayer.PlayMusic(MAIN_MENU_XM);
+
 }
 
 GMainMenuState::~GMainMenuState() {
-   delete mPlayfield;
-   mPlayfield = ENull;
+  delete mPlayfield;
+  delete mFont16;
+  mPlayfield = ENull;
 }
 
