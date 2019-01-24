@@ -12,7 +12,6 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: "n1/XFhPQ2t2OeY2xxffk6XoOkYEXgSjVKdDDGPG0Uk0S79LvCybo5y9qV0ueg/2A+ssav4Sks654QCGgfOp+sCZPMG2kOJQKvpIfNPY18/BRF7Qg72HdITDdnTqhkFcMLe3pUOP8pIPo/AiM0I6Md7Gm0PAf4El/5fFT3dl9ivaSen7GDRXZNtJprzEG4DNKaaxq70VSLCouJIkLcEcrhNqUTZlaPYiwTTe2GPsGlQWLI8k0ScKaBbS/geq55DuXqNUKQtU+mBPWXnqa/HQV4/GmQ8brKtrVfWeOFOy/JI2M4UqgmezjexH3WlOoN2UpTOK6Df5DLW2vafqUzEuLVe8kdZHDE+HN8FoZR21DgvyHXL0pQcx7hKRVUWT/YCTaoBg/E6k4GTv1SVXhapUIw/5EzVid35jbzHpzXyq+xMfsQszcTZR9oKfTjXxOugOoSOyBA8zQpNMX/T4dMnNitK1W0BZ3Xevv2/mcOsDIAOho0pGs5FZbYKSfWUC7u4PkvIB1haGvhG1BVxVZEoaquFHZqySURyuA8ClLW0UuIu35zvrDrXNIjaCJu42re5HcUevQ2qMpj/izAwGhnYEkJ5UJrQYcfjW7V8R4pfUE/UdAy1lZkSW3GF1bnGoUxMTj5nE4uDcFAVpEx4RjixQXG8w1fQLicxueKrcIlUnDO1w="
-  file: build/genus.tgz
   on:
     tags: true
     repo: ModusCreateOrg/genus
