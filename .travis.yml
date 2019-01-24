@@ -7,7 +7,6 @@ git:
 install: ./.ci/travis/install_deps.sh
 before_script: ./.ci/travis/lint.sh
 script: ./scripts/build.sh
-before_deploy: ./.ci/create_release.sh
 deploy:
   provider: releases
   skip_cleanup: true
