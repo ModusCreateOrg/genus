@@ -40,9 +40,16 @@ INCLUDE_DIRECTORIES(
 )
 
 # external libraries
-INCLUDE(FindPkgConfig)
-PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Emscripten")
+  # TODO(amitp): I don't know how to set this properly with add_compile_options
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2 -s USE_SDL_IMAGE=2")
+  set(SDL2_LIBRARIES "-s USE_SDL=2")
+  set(SDL2_IMAGE_LIBRARIES "-s USE_SDL_IMAGE=2")
+else ()
+  INCLUDE(FindPkgConfig)
+  PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+  PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
+endif ()
 
 # include creative-engine sources
 # when using out-of-tree source paths add_subdirectory's build_dir argument is required
