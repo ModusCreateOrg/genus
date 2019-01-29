@@ -10,8 +10,7 @@
 #MODULES = main glwrappers window atlas font render-sprites render-shapes render-surface render-imgui imgui/imgui imgui/imgui_draw imgui/imgui_widgets imgui/imgui_demo
 #ASSETS = assets/red-blob.png imgui/misc/fonts/DroidSans.ttf
 
-ASSETS = 
-
+ASSETS = src/Resources.bin
 
 MODULES = \
 src/GDialogWidget \
@@ -104,7 +103,6 @@ creative-engine/src/libxmp/control \
 creative-engine/src/libxmp/dataio \
 creative-engine/src/libxmp/effects \
 creative-engine/src/libxmp/filter \
-creative-engine/src/libxmp/fnmatch \
 creative-engine/src/libxmp/format \
 creative-engine/src/libxmp/hio \
 creative-engine/src/libxmp/lfo \
@@ -115,7 +113,6 @@ creative-engine/src/libxmp/memio \
 creative-engine/src/libxmp/mix_all \
 creative-engine/src/libxmp/mix_paula \
 creative-engine/src/libxmp/mixer \
-creative-engine/src/libxmp/mkstemp \
 creative-engine/src/libxmp/period \
 creative-engine/src/libxmp/player \
 creative-engine/src/libxmp/read_event \
@@ -133,6 +130,10 @@ creative-engine/src/libxmp/loaders/s3m_load \
 creative-engine/src/libxmp/loaders/sample \
 creative-engine/src/libxmp/loaders/voltable \
 creative-engine/src/libxmp/loaders/xm_load \
+
+#creative-engine/src/libxmp/fnmatch \
+#creative-engine/src/libxmp/mkstemp \
+
 
 UNAME = $(shell uname -s)
 BUILDDIR = build
@@ -178,7 +179,7 @@ EMXXFLAGS = $(COMMONFLAGS) -Oz -s USE_SDL=2 --use-preload-plugins -s USE_SDL_IMA
  -I creative-engine/src/libxmp/loaders
 
 EMCC = emcc
-EMCCFLAGS = -Oz -s USE_SDL=2 --use-preload-plugins -s USE_SDL_IMAGE=2 -s WASM=1 \
+EMCCFLAGS = -DLIBXMP_CORE_PLAYER -Oz -s USE_SDL=2 --use-preload-plugins -s USE_SDL_IMAGE=2 -s WASM=1 \
  -I creative-engine/src/libxmp \
  -I creative-engine/src/libxmp/loaders
 
