@@ -1,8 +1,8 @@
 
 # Developing
+....
 
-
-##Quick Start
+## Quick Start
 On macOS or Ubuntu 16.04 (and later), with git installed, run:
 
     git clone https://github.com/ModusCreateOrg/genus.git # Clone src
