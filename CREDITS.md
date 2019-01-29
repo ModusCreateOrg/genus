@@ -39,7 +39,7 @@ Genus was developed with love by the following team members:
 - [Claudio Matsuoka](https://github.com/cmatsuoka) - Thank you for fixing issues with LibXMP so rapidly! <3 
 
 ## Licensed visuals
-We used the following backgrounds licensed under Creative Commons 3.0 and 4.0 and have also donated to their respective authors as a thank you to them!
+We used the following backgrounds licensed under Creative Commons attribution licenses (version 3.0 and 4.0) and have also donated to their respective authors as a thank you to them!
 
 [Creative Commons 4.0](https://creativecommons.org/licenses/by/4.0/)
 - Stage 1 - [Countryside](http://pixelgameart.org/web/portfolio/country-side-platfformer/)
