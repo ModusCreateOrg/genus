@@ -24,7 +24,7 @@ Genus was developed with love by the following team members:
 ### Music and sound effects
 - [Jay Garcia](https://github.com/jaygarcia)
 
-### Music and sound effects
+### Project management
 - [Dave Collins](https://github.com/davecollins)
 
 ### Additional development:
