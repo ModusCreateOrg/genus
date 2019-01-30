@@ -1,6 +1,27 @@
 
 # Developing
-....
+
+This document's purpose is to provide a high-level understanding of how Genus work. Programmers wishing to contribute must review our [contributing][./CONTRIBUTING.md] guidelines as well as have a decent understanding of C++ and some knowledge of SOCs, such as the [ESP32-WROVER](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/get-started-wrover-kit.html). 
+
+# How genus works
+
+Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday sesaon. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux.  All of this is made possible by the following foundational technologies.
+
+#### All platforms
+[Creative Engine](https://github.com/ModusCreateOrg/creative-engine)\
+[Lib XMP](http://xmp.sourceforge.net/)
+
+#### macOS, Linux
+[SDL2](https://www.libsdl.org/download-2)
+
+#### ODROID GO
+[Espressif IoT development Framework (ESP IDF)](https://github.com/espressif/esp-idf)
+
+
+Genus ![genus-block-diagram](./genus-block-diagram.jpg)
+
+
+
 
 ## Quick Start
 On macOS or Ubuntu 16.04 (and later), with git installed, run:
