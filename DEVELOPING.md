@@ -48,7 +48,7 @@ Let's clone the Genus and Creative Engine repos:
 ## Install dependencies
 
 ### macOS
-- [ ] Install XCode\
+- [ ] Install [XCode](https://developer.apple.com/xcode/)
 - [ ] Intall [Homebrew](https://brew.sh) 
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 - [ ] Install final dependencies
