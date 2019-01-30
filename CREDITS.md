@@ -22,7 +22,7 @@ Genus was developed with love by the following team members:
 [Drew Griffith](https://dribbble.com/DrewGriffith)\
 [Lorena Vargas](https://dribbble.com/olorenav)\
 [Dymtro Kovalenko](https://dribbble.com/tasteofdalife)\
-[Jonathan Van Dalen](https://dribbble.com/tasteofdalife)
+[Jonathan Van Dalen](https://www.linkedin.com/in/jon-van-dalen-22a15aa/)
 
 ### Music and sound effects:
 [Jay Garcia](https://github.com/jaygarcia)
