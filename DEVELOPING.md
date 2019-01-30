@@ -1,7 +1,7 @@
 
 # Developing
 
-This document's purpose is to provide a high-level understanding of how Genus work. Programmers wishing to contribute must review our [contributing][./CONTRIBUTING.md] guidelines as well as have a decent understanding of C++ and some knowledge of SOCs, such as the [ESP32-WROVER](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/get-started-wrover-kit.html). 
+This document's purpose is to provide a high-level understanding of how Genus work. Programmers wishing to contribute must review our [contributing](./CONTRIBUTING.md) guidelines as well as have a decent understanding of C++ and some knowledge of SOCs, such as the [ESP32-WROVER](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/get-started-wrover-kit.html). 
 
 # How genus works
 
