@@ -17,21 +17,21 @@ On the ODROID GO, the instructions can be found on our play cards (front, back).
 
 ## Keymap for computer-based players:
 
-### Global (all screens)
+#### Global (all screens)
 | Key(s) | Description |
 | --- | --- |
 | `Q` | Quits the game |
 | `2` | Mute / Unmute audio |
 | `3` | Move menu cursor down |
 
-### Main Menu
+#### Main Menu
 | Key(s) | Description |
 | --- | --- |
 | `1` | Shortcut to enter Options from the main menu |
 | `↑ ↓` | Move menu cursor |
 | `4` `RETURN` `X` `Z` `SPACE` | Select item in the menu |
 
-### Options Screen
+#### Options Screen
 | Key(s) | Description |
 | --- | --- |
 | `1` | Exit options |
