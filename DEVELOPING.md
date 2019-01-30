@@ -3,7 +3,7 @@
 
 This document's purpose is to provide a high-level understanding of how Genus work. Programmers wishing to get involved should review our [contributions](./CONTRIBUTING.md) guidelines as well as have a decent understanding of C++ and build tools. Having some knowledge of SOCs, such as the [ESP32-WROVER](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/get-started-wrover-kit.html) would also be very helpful. 
 
-# How genus works
+## How genus works
 
 Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday sesaon. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux. 
 
@@ -24,9 +24,8 @@ The following visualization depicts the layers of the various libraries at play.
 
 
 
-# Getting started
-Let's get setup for desktop and device development. To do so, we'll need to ensure that we have the right 
-al libraries and tools installed.
+## Getting started
+Let's get setup for desktop and device development. To do so, we'll need to ensure that we have the right libraries and tools installed.
 
 We're going to get setup in three phases:
 1. Clone Genus and Creative Engine
@@ -71,11 +70,12 @@ sudo apt-get install libsdl2-dev libsdl2-image-dev cmake g++ -y
 - [ ] Build and run Genus
 ```    
 # Run this command from genus/
-scripts/build.sh -o                             # Build it
+scripts/build.sh -o            # Build it
+build/genus                    # Run Genus
 ```
 
 ## ODROID GO/ESP32
-- [ ] Follow the [setup-toolchain](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/#setup-toolchain) instructions. Be sure to follow them thorougly! 
+- [ ] Follow the [setup-toolchain](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/#setup-toolchain) instructions for the ESP IDF. Be sure to follow them thorougly! 
 - [ ] Stage the appropriate SDK config file
 ```
 # Linux ONLY
@@ -85,7 +85,7 @@ cp sdkconfig.mac sdkconfig
 ```
 - [ ] Build and run genus 
 ```
-#From within genus/
+# From within genus/
 make -j 4 flash   #Assuming you have four CPU cores to compile
 ```
 
