@@ -5,7 +5,7 @@ This document's purpose is to provide a high-level understanding of how Genus wo
 
 # How genus works
 
-Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday sesaon. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux.  All of this is made possible by the following foundational technologies.
+Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday sesaon. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux. 
 
 The following visualization depicts the layers of the various libraries at play.
 ![genus-block-diagram](./readme-images/genus-block-diagram.jpg)
@@ -25,7 +25,8 @@ The following visualization depicts the layers of the various libraries at play.
 
 
 # Getting started
-Let's get setup for desktop and device development. To do so, we'll need to ensure that we have the right foundational libraries and tools installed.
+Let's get setup for desktop and device development. To do so, we'll need to ensure that we have the right 
+al libraries and tools installed.
 
 We're going to get setup in three phases:
 1. Clone Genus and Creative Engine
