@@ -11,9 +11,9 @@ The following visualization depicts the layers of the various libraries at play.
 ![genus-block-diagram](./readme-images/genus-block-diagram.jpg)
 
 #### All platforms
-[Genus](https://github.com/moduscreateorg/genus) 
-[Creative Engine](https://github.com/ModusCreateOrg/creative-engine) is the game engine. It implements LibXMP, SDL2, ESP-IDF (Audio, Video and Input drivers).
-[LibXMP](http://xmp.sourceforge.net/) is a fantastic cross-platform library for playing music using the (Xtended Module (XM))[https://en.wikipedia.org/wiki/XM_(file_format)] format and also has additional functionality to play sound effects.
+[Genus](https://github.com/moduscreateorg/genus) this game.\
+[Creative Engine](https://github.com/ModusCreateOrg/creative-engine) is the game engine. It implements LibXMP, SDL2, ESP-IDF (Audio, Video and Input drivers).\
+[LibXMP](http://xmp.sourceforge.net/) is a fantastic cross-platform library for playing music using the [Xtended Module (XM)](https://en.wikipedia.org/wiki/XM_(file_format)) format and also has additional functionality to play sound effects.\
 [rcomp](https://github.com/ModusCreateOrg/creative-engine) is a CLI program that takes graphic and audio resources and packages them into a binary blob to be included and is part of the Creative Engine library.
 
 #### macOS, Linux
