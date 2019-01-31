@@ -30,7 +30,7 @@ function ensure_homebrew_installed {
 
 function ensure_cmake {
     # Adapted from https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line
-    if [[ -x /usr/local/bin/cmake ]]; then
+    if command -v cmake >/dev/null 2>&1; then
         return
     fi
     local version
@@ -77,6 +77,12 @@ function ensure_arch_devtools_installed {
     ensure_cmake
 }
 
+function ensure_solus_devtools_installed {
+    $SUDO eopkg install -y -c system.devel git libglvnd sdl2 sdl2-image curl doxygen imagemagick
+    # Use same version of cmake as for ubuntu
+    ensure_cmake
+}
+
 function ensure_creative_engine {
     if [[ ! -d "$CREATIVE_ENGINE_DIR" ]]; then
         git clone git@github.com:ModusCreateOrg/creative-engine.git "$CREATIVE_ENGINE_DIR"
@@ -85,15 +91,12 @@ function ensure_creative_engine {
 
 function build {
     cd "$BASE_DIR" || exit 1
-    if [[ ! -d creative-engine ]]; then
+    if [[ ! -d $CREATIVE_ENGINE_DIR ]]; then
         # rm -f creative-engine
-        ln -sf ../creative-engine .
+        ln -sf $CREATIVE_ENGINE_DIR .
     fi
     mkdir -p "$BUILD_DIR"
     cd "$BUILD_DIR" || exit 1
-    # pwd
-    # ls -l
-    # ls -l ..
     cmake ..
     make -j 8
 }
@@ -135,9 +138,9 @@ function build_xtensa {
 
     cd "$BASE_DIR" || exit 1
 
-    if [[ ! -d creative-engine ]]; then
+    if [[ ! -d $CREATIVE_ENGINE_DIR ]]; then
         rm -f creative-engine
-        ln -s ../creative-engine .
+        ln -s $CREATIVE_ENGINE_DIR .
     fi
     mkdir -p "$BUILD_DIR"
     make -j 10
