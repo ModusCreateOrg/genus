@@ -1,6 +1,7 @@
-# Use clang++ when on Solus Linux, otherwise gcc
-if command -v eopkg >/dev/null 2>&1; then
-    clang++ $@
+#!/usr/bin/env bash
+# Use clang++ when available, otherwise gcc
+if command -v clang++ >/dev/null 2>&1 ; then
+    exec clang++ "$@"
 else
-    gcc $@
+    exec gcc "$@"
 fi
