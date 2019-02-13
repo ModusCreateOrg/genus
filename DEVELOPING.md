@@ -39,6 +39,7 @@ The first thing we need to is create a folder that will contain Genus and Creati
             |-creative-engine/  # Symbolic Link to the above directory
 
 Let's clone the Genus and Creative Engine repos:
+
     mkdir genus-game/                                             # Whould be within ~/projects or similar
     cd genus-game/
     git clone git@github.com:ModusCreateOrg/genus.git
