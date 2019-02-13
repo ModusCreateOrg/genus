@@ -8,8 +8,6 @@ BITMAP charset_16x16.bmp
 BITMAP common_sprites.bmp
 RAW EmptySong.xm
 RAW GameOver.xm
-RAW Main_Menu.xm
-RAW EnterCredits.xm
 
 ## Main Screens
 PATH ../resources/main_screens # path to resource files
@@ -20,6 +18,8 @@ BITMAP genus_logo.bmp
 BITMAP modus_labs_sprite.bmp
 BITMAP team_sprite.bmp
 BITMAP main_options1.bmp
+RAW Main_Menu.xm
+RAW EnterCredits.xm
 
 ## High Scores
 PATH ../resources/high_scores

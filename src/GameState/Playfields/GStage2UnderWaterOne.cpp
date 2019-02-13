@@ -15,7 +15,7 @@
 
 
 GStage2UnderWaterOne::GStage2UnderWaterOne(GGameState *aGameEngine) {
-  gResourceManager.LoadBitmap(UNDER_WATER_BMP, BKG_SLOT, IMAGE_ENTIRE);
+  gResourceManager.LoadBitmap(UNDER_WATER_ONE_BMP, BKG_SLOT, IMAGE_ENTIRE);
   mGameEngine = aGameEngine;
   mTextColor = 0;
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
