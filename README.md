@@ -53,4 +53,4 @@ On the ODROID GO, the instructions can be found on our play cards (front, back).
 Genus is licensed under [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.en.html).
 
 # Contributing
-Interested in contributing to Genus? Please see our [developing](./DEVELOPING.md) and [contributions](./CONTRIBUTIONS.MD) guideilnes. 
+Interested in contributing to Genus? Please see our [developing](./DEVELOPING.md) and [contributions](./CONTRIBUTIONS.MD) guidelines. 
