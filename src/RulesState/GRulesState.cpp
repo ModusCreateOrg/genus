@@ -19,7 +19,7 @@ public:
 
     gResourceManager.LoadBitmap(HIGH_SCORES1_BMP, BKG_SLOT, IMAGE_ENTIRE);
     gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
-    gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+    gResourceManager.LoadBitmap(STAGE1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
 
     mBackground = gResourceManager.GetBitmap(BKG_SLOT);
     BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
