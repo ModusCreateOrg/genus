@@ -117,8 +117,13 @@ protected:
     ResetSprite();
 
     TInt y = TEXT_Y;
+#ifdef __XTENSA__
     y += RenderString("Use the directional", y);
     y += RenderString("pad to move the blocks", y);
+#else
+    y += RenderString("Use the arrow keys", y);
+    y += RenderString("to move the blocks", y);
+#endif
     y += RenderString("as they enter at the", y);
     y += RenderString("top of the game board.", y);
     return y;
@@ -128,12 +133,20 @@ protected:
     mSprite->flags |= SFLAG_RENDER;
 
     TInt y = TEXT_Y;
+#ifdef __XTENSA__
     y += RenderString("Pressing the A button", y);
+#else
+    y += RenderString("Pressing the X key", y);
+#endif
     y += RenderString("will rotate the blocks", y);
     y += RenderString("clockwise.", y) + 16;
     y += RenderString("Place the blocks on", y);
     y += RenderString("the board by pressing", y);
+#ifdef __XTENSA__
     y += RenderString("the B button.", y);
+#else
+    y += RenderString("the Z key.", y);
+#endif
 //    y += RenderString("to create matches.", y);
 
     mTimer--;
