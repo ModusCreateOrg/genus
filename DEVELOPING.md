@@ -1,10 +1,8 @@
 
 # Developing
-
 This document's purpose is to provide a high-level understanding of how Genus work. Programmers wishing to get involved should review our [contributions](./CONTRIBUTING.md) guidelines as well as have a decent understanding of C++ and build tools. Having some knowledge of SOCs, such as the [ESP32-WROVER](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/get-started-wrover-kit.html) would also be very helpful. 
 
-## How genus works
-
+## How Genus works
 Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday sesaon. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux. 
 
 The following visualization depicts the layers of the various libraries at play.
@@ -12,16 +10,16 @@ The following visualization depicts the layers of the various libraries at play.
 
 #### All platforms
 [Genus](https://github.com/moduscreateorg/genus) this game.\
-[Creative Engine](https://github.com/ModusCreateOrg/creative-engine) is the game engine. It implements LibXMP, SDL2, ESP-IDF (Audio, Video and Input drivers).\
+[Creative Engine](https://github.com/ModusCreateOrg/creative-engine) is the game engine developed by Modus Create. It implements LibXMP, SDL2, ESP-IDF (Audio, Video and Input drivers).\
 [LibXMP](http://xmp.sourceforge.net/) is a fantastic cross-platform library for playing music using the [Xtended Module (XM)](https://en.wikipedia.org/wiki/XM_(file_format)) format and also has additional functionality to play sound effects.\
-[rcomp](https://github.com/ModusCreateOrg/creative-engine) is a CLI program that takes graphic and audio resources and packages them into a binary blob to be included and is part of the Creative Engine library.
+
+[Rcomp](https://github.com/ModusCreateOrg/creative-engine/blob/master/tools/rcomp.cpp) is a CLI tool that takes any binary resources and packages  (graphic, audio, etc.) them into a binary blob to be included in the game executable and is part of [Creative Engine](https://github.com/ModusCreateOrg/creative-engine).
 
 #### macOS, Linux
 [SDL2](https://www.libsdl.org/download-2) is a cross-platform low-level media layer framework. Creative Engine generates audio data with LibXMP and feeds it into the SDL2 audio runloo and does similar to present visuals in the application window as well as poll for keyboard input to allow for gameplay.
 
 #### ODROID GO
 [Espressif IoT development Framework (ESP IDF)](https://github.com/espressif/esp-idf) is a low level framework for accessing capabilities of the ESP32-WOVER SOC.
-
 
 
 ## Getting started
@@ -36,14 +34,16 @@ We're going to get setup in three phases:
 The first thing we need to is create a folder that will contain Genus and Creative engine. When we're done, the folder struction will look similar to the following.
 
     projects/
+        |-creative-engine/      # Source Creative Engine
         |-genus/                # Source for Genus
-            |-creative-engine/  # Source Creative Engine
+            |-creative-engine/  # Symbolic Link to the above directory
 
 Let's clone the Genus and Creative Engine repos:
     mkdir genus-game/                                             # Whould be within ~/projects or similar
+    cd genus-game/
     git clone git@github.com:ModusCreateOrg/genus.git
-    cd genus/
-    git clone git@github.com:ModusCreateOrg/creative-engine.git 
+    git clone git@github.com:ModusCreateOrg/creative-engine.git
+    ln -s creative-engine/ genus/creative-engine                  # Create Symbolic Link
    
 ## Install dependencies
 
@@ -59,7 +59,8 @@ brew install
 - [ ] Build and run Genus
 ```    
 # Run this command from genus/
-scripts/build.sh -o                             # Build it
+scripts/build.sh                             # Build Genus
+open build/genus.app                         # Run Genus
 ```
 
 ### Linux (Debian based)
@@ -70,7 +71,7 @@ sudo apt-get install libsdl2-dev libsdl2-image-dev cmake g++ -y
 - [ ] Build and run Genus
 ```    
 # Run this command from genus/
-scripts/build.sh -o            # Build it
+scripts/build.sh               # Build Genus
 build/genus                    # Run Genus
 ```
 
