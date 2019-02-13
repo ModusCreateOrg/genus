@@ -5,37 +5,37 @@ Genus was developed with love by the following team members:
 
 ## Credits
 
-### Programming:
+##### Programming:
 [Mike Schwartz](https://github.com/mschwartz)\
 [Michael Tintiuc](https://github.com/michaeltintiuc)\
 [Jay Garcia](https://github.com/jaygarcia)\
 [Richard Bullington-McGuire](https://github.com/obscurerichard)
  
-### Gameplay:
+##### Gameplay:
 [Mike Schwartz](https://github.com/mschwartz)\
 [Michael Tintiuc](https://github.com/michaeltintiuc)\
 [Jay Garcia](https://github.com/jaygarcia)\
 [Dymtro Kovalenko](https://dribbble.com/tasteofdalife)\
 [Jonathan Van Dalen](https://dribbble.com/tasteofdalife)
 
-### Visual Design:
+##### Visual Design:
 [Drew Griffith](https://dribbble.com/DrewGriffith)\
 [Lorena Vargas](https://dribbble.com/olorenav)\
 [Dymtro Kovalenko](https://dribbble.com/tasteofdalife)\
 [Jonathan Van Dalen](https://www.linkedin.com/in/jon-van-dalen-22a15aa/)
 
-### Music and sound effects:
+##### Music and sound effects:
 [Jay Garcia](https://github.com/jaygarcia)
 
-### Project management:
+##### Project management:
 [Dave Collins](https://github.com/davecollins)
 
-### Additional development:
+##### Additional development:
 [Don Anderson](https://github.com/dranderson)\
 [Housni Yakoob](https://github.com/housni)\
 [Richard Bullington-McGuire](https://github.com/obscurerichard)
 
-### Shout out:
+##### Shout out:
 [Claudio Matsuoka](https://github.com/cmatsuoka) - Thank you for fixing issues with LibXMP so rapidly! ❤️
 
 ## Licensed visuals

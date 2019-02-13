@@ -1,68 +1,97 @@
 
 # Developing
 
-This document's purpose is to provide a high-level understanding of how Genus work. Programmers wishing to contribute must review our [contributing][./CONTRIBUTING.md] guidelines as well as have a decent understanding of C++ and some knowledge of SOCs, such as the [ESP32-WROVER](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/get-started-wrover-kit.html). 
+This document's purpose is to provide a high-level understanding of how Genus work. Programmers wishing to get involved should review our [contributions](./CONTRIBUTING.md) guidelines as well as have a decent understanding of C++ and build tools. Having some knowledge of SOCs, such as the [ESP32-WROVER](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/get-started-wrover-kit.html) would also be very helpful. 
 
-# How genus works
+## How genus works
 
-Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday sesaon. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux.  All of this is made possible by the following foundational technologies.
+Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday sesaon. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux. 
+
+The following visualization depicts the layers of the various libraries at play.
+![genus-block-diagram](./readme-images/genus-block-diagram.jpg)
 
 #### All platforms
-[Creative Engine](https://github.com/ModusCreateOrg/creative-engine)\
-[Lib XMP](http://xmp.sourceforge.net/)
+[Genus](https://github.com/moduscreateorg/genus) this game.\
+[Creative Engine](https://github.com/ModusCreateOrg/creative-engine) is the game engine. It implements LibXMP, SDL2, ESP-IDF (Audio, Video and Input drivers).\
+[LibXMP](http://xmp.sourceforge.net/) is a fantastic cross-platform library for playing music using the [Xtended Module (XM)](https://en.wikipedia.org/wiki/XM_(file_format)) format and also has additional functionality to play sound effects.\
+[rcomp](https://github.com/ModusCreateOrg/creative-engine) is a CLI program that takes graphic and audio resources and packages them into a binary blob to be included and is part of the Creative Engine library.
 
 #### macOS, Linux
-[SDL2](https://www.libsdl.org/download-2)
+[SDL2](https://www.libsdl.org/download-2) is a cross-platform low-level media layer framework. Creative Engine generates audio data with LibXMP and feeds it into the SDL2 audio runloo and does similar to present visuals in the application window as well as poll for keyboard input to allow for gameplay.
 
 #### ODROID GO
-[Espressif IoT development Framework (ESP IDF)](https://github.com/espressif/esp-idf)
-
-
-Genus ![genus-block-diagram](./genus-block-diagram.jpg)
+[Espressif IoT development Framework (ESP IDF)](https://github.com/espressif/esp-idf) is a low level framework for accessing capabilities of the ESP32-WOVER SOC.
 
 
 
+## Getting started
+Let's get setup for desktop and device development. To do so, we'll need to ensure that we have the right libraries and tools installed.
 
-## Quick Start
-On macOS or Ubuntu 16.04 (and later), with git installed, run:
+We're going to get setup in three phases:
+1. Clone Genus and Creative Engine
+2. Install supporting desktop libraries and tools
+3. Install ESP IDF toolchain (this is only needed if you want to program an ODROID GO)
 
-    git clone https://github.com/ModusCreateOrg/genus.git # Clone src
-    genus/scripts/build.sh                                # Build it
-    genus/build/genus                                     # Run genus
+## Clone Genus and Creative Engine
+The first thing we need to is create a folder that will contain Genus and Creative engine. When we're done, the folder struction will look similar to the following.
 
-Once this is built, you can make changes to the sources and rebuild with just these commands:
+    projects/
+        |-genus/                # Source for Genus
+            |-creative-engine/  # Source Creative Engine
 
-    cd genus/build
-    cmake ..        # only needed if you change CMakeLists.txt
-    make
+Let's clone the Genus and Creative Engine repos:
+    mkdir genus-game/                                             # Whould be within ~/projects or similar
+    git clone git@github.com:ModusCreateOrg/genus.git
+    cd genus/
+    git clone git@github.com:ModusCreateOrg/creative-engine.git 
+   
+## Install dependencies
 
-Alternatively you may use the [CLion IDE](https://www.jetbrains.com/clion/) to develop the project and run the builds.
-
-## Repository set up for development
-
-This repo and the [creative-engine](https://github.com/ModusCreateOrg/creative-engine) repo work together. The build scripts (`scripts/build.sh`, `cmake` or `make`) will automatically create a soft link to creative-engine.
-
-Thus you will need to fork and clone this and the `creative-engine` repos AT THE SAME LEVEL:
-
+### macOS
+- [ ] Install [XCode](https://developer.apple.com/xcode/)
+- [ ] Intall [Homebrew](https://brew.sh) 
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+- [ ] Install final dependencies
+```    
+# Run this command from genus/
+brew install
 ```
-$ ls ~/github
-genus/  creative-engine/
+- [ ] Build and run Genus
+```    
+# Run this command from genus/
+scripts/build.sh -o                             # Build it
 ```
 
-In `genus/` you will need to create a soft link:
+### Linux (Debian based)
+- [ ] Install dependencies
 ```
-cd genus
-ln -s ../creative-engine .
+sudo apt-get install libsdl2-dev libsdl2-image-dev cmake g++ -y
+```
+- [ ] Build and run Genus
+```    
+# Run this command from genus/
+scripts/build.sh -o            # Build it
+build/genus                    # Run Genus
 ```
 
-### Mac OS X
-
-On Mac OS X, install XCode and then run `scripts/build.sh`. This will ensure you have Homebrew installed, and build the code in the `build` directory.
-
-You can then run the application with this command:
+## ODROID GO/ESP32
+- [ ] Follow the [setup-toolchain](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/#setup-toolchain) instructions for the ESP IDF. Be sure to follow them thorougly! 
+- [ ] Stage the appropriate SDK config file
 ```
-build/genus
+# Linux ONLY
+cp sdkconfig.linux sdkconfig
+# macOS ONLY
+cp sdkconfig.mac sdkconfig
 ```
+- [ ] Build and run genus 
+```
+# From within genus/
+make -j 4 flash   #Assuming you have four CPU cores to compile
+```
+
+## Additional information
+We highly recommend using the [CLion IDE](https://www.jetbrains.com/clion/) to develop the project and run the builds.
+
 
 ## Git Workflow
 Read about [GitHub workflow](https://github.com/ModusCreateOrg/creative-engine) at the creative-engine repo.
@@ -70,7 +99,3 @@ Read about [GitHub workflow](https://github.com/ModusCreateOrg/creative-engine) 
 The gist is that we fork the main repos and work in our private forks.  We push to our forks.  We create Pull Requests against the main repos.
 
 The only way code makes it into master in the main repo is if we merge a PR.
-
-# ModusCreateOrg GitHub Guidelines
-
-> Modus Create team members should refer to [ModusCreateOrg GitHub Guidelines](https://docs.google.com/document/d/1eBFta4gP3-eZ4Gcpx0ww9SHAH6GrOoPSLmTFZ7R8foo/edit#heading=h.sjyqpqnsjmjl)
