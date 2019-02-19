@@ -61,6 +61,7 @@ function ensure_cmake {
         make
         $SUDO make install
     fi
+    cd - || exit 1
     rm -rf "$tmpdir"
 }
 
