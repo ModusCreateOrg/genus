@@ -50,3 +50,7 @@ Stage 5 - [Cyberpunk Street](http://pixelgameart.org/web/portfolio/cyberpunk-str
 
 [Creative Commons 3.0](https://creativecommons.org/licenses/by/3.0/)\
 Stage 6 - [Spaaaaaaace](https://opengameart.org/content/spaaaaaaace-scene)
+
+## Licensed Audio
+We used various sounds licensed under Creative Commons Universal Public Domain license 1.0 from the
+[512 Sound Effects (8-bit style)](https://opengameart.org/content/512-sound-effects-8-bit-style) collection by [SubSpaceAudio](https://opengameart.org/users/subspaceaudio).
