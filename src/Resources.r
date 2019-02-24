@@ -29,7 +29,7 @@ PATH ../resources/backgrounds/under_water
 BITMAP under_water_one.bmp
 
 PATH ../resources/backgrounds/countryside/
-#BITMAP countryside0.bmpadd 
+#BITMAP countryside0.bmp
 #BITMAP countryside1.bmp
 #BITMAP countryside2.bmp
 #BITMAP countryside3.bmp
