@@ -6,7 +6,7 @@ static const TUint8 BLOCK_TIMER_INIT = 7;
 static const TUint8 ARROW_X          = 4;
 static const TUint8 BLOCK_X          = 96;
 static const TUint8 BLOCK_Y          = 50;
-static const TUint8 TEXT_Y           = 100;
+static const TUint8 TEXT_Y           = 107;
 
 // special characters
 static const char *STR_LEFT_ARROW  = "\xf";
@@ -19,7 +19,7 @@ public:
 
     gResourceManager.LoadBitmap(HIGH_SCORES1_BMP, BKG_SLOT, IMAGE_ENTIRE);
     gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
-    gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+    gResourceManager.LoadBitmap(STAGE1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
 
     mBackground = gResourceManager.GetBitmap(BKG_SLOT);
     BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
@@ -69,7 +69,7 @@ public:
   TUint8 mLeftArrowColor = COLOR_TEXT;
   TUint8 mRightArrowColor = COLOR_TEXT;
   TUint mCurrentPage = 1;
-  TUint mTotalPages = 6;
+  TUint mTotalPages = 5;
 };
 
 class RulesProcess : public BProcess {
@@ -117,10 +117,15 @@ protected:
     ResetSprite();
 
     TInt y = TEXT_Y;
-    y += RenderString("Move the 2x2 blocks", y);
-    y += RenderString("with the joystick.", y) + 16;
-    y += RenderString("Drop blocks on board", y);
-    y += RenderString("with the B button.", y);
+#ifdef __XTENSA__
+    y += RenderString("Use the directional", y);
+    y += RenderString("pad to move the blocks", y);
+#else
+    y += RenderString("Use the arrow keys", y);
+    y += RenderString("to move the blocks", y);
+#endif
+    y += RenderString("as they enter at the", y);
+    y += RenderString("top of the game board.", y);
     return y;
   }
 
@@ -128,8 +133,22 @@ protected:
     mSprite->flags |= SFLAG_RENDER;
 
     TInt y = TEXT_Y;
-    y += RenderString("The A button rotates", y);
-    y += RenderString("the blocks.", y);
+#ifdef __XTENSA__
+    y += RenderString("Pressing the A button", y);
+#else
+    y += RenderString("Pressing the X key", y);
+#endif
+    y += RenderString("will rotate the blocks", y);
+    y += RenderString("clockwise.", y) + 16;
+    y += RenderString("Place the blocks on", y);
+    y += RenderString("the board by pressing", y);
+#ifdef __XTENSA__
+    y += RenderString("the B button.", y);
+#else
+    y += RenderString("the Z key.", y);
+#endif
+//    y += RenderString("to create matches.", y);
+
     mTimer--;
     if (mTimer < 0) {
       mSprite->RotateRight();
@@ -162,12 +181,14 @@ protected:
     DrawBlock(16, x, y, 1, 5);
 
     y = TEXT_Y;
-    y += RenderString("Object is to get 2x2", y);
-    y += RenderString("of the same color on", y);
-    y += RenderString("the board.", y) + 16;
-    y += RenderString("The matched blocks", y);
-    y += RenderString("turn dark and the", y);
-    y += RenderString("timer starts.", y);
+    y += RenderString("Clear the board by", y);
+    y += RenderString("grouping the same color", y);
+    y += RenderString("in a 2x2 pattern.", y) + 16;
+//    y += RenderString("clear to create ", y);
+
+    y += RenderString("Grouped blocks will", y);
+    y += RenderString("darken and start the", y);
+    y += RenderString("bonus timer.", y);
     return y;
   }
 
@@ -194,9 +215,11 @@ protected:
     DrawBlock(21, x, y, 1, 7);
 
     y = TEXT_Y;
-    y += RenderString("Increase score by", y);
-    y += RenderString("matching more while", y);
-    y += RenderString("timer runs.", y);
+    y += RenderString("While the bonus timer", y);
+    y += RenderString("is ticking, you can", y);
+    y += RenderString("create more color", y);
+    y += RenderString("combinations to increase", y);
+    y += RenderString("your score!", y);
     return y;
   }
 
@@ -213,26 +236,15 @@ protected:
     DrawBlock(0, x, y, 1, 4);
 
     y = TEXT_Y;
-    y += RenderString("When timer runs out,", y);
-    y += RenderString("the dark blocks are", y);
-    y += RenderString("removed from the board.", y) + 16;
-    y += RenderString("The more blocks removed,", y);
-    y += RenderString("the higher your score.", y);
+    y += RenderString("Difficulty increases as", y);
+    y += RenderString("you progress levels.", y) + 16;
+
+    y += RenderString("Play until you run out", y);
+    y += RenderString("of space to place", y);
+    y += RenderString("incoming blocks.", y);
     return y;
   }
 
-  TInt Text6() {
-    mSprite->flags &= ~SFLAG_RENDER;
-    TInt y = TEXT_Y - 36;
-    y += RenderString("Increase level by", y);
-    y += RenderString("removing enough", y);
-    y += RenderString("dark blocks.", y) + 16;
-    y += RenderString("Game is over when", y);
-    y += RenderString("the board has no", y);
-    y += RenderString("space to drop another", y);
-    y += RenderString("2x2.", y) + 16;
-    return y;
-  }
 protected:
   TBool RunBefore() { return ETrue; }
 
@@ -256,9 +268,6 @@ protected:
       case 4:
         Text5();
         break;
-      case 5:
-        Text6();
-        break;
     }
 
     // Highlitght the arrows
@@ -271,7 +280,7 @@ protected:
     if (gControls.WasPressed(JOYLEFT | JOYUP)) {
       mState--;
       if (mState < 0) {
-        mState = 5;
+        mState = 4;
       }
       mArrowTimer = ARROW_TIMER;
       mRulesPlayfield->mLeftArrowColor = COLOR_TEXT_BG;
@@ -281,10 +290,15 @@ protected:
     // Next screen
     if (gControls.WasPressed(JOYRIGHT | JOYDOWN | BUTTON_SELECT)) {
       mState++;
-      if (mState > 5) {
+
+      if (mState > 4) {
         mState = 0;
+
+        gGame->SetState(GAME_STATE_MAIN_MENU);
+        gSoundPlayer.SfxMenuCancel();
+        return EFalse;
       }
-      mArrowTimer = ARROW_TIMER;
+//      mArrowTimer = ARROW_TIMER;
       mRulesPlayfield->mRightArrowColor = COLOR_TEXT_BG;
       gSoundPlayer.SfxMenuNavDown();
     }
