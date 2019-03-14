@@ -49,14 +49,9 @@ Let's clone the Genus and Creative Engine repos:
 ## Install dependencies
 
 ### macOS
+The macOS build requires XCode and uses [Homebrew](https://brew.sh), which it will install for you if it is not already installed.
+
 - [ ] Install [XCode](https://developer.apple.com/xcode/)
-- [ ] Intall [Homebrew](https://brew.sh) 
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-- [ ] Install final dependencies
-```    
-# Run this command from genus/
-brew install
-```
 - [ ] Build and run Genus
 ```    
 # Run this command from genus/
@@ -65,10 +60,10 @@ open build/genus.app                         # Run Genus
 ```
 
 ### Linux (Debian based)
-- [ ] Install dependencies
-```
-sudo apt-get install libsdl2-dev libsdl2-image-dev cmake g++ -y
-```
+The Debian based build, usable on Debian Stretch and Ubuntu 16.04+, will install development tool dependencies and complete the build in one step.
+
+Running the `build.sh` script will download all development dependencies, including `libsdl2-dev`, `libsdl2-image-dev`, development tools including `g++`, and will install `cmake` from either a precompiled binary or from source if a binary is not available for your architecture.
+
 - [ ] Build and run Genus
 ```    
 # Run this command from genus/
