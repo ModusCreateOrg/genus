@@ -5,6 +5,8 @@ This document's purpose is to provide a high-level understanding of how Genus wo
 ## How Genus works
 Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday sesaon. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux. 
 
+Building Genus has been tested on the `x86_64` architecture with macOS X High Sierra and Mojave, Ubuntu 16.04 and 18.04, and on the `armhf` architecture with Raspbian Stretch (9.6).
+
 The following visualization depicts the layers of the various libraries at play.
 ![genus-block-diagram](./readme-images/genus-block-diagram.jpg)
 
@@ -70,6 +72,24 @@ Running the `build.sh` script will download all development dependencies, includ
 scripts/build.sh               # Build Genus
 build/genus                    # Run Genus
 ```
+
+### Raspberry Pi
+
+Genus is tested on Raspbian Stretch (9.6) on the Raspberry Pi 2B+ and 3B+. You will need about 2GB of space in /tmp and about 2GB of space in /home to build this.
+
+The game will run very slowly without enabling the OpenGL desktop driver. You can enable it by running `sudo raspbi-config` and choosing _Advanced Options / GL Driver / GL (Full KMS)_. See this site for complete instructions: https://eltechs.com/how-to-enable-opengl-on-raspberry-pi/
+
+The `build.sh` script will download all development dependencies, including `libsdl2-dev`, `libsdl2-image-dev`, development tools including `g++`, and will install `cmake` from source.
+
+- [ ] Install dependencies, build and run Genus
+
+```
+# Run this command from genus/
+scripts/build.sh               # Build Genus
+build/genus                    # Run Genus
+```
+
+The first time the build runs it will have to build `cmake` from source which takes a long time. It will install `cmake` in `/usr/local/bin/cmake`.
 
 ## ODROID GO/ESP32
 - [ ] Follow the [setup-toolchain](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/#setup-toolchain) instructions for the ESP IDF. Be sure to follow them thorougly! 
