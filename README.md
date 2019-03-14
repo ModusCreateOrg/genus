@@ -1,36 +1,57 @@
-# Modus Create's Genus Holiday Game
+[![Modus Create](./readme-images/modus.logo.svg)](https://moduscreate.com)
 
-[![Modus Create](./images/modus.logo.svg)](https://moduscreate.com)
+# Genus [![Build Status](https://ci.moduscreate.com/buildStatus/icon?job=ModusCreateOrg/genus/master&build=1)](https://ci.moduscreate.com/job/ModusCreateOrg/job/genus/job/master/1/)
 
-[![Build Status](https://ci.moduscreate.com/buildStatus/icon?job=ModusCreateOrg/genus/master&build=1)](https://ci.moduscreate.com/job/ModusCreateOrg/job/genus/job/master/1/)
+Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday season. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux.
 
-## Quick Start
+## How to Play
+Genus is a simple puzzle game where the objective is to match colors in 2x2 patterns. Once a 2x2 pattern is found, the blocks will be darken as they are marked for clearing and a bonus timer will appear. If you create additional create additional color matches while the bonus timer is counting down, your score will increase.  Play until you run out of spaces to place new blocks.  
+
+![genus-gameplay.gif](./readme-images/genus-gameplay.gif)
+
+The game's difficulty increases as you progress through levels. There are a total of six stages in the game, each with different backgrounds, songs and color themes.
+
+Here's the button mapping for the ODROID GO.
+![genus-card-odroid-cutout.jpg](./readme-images/genus-card-odroid-cutout.jpg)
+
+
+## Keymap for computer-based players:
+
+#### Global (all screens)
+| Key(s) | Description |
+| --- | --- |
+| `Q` | Quits the game |
+| `2` | Mute / Unmute audio |
+| `3` | Move menu cursor down |
+
+#### Main Menu
+| Key(s) | Description |
+| --- | --- |
+| `1` | Shortcut to enter Options from the main menu |
+| `↑ ↓` | Move menu cursor |
+| `4` `RETURN` `X` `Z` `SPACE` | Select item in the menu |
+
+#### Options Screen
+| Key(s) | Description |
+| --- | --- |
+| `1` | Exit options |
+
+
+### Instructions screens
+| Key(s) | Description |
+| --- | --- |
+| `← →` | Navigate how to play screens |
+
+### Game
+| Key(s) | Description |
+| --- | --- |
+|`← → ↑ ↓` | Moves the bocks |
+| `Z` | Rotate the blocks |
+| `X` `SPACE` | Place blocks on the gameboard |
+
+# Building genus
 
 On macOS or Ubuntu or Raspbian Stretch with git installed, run:
-
-    git clone https://github.com/ModusCreateOrg/genus.git # Clone src
-    genus/scripts/build.sh                                # Build it
-    genus/build/genus                                     # Run genus
-
-Once this is built, you can make changes to the sources and rebuild with just these commands:
-
-    cd genus/build
-    cmake ..        # only needed if you change CMakeLists.txt
-    make
-
-Alternatively you may use the [CLion IDE](https://www.jetbrains.com/clion/) to develop the project and run the builds.
-
-Run this in the project root to build the documentation:
-
-    make docs
-
-View the [documentation](docs/html/index.html) after it is built.
- 
-## Repository set up for development
-
-This repo and the [creative-engine](https://github.com/ModusCreateOrg/creative-engine) repo work together. The build scripts (`scripts/build.sh`, `cmake` or `make`) will automatically create a soft link to creative-engine.
-
-Thus you will need to fork and clone this and the `creative-engine` repos AT THE SAME LEVEL:
 
 ```
 $ ls ~/github
@@ -76,6 +97,10 @@ The only way code makes it into master in the main repo is if we merge a PR.
 
 # ModusCreateOrg GitHub Guidelines
 
-> Modus Create team members should refer to [ModusCreateOrg GitHub Guidelines](https://docs.google.com/document/d/1eBFta4gP3-eZ4Gcpx0ww9SHAH6GrOoPSLmTFZ7R8foo/edit#heading=h.sjyqpqnsjmjl)
+Modus Create team members should refer to [ModusCreateOrg GitHub Guidelines](https://docs.google.com/document/d/1eBFta4gP3-eZ4Gcpx0ww9SHAH6GrOoPSLmTFZ7R8foo/edit#heading=h.sjyqpqnsjmjl)
 
+## License
+Genus is licensed under [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.en.html).
 
+# Contributing
+Interested in contributing to Genus? Please see our [developing](./DEVELOPING.md) and [contributions](./CONTRIBUTIONS.MD) guidelines. 

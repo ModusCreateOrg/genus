@@ -1,12 +1,12 @@
 #include "Game.h"
 #include "GGameBoard.h"
 #include "GGameStateGameOverProcess.h"
-#include "Playfields/GLevelCountryside.h"
-#include "Playfields/GLevelCyberpunk.h"
-#include "Playfields/GLevelUnderWaterOne.h"
-#include "Playfields/GLevelGlacialMountains.h"
-#include "Playfields/GLevelUnderWaterFantasy.h"
-#include "Playfields/GLevelSpace.h"
+#include "Playfields/GStage1Countryside.h"
+#include "Playfields/GStage5Cyberpunk.h"
+#include "Playfields/GStage2UnderWaterOne.h"
+#include "Playfields/GStage3GlacialMountains.h"
+#include "Playfields/GStage4UnderWaterFantasy.h"
+#include "Playfields/GStage6Space.h"
 
 #ifdef CHICKEN_MODE
 class GGameState;
@@ -198,39 +198,38 @@ void GGameState::LoadLevel() {
 
     switch ((mLevel / 5) % 6) {
       case 0:
-        mPlayfield = new GLevelCountryside(this); // Playfield 1
-        gResourceManager.LoadBitmap(LEVEL1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        mPlayfield = new GStage1Countryside(this);
+        gResourceManager.LoadBitmap(STAGE1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(COUNTRYSIDE_XM);
         newStage = true;
         break;
       case 1:
-        mPlayfield = new GLevelUnderWaterOne(this); // Playfield 2
-        gResourceManager.LoadBitmap(LEVEL2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        mPlayfield = new GStage2UnderWaterOne(this);
+        gResourceManager.LoadBitmap(STAGE2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDER_WATER_XM);
         newStage = true;
         break;
       case 2:
-        mPlayfield = new GLevelGlacialMountains(this); // Playfield 3
-        gResourceManager.LoadBitmap(LEVEL3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        mPlayfield = new GStage3GlacialMountains(this);
+        gResourceManager.LoadBitmap(STAGE3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(GLACIAL_MOUNTAINS_XM);
         newStage = true;
         break;
       case 3:
-        // TODO: @Jay???
-        mPlayfield = new GLevelUnderWaterFantasy(this); // Playfield 2
-        gResourceManager.LoadBitmap(LEVEL4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        mPlayfield = new GStage4UnderWaterFantasy(this);
+        gResourceManager.LoadBitmap(STAGE4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDERWATERFANTASY_XM);
         newStage = true;
         break;
       case 4:
-        mPlayfield = new GLevelCyberpunk(this); // Playfield 5
-        gResourceManager.LoadBitmap(LEVEL5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        mPlayfield = new GStage5Cyberpunk(this);
+        gResourceManager.LoadBitmap(STAGE5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(CYBERPUNK_XM);
         newStage = true;
         break;
       case 5:
-        mPlayfield = new GLevelSpace(this); // Playfield 6
-        gResourceManager.LoadBitmap(LEVEL6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
+        mPlayfield = new GStage6Space(this);
+        gResourceManager.LoadBitmap(STAGE6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SPAAACE_XM);
         newStage = true;
         break;
