@@ -84,23 +84,17 @@ Genus is tested on Raspbian Stretch (9.6) on the Raspberry Pi 2B+ and 3B+. You w
 
 The game will run very slowly without enabling the OpenGL desktop driver. You can enable it by running `sudo raspbi-config` and choosing _Advanced Options / GL Driver / GL (Full KMS)_. See this site for complete instructions: https://eltechs.com/how-to-enable-opengl-on-raspberry-pi/
 
-- [ ] Install dependencies
-```
-sudo apt-get install libsdl2-dev libsdl2-image-dev g++ -y
-```
-- [ ] Build and run Genus
+The `build.sh` script will download all development dependencies, including `libsdl2-dev`, `libsdl2-image-dev`, development tools including `g++`, and will install `cmake` from source.
+
+- [ ] Install dependencies, build and run Genus
+
 ```
 # Run this command from genus/
 scripts/build.sh               # Build Genus
 build/genus                    # Run Genus
 ```
 
-The first time the build runs it will have to build `cmake` from source which takes a long time. It will install `cmake` in /usr/local/bin/cmake.
-
-You can then run the application with this command:
-```
-build/genus
-```
+The first time the build runs it will have to build `cmake` from source which takes a long time. It will install `cmake` in `/usr/local/bin/cmake`.
 
 ## ODROID GO/ESP32
 - [ ] Follow the [setup-toolchain](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/#setup-toolchain) instructions for the ESP IDF. Be sure to follow them thorougly! 
