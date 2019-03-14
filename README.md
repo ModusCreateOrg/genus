@@ -6,7 +6,7 @@
 
 ## Quick Start
 
-On macOS or Ubuntu 16.04, with git installed, run:
+On macOS or Ubuntu or Raspbian Stretch with git installed, run:
 
     git clone https://github.com/ModusCreateOrg/genus.git # Clone src
     genus/scripts/build.sh                                # Build it
@@ -46,6 +46,19 @@ ln -s ../creative-engine .
 ### Mac OS X
 
 On Mac OS X, install XCode and then run `scripts/build.sh`. This will ensure you have Homebrew installed, and build the code in the `build` directory.
+
+You can then run the application with this command:
+```
+build/genus
+```
+
+### Raspberry Pi
+
+Genus is tested on Raspbian Stretch (9.6) on the Raspberry Pi 2B+ and 3B+. You will need about 2GB of space in /tmp and about 2GB of space in /home to build this.
+
+The game will run very slowly without enabling the OpenGL desktop driver. You can enable it by running `sudo raspbi-config` and choosing _Advanced Options / GL Driver / GL (Full KMS)_. See this site for complete instructions: https://eltechs.com/how-to-enable-opengl-on-raspberry-pi/
+
+Run `scripts/build.sh` and the build will run. The first time it runs it will have to build `cmake` from source which takes a long time. It will install `cmake` in /usr/local/bin/cmake.
 
 You can then run the application with this command:
 ```
