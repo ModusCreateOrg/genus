@@ -43,6 +43,8 @@ cd genus
 ln -s ../creative-engine .
 ```
 
+Building this has been tested on the x86_64 architecture on macOS X High Sierra and Mojave, in Ubuntu 16.04 and 18.04, and on the `armhf` architecture Raspbian Stretch (9.6). 
+
 ### Mac OS X
 
 On Mac OS X, install XCode and then run `scripts/build.sh`. This will ensure you have Homebrew installed, and build the code in the `build` directory.
