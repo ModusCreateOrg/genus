@@ -12,6 +12,7 @@ Genus is a simple puzzle game where the objective is to match colors in 2x2 patt
 The game's difficulty increases as you progress through levels. There are a total of six stages in the game, each with different backgrounds, songs and color themes.
 
 Here's the button mapping for the ODROID GO.
+
 ![genus-card-odroid-cutout.jpg](./readme-images/genus-card-odroid-cutout.jpg)
 
 
