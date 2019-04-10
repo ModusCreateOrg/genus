@@ -179,10 +179,9 @@ void GGameState::Next(TBool aCanPowerup) {
       if (Random() & 1) {
         gOptions->gameProgress.playerType = PLAYER_MODUS_BOMB;
         AddProcess(new GModusBombPowerup(mSprite, this));
-      } else {
+	  } else if (mGameBoard.HasColorSwappableBlocks()) {
         gOptions->gameProgress.playerType = PLAYER_COLOR_SWAP;
         AddProcess(new GColorSwapPowerup(mSprite, this));
-        return;
       }
       return;
     }
