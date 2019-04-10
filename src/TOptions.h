@@ -5,6 +5,7 @@
 #include "BStore.h"
 #include "Panic.h"
 #include "GGameBoard.h"
+#include "BPowerup.h"
 
 enum {
   DIFFICULTY_EASY,
@@ -19,16 +20,17 @@ enum {
 };
 
 struct GameProgress {
-  TBool  savedState;
-  TUint8 difficulty;
-  TUint8 playerType;
-  TInt   level;
-  TInt   bonusTimer;
-  TInt   blocksRemaining;
-  TUint8 board[BOARD_ROWS][BOARD_COLS];
-  TUint8 playerBlocks[4];
-  TUint8 nextBlocks[4];
-  TBCD   score;
+  TBool          savedState;
+  TUint8         difficulty;
+  TUint8         playerType;
+  TInt           level;
+  TInt           bonusTimer;
+  TInt           blocksRemaining;
+  TUint8         board[BOARD_ROWS][BOARD_COLS];
+  TUint8         playerBlocks[4];
+  TUint8         nextBlocks[4];
+  TBCD           score;
+  TPowerUpStates gameState;
 
   GameProgress() {
     savedState = EFalse;
@@ -38,6 +40,7 @@ struct GameProgress {
     score = TBCD(TUint32(0));
     playerType = PLAYER_NO_POWERUP;
     difficulty = DIFFICULTY_EASY;
+    gameState  = STATE_MOVE;
     memset(board, 255, sizeof(board));
     memset(playerBlocks, 0, sizeof(playerBlocks));
     memset(nextBlocks, 0, sizeof(nextBlocks));

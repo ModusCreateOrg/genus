@@ -73,8 +73,8 @@ public:
     return mGameProcess->State();
   }
 
-  void MainStateWait() {
-    mGameProcess->Wait();
+  void MainState(TPowerUpStates aState) {
+    mGameProcess->State(aState);
   }
 
   void SetBlocksPerLevel();

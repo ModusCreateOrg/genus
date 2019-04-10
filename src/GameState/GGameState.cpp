@@ -8,8 +8,9 @@
 #include "Playfields/GStage4UnderWaterFantasy.h"
 #include "Playfields/GStage6Space.h"
 
-#ifdef CHICKEN_MODE
 class GGameState;
+
+#ifdef CHICKEN_MODE
 class ChickenModeProcess : public BProcess {
   public:
     ChickenModeProcess(GGameState *aState) : BProcess() {
@@ -39,6 +40,41 @@ class ChickenModeProcess : public BProcess {
     GGameState *mState;
 };
 #endif
+
+/****************************************************************************************************************
+ ****************************************************************************************************************
+ ****************************************************************************************************************/
+
+class SaveProcess : public BProcess {
+  public:
+    SaveProcess(GGameState *aState) : BProcess() {
+      mState = aState;
+      mPrevMainState = mState->MainState();
+    }
+
+    ~SaveProcess() {}
+
+    TBool RunBefore() {
+      if (gControls.WasPressed(BUTTON_START)) {
+        if (mState->MainState() == STATE_WAIT) {
+          mState->MainState(mPrevMainState);
+        } else {
+          mPrevMainState = mState->MainState();
+          gOptions->gameProgress.gameState = mPrevMainState;
+          mState->MainState(STATE_WAIT);
+          mState->SaveState();
+        }
+      }
+      return ETrue;
+    }
+
+    TBool RunAfter() {
+      return ETrue;
+    }
+
+    GGameState *mState;
+    TPowerUpStates mPrevMainState;
+};
 
 /****************************************************************************************************************
  ****************************************************************************************************************
@@ -79,6 +115,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   mGameProcess = new GNoPowerup(mSprite, this);
   AddProcess(mGameProcess);
+  AddProcess(new SaveProcess(this));
 
 #ifdef CHICKEN_MODE
   AddProcess(new ChickenModeProcess(this));
@@ -86,7 +123,6 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   if (gOptions->gameProgress.savedState) {
     LoadPlayerState();
-    mGameProcess->Signal();
   } else {
     Next(EFalse);
   }
@@ -148,7 +184,6 @@ void GGameState::Next(TBool aCanPowerup) {
         AddProcess(new GColorSwapPowerup(mSprite, this));
         return;
       }
-      SaveState();
       return;
     }
   } else {
@@ -159,7 +194,6 @@ void GGameState::Next(TBool aCanPowerup) {
   mSprite->Copy(mNextSprite);
   mNextSprite->Randomize();
   mGameProcess->Signal();
-  SaveState();
 }
 
 /****************************************************************************************************************
@@ -361,7 +395,6 @@ void GGameState::PostRender() {
   if (!mGameOver && mBlocksRemaining < 1) {
     mLevel++;
     LoadLevel();
-    SaveState();
   }
   //
   RenderTimer();
@@ -422,6 +455,8 @@ void GGameState::LoadState() {
 void GGameState::LoadPlayerState() {
   memcpy(mSprite->mBlocks, gOptions->gameProgress.playerBlocks, sizeof(mSprite->mBlocks));
   memcpy(mNextSprite->mBlocks, gOptions->gameProgress.nextBlocks, sizeof(mNextSprite->mBlocks));
+
+  mGameProcess->Signal(gOptions->gameProgress.gameState);
 
   switch (gOptions->gameProgress.playerType) {
     case PLAYER_MODUS_BOMB:

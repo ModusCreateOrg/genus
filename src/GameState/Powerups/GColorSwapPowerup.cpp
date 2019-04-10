@@ -116,7 +116,7 @@ TBool GColorSwapPowerup::StateMove() {
     if (mGameState->MainState() != STATE_REMOVE && (currentColor == 0 || currentColor == 16)) {
       Drop();
       mState = STATE_REMOVE;
-      mGameState->MainStateWait();
+      mGameState->MainState(STATE_WAIT);
     }
     else {
       // make bad drop sound
