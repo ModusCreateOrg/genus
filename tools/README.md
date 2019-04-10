@@ -7,3 +7,4 @@ gcc -o precalc precalc.cpp
 ./precalc
 ```
 
+This was used to make the under water scenes much more efficient. 
