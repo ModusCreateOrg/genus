@@ -102,6 +102,7 @@ void GModusBombPowerup::ExplodeBlock(TInt aRow, TInt aCol) {
   else {
     mGameBoard->ExplodeBlock(aRow, aCol);
   }
+  gControls.Rumble(0.1, 100);
 }
 
 TBool GModusBombPowerup::StateRemove() {
