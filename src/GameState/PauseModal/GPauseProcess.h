@@ -25,7 +25,6 @@ class GPauseProcess : public BProcess {
 
           mState->MainState(mPrevMainState);
           mState->mIsPaused = EFalse;
-          gSoundPlayer.SfxMenuCancel();
         } else {
           // Pause
           mState->mSprite->flags &= ~(SFLAG_RENDER | SFLAG_ANIMATE);
@@ -35,6 +34,7 @@ class GPauseProcess : public BProcess {
           gOptions->gameProgress.gameState = mPrevMainState;
           mState->MainState(STATE_WAIT);
           mState->mIsPaused = ETrue;
+          gSoundPlayer.SfxMenuCancel();
         }
       }
       return ETrue;

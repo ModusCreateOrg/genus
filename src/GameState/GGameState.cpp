@@ -11,9 +11,9 @@
 #include "PauseModal/GPauseProcess.h"
 
 #ifdef __XTENSA__
-#define PAUSE_MODAL_Y 50
+#define PAUSE_MODAL_Y 40
 #else
-#define PAUSE_MODAL_Y 60
+#define PAUSE_MODAL_Y 50
 #endif
 
 #ifdef CHICKEN_MODE

@@ -34,6 +34,8 @@ TInt GStartWidget::Render(TInt aX, TInt aY) {
 }
 
 void GStartWidget::Select() {
+  gSoundPlayer.SfxMenuAccept();
+
   if (gOptions->gameProgress.savedState) {
     mProcess->SwitchContainer();
     return;
