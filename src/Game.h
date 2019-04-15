@@ -9,7 +9,7 @@
 #undef FRAME_RATE_INFO
 
 // Enable level skipping via SELECT button
-//#define CHICKEN_MODE
+#define CHICKEN_MODE
 //#undef CHICKEN_MODE
 
 #include <stdio.h>

@@ -7,6 +7,7 @@
 #include "Playfields/GStage3GlacialMountains.h"
 #include "Playfields/GStage4UnderWaterFantasy.h"
 #include "Playfields/GStage6Space.h"
+#include "GExitWidget.h"
 
 class GGameState;
 
@@ -45,24 +46,48 @@ class ChickenModeProcess : public BProcess {
  ****************************************************************************************************************
  ****************************************************************************************************************/
 
-class SaveProcess : public BProcess {
+class PauseModal : public GDialogWidget {
   public:
-    SaveProcess(GGameState *aState) : BProcess() {
+    PauseModal(TInt aX, TInt aY) : GDialogWidget("Options", aX, aY) {
+      AddWidget((BWidget &) *new GExitWidget());
+    }
+
+    ~PauseModal() {}
+
+    TInt Render(TInt aX, TInt aY) {
+      BContainerWidget::Render(0, 0);
+      return SCREEN_HEIGHT;
+    }
+};
+
+class PauseProcess : public BProcess {
+  public:
+    PauseProcess(GGameState *aState) : BProcess() {
       mState = aState;
       mPrevMainState = mState->MainState();
     }
 
-    ~SaveProcess() {}
+    ~PauseProcess() {}
 
     TBool RunBefore() {
       if (gControls.WasPressed(BUTTON_START)) {
+        mState->mSprite->flags ^= SFLAG_RENDER;
+        mState->mNextSprite->flags ^= SFLAG_RENDER;
+
         if (mState->MainState() == STATE_WAIT) {
+          // Resume
           mState->MainState(mPrevMainState);
+          mState->mGameBoard.Show();
+          mState->mIsPaused = EFalse;
+
         } else {
+          // Pause
           mPrevMainState = mState->MainState();
           gOptions->gameProgress.gameState = mPrevMainState;
           mState->MainState(STATE_WAIT);
           mState->SaveState();
+          mState->mGameBoard.Hide();
+          mState->mIsPaused = ETrue;
         }
       }
       return ETrue;
@@ -83,6 +108,8 @@ class SaveProcess : public BProcess {
 GGameState::GGameState() : BGameEngine(gViewPort) {
   mLevel      = 1;
   mGameOver   = EFalse;
+  mIsPaused   = EFalse;
+  mPauseModal = ENull;
   mPlayfield  = ENull;
   mBonusTimer = -1;
 
@@ -90,6 +117,8 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   mFont8  = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
+
+  SetPauseModalTheme();
 
   if (gOptions->gameProgress.savedState) {
     LoadState();
@@ -115,7 +144,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   mGameProcess = new GNoPowerup(mSprite, this);
   AddProcess(mGameProcess);
-  AddProcess(new SaveProcess(this));
+  AddProcess(new PauseProcess(this));
 
 #ifdef CHICKEN_MODE
   AddProcess(new ChickenModeProcess(this));
@@ -385,6 +414,19 @@ void GGameState::RenderMovesLeft() {
   bm->FillRect(ENull, MOVES_INNER.x1, MOVES_INNER.y1, MOVES_INNER.x1 + width, MOVES_INNER.y2, COLOR_BORDER2);
 }
 
+void GGameState::RenderPauseModal() {
+  if (mIsPaused) {
+    if (!mPauseModal) {
+      mPauseModal = new PauseModal(0, 0);
+    }
+    mPauseModal->Render(0, 0);
+    mPauseModal->Run();
+  } else if (mPauseModal) {
+    delete mPauseModal;
+    mPauseModal = ENull;
+  }
+}
+
 /****************************************************************************************************************
  ****************************************************************************************************************
  ****************************************************************************************************************/
@@ -395,12 +437,15 @@ void GGameState::PostRender() {
     mLevel++;
     LoadLevel();
   }
-  //
-  RenderTimer();
-  RenderScore();
-  RenderLevel();
-  RenderMovesLeft();
-  RenderNext();
+
+  if (!mIsPaused) {
+    RenderTimer();
+    RenderScore();
+    RenderLevel();
+    RenderMovesLeft();
+    RenderNext();
+  }
+  RenderPauseModal();
 }
 
 void GGameState::SetBlocksPerLevel() {
@@ -468,4 +513,22 @@ void GGameState::LoadPlayerState() {
     default:
       return;
   }
+}
+
+void GGameState::SetPauseModalTheme() {
+  gWidgetTheme.Configure(
+      WIDGET_TEXT_FONT, mFont16,
+      WIDGET_TEXT_FG, COLOR_TEXT,
+      WIDGET_TEXT_BG, COLOR_TEXT_BG,
+      WIDGET_TITLE_FONT, mFont16,
+      WIDGET_TITLE_FG, COLOR_TEXT,
+      WIDGET_TITLE_BG, -1,
+      WIDGET_WINDOW_BG, -1,
+      WIDGET_WINDOW_FG, COLOR_TEXT,
+      WIDGET_SLIDER_FG, COLOR_TEXT_BG,
+      WIDGET_SLIDER_BG, COLOR_TEXT,
+      WIDGET_END_TAG);
+
+  // gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
+  // gDisplay.SetColor(COLOR_TEXT_BG, 255, 92, 93);
 }
