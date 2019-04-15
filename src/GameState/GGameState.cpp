@@ -154,7 +154,9 @@ void GGameState::Next(TBool aCanPowerup) {
         mPowerup = new GColorSwapPowerup(mSprite, this);
         gOptions->gameProgress.playerType = PLAYER_COLOR_SWAP;
       }
-      AddProcess(mPowerup);
+      if (mPowerup) {
+        AddProcess(mPowerup);
+      }
       return;
     }
   } else {
