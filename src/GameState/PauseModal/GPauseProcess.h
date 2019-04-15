@@ -15,9 +15,9 @@ class GPauseProcess : public BProcess {
     ~GPauseProcess() {}
 
     TBool RunBefore() {
-      const TBool hasPowerup = !mState->mPowerup || (mState->mPowerup && mState->mPowerup->State() != STATE_REMOVE);
+      const TBool powerupMoveState = !mState->mPowerup || (mState->mPowerup && mState->mPowerup->State() != STATE_REMOVE);
 
-      if (gControls.WasPressed(BUTTON_START) && hasPowerup) {
+      if (gControls.WasPressed(BUTTON_START) && powerupMoveState) {
         if (mState->MainState() == STATE_WAIT) {
           // Resume
           mState->mSprite->flags |= (SFLAG_RENDER | SFLAG_ANIMATE);

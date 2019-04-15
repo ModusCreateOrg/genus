@@ -18,7 +18,6 @@
 
 #ifdef CHICKEN_MODE
 class GGameState;
-
 class ChickenModeProcess : public BProcess {
   public:
     ChickenModeProcess(GGameState *aState) : BProcess() {
@@ -29,14 +28,10 @@ class ChickenModeProcess : public BProcess {
 
     TBool RunBefore() {
       if (gControls.WasPressed(BUTTON_SELECT)) {
-        // Uncomment to go by 5 levels
-        // while (mState->mLevel % 5 > 0) {
-          // mState->mLevel++;
-        // }
-        // mState->mBlocksRemaining = 0;
-
-        // Increment a single level
-        mState->mBlocksRemaining = -1;
+        while (mState->mLevel % 5 > 0) {
+          mState->mLevel++;
+        }
+        mState->mBlocksRemaining = 0;
       }
       return ETrue;
     }
