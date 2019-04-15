@@ -103,6 +103,7 @@ TBool GColorSwapPowerup::StateRemove() {
     }
     delete p;
   }
+  gControls.dKeys = 0;  // in case user pressed a key during removing blocks
   mGameState->Next(EFalse);
   return EFalse;
 }

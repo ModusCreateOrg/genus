@@ -102,6 +102,7 @@ public:
   GPlayerSprite *mSprite, *mNextSprite;
   GGameBoard mGameBoard;
   BDialogWidget *mPauseModal;
+  BPowerup      *mPowerup;
 
 public:
   TInt mBonusTime;        // how much time to set bonus timer to (faster = harder)

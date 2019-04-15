@@ -39,13 +39,17 @@ GGame::GGame() {
 }
 
 GGame::~GGame() {
-  delete gGameEngine;
   delete gOptions;
+  delete gGameEngine;
   delete gViewPort;
 }
 
 void GGame::SetState(TInt aNewState) {
   mNextState = aNewState;
+}
+
+TInt GGame::GetState() {
+  return mState;
 }
 
 void GGame::Run() {

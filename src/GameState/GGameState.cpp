@@ -7,11 +7,18 @@
 #include "Playfields/GStage3GlacialMountains.h"
 #include "Playfields/GStage4UnderWaterFantasy.h"
 #include "Playfields/GStage6Space.h"
-#include "GExitWidget.h"
+#include "PauseModal/GPauseModal.h"
+#include "PauseModal/GPauseProcess.h"
 
-class GGameState;
+#ifdef __XTENSA__
+#define PAUSE_MODAL_Y 50
+#else
+#define PAUSE_MODAL_Y 60
+#endif
 
 #ifdef CHICKEN_MODE
+class GGameState;
+
 class ChickenModeProcess : public BProcess {
   public:
     ChickenModeProcess(GGameState *aState) : BProcess() {
@@ -46,79 +53,19 @@ class ChickenModeProcess : public BProcess {
  ****************************************************************************************************************
  ****************************************************************************************************************/
 
-class PauseModal : public GDialogWidget {
-  public:
-    PauseModal(TInt aX, TInt aY) : GDialogWidget("Options", aX, aY) {
-      AddWidget((BWidget &) *new GExitWidget());
-    }
-
-    ~PauseModal() {}
-
-    TInt Render(TInt aX, TInt aY) {
-      BContainerWidget::Render(0, 0);
-      return SCREEN_HEIGHT;
-    }
-};
-
-class PauseProcess : public BProcess {
-  public:
-    PauseProcess(GGameState *aState) : BProcess() {
-      mState = aState;
-      mPrevMainState = mState->MainState();
-    }
-
-    ~PauseProcess() {}
-
-    TBool RunBefore() {
-      if (gControls.WasPressed(BUTTON_START)) {
-        mState->mSprite->flags ^= SFLAG_RENDER;
-        mState->mNextSprite->flags ^= SFLAG_RENDER;
-
-        if (mState->MainState() == STATE_WAIT) {
-          // Resume
-          mState->MainState(mPrevMainState);
-          mState->mGameBoard.Show();
-          mState->mIsPaused = EFalse;
-
-        } else {
-          // Pause
-          mPrevMainState = mState->MainState();
-          gOptions->gameProgress.gameState = mPrevMainState;
-          mState->MainState(STATE_WAIT);
-          mState->SaveState();
-          mState->mGameBoard.Hide();
-          mState->mIsPaused = ETrue;
-        }
-      }
-      return ETrue;
-    }
-
-    TBool RunAfter() {
-      return ETrue;
-    }
-
-    GGameState *mState;
-    TPowerUpStates mPrevMainState;
-};
-
-/****************************************************************************************************************
- ****************************************************************************************************************
- ****************************************************************************************************************/
-
 GGameState::GGameState() : BGameEngine(gViewPort) {
   mLevel      = 1;
   mGameOver   = EFalse;
   mIsPaused   = EFalse;
   mPauseModal = ENull;
   mPlayfield  = ENull;
+  mPowerup    = ENull;
   mBonusTimer = -1;
 
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
 
   mFont8  = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
-
-  SetPauseModalTheme();
 
   if (gOptions->gameProgress.savedState) {
     LoadState();
@@ -144,7 +91,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   mGameProcess = new GNoPowerup(mSprite, this);
   AddProcess(mGameProcess);
-  AddProcess(new PauseProcess(this));
+  AddProcess(new GPauseProcess(this));
 
 #ifdef CHICKEN_MODE
   AddProcess(new ChickenModeProcess(this));
@@ -206,15 +153,17 @@ void GGameState::Next(TBool aCanPowerup) {
 
     if (maybe == 16) {
       if (Random() & 1) {
+        mPowerup = new GModusBombPowerup(mSprite, this);
         gOptions->gameProgress.playerType = PLAYER_MODUS_BOMB;
-        AddProcess(new GModusBombPowerup(mSprite, this));
 	  } else if (mGameBoard.HasColorSwappableBlocks()) {
+        mPowerup = new GColorSwapPowerup(mSprite, this);
         gOptions->gameProgress.playerType = PLAYER_COLOR_SWAP;
-        AddProcess(new GColorSwapPowerup(mSprite, this));
       }
+      AddProcess(mPowerup);
       return;
     }
   } else {
+    mPowerup = ENull;
     gOptions->gameProgress.playerType = PLAYER_NO_POWERUP;
   }
 
@@ -328,6 +277,8 @@ void GGameState::LoadLevel(TBool aForceStageLoad) {
   gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
   gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
 
+  SetPauseModalTheme();
+
   mBlocksRemaining = mBlocksThisLevel;
 }
 
@@ -417,11 +368,13 @@ void GGameState::RenderMovesLeft() {
 void GGameState::RenderPauseModal() {
   if (mIsPaused) {
     if (!mPauseModal) {
-      mPauseModal = new PauseModal(0, 0);
+      mPauseModal = new GPauseModal(20, PAUSE_MODAL_Y);
     }
-    mPauseModal->Render(0, 0);
+    mGameBoard.Hide();
+    mPauseModal->Render(30, 20);
     mPauseModal->Run();
   } else if (mPauseModal) {
+    mGameBoard.Show();
     delete mPauseModal;
     mPauseModal = ENull;
   }
@@ -504,10 +457,12 @@ void GGameState::LoadPlayerState() {
 
   switch (gOptions->gameProgress.playerType) {
     case PLAYER_MODUS_BOMB:
-      AddProcess(new GModusBombPowerup(mSprite, this));
+      mPowerup = new GModusBombPowerup(mSprite, this);
+      AddProcess(mPowerup);
       break;
     case PLAYER_COLOR_SWAP:
-      AddProcess(new GColorSwapPowerup(mSprite, this));
+      mPowerup = new GColorSwapPowerup(mSprite, this);
+      AddProcess(mPowerup);
       break;
     case PLAYER_NO_POWERUP:
     default:
@@ -524,11 +479,10 @@ void GGameState::SetPauseModalTheme() {
       WIDGET_TITLE_FG, COLOR_TEXT,
       WIDGET_TITLE_BG, -1,
       WIDGET_WINDOW_BG, -1,
-      WIDGET_WINDOW_FG, COLOR_TEXT,
+      WIDGET_WINDOW_FG, -1,
       WIDGET_SLIDER_FG, COLOR_TEXT_BG,
       WIDGET_SLIDER_BG, COLOR_TEXT,
       WIDGET_END_TAG);
 
-  // gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
-  // gDisplay.SetColor(COLOR_TEXT_BG, 255, 92, 93);
+  gDisplay.SetColor(COLOR_TEXT_BG, 255, 92, 93);
 }
