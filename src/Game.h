@@ -44,4 +44,10 @@ extern BViewPort   *gViewPort;
 extern BGameEngine *gGameEngine;
 extern TOptions    *gOptions;
 
+
+#ifdef __XTENSA__
+static const TInt MAX_BRIGHTNESS = 0x1fff;
+static const TInt MIN_BRIGHTNESS = 0x50;
+#endif
+
 #endif
