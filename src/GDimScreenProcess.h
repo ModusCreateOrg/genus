@@ -6,13 +6,10 @@
 class GDimScreenProcess : public BProcess {
   public:
     GDimScreenProcess() : BProcess() {
-      printf("New process\n");
       ResetTimer();
     }
 
-    ~GDimScreenProcess() {
-      printf("destroyed process\n");
-    }
+    ~GDimScreenProcess() {}
 
     void ResetTimer() {
       mTimer = 300; // 10s
@@ -24,9 +21,7 @@ class GDimScreenProcess : public BProcess {
 
     TBool RunAfter() {
 #ifdef __XTENSA__
-      const TBool keysPressed = gControls.CheckPressed(BUTTON_JOY_ANY);
-
-      if (keysPressed) {
+      if (gControls.CheckPressed(BUTTON_JOY_ANY)) {
         gDisplay.SetBrightness(MAX(MIN_BRIGHTNESS, MAX_BRIGHTNESS * gOptions->brightness));
         ResetTimer();
       } else {

@@ -1,6 +1,9 @@
 #include "GGame.h"
+
 #ifdef __XTENSA__
+#ifdef DIM_SCREEN
 #include "GDimScreenProcess.h"
+#endif
 #endif
 
 static TUint32 start;
@@ -100,7 +103,9 @@ void GGame::Run() {
       mState = mNextState;
 
 #ifdef __XTENSA__
+#ifdef DIM_SCREEN
       gGameEngine->AddProcess(new GDimScreenProcess());
+#endif
 #endif
     }
     gGameEngine->GameLoop();
