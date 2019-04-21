@@ -3,8 +3,6 @@
 
 #include "GGame.h"
 
-static const TInt16 TIMEOUT = 4 * 30;
-
 class GDimScreenProcess : public BProcess {
   public:
     GDimScreenProcess() : BProcess() {
@@ -17,7 +15,7 @@ class GDimScreenProcess : public BProcess {
     }
 
     void ResetTimer() {
-      mTimer = TIMEOUT;
+      mTimer = 300; // 10s
     }
 
     TBool RunBefore() {
