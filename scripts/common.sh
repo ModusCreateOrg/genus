@@ -30,7 +30,7 @@ function ensure_homebrew_installed {
 
 function ensure_cmake {
     # Adapted from https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line
-    if command -v cmake >/dev/null 2>&1; then
+    if [[ -x /usr/local/bin/cmake ]]; then
         return
     fi
     local version
@@ -73,12 +73,6 @@ function ensure_debian_devtools_installed {
 
 function ensure_arch_devtools_installed {
     $SUDO pacman -Sqyyu --noconfirm base-devel git libglvnd sdl2 sdl2_image curl doxygen imagemagick
-    # Use same version of cmake as for ubuntu
-    ensure_cmake
-}
-
-function ensure_solus_devtools_installed {
-    $SUDO eopkg install -y -c system.devel git libglvnd sdl2 sdl2-image curl doxygen imagemagick
     # Use same version of cmake as for ubuntu
     ensure_cmake
 }

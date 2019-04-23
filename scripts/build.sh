@@ -70,10 +70,8 @@ elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
         ensure_debian_devtools_installed
     elif command -v pacman >/dev/null 2>&1; then
         ensure_arch_devtools_installed
-    elif command -v eopkg >/dev/null 2>&1; then
-        ensure_solus_devtools_installed
     else
-        echo "Only debian/ubuntu, arch Linux and Solus are supported targets, sorry."
+        echo "Only debian/ubuntu and arch Linux are supported targets, sorry."
         exit 1
     fi
 elif [ "$(cut -c1-10 <<<"$OS")" == "MINGW32_NT" ]; then
