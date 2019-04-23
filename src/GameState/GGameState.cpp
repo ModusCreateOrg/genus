@@ -195,7 +195,9 @@ void GGameState::GameOver() {
  ****************************************************************************************************************/
 
 void GGameState::PreRender() {
-  //
+  if (mPauseModal) {
+    mPauseModal->Run();
+  }
 }
 
 /****************************************************************************************************************
@@ -369,7 +371,6 @@ void GGameState::RenderPauseModal() {
     }
     mGameBoard.Hide();
     mPauseModal->Render(30, 20);
-    mPauseModal->Run();
   } else if (mPauseModal) {
     mGameBoard.Show();
     delete mPauseModal;
