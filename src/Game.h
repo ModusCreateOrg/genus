@@ -8,6 +8,9 @@
 #define FRAME_RATE_INFO 0
 #undef FRAME_RATE_INFO
 
+#define DIM_SCREEN
+// #undef DIM_SCREEN
+
 // Enable level skipping via SELECT button
 //#define CHICKEN_MODE
 //#undef CHICKEN_MODE
@@ -43,5 +46,11 @@
 extern BViewPort   *gViewPort;
 extern BGameEngine *gGameEngine;
 extern TOptions    *gOptions;
+
+
+#ifdef __XTENSA__
+static const TInt MAX_BRIGHTNESS = 0x1fff;
+static const TInt MIN_BRIGHTNESS = 0x50;
+#endif
 
 #endif

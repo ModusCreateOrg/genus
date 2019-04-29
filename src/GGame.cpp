@@ -1,11 +1,12 @@
 #include "GGame.h"
 
-static TUint32 start;
-
 #ifdef __XTENSA__
-static const TInt MAX_BRIGHTNESS = 0x1fff;
-static const TInt MIN_BRIGHTNESS = 0x50;
+#ifdef DIM_SCREEN
+#include "GDimScreenProcess.h"
 #endif
+#endif
+
+static TUint32 start;
 
 GGame::GGame() {
   // Load Game Options
@@ -96,9 +97,16 @@ void GGame::Run() {
         default:
           continue;
       }
+
       // reset dKeys so next state doesn't react to any keys already pressed
       gControls.dKeys = 0;
       mState = mNextState;
+
+#ifdef __XTENSA__
+#ifdef DIM_SCREEN
+      gGameEngine->AddProcess(new GDimScreenProcess());
+#endif
+#endif
     }
     gGameEngine->GameLoop();
     gDisplay.Update();
