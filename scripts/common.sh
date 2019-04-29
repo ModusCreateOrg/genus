@@ -86,15 +86,12 @@ function ensure_creative_engine {
 
 function build {
     cd "$BASE_DIR" || exit 1
-    if [[ ! -d creative-engine ]]; then
+    if [[ ! -d $CREATIVE_ENGINE_DIR ]]; then
         # rm -f creative-engine
-        ln -sf ../creative-engine .
+        ln -sf $CREATIVE_ENGINE_DIR .
     fi
     mkdir -p "$BUILD_DIR"
     cd "$BUILD_DIR" || exit 1
-    # pwd
-    # ls -l
-    # ls -l ..
     cmake ..
     make -j 8
 }
@@ -136,9 +133,9 @@ function build_xtensa {
 
     cd "$BASE_DIR" || exit 1
 
-    if [[ ! -d creative-engine ]]; then
+    if [[ ! -d $CREATIVE_ENGINE_DIR ]]; then
         rm -f creative-engine
-        ln -s ../creative-engine .
+        ln -s $CREATIVE_ENGINE_DIR .
     fi
     mkdir -p "$BUILD_DIR"
     make -j 10
