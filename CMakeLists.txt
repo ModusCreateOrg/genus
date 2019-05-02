@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
-project(genus)
+project(genus-matrix-display)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-implicit-exception-spec-mismatch")
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -43,6 +43,12 @@ INCLUDE_DIRECTORIES(
 INCLUDE(FindPkgConfig)
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
+
+FIND_PACKAGE(Threads REQUIRED)
+
+FIND_PACKAGE(Boost REQUIRED)
+INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+
 
 # include creative-engine sources
 # when using out-of-tree source paths add_subdirectory's build_dir argument is required
@@ -98,4 +104,4 @@ if (APPLE)
     INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ".")
 endif (APPLE)
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT}   ${Boost_System} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})

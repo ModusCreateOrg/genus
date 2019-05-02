@@ -4,7 +4,8 @@ This document's purpose is to provide a high-level understanding of how Genus wo
 
 *Note* We've standardized on ESP-IDF version 3.2:
 https://github.com/espressif/esp-idf/releases/tag/v3.2
-https://docs.espressif.com/projects/esp-idf/en/v3.2/. 
+https://docs.espressif.com/projects/esp-idf/en/v3.2/
+
 
 ## How Genus works
 Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday sesaon. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux. 
