@@ -3,7 +3,7 @@ project(genus-matrix-display)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-implicit-exception-spec-mismatch")
-set(CMAKE_VERBOSE_MAKEFILE ON)
+#set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # creative-engine path
 if (EXISTS $ENV{CREATIVE_ENGINE_PATH})
@@ -31,8 +31,11 @@ INCLUDE_DIRECTORIES(
         ${CMAKE_SOURCE_DIR}/src/MainOptionsState
         ${CMAKE_SOURCE_DIR}/src/SplashState
         ${CMAKE_SOURCE_DIR}/src/RulesState
-        ${CMAKE_BINARY_DIR} /usr/local/include
+        ${CMAKE_BINARY_DIR}/usr/local/include
         ${CREATIVE_ENGINE_PATH}/src
+        ${CREATIVE_ENGINE_PATH}/src/Display/
+        ${CREATIVE_ENGINE_PATH}/src/Display/DesktopDisplay
+        ${CREATIVE_ENGINE_PATH}/src/Display/OdroidDisplay
         ${CREATIVE_ENGINE_PATH}/src/Widgets
         ${CREATIVE_ENGINE_PATH}/src/libxmp
         ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders
@@ -44,10 +47,17 @@ INCLUDE(FindPkgConfig)
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 
-FIND_PACKAGE(Threads REQUIRED)
+set(__NETWORK_DISPLAY__ true)
+if (__NETWORK_DISPLAY__)
+    add_compile_definitions(__NETWORK_DISPLAY__=true)
 
-FIND_PACKAGE(Boost REQUIRED)
-INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+    INCLUDE_DIRECTORIES(${CREATIVE_ENGINE_PATH}/src/Display/NetworkDisplay)
+    FIND_PACKAGE(Threads REQUIRED)
+
+    FIND_PACKAGE(Boost REQUIRED)
+    INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+
+endif(__NETWORK_DISPLAY__)
 
 
 # include creative-engine sources
@@ -60,19 +70,19 @@ add_subdirectory(${CREATIVE_ENGINE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/creative-en
 
 # build rcomp
 add_custom_command(
-        OUTPUT rcomp
-        COMMAND cd ${CREATIVE_ENGINE_PATH}/tools && make
-        OUTPUTS rcomp
-        COMMENT "Building rcomp ${CREATIVE_ENGINE_PATH}"
+    OUTPUT rcomp
+    COMMAND cd ${CREATIVE_ENGINE_PATH}/tools && make
+    OUTPUTS rcomp
+    COMMENT "Building rcomp ${CREATIVE_ENGINE_PATH}"
 )
 
 # build Resources.bin
 add_custom_command(
-        OUTPUT Resources.bin
-        COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/src && ${RCOMP} Resources.r
-        OUTPUTS Resources.bin
-        DEPENDS rcomp
-        COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR}"
+    OUTPUT Resources.bin
+    COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/src && ${RCOMP} Resources.r
+    OUTPUTS Resources.bin
+    DEPENDS rcomp
+    COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 # gather creative-engine sources
@@ -82,9 +92,9 @@ file(GLOB_RECURSE CREATIVE_ENGINE ${CREATIVE_ENGINE_PATH}/src/*.cpp)
 add_compile_definitions(LIBXMP_CORE_PLAYER=true)
 
 file(
-        GLOB LIBXMP_SRC
-        ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/*.c
-        ${CREATIVE_ENGINE_PATH}/src/libxmp/*.c
+    GLOB LIBXMP_SRC
+    ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/*.c
+    ${CREATIVE_ENGINE_PATH}/src/libxmp/*.c
 )
 
 # gather Genus sources
@@ -98,10 +108,16 @@ add_executable(
     ${GENUS_SRC}
 )
 
-# make genus.app
-if (APPLE)
-    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
-    INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ".")
-endif (APPLE)
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT}   ${Boost_System} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
+if (__NETWORK_DISPLAY__)
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT}   ${Boost_System} -L/usr/local/lib ${SDL2_LIBRARIES})
+else(NOT __NETWORK_DISPLAY__)
+
+    # make genus.app
+    if (APPLE)
+        SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
+        INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ".")
+    endif (APPLE)
+
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
+endif(__NETWORK_DISPLAY__)
