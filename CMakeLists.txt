@@ -16,10 +16,17 @@ else ()
 #   message(STATUS "<<<<<<<<<<<<<<<<<<<<<<<<<< Falling back to default creative-engine path: ${CREATIVE_ENGINE_PATH}")
 endif ()
 
+# external libraries
+INCLUDE(FindPkgConfig)
+PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
+PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
+
 # resource compiler
 set(RCOMP "${CREATIVE_ENGINE_PATH}/tools/rcomp")
 
+
 INCLUDE_DIRECTORIES(
+    ${SDL2_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/GameState
     ${CMAKE_SOURCE_DIR}/src/GameState/Playfields
@@ -34,24 +41,18 @@ INCLUDE_DIRECTORIES(
     ${CREATIVE_ENGINE_PATH}/src
     ${CREATIVE_ENGINE_PATH}/src/Display/
     ${CREATIVE_ENGINE_PATH}/src/Display/DesktopDisplay
-    ${CREATIVE_ENGINE_PATH}/src/Display/OdroidDisplay
     ${CREATIVE_ENGINE_PATH}/src/Controls
     ${CREATIVE_ENGINE_PATH}/src/Controls/DesktopControls
-    ${CREATIVE_ENGINE_PATH}/src/Controls/OdroidControls
     ${CREATIVE_ENGINE_PATH}/src/Widgets
     ${CREATIVE_ENGINE_PATH}/src/libxmp
     ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders
     ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/prowizarde
 )
 
-# external libraries
-INCLUDE(FindPkgConfig)
-PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 
-set(__NETWORK_DISPLAY__ true)
-if (__NETWORK_DISPLAY__)
-    add_compile_definitions(__NETWORK_DISPLAY__=true)
+# Network matrix display
+if (DEFINED ENV{NETWORK_DISPLAY_ENABLED})
+    add_compile_definitions(__MODUS_TARGET_NETWORK_DISPLAY__=true)
 
     INCLUDE_DIRECTORIES(
         ${CREATIVE_ENGINE_PATH}/src/Display/NetworkDisplay
@@ -61,8 +62,10 @@ if (__NETWORK_DISPLAY__)
 
     FIND_PACKAGE(Boost REQUIRED)
     INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+else()
+    add_compile_definitions(__MODUS_TARGET_DESKTOP_DISPLAY__=true)
+endif()
 
-endif(__NETWORK_DISPLAY__)
 
 
 # include creative-engine sources
@@ -71,7 +74,7 @@ endif(__NETWORK_DISPLAY__)
 # https://cmake.org/cmake/help/latest/variable/CMAKE_CURRENT_BINARY_DIR.html
 # https://cmake.org/cmake/help/latest/command/add_subdirectory.html
 # https://stackoverflow.com/questions/35260552/how-do-i-explicitly-specify-an-out-of-tree-source-in-cmake
-add_subdirectory(${CREATIVE_ENGINE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/creative-engine)
+#add_subdirectory(${CREATIVE_ENGINE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/creative-engine)
 
 # build rcomp
 add_custom_command(
@@ -105,15 +108,14 @@ file(GLOB_RECURSE GENUS_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 add_executable(
     ${PROJECT_NAME}
     Resources.bin
-#    ${LIBXMP_SRC}
     ${CREATIVE_ENGINE}
     ${GENUS_SRC}
 )
 
 
-if (__NETWORK_DISPLAY__)
+if (DEFINED ENV{NETWORK_DISPLAY_ENABLED})
     TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT}   ${Boost_System} -L/usr/local/lib ${SDL2_LIBRARIES})
-else(NOT __NETWORK_DISPLAY__)
+else()
 
     # make genus.app
     if (APPLE)
@@ -122,4 +124,5 @@ else(NOT __NETWORK_DISPLAY__)
     endif (APPLE)
 
     TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
-endif(__NETWORK_DISPLAY__)
+endif()
+
