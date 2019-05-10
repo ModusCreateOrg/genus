@@ -11,7 +11,8 @@ if (EXISTS $ENV{CREATIVE_ENGINE_PATH})
    set(CREATIVE_ENGINE_PATH $ENV{CREATIVE_ENGINE_PATH})
 #   message(STATUS "********************************* Using user-defined creative-engine path: ${CREATIVE_ENGINE_PATH}")
 else ()
-    set(CREATIVE_ENGINE_PATH "${CMAKE_SOURCE_DIR}/../creative-engine")
+#    set(CREATIVE_ENGINE_PATH "${CMAKE_SOURCE_DIR}/../creative-engine") # This broke debugging in clion!
+    set(CREATIVE_ENGINE_PATH "${CMAKE_SOURCE_DIR}/creative-engine")
 #   message(STATUS "<<<<<<<<<<<<<<<<<<<<<<<<<< Falling back to default creative-engine path: ${CREATIVE_ENGINE_PATH}")
 endif ()
 
@@ -19,27 +20,28 @@ endif ()
 set(RCOMP "${CREATIVE_ENGINE_PATH}/tools/rcomp")
 
 INCLUDE_DIRECTORIES(
-        ${SDL2_INCLUDE_DIRS}
-        ${SDL2IMAGE_INCLUDE_DIRS}
-        ${CMAKE_SOURCE_DIR}/src
-        ${CMAKE_SOURCE_DIR}/src/GameState
-        ${CMAKE_SOURCE_DIR}/src/GameState/Playfields
-        ${CMAKE_SOURCE_DIR}/src/GameState/Powerups
-        ${CMAKE_SOURCE_DIR}/src/GameOverState
-        ${CMAKE_SOURCE_DIR}/src/HighScoresState
-        ${CMAKE_SOURCE_DIR}/src/MainMenuState
-        ${CMAKE_SOURCE_DIR}/src/MainOptionsState
-        ${CMAKE_SOURCE_DIR}/src/SplashState
-        ${CMAKE_SOURCE_DIR}/src/RulesState
-        ${CMAKE_BINARY_DIR}/usr/local/include
-        ${CREATIVE_ENGINE_PATH}/src
-        ${CREATIVE_ENGINE_PATH}/src/Display/
-        ${CREATIVE_ENGINE_PATH}/src/Display/DesktopDisplay
-        ${CREATIVE_ENGINE_PATH}/src/Display/OdroidDisplay
-        ${CREATIVE_ENGINE_PATH}/src/Widgets
-        ${CREATIVE_ENGINE_PATH}/src/libxmp
-        ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders
-        ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/prowizarde
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/GameState
+    ${CMAKE_SOURCE_DIR}/src/GameState/Playfields
+    ${CMAKE_SOURCE_DIR}/src/GameState/Powerups
+    ${CMAKE_SOURCE_DIR}/src/GameOverState
+    ${CMAKE_SOURCE_DIR}/src/HighScoresState
+    ${CMAKE_SOURCE_DIR}/src/MainMenuState
+    ${CMAKE_SOURCE_DIR}/src/MainOptionsState
+    ${CMAKE_SOURCE_DIR}/src/SplashState
+    ${CMAKE_SOURCE_DIR}/src/RulesState
+    ${CMAKE_BINARY_DIR}/usr/local/include
+    ${CREATIVE_ENGINE_PATH}/src
+    ${CREATIVE_ENGINE_PATH}/src/Display/
+    ${CREATIVE_ENGINE_PATH}/src/Display/DesktopDisplay
+    ${CREATIVE_ENGINE_PATH}/src/Display/OdroidDisplay
+    ${CREATIVE_ENGINE_PATH}/src/Controls
+    ${CREATIVE_ENGINE_PATH}/src/Controls/DesktopControls
+    ${CREATIVE_ENGINE_PATH}/src/Controls/OdroidControls
+    ${CREATIVE_ENGINE_PATH}/src/Widgets
+    ${CREATIVE_ENGINE_PATH}/src/libxmp
+    ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders
+    ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/prowizarde
 )
 
 # external libraries
@@ -51,7 +53,10 @@ set(__NETWORK_DISPLAY__ true)
 if (__NETWORK_DISPLAY__)
     add_compile_definitions(__NETWORK_DISPLAY__=true)
 
-    INCLUDE_DIRECTORIES(${CREATIVE_ENGINE_PATH}/src/Display/NetworkDisplay)
+    INCLUDE_DIRECTORIES(
+        ${CREATIVE_ENGINE_PATH}/src/Display/NetworkDisplay
+        ${CREATIVE_ENGINE_PATH}/src/Controls/DirectLinuxControls
+    )
     FIND_PACKAGE(Threads REQUIRED)
 
     FIND_PACKAGE(Boost REQUIRED)
@@ -85,16 +90,13 @@ add_custom_command(
     COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
-# gather creative-engine sources
-file(GLOB_RECURSE CREATIVE_ENGINE ${CREATIVE_ENGINE_PATH}/src/*.cpp)
 
-# gather LibXMP sources
 add_compile_definitions(LIBXMP_CORE_PLAYER=true)
 
-file(
-    GLOB LIBXMP_SRC
-    ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/*.c
-    ${CREATIVE_ENGINE_PATH}/src/libxmp/*.c
+# gather creative-engine sources
+file(GLOB_RECURSE CREATIVE_ENGINE
+    ${CREATIVE_ENGINE_PATH}/src/*.cpp
+    ${CREATIVE_ENGINE_PATH}/src/*.c
 )
 
 # gather Genus sources
@@ -103,7 +105,7 @@ file(GLOB_RECURSE GENUS_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 add_executable(
     ${PROJECT_NAME}
     Resources.bin
-    ${LIBXMP_SRC}
+#    ${LIBXMP_SRC}
     ${CREATIVE_ENGINE}
     ${GENUS_SRC}
 )
