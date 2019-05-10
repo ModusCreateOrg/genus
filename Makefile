@@ -35,7 +35,7 @@ COMPONENT_ADD_INCLUDEDIRS = ${EXTRA_COMPONENT_DIRS}
 # It shaved about 20 seconds from fresh builds (6 core i7 8700k)
 EXCLUDE_COMPONENTS := asio fatfs json libsodium secure_boot idf_test bt mqtt   \
 	esp_http_server  esp_https_ota esp_https_server sdmmc protocomm \
-	wear_leveling spiffs 
+	wear_leveling spiffs
 
 
 # Let's keep this ABOVE the COMPONENT_DIRS var modification.
