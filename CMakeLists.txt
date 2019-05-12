@@ -16,6 +16,7 @@ else ()
 #   message(STATUS "<<<<<<<<<<<<<<<<<<<<<<<<<< Falling back to default creative-engine path: ${CREATIVE_ENGINE_PATH}")
 endif ()
 
+
 # external libraries
 INCLUDE(FindPkgConfig)
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
@@ -51,7 +52,8 @@ INCLUDE_DIRECTORIES(
 
 
 # Network matrix display
-if (DEFINED ENV{NETWORK_DISPLAY_ENABLED})
+if (DEFINED ENV{CE_NETWORK_DISPLAY_ENABLED})
+    message(">> ENABLING NETWORK DISPLAY <<")
     add_compile_definitions(__MODUS_TARGET_NETWORK_DISPLAY__=true)
 
     INCLUDE_DIRECTORIES(
@@ -66,7 +68,13 @@ else()
     add_compile_definitions(__MODUS_TARGET_DESKTOP_DISPLAY__=true)
 endif()
 
-
+# Direct linux controls (non-SDL2!)
+if (DEFINED ENV{CE_DIRECT_LINUX_CONTROS_ENABLED})
+    message(">> ENABLING DIRECT LINUX CONTROLS <<")
+    add_compile_definitions(__MODUS_TARGET_DIRECT_LINUX_CONTROLS__=true)
+else()
+    add_compile_definitions(__MODUS_TARGET_DESKTOP_CONTROLS__=true)
+endif()
 
 # include creative-engine sources
 # when using out-of-tree source paths add_subdirectory's build_dir argument is required
@@ -113,10 +121,9 @@ add_executable(
 )
 
 
-if (DEFINED ENV{NETWORK_DISPLAY_ENABLED})
+if (DEFINED ENV{CE_NETWORK_DISPLAY_ENABLED})
     TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT}   ${Boost_System} -L/usr/local/lib ${SDL2_LIBRARIES})
 else()
-
     # make genus.app
     if (APPLE)
         SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
