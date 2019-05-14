@@ -54,4 +54,4 @@ Here's the button mapping for the ODROID GO.
 Genus is licensed under [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.en.html).
 
 # Contributing
-Interested in contributing to Genus? Please see our [developing](./DEVELOPING.md) and [contributions](./CONTRIBUTIONS.MD) guidelines. 
+Interested in contributing to Genus? Please see our [developing](./md/DEVELOPING.md) and [contributions](./md/CONTRIBUTIONS.MD) guidelines. 
