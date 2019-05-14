@@ -1,6 +1,6 @@
 # The Genus Team
 Genus was developed with love by the following team members:
-![the-team.jpg](./readme-images/the-team.jpg)
+![the-team.jpg](./img/the-team.jpg)
 
 
 ## Credits

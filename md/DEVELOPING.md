@@ -13,7 +13,7 @@ Genus is a cross-platform a puzzle game created by [Modus Create](https://modusc
 Building Genus has been tested on the `x86_64` architecture with macOS X High Sierra and Mojave, Ubuntu 16.04 and 18.04, and on the `armhf` architecture with Raspbian Stretch (9.6).
 
 The following visualization depicts the layers of the various libraries at play.
-![genus-block-diagram](./readme-images/genus-block-diagram.jpg)
+![genus-block-diagram](./img/genus-block-diagram.jpg)
 
 #### All platforms
 [Genus](https://github.com/moduscreateorg/genus) this game.\
