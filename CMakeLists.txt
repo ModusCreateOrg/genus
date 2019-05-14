@@ -1,33 +1,27 @@
-cmake_minimum_required(VERSION 3.12)
-project(genus-matrix-display)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
+PROJECT(genus-matrix-display)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-implicit-exception-spec-mismatch")
+SET(CMAKE_CXX_STANDARD 14)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-implicit-exception-spec-mismatch")
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-# creative-engine path
-if (EXISTS $ENV{CREATIVE_ENGINE_PATH})
-   # set ENV variable in CLion project settings
-   set(CREATIVE_ENGINE_PATH $ENV{CREATIVE_ENGINE_PATH})
-#   message(STATUS "********************************* Using user-defined creative-engine path: ${CREATIVE_ENGINE_PATH}")
-else ()
-#    set(CREATIVE_ENGINE_PATH "${CMAKE_SOURCE_DIR}/../creative-engine") # This broke debugging in clion!
-    set(CREATIVE_ENGINE_PATH "${CMAKE_SOURCE_DIR}/creative-engine")
-#   message(STATUS "<<<<<<<<<<<<<<<<<<<<<<<<<< Falling back to default creative-engine path: ${CREATIVE_ENGINE_PATH}")
-endif ()
-
-
-# external libraries
 INCLUDE(FindPkgConfig)
-PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 
-# resource compiler
-set(RCOMP "${CREATIVE_ENGINE_PATH}/tools/rcomp")
+# CMake Module path (additional cmake files via find_package)
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake.files")
 
+FIND_PACKAGE(SDL2 REQUIRED)
+FIND_PACKAGE(SDL2_image REQUIRED)
 
 INCLUDE_DIRECTORIES(
-    ${SDL2_INCLUDE_DIRS}
+    ${SDL2_INCLUDE_DIR}
+    ${SDL2_IMAGE_INCLUDE_DIR}
+)
+
+# Creative Engine
+FIND_PACKAGE(Creative-Engine REQUIRED)
+
+INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/GameState
     ${CMAKE_SOURCE_DIR}/src/GameState/Playfields
@@ -39,43 +33,11 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}/src/SplashState
     ${CMAKE_SOURCE_DIR}/src/RulesState
     ${CMAKE_BINARY_DIR}/usr/local/include
-    ${CREATIVE_ENGINE_PATH}/src
-    ${CREATIVE_ENGINE_PATH}/src/Display/
-    ${CREATIVE_ENGINE_PATH}/src/Display/DesktopDisplay
-    ${CREATIVE_ENGINE_PATH}/src/Controls
-    ${CREATIVE_ENGINE_PATH}/src/Controls/DesktopControls
-    ${CREATIVE_ENGINE_PATH}/src/Widgets
-    ${CREATIVE_ENGINE_PATH}/src/libxmp
-    ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders
-    ${CREATIVE_ENGINE_PATH}/src/libxmp/loaders/prowizarde
+    ${CREATIVE_ENGINE_INCLUDE_DIRS}
 )
 
 
-# Network matrix display
-if (DEFINED ENV{CE_NETWORK_DISPLAY_ENABLED})
-    message(">> ENABLING NETWORK DISPLAY <<")
-    add_compile_definitions(__MODUS_TARGET_NETWORK_DISPLAY__=true)
-
-    INCLUDE_DIRECTORIES(
-        ${CREATIVE_ENGINE_PATH}/src/Display/NetworkDisplay
-        ${CREATIVE_ENGINE_PATH}/src/Controls/DirectLinuxControls
-    )
-    FIND_PACKAGE(Threads REQUIRED)
-
-    FIND_PACKAGE(Boost REQUIRED)
-    INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
-else()
-    add_compile_definitions(__MODUS_TARGET_DESKTOP_DISPLAY__=true)
-endif()
-
-# Direct linux controls (non-SDL2!)
-if (DEFINED ENV{CE_DIRECT_LINUX_CONTROS_ENABLED})
-    message(">> ENABLING DIRECT LINUX CONTROLS <<")
-    add_compile_definitions(__MODUS_TARGET_DIRECT_LINUX_CONTROLS__=true)
-else()
-    add_compile_definitions(__MODUS_TARGET_DESKTOP_CONTROLS__=true)
-endif()
-
+## JG: Commented this out because it broke debugging.
 # include creative-engine sources
 # when using out-of-tree source paths add_subdirectory's build_dir argument is required
 # use the project's current build directory
@@ -84,52 +46,22 @@ endif()
 # https://stackoverflow.com/questions/35260552/how-do-i-explicitly-specify-an-out-of-tree-source-in-cmake
 #add_subdirectory(${CREATIVE_ENGINE_PATH} ${CMAKE_CURRENT_BINARY_DIR}/creative-engine)
 
-# build rcomp
-add_custom_command(
-    OUTPUT rcomp
-    COMMAND cd ${CREATIVE_ENGINE_PATH}/tools && make
-    OUTPUTS rcomp
-    COMMENT "Building rcomp ${CREATIVE_ENGINE_PATH}"
-)
-
-# build Resources.bin
-add_custom_command(
-    OUTPUT Resources.bin
-    COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/src && ${RCOMP} Resources.r
-    OUTPUTS Resources.bin
-    DEPENDS rcomp
-    COMMENT "Compiling Resources ${CMAKE_CURRENT_SOURCE_DIR}"
-)
-
-
-add_compile_definitions(LIBXMP_CORE_PLAYER=true)
-
-# gather creative-engine sources
-file(GLOB_RECURSE CREATIVE_ENGINE
-    ${CREATIVE_ENGINE_PATH}/src/*.cpp
-    ${CREATIVE_ENGINE_PATH}/src/*.c
-)
 
 # gather Genus sources
-file(GLOB_RECURSE GENUS_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
+FILE(GLOB_RECURSE GENUS_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
 
-add_executable(
+ADD_EXECUTABLE(
     ${PROJECT_NAME}
     Resources.bin
-    ${CREATIVE_ENGINE}
+    ${CREATIVE_ENGINE_SOURCE_FILES}
     ${GENUS_SRC}
 )
 
+# make genus.app
+if (APPLE)
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
+    INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ".")
+endif (APPLE)
 
-if (DEFINED ENV{CE_NETWORK_DISPLAY_ENABLED})
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT}   ${Boost_System} -L/usr/local/lib ${SDL2_LIBRARIES})
-else()
-    # make genus.app
-    if (APPLE)
-        SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
-        INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ".")
-    endif (APPLE)
-
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME} -L/usr/local/lib ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
-endif()
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CE_LINK_LIBRARIES})
 
