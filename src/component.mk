@@ -6,5 +6,21 @@
 COMPONENT_NAME = Genus
 
 COMPONENT_EMBED_FILES := Resources.bin
-
 #$(info COMPONENT_EMBED_FILES is ${COMPONENT_EMBED_FILES})
+
+COMPONENT_ADD_INCLUDEDIRS = . \
+  CreditsState \
+  GameOverState \
+  GameState \
+  GameState/Powerups \
+  GameState/Playfields \
+  HighScoreState \
+  MainOptionsState \
+  MainMenuState \
+  HighScoresState \
+  RulesState \
+  SplashState
+
+
+
+COMPONENT_SRCDIRS = ${COMPONENT_ADD_INCLUDEDIRS}

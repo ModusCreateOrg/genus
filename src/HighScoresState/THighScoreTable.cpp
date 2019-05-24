@@ -40,20 +40,20 @@ void THighScoreTable::Reset(TBool aSave) {
 }
 
 void THighScoreTable::Load() {
-  auto *store = new BStore("scores");
+  BStore *store = new BStore("scores");
   if (!store->Get("high scores", this, sizeof(THighScoreTable))) {
     Reset();
   } else if (version != VERSION) {
     Reset();
   }
-  delete store;
+//  delete store;
 }
 
 void THighScoreTable::Save() {
   version = VERSION;
-  auto *store = new BStore("scores");
+  BStore *store = new BStore("scores");
   store->Set("high scores", this, sizeof(THighScoreTable));
-  delete store;
+//  delete store;
 }
 
 THighScore *THighScoreTable::GetTable(TInt aDifficulty) {
