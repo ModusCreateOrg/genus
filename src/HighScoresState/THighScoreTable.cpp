@@ -46,14 +46,14 @@ void THighScoreTable::Load() {
   } else if (version != VERSION) {
     Reset();
   }
-  delete store;
+//  delete store;
 }
 
 void THighScoreTable::Save() {
   version = VERSION;
   BStore *store = new BStore("scores");
   store->Set("high scores", this, sizeof(THighScoreTable));
-  delete store;
+//  delete store;
 }
 
 THighScore *THighScoreTable::GetTable(TInt aDifficulty) {

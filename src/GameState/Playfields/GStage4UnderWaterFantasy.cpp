@@ -197,14 +197,14 @@ void GStage4UnderWaterFantasy::Render() {
 //  DrawScrolledBackground(mBackground1, bgOffset1, 95, ETrue, mCanvasBitmap);
 //  DrawScrolledBackground(mBackground2, bgOffset2, mCanvasBitmap->Height() - mBackground2->Height() - 15, ETrue, mCanvasBitmap);
 
-  uint8_t *src = mBackground0->GetPixels(),
+  TUint8 *src = mBackground0->GetPixels(),
           *dest = gDisplay.renderBitmap->GetPixels();
 
   int srcIndex = 8,
       destIndex = 0;
 
 
-  for (uint8_t y = 0; y < 240; y++) {
+  for (TUint8 y = 0; y < 240; y++) {
     for (int x = 0; x < 320; x++) {
       dest[destIndex] = src[srcIndex + mYOffset[y] + mXComp[x]];
 

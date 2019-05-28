@@ -112,6 +112,7 @@ function ensure_esp_idf {
         cd esp || exit 1
         git clone --recursive https://github.com/espressif/esp-idf.git
         cd esp-idf || exit 1
+        git reset --hard SUPPORTED_ESP_IDF_VERSION
         git submodule update --init --recursive
         export IDF_PATH="$BASE_DIR/esp/esp-idf"
         python -m pip install --user -r "$IDF_PATH/requirements.txt"
