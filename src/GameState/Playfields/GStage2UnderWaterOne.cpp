@@ -81,13 +81,13 @@ void GStage2UnderWaterOne::Animate() {
 }
 
 void GStage2UnderWaterOne::Render() {
-  uint8_t *src = mBackground->GetPixels(),
+  TUint8 *src = mBackground->GetPixels(),
           *dest = gDisplay.renderBitmap->GetPixels();
 
   int srcIndex = 8,
       destIndex = 0;
 
-  for (uint8_t y = 0; y < 240; y++) {
+  for (TUint8 y = 0; y < 240; y++) {
     for (int x = 0; x < 320; x++) {
       dest[destIndex] = src[srcIndex + mYOffset[y] + mXComp[x]];
 

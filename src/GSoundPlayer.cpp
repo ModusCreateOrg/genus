@@ -20,7 +20,7 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
   mMaxSongs = 11;
   mSongSlots = (SongSlot *)AllocMem(sizeof(SongSlot) * mMaxSongs, MEMF_SLOW);
 
-  const uint16_t allSongs[] = {
+  const TUint16 allSongs[] = {
     EMPTYSONG_XM,
     UNDER_WATER_XM,
     CYBERPUNK_XM,
@@ -34,7 +34,7 @@ void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
     ENTERCREDITS_XM
   };
 
-  for (uint8_t i = 0; i < mMaxSongs; i++) {
+  for (TUint8 i = 0; i < mMaxSongs; i++) {
     auto *slot = (SongSlot *)AllocMem(sizeof(SongSlot), MEMF_SLOW);
 
     slot->mResourceNumber = allSongs[i];
@@ -80,7 +80,7 @@ TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
 
 TBool GSoundPlayer::LoadEffects() {
   // Load effects
-  const uint16_t mEffectsList[] = {
+  const TUint16 mEffectsList[] = {
     SFX_GOOD_DROP_BLOCK_WAV,
     SFX_BAD_DROP_BLOCK_WAV,
     SFX_MOVE_BLOCK_WAV,
@@ -93,7 +93,7 @@ TBool GSoundPlayer::LoadEffects() {
     SFX_NEXT_STAGE_WAV
   };
 
-  for (uint8_t i = 0; i < 10; i++) {
+  for (TUint8 i = 0; i < 10; i++) {
     LoadEffect(mEffectsList[i], i);
   }
 
