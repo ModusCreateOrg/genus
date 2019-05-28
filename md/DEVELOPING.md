@@ -7,6 +7,7 @@ https://github.com/espressif/esp-idf/releases/tag/v3.2
 https://docs.espressif.com/projects/esp-idf/en/v3.2/
 
 
+
 ## How Genus works
 Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday season. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux. 
 
@@ -109,9 +110,38 @@ build/genus                    # Run Genus
 The first time the build runs it will have to build `cmake` from source which takes a long time. It will install `cmake` in `/usr/local/bin/cmake`.
 
 ## ODROID GO/ESP32
-- [ ] Follow the [setup-toolchain](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/#setup-toolchain) instructions for the ESP IDF. Be sure to follow them thorougly! 
+- [ ] The following script replicates the steps to install the related ESP-IDF software. See the [setup-toolchain](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/#setup-toolchain) instructions details.
+ 
+__Note:__ We've standardized on ESP-IDF version 3.2, and have deviated a bit from the install instructions.
+
+```
+# To install ESP-IDF, please execute the following command:
+# Assumes you don't have an esp directory in your profile directory
+bash scripts/download-esp-idf.sh
+
+```
+To proceed further, __make sure__ your [$IDF_PATH](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/add-idf_path-to-profile.html#linux-and-macos) environment variable is set.
+
+Next, close & re-open your terminal.
+To proceed further, __make sure__ your [$IDF_PATH](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/add-idf_path-to-profile.html#linux-and-macos) environment variable is set.
+
+Next, close & re-open your terminal.
+
+Last step is to execute the following command to update the IDF Python scripts. This will only work if your `$IDF_PATH` is properly set.
+
+```
+python -m pip install --user -r $IDF_PATH/requirements.txt
+```
+
+Last step is to execute the following command to update the IDF Python scripts. This will only work if your `$IDF_PATH` is properly set.
+
+```
+python -m pip install --user -r $IDF_PATH/requirements.txt
+```
+
 - [ ] Stage the appropriate SDK config file
 ```
+# From within genus/
 # Linux ONLY
 cp sdkconfig.linux sdkconfig
 
@@ -120,9 +150,10 @@ cp sdkconfig.mac sdkconfig
 ```
 - [ ] Build and run genus 
 ```
-# From within genus/
-make rcomp resources    # Build necessary tooling & resources binary
-make -j 4 flash         # Assuming you have four CPU cores to compile
+# From within genus/ 
+# Ensure your device is plugged in and powered on.
+make rcomp resources        # Build necessary tooling & resources binary
+make flash && make monitor  # Sit back, relax and enjoy the game.
 
 # *IF* you are prompted by the build system to say yes or no to any configura†ion changes, 
 # choose the default (press ENTER).
