@@ -15,11 +15,12 @@ Building Genus has been tested on the `x86_64` architecture with macOS X High Si
 The following visualization depicts the layers of the various libraries at play.
 ![genus-block-diagram](./img/genus-block-diagram.jpg)
 
-#### All platforms
-[Genus](https://github.com/moduscreateorg/genus) this game.\
+The following is a list of dependencies for each platform.
+
+### Dependencies (All platforms)
+[Genus](https://github.com/moduscreateorg/genus), this game.\
 [Creative Engine](https://github.com/ModusCreateOrg/creative-engine) is the game engine developed by Modus Create. It implements LibXMP, SDL2, ESP-IDF (Audio, Video and Input drivers).\
 [LibXMP](http://xmp.sourceforge.net/) is a fantastic cross-platform library for playing music using the [Xtended Module (XM)](https://en.wikipedia.org/wiki/XM_(file_format)) format and also has additional functionality to play sound effects.\
-
 [Rcomp](https://github.com/ModusCreateOrg/creative-engine/blob/master/tools/rcomp.cpp) is a CLI tool that takes any binary resources and packages  (graphic, audio, etc.) them into a binary blob to be included in the game executable and is part of [Creative Engine](https://github.com/ModusCreateOrg/creative-engine).
 
 #### macOS, Linux
@@ -41,13 +42,15 @@ We're going to get setup in three phases:
 The first thing we need to is create a folder that will contain Genus and Creative engine. When we're done, the folder struction will look similar to the following.
 
     projects/
-        |-creative-engine/      # Source Creative Engine
-        |-genus/                # Source for Genus
-            |-creative-engine/  # Symbolic Link to the above directory
+        |-genus-game/
+            |-creative-engine/      # Source Creative Engine
+            |-genus/                # Source for Genus
+                |-creative-engine/  # Symbolic Link to ../creative-engine/
 
 Let's clone the Genus and Creative Engine repos:
 
-    mkdir genus-game/                                             # Whould be within ~/projects or similar
+    # Would be within ~/projects or similar
+    mkdir genus-game/                                          
     cd genus-game/
     git clone git@github.com:ModusCreateOrg/genus.git
     git clone git@github.com:ModusCreateOrg/creative-engine.git
@@ -56,12 +59,21 @@ Let's clone the Genus and Creative Engine repos:
 ## Install dependencies
 
 ### macOS
-The macOS build requires XCode and uses [Homebrew](https://brew.sh), which it will install for you if it is not already installed.
+- [ ] Install [XCode](https://developer.apple.com/xcode/) CLI tools
+    
+```
+xcode-select --install
+``` 
+  
+- [ ] Install [Homebrew](https://brew.sh)
 
-- [ ] Install [XCode](https://developer.apple.com/xcode/)
-- [ ] Build and run Genus
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+```
+- [ ] Install final dependencies via HomeBrew
 ```    
 # Run this command from genus/
+brew install
 scripts/build.sh                             # Build Genus
 open build/genus.app                         # Run Genus
 ```
@@ -79,10 +91,10 @@ build/genus                    # Run Genus
 ```
 
 ### Raspberry Pi
+Genus runs on Raspbian Stretch (9.6) on the Raspberry Pi 2B+ and 3B+. You will need about 2GB of space in /tmp and about 2GB of space in /home to build this.
 
-Genus is tested on Raspbian Stretch (9.6) on the Raspberry Pi 2B+ and 3B+. You will need about 2GB of space in /tmp and about 2GB of space in /home to build this.
+The game will run very slowly without enabling the OpenGL desktop driver. You can enable it by running `sudo raspbi-config` and choosing _Advanced Options / GL Driver / GL (Full KMS)_. The game will run very slowly without enabling the OpenGL desktop driver. You can enable it by running `sudo raspbi-config` and choosing _Advanced Options / GL Driver / GL (Full KMS)_. See this site for complete instructions:  [https://eltechs.com/how-to-enable-opengl-on-raspberry-pi/](https://eltechs.com/how-to-enable-opengl-on-raspberry-pi/).
 
-The game will run very slowly without enabling the OpenGL desktop driver. You can enable it by running `sudo raspbi-config` and choosing _Advanced Options / GL Driver / GL (Full KMS)_. See this site for complete instructions: https://eltechs.com/how-to-enable-opengl-on-raspberry-pi/
 
 The `build.sh` script will download all development dependencies, including `libsdl2-dev`, `libsdl2-image-dev`, development tools including `g++`, and will install `cmake` from source.
 
@@ -102,13 +114,18 @@ The first time the build runs it will have to build `cmake` from source which ta
 ```
 # Linux ONLY
 cp sdkconfig.linux sdkconfig
+
 # macOS ONLY
 cp sdkconfig.mac sdkconfig
 ```
 - [ ] Build and run genus 
 ```
 # From within genus/
-make -j 4 flash   #Assuming you have four CPU cores to compile
+make rcomp resources    # Build necessary tooling & resources binary
+make -j 4 flash         # Assuming you have four CPU cores to compile
+
+# *IF* you are prompted by the build system to say yes or no to any configura†ion changes, 
+# choose the default (press ENTER).
 ```
 
 ## Additional information
