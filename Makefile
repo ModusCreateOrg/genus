@@ -29,10 +29,6 @@ include $(IDF_PATH)/make/project.mk
 # We're not supposed to write to this variable, but for now, let's keep this as/is.
 COMPONENT_DIRS := ${EXTRA_COMPONENT_DIRS}
 
-# ENTIRE_SOURCE_TREE = ${EXTRA_COMPONENT_DIRS}
-# export ENTIRE_SOURCE_TREE
-
-
 
 release: FORCE
 	./scripts/build.sh && cp ./build/genus.tgz ~/Downloads/
