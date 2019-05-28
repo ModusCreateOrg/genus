@@ -30,6 +30,8 @@ source "$DIR/common.sh"
 
 ######################### Main build ##################################
 
+export SUPPORTED_ESP_IDF_VERSION="ba1ff1692b433e76718a60c3b2cb75e66b383909"
+
 op=${1:-}
 SKIP_TOOLS_INSTALL=false
 SUDO="sudo"
