@@ -6,8 +6,8 @@
 
 GContinueGameContainer::GContinueGameContainer(TInt aX, TInt aY, GMainMenuProcess *aProcess) : GDialogWidget("Menu", aX, aY) {
   mProcess = aProcess;
-  AddWidget((BWidget &) *new GNewGameWidget());
   AddWidget((BWidget &) *new GContinueWidget());
+  AddWidget((BWidget &) *new GNewGameWidget());
   AddWidget((BWidget &) *new GCancelWidget(mProcess));
 }
 
