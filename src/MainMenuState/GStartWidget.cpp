@@ -13,7 +13,7 @@ TInt GStartWidget::Render(TInt aX, TInt aY) {
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
-        "\xe",
+        STR_RIGHT_ARROW,
         f,
         aX - 16, aY,
         gWidgetTheme.GetInt(WIDGET_TEXT_BG),
@@ -37,7 +37,7 @@ void GStartWidget::Select() {
   gSoundPlayer.SfxMenuAccept();
 
   if (gOptions->gameProgress.savedState) {
-    mProcess->SwitchContainer();
+    mProcess->SwitchContainer(1);
     return;
   }
 

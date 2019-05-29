@@ -25,7 +25,7 @@ class GPauseModal : public GDialogWidget {
     ~GPauseModal() {}
 
     TInt Render(TInt aX, TInt aY) {
-      TInt color;
+      TInt color = gWidgetTheme.GetInt(WIDGET_TEXT_BG);;
       const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
       const TInt x = (SCREEN_WIDTH - (strlen(mTitle) * f->mWidth)) / 2;
 

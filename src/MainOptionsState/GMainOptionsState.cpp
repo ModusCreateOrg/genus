@@ -7,9 +7,6 @@
 
 #ifdef __XTENSA__
 #include "GBrightnessWidget.h"
-#endif
-
-#ifdef __XTENSA__
 #define WIDGET_CONTAINER_Y 50
 #else
 #define WIDGET_CONTAINER_Y 60

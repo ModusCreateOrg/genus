@@ -1,16 +1,22 @@
-#include "GRestartWidget.h"
+#include "GCancelWidget.h"
 #include "Game.h"
+#include "THighScoreTable.h"
 
-GRestartWidget::GRestartWidget() : BButtonWidget("NEW GAME", COLOR_TEXT, COLOR_TEXT_BG) {}
+// special characters
 
-GRestartWidget::~GRestartWidget() {}
+GCancelWidget::GCancelWidget(GMainMenuProcess *aProcess) : BButtonWidget("EXIT", COLOR_TEXT, COLOR_TEXT_BG) {
+  mProcess = aProcess;
+}
 
-TInt GRestartWidget::Render(TInt aX, TInt aY) {
+GCancelWidget::~GCancelWidget() {}
+
+TInt GCancelWidget::Render(TInt aX, TInt aY) {
+
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
 
   if (mActive) {
     gDisplay.renderBitmap->DrawStringShadow(ENull,
-        "\xe",
+        STR_RIGHT_ARROW,
         f,
         aX - 16, aY,
         gWidgetTheme.GetInt(WIDGET_TEXT_BG),
@@ -27,10 +33,10 @@ TInt GRestartWidget::Render(TInt aX, TInt aY) {
       gWidgetTheme.GetInt(WIDGET_TITLE_BG),
       -6);
 
-  return f->mHeight + 10;
+  return f->mHeight - 4;
 }
 
-void GRestartWidget::Select() {
-  gOptions->ResetGameProgress();
-  gGame->SetState(GAME_STATE_GAME);
+void GCancelWidget::Select() {
+  mProcess->SwitchContainer(0);
+  gSoundPlayer.SfxMenuCancel();
 }

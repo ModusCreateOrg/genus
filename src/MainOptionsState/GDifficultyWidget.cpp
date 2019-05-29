@@ -1,7 +1,6 @@
 #include "GDifficultyWidget.h"
 
-// special characters
-static const char *STR_RIGHT_ARROW = "\xe";
+
 
 static const TSelectOption difficulty_options[] = {
     {gOptions->DifficultyString(EFalse, DIFFICULTY_EASY), 1},

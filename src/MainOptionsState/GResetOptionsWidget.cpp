@@ -1,8 +1,7 @@
 #include "GResetOptionsWidget.h"
 #include "Game.h"
 
-// special characters
-static const char *STR_RIGHT_ARROW = "\xe";
+
 
 GResetOptionsWidget::GResetOptionsWidget() : BButtonWidget("OPTIONS", COLOR_TEXT, COLOR_TEXT_BG) {}
 

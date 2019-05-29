@@ -8,9 +8,7 @@ static const TUint8 BLOCK_X          = 96;
 static const TUint8 BLOCK_Y          = 50;
 static const TUint8 TEXT_Y           = 107;
 
-// special characters
-static const char *STR_LEFT_ARROW  = "\xf";
-static const char *STR_RIGHT_ARROW = "\xe";
+
 
 class GRulesPlayfield : public BPlayfield {
 public:
