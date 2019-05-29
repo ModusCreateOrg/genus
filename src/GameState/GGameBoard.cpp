@@ -2,7 +2,7 @@
 #include "GGameBoard.h"
 
 GGameBoard::GGameBoard() {
-
+  mIsHidden = EFalse;
   Clear();
 }
 
@@ -34,6 +34,10 @@ void GGameBoard::Clear() {
 }
 
 void GGameBoard::Render(TInt aX, TInt aY) {
+  if (mIsHidden) {
+    return;
+  }
+
   // render the board
   TInt      y   = aY;
   for (TInt row = 0; row < BOARD_ROWS; row++) {

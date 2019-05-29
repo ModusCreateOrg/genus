@@ -50,7 +50,7 @@ TBool GModusBombPowerup::StateMove() {
     if (mGameState->MainState() != STATE_REMOVE) {
       Drop();
       mState = STATE_REMOVE;
-      mGameState->MainStateWait();
+      mGameState->MainState(STATE_WAIT);
       mPlayerSprite->StartAnimation(BombDropAnimation);
     } else {
       gSoundPlayer.SfxBadDrop();

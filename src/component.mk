@@ -12,6 +12,7 @@ COMPONENT_ADD_INCLUDEDIRS = . \
   CreditsState \
   GameOverState \
   GameState \
+  GameState/PauseModal \
   GameState/Powerups \
   GameState/Playfields \
   HighScoreState \

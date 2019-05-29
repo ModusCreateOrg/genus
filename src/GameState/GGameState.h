@@ -73,9 +73,16 @@ public:
     return mGameProcess->State();
   }
 
-  void MainStateWait() {
-    mGameProcess->Wait();
+  void MainState(TPowerUpStates aState) {
+    mGameProcess->State(aState);
   }
+
+  void SetBlocksPerLevel();
+
+  void SaveState();
+  void LoadState();
+  void LoadPlayerState();
+  void SetPauseModalTheme();
 
   // make next sprite current sprite, randomize next sprite
   // maybe randomize powerup if aCanPowerup is true
@@ -89,10 +96,13 @@ protected:
 public:
   BFont      *mFont8, *mFont16;
   TBool      mGameOver;
+  TBool      mIsPaused;
   TInt       mLevel;
   TBCD       mScore;
   GPlayerSprite *mSprite, *mNextSprite;
   GGameBoard mGameBoard;
+  BDialogWidget *mPauseModal;
+  BPowerup      *mPowerup;
 
 public:
   TInt mBonusTime;        // how much time to set bonus timer to (faster = harder)
@@ -114,6 +124,8 @@ private:
 
   void RenderNext();
 
+  void RenderPauseModal();
+
 public:
   // override BGameEngine PreRender() so we can manage timers
   void PreRender();
@@ -122,7 +134,7 @@ public:
   void PostRender();
 
 public:
-  void LoadLevel();
+  void LoadLevel(TBool aForceStageLoad = EFalse);
   void GameOver();
 
 };

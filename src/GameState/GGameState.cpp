@@ -7,6 +7,14 @@
 #include "Playfields/GStage3GlacialMountains.h"
 #include "Playfields/GStage4UnderWaterFantasy.h"
 #include "Playfields/GStage6Space.h"
+#include "PauseModal/GPauseModal.h"
+#include "PauseModal/GPauseProcess.h"
+
+#ifdef __XTENSA__
+#define PAUSE_MODAL_Y 50
+#else
+#define PAUSE_MODAL_Y 60
+#endif
 
 #ifdef CHICKEN_MODE
 class GGameState;
@@ -43,16 +51,25 @@ class ChickenModeProcess : public BProcess {
 GGameState::GGameState() : BGameEngine(gViewPort) {
   mLevel      = 1;
   mGameOver   = EFalse;
+  mIsPaused   = EFalse;
+  mPauseModal = ENull;
   mPlayfield  = ENull;
+  mPowerup    = ENull;
   mBonusTimer = -1;
 
   gResourceManager.LoadBitmap(COMMON_SPRITES_BMP, COMMON_SLOT, IMAGE_16x16);
 
-  mFont8 = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
+  mFont8  = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
 
-  mGameBoard.Clear();
-  LoadLevel();
+  if (gOptions->gameProgress.savedState) {
+    LoadState();
+    SetBlocksPerLevel();
+  } else {
+    mGameBoard.Clear();
+  }
+
+  LoadLevel(gOptions->gameProgress.savedState);
 
   mSprite = new GPlayerSprite();
   AddSprite(mSprite);
@@ -60,7 +77,7 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
   mSprite->y  = PLAYER_Y;
   mSprite->vy = 0;
 
-  mNextSprite    = new GPlayerSprite();
+  mNextSprite = new GPlayerSprite();
   AddSprite(mNextSprite);
   mNextSprite->flags |= SFLAG_RENDER | SFLAG_NEXT_BLOCK;
   mNextSprite->x = NEXT_BLOCK_X;
@@ -69,12 +86,17 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 
   mGameProcess = new GNoPowerup(mSprite, this);
   AddProcess(mGameProcess);
+  AddProcess(new GPauseProcess(this));
 
 #ifdef CHICKEN_MODE
   AddProcess(new ChickenModeProcess(this));
 #endif
 
-  Next(EFalse);
+  if (gOptions->gameProgress.savedState) {
+    LoadPlayerState();
+  } else {
+    Next(EFalse);
+  }
 }
 
 GGameState::~GGameState() {
@@ -126,13 +148,20 @@ void GGameState::Next(TBool aCanPowerup) {
 
     if (maybe == 16) {
       if (Random() & 1) {
-        AddProcess(new GModusBombPowerup(mSprite, this));
-        return;
-      } else if (mGameBoard.HasColorSwappableBlocks()) {
-        AddProcess(new GColorSwapPowerup(mSprite, this));
-        return;
+        mPowerup = new GModusBombPowerup(mSprite, this);
+        gOptions->gameProgress.playerType = PLAYER_MODUS_BOMB;
+	  } else if (mGameBoard.HasColorSwappableBlocks()) {
+        mPowerup = new GColorSwapPowerup(mSprite, this);
+        gOptions->gameProgress.playerType = PLAYER_COLOR_SWAP;
       }
+      if (mPowerup) {
+        AddProcess(mPowerup);
+      }
+      return;
     }
+  } else {
+    mPowerup = ENull;
+    gOptions->gameProgress.playerType = PLAYER_NO_POWERUP;
   }
 
   // NOT a powerup or powerup criteria not met
@@ -156,6 +185,9 @@ void GGameState::GameOver() {
   h.lastScore[gOptions->difficulty].mValue = mScore.mValue;
   h.Save();
   gSoundPlayer.PlayMusic(GAMEOVER_XM);
+
+  // Reset the game state and save it
+  SaveState();
 }
 
 /****************************************************************************************************************
@@ -163,83 +195,71 @@ void GGameState::GameOver() {
  ****************************************************************************************************************/
 
 void GGameState::PreRender() {
-  //
+  if (mPauseModal) {
+    mPauseModal->Run();
+  }
 }
 
 /****************************************************************************************************************
  ****************************************************************************************************************
  ****************************************************************************************************************/
 
-void GGameState::LoadLevel() {
-  bool newStage = false;
+void GGameState::LoadLevel(TBool aForceStageLoad) {
+  TBool newStage = EFalse;
 
-  if ((mLevel % 5) == 1) {  // every 5th level
-    delete mPlayfield;
-    // difficulty
-    // TODO: Jay tweak until you are satisfied!
-    mBlocksThisLevel = 20 + mLevel*5 + gOptions->difficulty * 10;
-    switch(gOptions->difficulty) {
-      case DIFFICULTY_EASY:
-        mBonusTime = 20 * 30;
-        break;
-      case DIFFICULTY_INTERMEDIATE:
-        mBonusTime = 15 * 30;
-        break;
-      case DIFFICULTY_HARD:
-        mBonusTime = 10 * 30;
-        break;
+  if ((mLevel % 5) == 1) {  // every 6th level
+    newStage = ETrue;
+
+    if (mPlayfield) {
+      delete mPlayfield;
     }
+
+    SetBlocksPerLevel();
 
     // Release only if bitmap was loaded
     if (gResourceManager.GetBitmap(PLAYER_SLOT)) {
       gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
     }
+  }
 
+  if (newStage || aForceStageLoad) {
+    TUint8 levelToLoad = mLevel <= 0 || newStage ? (mLevel / 5) % 6 : ((mLevel - 1) / 5) % 6;
 
-    switch ((mLevel / 5) % 6) {
+    switch (levelToLoad) {
       case 0:
         mPlayfield = new GStage1Countryside(this);
         gResourceManager.LoadBitmap(STAGE1_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(COUNTRYSIDE_XM);
-        newStage = true;
         break;
       case 1:
         mPlayfield = new GStage2UnderWaterOne(this);
         gResourceManager.LoadBitmap(STAGE2_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDER_WATER_XM);
-        newStage = true;
         break;
       case 2:
         mPlayfield = new GStage3GlacialMountains(this);
         gResourceManager.LoadBitmap(STAGE3_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(GLACIAL_MOUNTAINS_XM);
-        newStage = true;
         break;
       case 3:
         mPlayfield = new GStage4UnderWaterFantasy(this);
         gResourceManager.LoadBitmap(STAGE4_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(UNDERWATERFANTASY_XM);
-        newStage = true;
         break;
       case 4:
         mPlayfield = new GStage5Cyberpunk(this);
         gResourceManager.LoadBitmap(STAGE5_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(CYBERPUNK_XM);
-        newStage = true;
         break;
       case 5:
         mPlayfield = new GStage6Space(this);
         gResourceManager.LoadBitmap(STAGE6_SPRITES_BMP, PLAYER_SLOT, IMAGE_16x16);
         gSoundPlayer.PlayMusic(SPAAACE_XM);
-        newStage = true;
         break;
       default:
         Panic("LoadLevel invalid level\n");
     }
-
-
   }
-
 
   if (newStage && mLevel > 1) {
     gSoundPlayer.SfxNextStage();
@@ -248,15 +268,15 @@ void GGameState::LoadLevel() {
     gSoundPlayer.SfxNextLevel();
   }
 
-
   BBitmap *playerBitmap = gResourceManager.GetBitmap(PLAYER_SLOT);
   mBackground = gResourceManager.GetBitmap(BKG_SLOT);
-  // TODO: Jay - this logic can be moved to BPlayfield children
-  // this assumes BKG_SLOT bmp has the correct palette for the display
+
   gDisplay.SetPalette(mBackground, 0, 128);
   gDisplay.SetPalette(playerBitmap, 128, 128);
   gDisplay.SetColor(COLOR_TEXT, 255, 255, 255);
   gDisplay.SetColor(COLOR_TEXT_SHADOW, 0, 0, 0);
+
+  SetPauseModalTheme();
 
   mBlocksRemaining = mBlocksThisLevel;
 }
@@ -344,6 +364,20 @@ void GGameState::RenderMovesLeft() {
   bm->FillRect(ENull, MOVES_INNER.x1, MOVES_INNER.y1, MOVES_INNER.x1 + width, MOVES_INNER.y2, COLOR_BORDER2);
 }
 
+void GGameState::RenderPauseModal() {
+  if (mIsPaused) {
+    if (!mPauseModal) {
+      mPauseModal = new GPauseModal(20, PAUSE_MODAL_Y);
+    }
+    mGameBoard.Hide();
+    mPauseModal->Render(30, 20);
+  } else if (mPauseModal) {
+    mGameBoard.Show();
+    delete mPauseModal;
+    mPauseModal = ENull;
+  }
+}
+
 /****************************************************************************************************************
  ****************************************************************************************************************
  ****************************************************************************************************************/
@@ -354,11 +388,99 @@ void GGameState::PostRender() {
     mLevel++;
     LoadLevel();
   }
-  //
-  RenderTimer();
-  RenderScore();
-  RenderLevel();
-  RenderMovesLeft();
-  RenderNext();
+
+  if (!mIsPaused) {
+    RenderTimer();
+    RenderScore();
+    RenderLevel();
+    RenderMovesLeft();
+    RenderNext();
+  }
+  RenderPauseModal();
 }
 
+void GGameState::SetBlocksPerLevel() {
+  mBlocksThisLevel = 20 + mLevel*5 + gOptions->difficulty * 10;
+  switch(gOptions->difficulty) {
+    case DIFFICULTY_EASY:
+      mBonusTime = 20 * 30;
+      break;
+    case DIFFICULTY_INTERMEDIATE:
+      mBonusTime = 15 * 30;
+      break;
+    case DIFFICULTY_HARD:
+      mBonusTime = 10 * 30;
+      break;
+  }
+}
+
+void GGameState::SaveState() {
+  if (mGameOver) {
+    gOptions->ResetGameProgress();
+    gOptions->Save();
+    return;
+  }
+
+  gOptions->gameProgress.savedState = ETrue;
+  gOptions->gameProgress.level = mLevel;
+  gOptions->gameProgress.bonusTimer = mBonusTimer;
+  gOptions->gameProgress.blocksRemaining = mBlocksRemaining;
+  gOptions->gameProgress.score = mScore;
+  gOptions->gameProgress.difficulty = gOptions->difficulty;
+
+  memcpy(gOptions->gameProgress.board, mGameBoard.mBoard, sizeof(mGameBoard.mBoard));
+  memcpy(gOptions->gameProgress.playerBlocks, mSprite->mBlocks, sizeof(mSprite->mBlocks));
+  memcpy(gOptions->gameProgress.nextBlocks, mNextSprite->mBlocks, sizeof(mNextSprite->mBlocks));
+
+  gOptions->Save();
+}
+
+void GGameState::LoadState() {
+  mLevel = gOptions->gameProgress.level;
+  mBonusTimer = gOptions->gameProgress.bonusTimer;
+  mBlocksRemaining = gOptions->gameProgress.blocksRemaining;
+  mScore = gOptions->gameProgress.score;
+
+  // Reset previous game state's difficulty
+  gOptions->difficulty = gOptions->gameProgress.difficulty;
+
+  memcpy(mGameBoard.mBoard, gOptions->gameProgress.board, sizeof(mGameBoard.mBoard));
+}
+
+void GGameState::LoadPlayerState() {
+  memcpy(mSprite->mBlocks, gOptions->gameProgress.playerBlocks, sizeof(mSprite->mBlocks));
+  memcpy(mNextSprite->mBlocks, gOptions->gameProgress.nextBlocks, sizeof(mNextSprite->mBlocks));
+
+  mGameProcess->Signal(gOptions->gameProgress.gameState);
+
+  switch (gOptions->gameProgress.playerType) {
+    case PLAYER_MODUS_BOMB:
+      mPowerup = new GModusBombPowerup(mSprite, this);
+      AddProcess(mPowerup);
+      break;
+    case PLAYER_COLOR_SWAP:
+      mPowerup = new GColorSwapPowerup(mSprite, this);
+      AddProcess(mPowerup);
+      break;
+    case PLAYER_NO_POWERUP:
+    default:
+      return;
+  }
+}
+
+void GGameState::SetPauseModalTheme() {
+  gWidgetTheme.Configure(
+      WIDGET_TEXT_FONT, mFont16,
+      WIDGET_TEXT_FG, COLOR_TEXT,
+      WIDGET_TEXT_BG, COLOR_TEXT_BG,
+      WIDGET_TITLE_FONT, mFont16,
+      WIDGET_TITLE_FG, COLOR_TEXT,
+      WIDGET_TITLE_BG, -1,
+      WIDGET_WINDOW_BG, -1,
+      WIDGET_WINDOW_FG, -1,
+      WIDGET_SLIDER_FG, COLOR_TEXT_BG,
+      WIDGET_SLIDER_BG, COLOR_TEXT,
+      WIDGET_END_TAG);
+
+  gDisplay.SetColor(COLOR_TEXT_BG, 255, 92, 93);
+}

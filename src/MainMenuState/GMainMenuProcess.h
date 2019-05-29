@@ -3,6 +3,7 @@
 
 #include "Game.h"
 #include "GMainMenuContainer.h"
+#include "GContinueContainer.h"
 
 static const TInt TIMEOUT = 30 * 5;
 
@@ -13,12 +14,15 @@ public:
 
 public:
   void ResetTimer();
+  void SwitchContainer();
   TBool RunBefore();
   TBool RunAfter();
 
 private:
+  TBool mSwitchContainer;
+  TBool mShowHighScores;
   TInt mTimer;
-  GMainMenuContainer *mContainer;
+  GDialogWidget *mContainer;
 };
 
 #endif //GENUS_GMAINMENUPROCESS_H

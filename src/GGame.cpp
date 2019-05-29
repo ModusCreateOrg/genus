@@ -49,6 +49,10 @@ void GGame::SetState(TInt aNewState) {
   mNextState = aNewState;
 }
 
+TInt GGame::GetState() {
+  return mState;
+}
+
 void GGame::Run() {
   TBool muted = gOptions->muted;
 

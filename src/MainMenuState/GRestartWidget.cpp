@@ -1,14 +1,11 @@
+#include "GRestartWidget.h"
 #include "Game.h"
-#include "GStartWidget.h"
-#include "GMainMenuProcess.h"
 
-GStartWidget::GStartWidget(GMainMenuProcess *aProcess) : BButtonWidget("START", COLOR_TEXT, COLOR_TEXT_BG) {
-  mProcess = aProcess;
-}
+GRestartWidget::GRestartWidget() : BButtonWidget("NEW GAME", COLOR_TEXT, COLOR_TEXT_BG) {}
 
-GStartWidget::~GStartWidget() {}
+GRestartWidget::~GRestartWidget() {}
 
-TInt GStartWidget::Render(TInt aX, TInt aY) {
+TInt GRestartWidget::Render(TInt aX, TInt aY) {
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
 
   if (mActive) {
@@ -33,13 +30,7 @@ TInt GStartWidget::Render(TInt aX, TInt aY) {
   return f->mHeight + 10;
 }
 
-void GStartWidget::Select() {
-  gSoundPlayer.SfxMenuAccept();
-
-  if (gOptions->gameProgress.savedState) {
-    mProcess->SwitchContainer();
-    return;
-  }
-
+void GRestartWidget::Select() {
+  gOptions->ResetGameProgress();
   gGame->SetState(GAME_STATE_GAME);
 }

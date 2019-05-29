@@ -1,14 +1,11 @@
+#include "GContinueWidget.h"
 #include "Game.h"
-#include "GStartWidget.h"
-#include "GMainMenuProcess.h"
 
-GStartWidget::GStartWidget(GMainMenuProcess *aProcess) : BButtonWidget("START", COLOR_TEXT, COLOR_TEXT_BG) {
-  mProcess = aProcess;
-}
+GContinueWidget::GContinueWidget() : BButtonWidget("CONTINUE", COLOR_TEXT, COLOR_TEXT_BG) {}
 
-GStartWidget::~GStartWidget() {}
+GContinueWidget::~GContinueWidget() {}
 
-TInt GStartWidget::Render(TInt aX, TInt aY) {
+TInt GContinueWidget::Render(TInt aX, TInt aY) {
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
 
   if (mActive) {
@@ -33,13 +30,6 @@ TInt GStartWidget::Render(TInt aX, TInt aY) {
   return f->mHeight + 10;
 }
 
-void GStartWidget::Select() {
-  gSoundPlayer.SfxMenuAccept();
-
-  if (gOptions->gameProgress.savedState) {
-    mProcess->SwitchContainer();
-    return;
-  }
-
+void GContinueWidget::Select() {
   gGame->SetState(GAME_STATE_GAME);
 }
