@@ -2,8 +2,7 @@
 #include "Game.h"
 #include "THighScoreTable.h"
 
-// special characters
-static const char *STR_RIGHT_ARROW = "\xe";
+
 
 GResetHighScoresWidget::GResetHighScoresWidget() : BButtonWidget("HIGHSCORES", COLOR_TEXT, COLOR_TEXT_BG) {}
 

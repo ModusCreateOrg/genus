@@ -13,7 +13,7 @@ class GSoundPlayer : public BSoundPlayer {
 
 
 public:
-  void Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots);
+  void Init(TUint8 aNumberFxChannels);
 
   TBool LoadSongSlot(TInt16 aResourceId) override;
   TBool LoadEffects() override;
@@ -35,6 +35,7 @@ public:
   void SfxMenuCancel();
   void SfxNextLevel();
   void SfxNextStage();
+  void SfxSaveGame();
 };
 
 

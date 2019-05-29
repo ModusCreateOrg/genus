@@ -7,12 +7,9 @@
 
 #ifdef __XTENSA__
 #include "GBrightnessWidget.h"
-#endif
-
-#ifdef __XTENSA__
-#define WIDGE_CONTAINER_Y 50
+#define WIDGET_CONTAINER_Y 50
 #else
-#define WIDGE_CONTAINER_Y 60
+#define WIDGET_CONTAINER_Y 60
 #endif
 
 class OptionsContainer : public GDialogWidget {
@@ -32,7 +29,7 @@ public:
 class GMainOptionsProcess : public BProcess {
 public:
     GMainOptionsProcess() : BProcess() {
-      mContainer = new OptionsContainer(10, WIDGE_CONTAINER_Y);
+      mContainer = new OptionsContainer(10, WIDGET_CONTAINER_Y);
     }
 
     ~GMainOptionsProcess() {

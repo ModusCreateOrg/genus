@@ -23,14 +23,14 @@ void GNoPowerup::Wait() {
   mState = STATE_WAIT;
 }
 
-void GNoPowerup::Signal() {
+void GNoPowerup::Signal(TPowerUpStates aState) {
   if (mGameBoard->Combine()) {
     mGameState->StartBonusTimer();
     mState = STATE_TIMER;
   } else if (mGameState->mBonusTimer >= 0) {
     mState = STATE_TIMER;
   } else {
-    mState = STATE_MOVE;
+    mState = aState;
   }
 }
 

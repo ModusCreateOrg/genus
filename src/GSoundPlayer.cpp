@@ -13,26 +13,42 @@
 
 GSoundPlayer gSoundPlayer;
 
+static const TUint16 effectsList[] = {
+  SFX_GOOD_DROP_BLOCK_WAV,
+  SFX_BAD_DROP_BLOCK_WAV,
+  SFX_MOVE_BLOCK_WAV,
+  SFX_ROTATE_BLOCK_LEFT_WAV,
+  SFX_ROTATE_BLOCK_RIGHT_WAV,
+  SFX_SCORE_COMBO_WAV,
+  SFX_OPTION_SELECT_WAV,
+  SFX_EXPLODE_BLOCK_WAV,
+  SFX_NEXT_LEVEL_WAV,
+  SFX_NEXT_STAGE_WAV,
+  SFX_SAVE_GAME_WAV
+};
 
-void GSoundPlayer::Init(TUint8 aNumberFxChannels, TUint8 aNumberFxSlots) {
-  BSoundPlayer::Init(aNumberFxChannels, aNumberFxSlots);
+static const TUint16 allSongs[] = {
+  EMPTYSONG_XM,
+  UNDER_WATER_XM,
+  CYBERPUNK_XM,
+  COUNTRYSIDE_XM,
+  MAIN_MENU_XM,
+  SPAAACE_XM,
+  GLACIAL_MOUNTAINS_XM,
+  GAMEOVER_XM,
+  UNDERWATERFANTASY_XM,
+  GAMEOVER_XM,
+  ENTERCREDITS_XM
+};
 
-  mMaxSongs = 11;
+
+void GSoundPlayer::Init(TUint8 aNumberFxChannels) {
+  mMaxSongs = sizeof(allSongs) / sizeof(TUint16);
+  mMaxEffects = sizeof(effectsList) / sizeof(TUint16);
+
+  BSoundPlayer::Init(aNumberFxChannels, mMaxEffects);
+
   mSongSlots = (SongSlot *)AllocMem(sizeof(SongSlot) * mMaxSongs, MEMF_SLOW);
-
-  const TUint16 allSongs[] = {
-    EMPTYSONG_XM,
-    UNDER_WATER_XM,
-    CYBERPUNK_XM,
-    COUNTRYSIDE_XM,
-    MAIN_MENU_XM,
-    SPAAACE_XM,
-    GLACIAL_MOUNTAINS_XM,
-    GAMEOVER_XM,
-    UNDERWATERFANTASY_XM,
-    GAMEOVER_XM,
-    ENTERCREDITS_XM
-  };
 
   for (TUint8 i = 0; i < mMaxSongs; i++) {
     auto *slot = (SongSlot *)AllocMem(sizeof(SongSlot), MEMF_SLOW);
@@ -79,22 +95,8 @@ TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
 
 
 TBool GSoundPlayer::LoadEffects() {
-  // Load effects
-  const TUint16 mEffectsList[] = {
-    SFX_GOOD_DROP_BLOCK_WAV,
-    SFX_BAD_DROP_BLOCK_WAV,
-    SFX_MOVE_BLOCK_WAV,
-    SFX_ROTATE_BLOCK_LEFT_WAV,
-    SFX_ROTATE_BLOCK_RIGHT_WAV,
-    SFX_SCORE_COMBO_WAV,
-    SFX_OPTION_SELECT_WAV,
-    SFX_EXPLODE_BLOCK_WAV,
-    SFX_NEXT_LEVEL_WAV,
-    SFX_NEXT_STAGE_WAV
-  };
-
-  for (TUint8 i = 0; i < 10; i++) {
-    LoadEffect(mEffectsList[i], i);
+  for (TUint8 i = 0; i < mMaxEffects; i++) {
+    LoadEffect(effectsList[i], i);
   }
 
   SetMusicVolume(gOptions->music);
@@ -158,9 +160,15 @@ void GSoundPlayer::SfxMenuAccept() {
 void GSoundPlayer::SfxMenuCancel() {
   gSoundPlayer.PlaySfx(/*SFX_GOOD_DROP_BLOCK_WAV*/0);
 }
+
 void GSoundPlayer::SfxNextLevel() {
   gSoundPlayer.PlaySfx(/*SFX_NEXT_LEVEL*/8);
 }
+
 void GSoundPlayer::SfxNextStage() {
   gSoundPlayer.PlaySfx(/*SFX_NEXT_LEVEL*/9);
+}
+
+void GSoundPlayer::SfxSaveGame() {
+  gSoundPlayer.PlaySfx(/*SFX_SAVE_GAME*/10);
 }

@@ -22,6 +22,7 @@ public:
 public:
   void Run();
 public:
+  TInt GetState();
   void SetState(TInt aNewState);
 
 protected:

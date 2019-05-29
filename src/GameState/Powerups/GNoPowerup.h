@@ -26,7 +26,7 @@ public:
   // tell process to sleep until signaled
   void Wait();
   // tell process to wake up
-  void Signal();
+  void Signal(TPowerUpStates aState = STATE_MOVE);
 protected:
   TBool TimerState();
 

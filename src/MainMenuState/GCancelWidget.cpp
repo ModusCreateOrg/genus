@@ -1,14 +1,17 @@
-#include "GCancelResetWidget.h"
+#include "GCancelWidget.h"
 #include "Game.h"
 #include "THighScoreTable.h"
 
+// special characters
 
+GCancelWidget::GCancelWidget(GMainMenuProcess *aProcess) : BButtonWidget("EXIT", COLOR_TEXT, COLOR_TEXT_BG) {
+  mProcess = aProcess;
+}
 
-GCancelResetWidget::GCancelResetWidget() : BButtonWidget("CANCEL", COLOR_TEXT, COLOR_TEXT_BG) {}
+GCancelWidget::~GCancelWidget() {}
 
-GCancelResetWidget::~GCancelResetWidget() {}
+TInt GCancelWidget::Render(TInt aX, TInt aY) {
 
-TInt GCancelResetWidget::Render(TInt aX, TInt aY) {
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
 
   if (mActive) {
@@ -30,10 +33,10 @@ TInt GCancelResetWidget::Render(TInt aX, TInt aY) {
       gWidgetTheme.GetInt(WIDGET_TITLE_BG),
       -6);
 
-  return f->mHeight << 1;
+  return f->mHeight - 4;
 }
 
-void GCancelResetWidget::Select() {
-  gGame->SetState(GAME_STATE_MAIN_OPTIONS);
+void GCancelWidget::Select() {
+  mProcess->SwitchContainer(0);
   gSoundPlayer.SfxMenuCancel();
 }

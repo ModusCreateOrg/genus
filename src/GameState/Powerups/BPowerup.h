@@ -34,6 +34,10 @@ public:
     return mState;
   }
 
+  void State(TPowerUpStates aState) {
+    mState = aState;
+  }
+
 public:
   TBool TimedControl(TUint16 aButton);
 

@@ -103,6 +103,7 @@ TBool GColorSwapPowerup::StateRemove() {
     }
     delete p;
   }
+  gControls.dKeys = 0;  // in case user pressed a key during removing blocks
   mGameState->Next(EFalse);
   return EFalse;
 }
@@ -116,7 +117,7 @@ TBool GColorSwapPowerup::StateMove() {
     if (mGameState->MainState() != STATE_REMOVE && (currentColor == 0 || currentColor == 16)) {
       Drop();
       mState = STATE_REMOVE;
-      mGameState->MainStateWait();
+      mGameState->MainState(STATE_WAIT);
     }
     else {
       // make bad drop sound

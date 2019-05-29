@@ -11,6 +11,12 @@
 #define DIM_SCREEN
 // #undef DIM_SCREEN
 
+// special characters
+#define STR_LEFT_ARROW "\xf"
+#define STR_RIGHT_ARROW "\xe"
+
+#define TOTAL_SFX_CHANNELS 5
+
 // Enable level skipping via SELECT button
 //#define CHICKEN_MODE
 //#undef CHICKEN_MODE

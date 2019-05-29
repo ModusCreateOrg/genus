@@ -16,8 +16,7 @@ GGame::GGame() {
   gDisplay.SetBrightness(MAX(MIN_BRIGHTNESS, MAX_BRIGHTNESS * gOptions->brightness));
 #endif
 
-  // TODO: Jay - this needs to be in BApplication constructor (I think)
-  gSoundPlayer.Init(5, 10);
+  gSoundPlayer.Init(TOTAL_SFX_CHANNELS);
 
   // preload bitmaps
   for (TInt16 slot=0; slot<26; slot++) {  // 26 is the last BMP in Resources.h (plus one)
@@ -47,6 +46,10 @@ GGame::~GGame() {
 
 void GGame::SetState(TInt aNewState) {
   mNextState = aNewState;
+}
+
+TInt GGame::GetState() {
+  return mState;
 }
 
 void GGame::Run() {

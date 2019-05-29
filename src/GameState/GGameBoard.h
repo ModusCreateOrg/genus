@@ -23,6 +23,14 @@ public:
 
   void Render(TInt aX, TInt aY);
 
+  void Hide() {
+    mIsHidden = ETrue;
+  }
+
+  void Show() {
+    mIsHidden = EFalse;
+  }
+
 protected:
   // mark a block as matched (e.g. turn from blue/pink to blue/pink with black center
   // returns EFalse if the block was already black center
@@ -82,6 +90,7 @@ public:
 
 public:
   TUint8 mBoard[BOARD_ROWS][BOARD_COLS];
+  TBool  mIsHidden;
 };
 
 

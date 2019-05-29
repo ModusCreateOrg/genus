@@ -1,14 +1,11 @@
-#include "GCancelResetWidget.h"
+#include "GContinueWidget.h"
 #include "Game.h"
-#include "THighScoreTable.h"
 
+GContinueWidget::GContinueWidget() : BButtonWidget("CONTINUE", COLOR_TEXT, COLOR_TEXT_BG) {}
 
+GContinueWidget::~GContinueWidget() {}
 
-GCancelResetWidget::GCancelResetWidget() : BButtonWidget("CANCEL", COLOR_TEXT, COLOR_TEXT_BG) {}
-
-GCancelResetWidget::~GCancelResetWidget() {}
-
-TInt GCancelResetWidget::Render(TInt aX, TInt aY) {
+TInt GContinueWidget::Render(TInt aX, TInt aY) {
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
 
   if (mActive) {
@@ -30,10 +27,9 @@ TInt GCancelResetWidget::Render(TInt aX, TInt aY) {
       gWidgetTheme.GetInt(WIDGET_TITLE_BG),
       -6);
 
-  return f->mHeight << 1;
+  return f->mHeight + 10;
 }
 
-void GCancelResetWidget::Select() {
-  gGame->SetState(GAME_STATE_MAIN_OPTIONS);
-  gSoundPlayer.SfxMenuCancel();
+void GContinueWidget::Select() {
+  gGame->SetState(GAME_STATE_GAME);
 }
