@@ -91,3 +91,4 @@ RAW SFX_option_select.wav
 RAW SFX_explode_block.wav
 RAW SFX_next_level.wav
 RAW SFX_next_stage.wav
+RAW SFX_save_game.wav
