@@ -64,7 +64,7 @@ This project is part of [Modus Labs](https://labs.moduscreate.com/?utm_source=la
 <a href="https://labs.moduscreate.com/?utm_source=labs&utm_medium=github&utm_campaign=genus"><img src="https://res.cloudinary.com/modus-labs/image/upload/h_80/v1531492623/labs/logo-black.svg" height="80" alt="Modus Labs"/></a>
 
 ## License
-Genus is licensed under [GPL v3](https://www.gnu.org/licenses/quick-guide-gplv3.en.html).
+Genus is licensed under [GPL v3](./LICENSE).
 
 # Contributing
 Interested in contributing to Genus? Please see our [developing](./md/DEVELOPING.md) and [contributions](./md/CONTRIBUTIONS.MD) guidelines. 
