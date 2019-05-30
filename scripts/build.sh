@@ -97,7 +97,13 @@ checkout_creative_engine_branch
 # Build the software and documentation
 build
 # build_xtensa #GEN-275
-copy_sdl2_libs_to_app
+if [ "$OS" == "Darwin" ]; then
+    patch_mac_build
+elif [ "$OS" == "Linux" ]; then
+    patch_linux_build
+fi
+
+
 # "$BASE_DIR/doxygen/build.sh" #GEN-275
 
 # Archive the artifacts
