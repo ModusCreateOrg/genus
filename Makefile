@@ -31,7 +31,7 @@ COMPONENT_DIRS := ${EXTRA_COMPONENT_DIRS}
 
 
 release: FORCE
-	./scripts/build.sh && cp ./build/genus.tgz ~/Downloads/
+	./scripts/build.sh docker-build && cp ./build/Genus.tgz ~/Downloads/
 
 rcomp: FORCE
 	echo "Building rcomp"
@@ -43,7 +43,7 @@ resources: rcomp FORCE
 
 reset: FORCE
 	echo "Resetting high score table (and options)"
-	 rm -f cmake-build-debug/genus.app/Contents/MacOS/*.store
+	 rm -f cmake-build-debug/Genus.app/Contents/MacOS/*.store
 
 FORCE:
 
