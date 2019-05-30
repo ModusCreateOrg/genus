@@ -150,9 +150,9 @@ function clean {
 
 # TODO: Use otool -L and some foo to find the dependencies
 #        The sentinel is "/usr/local/opt"
-function copy_sdl2_libs_to_app {
+function patch_mac_build {
     if [[ "$OS" == "Darwin" ]]; then
-        export APP_DIR="$BASE_DIR/build/genus.app"
+        export APP_DIR="$BASE_DIR/build/Genus.app"
         export APP_CNT_DIR="$APP_DIR/Contents"
         export APP_RES_DIR="$APP_CNT_DIR/Resources"
         export APP_MACOSX_DIR="$APP_CNT_DIR/MacOS"
@@ -172,29 +172,33 @@ function copy_sdl2_libs_to_app {
             install_name_tool -change \
                 /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
                  ./libs/libSDL2.dylib \
-                 "$APP_MACOSX_DIR/genus"
+                 "$APP_MACOSX_DIR/Genus"
             install_name_tool -change \
                 /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib \
                 ./libs/libSDL2_image.dylib \
-                "$APP_MACOSX_DIR/genus"
+                "$APP_MACOSX_DIR/Genus"
 
             # FIX SDL2_image
             install_name_tool -change \
                 /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
                 ./libs/libSDL2.dylib \
                 "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+            
             install_name_tool -change \
                 /usr/local/opt/libpng/lib/libpng16.16.dylib \
                 ./libs/libpng.dylib \
                 "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
-               install_name_tool -change \
+            
+            install_name_tool -change \
                 /usr/local/opt/jpeg/lib/libjpeg.9.dylib \
                 ./libs/libjpeg.dylib \
                 "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+            
             install_name_tool -change \
                 /usr/local/opt/libtiff/lib/libtiff.5.dylib \
                 ./libs/libtiff.dylib \
                 "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+            
             install_name_tool -change \
                 /usr/local/opt/webp/lib/libwebp.7.dylib \
                 ./libs/libwebp.dylib \
@@ -207,21 +211,27 @@ function copy_sdl2_libs_to_app {
                 "$APP_MACOSX_DIR/libs/libtiff.dylib"
 
             # CREATE WRAPPER
-            mv "$APP_MACOSX_DIR/genus" "$APP_MACOSX_DIR/genus.bin"
-            tee "$APP_MACOSX_DIR/genus" <<-"EOF"
+            mv "$APP_MACOSX_DIR/Genus" "$APP_MACOSX_DIR/Genus.bin"
+            tee "$APP_MACOSX_DIR/Genus" <<-"EOF"
 		#!/usr/bin/env bash
 		MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
-		(cd $MY_DIR && ./genus.bin)
+		(cd $MY_DIR && ./Genus.bin)
 		EOF
-            chmod 0755 "$BASE_DIR/build/genus.app/Contents/MacOS/genus"
-
+            chmod 0755 "${APP_DIR}/Contents/MacOS/Genus"
+         
             # INSTALL APP.PLIST & ETC
             cp "$BASE_DIR/resources/info.plist" "$APP_CNT_DIR"
             mkdir -p "$APP_RES_DIR"
-            cp "$BASE_DIR/resources/GenusIcon.icns" "$APP_RES_DIR"
+            cp "$BASE_DIR/resources/desktop-icon/Genus.icns" "$APP_RES_DIR"
+
+            codesign --force --sign "Developer ID Application: Modus Create, Inc." "$BASE_DIR/build/Genus.app"
 
         fi
     fi
+}
+
+function patch_linux_build {
+    echo "Linux bundling not yet implemented."
 }
 
 function checkout_creative_engine_branch {
