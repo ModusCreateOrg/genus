@@ -7,7 +7,9 @@
 Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday season. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux.
 
 ## How to Play
-Genus is a simple puzzle game where the objective is to match colors in 2x2 patterns. Once a 2x2 pattern is found, the blocks will be darken as they are marked for clearing and a bonus timer will appear. If you create additional create additional color matches while the bonus timer is counting down, your score will increase.  Play until you run out of spaces to place new blocks.  
+Genus is a puzzle game where the objective is to match colors in 2x2 patterns. Play until you run out of spaces to place new blocks. 
+
+We really hope you enjoy playing this game as much as we enjoyed making it! ❤️
 
 ![genus-gameplay.gif](./md/img/genus-gameplay.gif)
 
