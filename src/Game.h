@@ -3,7 +3,7 @@
 
 // Used by GLevel super classes to enable/disable parallax scrolling
 #define STATIC_GAME_BACKGROUNDS (1)
-//#undef STATIC_GAME_BACKGROUNDS
+#undef STATIC_GAME_BACKGROUNDS
 
 #define FRAME_RATE_INFO 0
 #undef FRAME_RATE_INFO
@@ -12,7 +12,7 @@
 // #undef DIM_SCREEN
 
 // Enable level skipping via SELECT button
-//#define CHICKEN_MODE
+#define CHICKEN_MODE
 //#undef CHICKEN_MODE
 
 #include <stdio.h>
