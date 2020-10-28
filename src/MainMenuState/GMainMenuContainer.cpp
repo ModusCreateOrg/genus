@@ -13,7 +13,6 @@ GMainMenuContainer::GMainMenuContainer(TInt aX, TInt aY, GMainMenuProcess *aProc
   AddWidget((BWidget &) *new GCreditsWidget());
 }
 
-GMainMenuContainer::~GMainMenuContainer() {}
 
 TBool GMainMenuContainer::OnNavigate(TUint16 bits) {
   GDialogWidget::OnNavigate(bits);

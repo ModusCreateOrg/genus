@@ -17,11 +17,9 @@ extern "C" void app_main() {
   delete gGame;
 }
 
-#ifndef __XTENSA__
 
 int main() {
   app_main();
   return 0;
 }
 
-#endif

@@ -10,11 +10,7 @@
 #include "PauseModal/GPauseModal.h"
 #include "PauseModal/GPauseProcess.h"
 
-#ifdef __XTENSA__
-#define PAUSE_MODAL_Y 50
-#else
 #define PAUSE_MODAL_Y 60
-#endif
 
 #ifdef CHICKEN_MODE
 class GGameState;
@@ -102,8 +98,6 @@ GGameState::GGameState() : BGameEngine(gViewPort) {
 GGameState::~GGameState() {
   gResourceManager.ReleaseBitmapSlot(COMMON_SLOT);
   gResourceManager.ReleaseBitmapSlot(PLAYER_SLOT);
-  delete mFont16;
-  delete mFont8;
 }
 
 /**
@@ -289,7 +283,7 @@ void GGameState::RenderTimer() {
   BBitmap *bm = gDisplay.renderBitmap;
   if (mBonusTimer >= 0) {
 
-    bm->DrawStringShadow(ENull, "Time", mFont16, TIMER_X, TIMER_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+    bm->DrawStringShadow(ENull, "Time", mFont16, TIMER_X, TIMER_Y, (TUint8)COLOR_TEXT, (TUint8)COLOR_TEXT_SHADOW, (TInt16)-1, (TInt)-6);
     // frame
     bm->DrawRect(ENull, TIMER_BORDER.x1, TIMER_BORDER.y1, TIMER_BORDER.x2, TIMER_BORDER.y2, COLOR_TIMER_BORDER);
     // inner
@@ -309,8 +303,8 @@ void GGameState::RenderScore() {
     score_text[i] = '0' + char(v);
   }
   score_text[8] = '\0';
-  bm->DrawStringShadow(ENull, score_text, mFont16, SCORE_X, SCORE_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
-  bm->DrawStringShadow(ENull, gOptions->DifficultyString(), mFont8, SCORE_X+4, SCORE_Y+18, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -1);
+  bm->DrawStringShadow(ENull, score_text, mFont16, SCORE_X, SCORE_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, (TInt)-6);
+  bm->DrawStringShadow(ENull, gOptions->DifficultyString(), mFont8, SCORE_X+4, SCORE_Y+18, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, (TInt)-1);
 }
 
 void GGameState::RenderLevel() {
@@ -339,16 +333,16 @@ void GGameState::RenderLevel() {
       strcat(out, "999");
   }
 
-  bm->DrawStringShadow(ENull, out, mFont16, LEVEL_X, LEVEL_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+  bm->DrawStringShadow(ENull, out, mFont16, LEVEL_X, LEVEL_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, -6);
 }
 
 void GGameState::RenderNext() {
   BBitmap *bm = gDisplay.renderBitmap;
-  bm->DrawStringShadow(ENull, "Next", mFont16, NEXT_X, NEXT_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -6);
+  bm->DrawStringShadow(ENull, "Next", mFont16, NEXT_X, NEXT_Y, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, -6);
 
   // On HARD difficulty draw a "?" over a filled block
   if (gOptions->difficulty == DIFFICULTY_HARD) {
-    bm->DrawStringShadow(ENull, "?", mFont16, NEXT_BLOCK_X + 8, NEXT_BLOCK_Y + 8, COLOR_TEXT, COLOR_TEXT_SHADOW, -1);
+    bm->DrawStringShadow(ENull, "?", mFont16, NEXT_BLOCK_X + 8, NEXT_BLOCK_Y + 8, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT);
   }
 }
 

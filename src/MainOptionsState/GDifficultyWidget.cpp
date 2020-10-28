@@ -29,35 +29,28 @@ TInt GDifficultyWidget::RenderTitle(TInt aX, TInt aY, TBool aActive) {
         STR_RIGHT_ARROW,
         f,
         aX - 16, aY,
-        gWidgetTheme.GetInt(WIDGET_TEXT_BG),
+        (TInt16)gWidgetTheme.GetInt(WIDGET_TEXT_BG),
         COLOR_TEXT_SHADOW,
-        -1);
+        COLOR_TEXT_TRANSPARENT);
   }
 
   gDisplay.renderBitmap->DrawStringShadow(ENull,
       mTitle,
       f,
       aX, aY,
-      gWidgetTheme.GetInt(WIDGET_TITLE_FG),
+      (TInt16)gWidgetTheme.GetInt(WIDGET_TITLE_FG),
       COLOR_TEXT_SHADOW,
-      gWidgetTheme.GetInt(WIDGET_TITLE_BG),
+      (TInt16)gWidgetTheme.GetInt(WIDGET_TITLE_BG),
       -6);
 
-#ifdef __XTENSA__
-  return f->mHeight;
-#else
+
   return f->mHeight + 4;
-#endif
 }
 
 TInt GDifficultyWidget::Render(TInt aX, TInt aY) {
   mSelectedIndex = gOptions->difficulty;
   aX += 19;
-#ifdef __XTENSA__
-  aY -= 16;
-#else
   aY -= 20;
-#endif
 
   const BFont *f = gWidgetTheme.GetFont(WIDGET_TEXT_FONT);
   const TInt  fg    = gWidgetTheme.GetInt(WIDGET_TEXT_FG),
@@ -71,13 +64,13 @@ TInt GDifficultyWidget::Render(TInt aX, TInt aY) {
                                         mOptions[ndx].text,
                                         f,
                                         x + aX, aY,
-                                        fg, COLOR_TEXT_SHADOW, -1, -6);
+                                        fg, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, -6);
     } else {
       gDisplay.renderBitmap->DrawStringShadow(ENull,
                                         mOptions[ndx].text,
                                         f,
                                         x + aX, aY,
-                                        bg, COLOR_TEXT_SHADOW, -1, -6);
+                                        bg, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, -6);
     }
 
     x += f->mWidth * strlen(mOptions[ndx].text) - (14 * (ndx + 1));
