@@ -2,11 +2,6 @@
 #include "Game.h"
 #include "GStage1Countryside.h"
 
-#ifdef __XTENSA__
-#include <math.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#endif
 
 
 GStage1Countryside::GStage1Countryside(GGameState *aGameEngine) {

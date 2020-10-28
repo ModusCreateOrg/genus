@@ -36,7 +36,7 @@ GGameOverProcess::~GGameOverProcess() {
 
 TInt GGameOverProcess::CenterText8(const char *s, TInt aY, TInt aColor, TInt aBackground) {
   TInt x = TInt((320 - (strlen(s) * 8)) / 2);
-  gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont8, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground);
+  gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont8, x, aY, (TUint8)aColor, (TUint8)COLOR_TEXT_SHADOW, (TInt16)aBackground);
   return 8;
 }
 
@@ -44,9 +44,9 @@ TInt GGameOverProcess::CenterText16(const char *s, TInt aY, TInt aColor, TInt aB
   TInt width = aBackground == -1 ? 12 : 16;
   TInt x     = TInt((320 - (strlen(s) * width)) / 2);
   if (aBackground != -1) {
-    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, (TUint8)aColor, (TUint8)COLOR_TEXT_SHADOW, (TInt16)aBackground);
   } else {
-    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground, -4);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, (TUint8)aColor, (TUint8)COLOR_TEXT_SHADOW, (TInt16)aBackground, -4);
   }
   return 16;
 }

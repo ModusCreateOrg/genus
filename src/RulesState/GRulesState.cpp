@@ -39,7 +39,16 @@ public:
   TInt RenderString(const char *aString, TInt aY) {
     TInt width = TInt(strlen(aString) * 12);
     TInt x     = (SCREEN_WIDTH - width) / 2;
-    gDisplay.renderBitmap->DrawStringShadow(ENull, aString, mFont, x, aY, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -4);
+    gDisplay.renderBitmap->DrawStringShadow(
+        ENull,
+        aString,
+        mFont,
+        x,
+        aY,
+        (TInt16)COLOR_TEXT,
+        COLOR_TEXT_SHADOW,
+        (TInt16)COLOR_TEXT_TRANSPARENT,
+        (TInt)-4);
     return 18;
   }
 
@@ -56,10 +65,10 @@ public:
     RenderString((const char*)pagination, 12);
 
     // Left arrow
-    gDisplay.renderBitmap->DrawString(ENull, STR_LEFT_ARROW, mFont, ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mLeftArrowColor, -1);
+    gDisplay.renderBitmap->DrawString(ENull, STR_LEFT_ARROW, mFont, ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mLeftArrowColor, COLOR_TEXT_TRANSPARENT);
 
     // Right arrow
-    gDisplay.renderBitmap->DrawString(ENull, STR_RIGHT_ARROW, mFont, SCREEN_WIDTH - mFont->mWidth - ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mRightArrowColor, -1);
+    gDisplay.renderBitmap->DrawString(ENull, STR_RIGHT_ARROW, mFont, SCREEN_WIDTH - mFont->mWidth - ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mRightArrowColor, COLOR_TEXT_TRANSPARENT);
   }
 
   BFont *mFont;
@@ -105,7 +114,7 @@ protected:
   TInt RenderString(const char *aString, TInt aY) {
     TInt width = TInt(strlen(aString) * 12);
     TInt x     = (SCREEN_WIDTH - width) / 2;
-    gDisplay.renderBitmap->DrawStringShadow(ENull, aString, mFont, x, aY, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -4);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, aString, mFont, x, aY, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, -4);
     return 18;
   }
 

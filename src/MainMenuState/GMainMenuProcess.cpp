@@ -38,8 +38,6 @@ TBool GMainMenuProcess::RunBefore() {
     mNewContainerToRender = -1;
   }
 
-  mContainer->Render(120, 120);
-  mContainer->Run();
   return ETrue;
 }
 
@@ -56,6 +54,10 @@ TBool GMainMenuProcess::RunAfter() {
 //
 //    return EFalse;
 //  }
+
+
+  mContainer->Render(120, 120);
+  mContainer->Run();
 
   if (gControls.WasPressed(BUTTON_MENU)) {
     gGame->SetState(GAME_STATE_MAIN_OPTIONS);

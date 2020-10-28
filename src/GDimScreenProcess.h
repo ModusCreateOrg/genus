@@ -20,18 +20,7 @@ class GDimScreenProcess : public BProcess {
     }
 
     TBool RunAfter() {
-#ifdef __XTENSA__
-      if (gControls.IsPressed(BUTTON_JOY_ANY)) {
-        gDisplay.SetBrightness(MAX(MIN_BRIGHTNESS, MAX_BRIGHTNESS * gOptions->brightness));
-        ResetTimer();
-      } else {
-        mTimer--;
-        if (mTimer < 0) {
-          gDisplay.SetBrightness(MIN_BRIGHTNESS);
-          ResetTimer();
-        }
-      }
-#endif
+
       return ETrue;
     }
 

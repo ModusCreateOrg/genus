@@ -5,9 +5,7 @@
 GMainMenuState::GMainMenuState() : BGameEngine(gViewPort) {
   mFont16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
   mPlayfield = new GMainMenuPlayfield();
-  auto *p = new GMainMenuProcess();
-
-  AddProcess(p);
+  AddProcess(new GMainMenuProcess());
 
   gWidgetTheme.Configure(
       WIDGET_TEXT_BG, COLOR_TEXT_BG,

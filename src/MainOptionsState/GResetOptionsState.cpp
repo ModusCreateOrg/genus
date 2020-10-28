@@ -26,12 +26,13 @@ public:
 
 public:
     TBool RunBefore() {
-      mContainer->Render(30, 20);
-      mContainer->Run();
+
       return ETrue;
     }
 
     TBool RunAfter() {
+      mContainer->Render(30, 20);
+      mContainer->Run();
       if (gControls.WasPressed(BUTTON_MENU | BUTTON_START)) {
         gGame->SetState(GAME_STATE_MAIN_OPTIONS);
         gSoundPlayer.SfxMenuCancel();
@@ -58,21 +59,23 @@ public:
     }
 
 public:
-    void Render() {
+    void Render() OVERRIDE {
       gDisplay.renderBitmap->CopyPixels(mBackground);
 
       const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
-      const char* questionStr = "What would you like to reset?";
+      const char* questionStr = "Choose what to reset";
       const TInt charWidth = f->mWidth - 6;
 
       gDisplay.renderBitmap->DrawStringShadow(ENull,
           questionStr,
           f,
-          (SCREEN_WIDTH - strlen(questionStr) * charWidth) / 2, 80,
+          (TInt)((SCREEN_WIDTH - strlen(questionStr) * charWidth) / 2),
+          80,
           gWidgetTheme.GetInt(WIDGET_TITLE_FG),
           COLOR_TEXT_SHADOW,
-          gWidgetTheme.GetInt(WIDGET_TITLE_BG),
-          -6);
+          COLOR_TEXT_TRANSPARENT,
+          -6
+      );
     }
 
 public:

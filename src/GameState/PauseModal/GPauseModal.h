@@ -6,14 +6,10 @@
 #include "GResumeWidget.h"
 #include "GMusicWidget.h"
 #include "GSfxWidget.h"
-#include "GBrightnessWidget.h"
 
 class GPauseModal : public GDialogWidget {
   public:
     GPauseModal(TInt aX, TInt aY) : GDialogWidget("GAME PAUSED", aX, aY) {
-#ifdef __XTENSA__
-      AddWidget((BWidget &) *new GBrightnessWidget());
-#endif
       AddWidget((BWidget &) *new GMusicWidget());
       AddWidget((BWidget &) *new GSfxWidget());
       AddWidget((BWidget &) *new GSaveWidget());
@@ -22,9 +18,7 @@ class GPauseModal : public GDialogWidget {
       mTimer = 30;
     }
 
-    ~GPauseModal() {}
-
-    TInt Render(TInt aX, TInt aY) {
+    TInt Render(TInt aX, TInt aY) OVERRIDE {
       TInt color = gWidgetTheme.GetInt(WIDGET_TEXT_BG);;
       const BFont *f = gWidgetTheme.GetFont(WIDGET_TITLE_FONT);
       const TInt x = (SCREEN_WIDTH - (strlen(mTitle) * f->mWidth)) / 2;
@@ -44,7 +38,7 @@ class GPauseModal : public GDialogWidget {
         aX + x, aY + 16,
         color,
         COLOR_TEXT_SHADOW,
-        gWidgetTheme.GetInt(WIDGET_TITLE_BG),
+        (TInt16)gWidgetTheme.GetInt(WIDGET_TITLE_BG),
         -6
       );
 

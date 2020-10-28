@@ -20,7 +20,7 @@ GStage4UnderWaterFantasy::GStage4UnderWaterFantasy(GGameState *aGameEngine) {
 //  gResourceManager.LoadBitmap(UNDER_WATER_FANTASY2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
 
 
-  mCanvasBitmap = new BBitmap(336, 256, 8, MEMF_SLOW);
+  mCanvasBitmap = BBitmap::CreateBBitmap(336, 256, 8, MEMF_SLOW);
 //  mViewport = new BViewPort();
 //  TRect viewportRect = ;
 //  mViewport->SetRect(TRect(0, 0, 336, 256));
