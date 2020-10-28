@@ -2,13 +2,6 @@
 #include "GStage2UnderWaterOne.h"
 #include "PrecalcSines.h"
 
-
-#ifdef __XTENSA__
-#include <math.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#endif
-
 //int8_t *xOffset;
 //
 //int8_t *yComp;

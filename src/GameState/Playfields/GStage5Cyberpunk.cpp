@@ -1,13 +1,6 @@
 #include "Game.h"
 #include "GStage5Cyberpunk.h"
 
-#ifdef __XTENSA__
-#include <math.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#endif
-
-
 /*************************************************************************/
 
 class CyberpunkProcess : public BProcess {

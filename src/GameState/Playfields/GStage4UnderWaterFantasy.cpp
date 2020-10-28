@@ -2,16 +2,6 @@
 #include "Game.h"
 #include "PrecalcSines.h"
 
-#ifdef __XTENSA__
-#include <math.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#endif
-
-
-
-
-
 
 GStage4UnderWaterFantasy::GStage4UnderWaterFantasy(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(UNDER_WATER_FANTASY_BMP, BKG_SLOT, IMAGE_ENTIRE);

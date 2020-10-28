@@ -1,8 +1,6 @@
 #include "GSoundSliderWidget.h"
 #include "Game.h"
 
-
-
 GSoundSliderWidget::GSoundSliderWidget(char *aTitle, const TRange *aRange, TInt aForeground, TInt aBackground)
     : BSliderWidget(aTitle, aRange, aForeground, aBackground) {
 }
@@ -39,11 +37,7 @@ TInt GSoundSliderWidget::RenderTitle(TInt aX, TInt aY, TBool aActive) {
       (TInt16)gWidgetTheme.GetInt(WIDGET_TITLE_BG),
       -6);
 
-#ifdef __XTENSA__
-  return f->mHeight;
-#else
   return f->mHeight + 4;
-#endif
 }
 
 TInt GSoundSliderWidget::Render(TInt aX, TInt aY) {
