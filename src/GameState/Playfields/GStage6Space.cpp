@@ -1,16 +1,6 @@
-//
-// Created by Jesus Garcia on 11/5/18.
-//
-
 #include "GStage6Space.h"
 #include "Game.h"
 
-#ifdef __XTENSA__
-#include <math.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#include "esp_task_wdt.h"
-#endif
 
 
 #if 1

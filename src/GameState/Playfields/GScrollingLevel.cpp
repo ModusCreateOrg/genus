@@ -1,7 +1,3 @@
-//
-// Created by Jesus Garcia on 10/28/18.
-//
-
 #include "GScrollingLevel.h"
 
 

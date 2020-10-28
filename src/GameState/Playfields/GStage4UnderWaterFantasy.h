@@ -1,7 +1,3 @@
-//
-// Created by Jesus Garcia on 11/5/18.
-//
-
 #ifndef GENUS_GLEVELUNDERWATERFANTASY_H
 #define GENUS_GLEVELUNDERWATERFANTASY_H
 
@@ -9,11 +5,7 @@
 #include "Playfields/GScrollingLevel.h"
 #include "BViewPort.h"
 
-#ifdef __XTENSA__
-#include <math.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#endif
+
 
 class GStage4UnderWaterFantasy : public GScrollingLevel {
 public:

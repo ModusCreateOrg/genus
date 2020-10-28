@@ -1,7 +1,3 @@
-//
-// Created by Jesus Garcia on 10/23/18.
-//
-
 #ifndef GENUS_GLEVEL2PLAYFIELD_H
 #define GENUS_GLEVEL2PLAYFIELD_H
 

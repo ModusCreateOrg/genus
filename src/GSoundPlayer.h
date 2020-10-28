@@ -1,6 +1,3 @@
-//
-// Created by Jesus Garcia on 10/2/18.
-//
 #ifndef GSOUNDPLAYER_H
 #define GSOUNDPLAYER_H
 

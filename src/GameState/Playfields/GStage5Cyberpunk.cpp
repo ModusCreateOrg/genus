@@ -1,4 +1,3 @@
-// Created by jaygarcia on 10/23/18.
 #include "Game.h"
 #include "GStage5Cyberpunk.h"
 

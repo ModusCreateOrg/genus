@@ -1,7 +1,3 @@
-//
-// Created by Michael Schwartz on 11/16/18.
-//
-
 #include "GDropProcess.h"
 
 const TInt DROP_ANIM_SPEED = 3;

@@ -1,7 +1,3 @@
-//
-// Created by Jesus Garcia on 11/5/18.
-//
-
 #include "GStage3GlacialMountains.h"
 #include "Game.h"
 

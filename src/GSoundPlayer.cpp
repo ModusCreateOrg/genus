@@ -1,7 +1,3 @@
-//
-// Created by Jesus Garcia on 10/2/18.
-//
-
 #include "Game.h"
 #include "GSoundPlayer.h"
 #include "GResources.h"
