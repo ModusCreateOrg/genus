@@ -10,7 +10,7 @@ GStage4UnderWaterFantasy::GStage4UnderWaterFantasy(GGameState *aGameEngine) {
 //  gResourceManager.LoadBitmap(UNDER_WATER_FANTASY2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
 
 
-  mCanvasBitmap = BBitmap::CreateBBitmap(336, 256, 8, MEMF_SLOW);
+  mCanvasBitmap = BBitmap::CreateBBitmap(336, 256, 8, MEMF_FAST);
 //  mViewport = new BViewPort();
 //  TRect viewportRect = ;
 //  mViewport->SetRect(TRect(0, 0, 336, 256));
@@ -25,9 +25,12 @@ GStage4UnderWaterFantasy::GStage4UnderWaterFantasy(GGameState *aGameEngine) {
 
   mXSinIndex = 0;
   mYSinIndex = 0;
+  mAnimSpeedX = .35;
+  mAnimSpeedY = .15;
+  mXTimer = mYTimer = 0;
 
-  mXComp   = (int8_t *)AllocMem(320, MEMF_SLOW);
-  mYOffset = (int8_t *)AllocMem(240, MEMF_SLOW);
+  mXComp   = (TInt8 *)AllocMem(320, MEMF_FAST);
+  mYOffset = (TInt8 *)AllocMem(240, MEMF_FAST);
 }
 
 GStage4UnderWaterFantasy::~GStage4UnderWaterFantasy()  {
@@ -48,8 +51,8 @@ void GStage4UnderWaterFantasy::Animate() {
 //  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
   // This block will setup x and y offsets
-  int workingXSinIndex = mXSinIndex;
-  for (int x = 0; x < 320; x++) {
+  TInt16 workingXSinIndex = mXSinIndex;
+  for (TInt16 x = 0; x < 320; x++) {
 //    xOffset[x] = sin(mFrame * 0.15 + x * 0.06) * 4;
 //    mXComp[x] = sin(mFrame * 0.11 + x * 0.12) * 3.0f;
 
@@ -60,8 +63,8 @@ void GStage4UnderWaterFantasy::Animate() {
     }
   }
 
-  int workingYSinIndex = mYSinIndex;
-  for (int y = 0; y < 240; y++) {
+  TInt16 workingYSinIndex = mYSinIndex;
+  for (TInt16 y = 0; y < 240; y++) {
 //    mYOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 2.0f;
 //    yComp[y] = sin(mFrame * 0.07 + y * 0.15) * 4;
 
@@ -72,15 +75,21 @@ void GStage4UnderWaterFantasy::Animate() {
     }
   }
 
-  mXSinIndex++;
+  mXTimer += mAnimSpeedX;
+  mYTimer += mAnimSpeedY;
+
+//  mXSinIndex++;
+  mXSinIndex = (TInt16)mXTimer;
   if (mXSinIndex > 319) {
-    mXSinIndex = 0;
+    mXTimer = mXSinIndex = 0;
   }
 
-  mYSinIndex++;
+//  mYSinIndex++;
+  mYSinIndex = (TInt16)mYTimer;
   if (mYSinIndex > 239) {
-    mYSinIndex = 0;
+    mYTimer = mYSinIndex = 0;
   }
+
 
 }
 

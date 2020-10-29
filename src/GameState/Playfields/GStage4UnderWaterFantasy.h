@@ -27,11 +27,14 @@ public:
   void DrawScrolledBackground(BBitmap *aBitmap, TFloat aOffsetX, TUint aVerticalOffset, TBool aDrawTransparent, BBitmap *aTargetBitmap);
 
 
-  int8_t *mYOffset;
-  int8_t *mXComp;
-  int mYSinIndex;
-  int mXSinIndex;
-
+  TInt8 *mYOffset;
+  TInt8 *mXComp;
+  TInt16 mYSinIndex;
+  TInt16 mXSinIndex;
+  TFloat mXTimer;
+  TFloat mYTimer;
+  TFloat mAnimSpeedX;
+  TFloat mAnimSpeedY;
   TUint8 mTextColor;
 };
 
