@@ -15,7 +15,7 @@ CREATIVE_ENGINE_PATH = $(ROOT_DIR)/creative-engine
 CREATIVE_ENGINE_SOURCE_DIR = $(CREATIVE_ENGINE_PATH)/src
 
 
-TARGET = $(BUILD_DIR)/modite-adventure.dge
+TARGET = $(BUILD_DIR)/genus.dge
 
 SOURCES = $(shell find ${GAME_SOURCE_DIR} -type f -name '*.cpp')
 SOURCES += $(shell find $(CREATIVE_ENGINE_SOURCE_DIR) -type f -name '*.c*')
@@ -39,32 +39,23 @@ INCLUDE = -I $(CREATIVE_ENGINE_SOURCE_DIR) \
           -I $(CREATIVE_ENGINE_SOURCE_DIR)/Display \
           -I $(CREATIVE_ENGINE_SOURCE_DIR)/Display/LDKDisplay \
           -I $(CREATIVE_ENGINE_SOURCE_DIR)/Controls \
-          -I $(CREATIVE_ENGINE_SOURCE_DIR)/Controls/DesktopControls \
           -I $(CREATIVE_ENGINE_SOURCE_DIR)/Controls/LDKControls \
           -I $(CREATIVE_ENGINE_SOURCE_DIR)/Widgets \
           -I $(CREATIVE_ENGINE_SOURCE_DIR)/Types \
           -I $(CREATIVE_ENGINE_SOURCE_DIR)/libxmp \
           -I $(CREATIVE_ENGINE_SOURCE_DIR)/libxmp/loaders \
-          -I $(GAME_SOURCE_DIR)/CreditsState \
-          -I $(GAME_SOURCE_DIR)/GameMenuState \
-          -I $(GAME_SOURCE_DIR)/MainOptionsState \
-          -I $(GAME_SOURCE_DIR)/SplashState \
-          -I $(GAME_SOURCE_DIR)/MainMenuState \
+          -I $(GAME_SOURCE_DIR)/ \
           -I $(GAME_SOURCE_DIR)/GameState \
-          -I $(GAME_SOURCE_DIR)/GameState/enemies \
-          -I $(GAME_SOURCE_DIR)/GameState/environment \
-          -I $(GAME_SOURCE_DIR)/GameState/inventory \
-          -I $(GAME_SOURCE_DIR)/GameState/final-boss \
-          -I $(GAME_SOURCE_DIR)/GameState/mid-bosses \
-          -I $(GAME_SOURCE_DIR)/GameState/wizard \
-          -I $(GAME_SOURCE_DIR)/GameState/player \
-          -I $(GAME_SOURCE_DIR)/GameState/status \
-          -I $(GAME_SOURCE_DIR)/ResetState \
-          -I $(GAME_SOURCE_DIR)/MainOptionsState \
-          -I $(GAME_SOURCE_DIR)/LoadGameState \
-          -I $(GAME_SOURCE_DIR)/DebugMenuState \
-          -I $(GAME_SOURCE_DIR)/VictoryState \
-          -I $(GAME_SOURCE_DIR)/
+          -I ${GAME_SOURCE_DIR}/GameState \
+          -I ${GAME_SOURCE_DIR}/GameState/Playfields \
+          -I ${GAME_SOURCE_DIR}/GameState/Powerups \
+          -I ${GAME_SOURCE_DIR}/GameState/PauseModal \
+          -I ${GAME_SOURCE_DIR}/GameOverState \
+          -I ${GAME_SOURCE_DIR}/HighScoresState \
+          -I ${GAME_SOURCE_DIR}/MainMenuState \
+          -I ${GAME_SOURCE_DIR}/MainOptionsState \
+          -I ${GAME_SOURCE_DIR}/SplashState \
+          -I ${GAME_SOURCE_DIR}/RulesState
 
 
 
