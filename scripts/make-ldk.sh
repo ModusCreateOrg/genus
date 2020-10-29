@@ -59,7 +59,7 @@ if [[ ${VERBOSE} -eq 1 ]]; then
   md5=`md5sum build/ldk/genus.dge | awk '{print $1}'`
   md5=${md5: -6}
 else
-  make -j `nproc` ipk >/dev/null 2>&1
+  make -j `nproc` ipk #>/dev/null 2>&1
   md5=`md5sum build/ldk/genus.dge | awk '{print $1}'`
   md5=${md5: -6}
 fi
