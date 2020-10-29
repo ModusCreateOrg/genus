@@ -1,20 +1,10 @@
-//
-// Created by Jesus Garcia on 11/5/18.
-//
-
 #include "GStage6Space.h"
 #include "Game.h"
 
-#ifdef __XTENSA__
-#include <math.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#include "esp_task_wdt.h"
-#endif
 
 
 #if 1
-const TFloat VELOCITY = 4.5;
+const TFloat VELOCITY = 1.5;
 
 GStage6Space::GStage6Space(GGameState *aGameEngine) {
   mGameEngine = aGameEngine;
@@ -81,8 +71,8 @@ void GStage6Space::Render() {
     ENull,
     mBackground1,
     rect,
-    gDisplay.renderBitmap->Width() - mBackground1->Width(),
-    gDisplay.renderBitmap->Height() - mBackground1->Height()
+    gDisplay.renderBitmap->Width() - mBackground1->Width() + 1,
+    gDisplay.renderBitmap->Height() - mBackground1->Height() + 1
   );
 
 

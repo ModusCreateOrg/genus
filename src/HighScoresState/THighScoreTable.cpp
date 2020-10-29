@@ -137,10 +137,10 @@ TInt THighScoreTable::Render(TInt aDifficulty, TInt aCount, TInt aX, TInt aY, BF
     strcat(buf, sbuf);
 
     if (checkPlayerHighScore && *t[i].score <= *lastScore[gOptions->difficulty]) {
-      bm->DrawStringShadow(gViewPort, buf, aFont, x, y, COLOR_MENU_TITLE, aShadowColor, -1, -4);
+      bm->DrawStringShadow(gViewPort, buf, aFont, x, y, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, -4);
       checkPlayerHighScore = EFalse;
     } else {
-      bm->DrawStringShadow(gViewPort, buf, aFont, x, y, aColor, aShadowColor, -1, -4);
+      bm->DrawStringShadow(gViewPort, buf, aFont, x, y, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, -4);
     }
 
     y += aFont->mHeight;

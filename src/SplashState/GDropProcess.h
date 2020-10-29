@@ -17,7 +17,7 @@ protected:
   TBool RunAfter();
 
 protected:
-  const TFloat GRAVITY = .08f;
+  const TFloat GRAVITY = .04f;
   BAnimSprite *mSprite;
   GSplashState *mSplashState;
   TInt16 mTimer;

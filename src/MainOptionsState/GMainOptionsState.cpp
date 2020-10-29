@@ -5,20 +5,12 @@
 #include "GResetWidget.h"
 #include "GExitWidget.h"
 
-#ifdef __XTENSA__
-#include "GBrightnessWidget.h"
-#define WIDGET_CONTAINER_Y 50
-#else
 #define WIDGET_CONTAINER_Y 60
-#endif
 
 class OptionsContainer : public GDialogWidget {
 public:
     OptionsContainer(TInt aX, TInt aY) : GDialogWidget("Options", aX, aY) {
       AddWidget((BWidget &) *new GDifficultyWidget());
-#ifdef __XTENSA__
-      AddWidget((BWidget &) *new GBrightnessWidget());
-#endif
       AddWidget((BWidget &) *new GMusicWidget());
       AddWidget((BWidget &) *new GSfxWidget());
       AddWidget((BWidget &) *new GResetWidget());
@@ -38,12 +30,13 @@ public:
 
 public:
     TBool RunBefore() {
-      mContainer->Render(30, 20);
-      mContainer->Run();
+
       return ETrue;
     }
 
     TBool RunAfter() {
+      mContainer->Render(30, 20);
+      mContainer->Run();
       if (gControls.WasPressed(BUTTON_MENU | BUTTON_START)) {
         gGame->SetState(GAME_STATE_MAIN_MENU);
         gSoundPlayer.SfxMenuCancel();

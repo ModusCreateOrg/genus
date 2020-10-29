@@ -4,7 +4,7 @@
 
 
 
-GResetHighScoresWidget::GResetHighScoresWidget() : BButtonWidget("HIGHSCORES", COLOR_TEXT, COLOR_TEXT_BG) {}
+GResetHighScoresWidget::GResetHighScoresWidget() : BButtonWidget("HIGH SCORES", COLOR_TEXT, COLOR_TEXT_BG) {}
 
 GResetHighScoresWidget::~GResetHighScoresWidget() {}
 
@@ -16,18 +16,18 @@ TInt GResetHighScoresWidget::Render(TInt aX, TInt aY) {
         STR_RIGHT_ARROW,
         f,
         aX - 16, aY,
-        gWidgetTheme.GetInt(WIDGET_TEXT_BG),
+        (TInt16)gWidgetTheme.GetInt(WIDGET_TEXT_BG),
         COLOR_TEXT_SHADOW,
-        -1);
+        COLOR_TEXT_TRANSPARENT);
   }
 
   gDisplay.renderBitmap->DrawStringShadow(ENull,
       mText,
       f,
       aX, aY,
-      gWidgetTheme.GetInt(WIDGET_TITLE_FG),
+      (TInt16)gWidgetTheme.GetInt(WIDGET_TITLE_FG),
       COLOR_TEXT_SHADOW,
-      gWidgetTheme.GetInt(WIDGET_TITLE_BG),
+      COLOR_TEXT_TRANSPARENT,
       -6);
 
   return f->mHeight << 1;

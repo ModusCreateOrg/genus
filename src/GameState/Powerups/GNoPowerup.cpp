@@ -96,10 +96,18 @@ TBool GNoPowerup::MoveState() {
     return ETrue;
   }
 
-  if (gControls.WasPressed(BUTTONA)) {
+#ifdef __DINGUX__
+  TUint16 rotateLeftPress = BUTTONY | BUTTONL;
+  TUint16 dropPress = BUTTONB | BUTTONX;
+#else
+  TUint16 rotateLeftPress = BUTTONX | BUTTONL;
+  TUint16 dropPress = BUTTONB | BUTTONY;
+#endif
+
+  if (gControls.WasPressed(BUTTONA | BUTTONR)) {
     RotateRight();
-//  } else if (gControls.WasPressed(BUTTONB)) {
-//    RotateLeft();
+  } else if (gControls.WasPressed(rotateLeftPress)) {
+    RotateLeft();
   } else if (TimedControl(JOYLEFT)) {
     MoveLeft();
   } else if (TimedControl(JOYRIGHT)) {
@@ -110,24 +118,27 @@ TBool GNoPowerup::MoveState() {
     MoveDown();
   }
 
-  if (gControls.WasPressed(BUTTONB)) {
-    if (CanDrop()) {
-      if (Drop()) {
-        // combined!
-        // start bonus timer, if not already started
-        gSoundPlayer.SfxCombo();
-        mGameState->StartBonusTimer();
-        mState = STATE_TIMER;
-        return ETrue;
+
+  if (gOptions->gameProgress.playerType == PLAYER_NO_POWERUP) {
+    if (gControls.WasPressed(dropPress)) {
+      if (CanDrop()) {
+        if (Drop()) {
+          // combined!
+          // start bonus timer, if not already started
+          gSoundPlayer.SfxCombo();
+          mGameState->StartBonusTimer();
+          mState = STATE_TIMER;
+          return ETrue;
+        } else {
+          gSoundPlayer.SfxGoodDrop();
+        }
       } else {
-        gSoundPlayer.SfxGoodDrop();
+        // can't drop sound:
+        gSoundPlayer.SfxBadDrop();
       }
-    } else {
-      // can't drop sound:
-      gSoundPlayer.SfxBadDrop();
     }
+    Blink();
   }
-  Blink();
   return ETrue;
 }
 
@@ -162,19 +173,21 @@ TBool GNoPowerup::TimerState() {
     MoveDown();
   }
 
-  if (gControls.WasPressed(BUTTONB)) {
-    if (CanDrop()) {
-      gSoundPlayer.SfxGoodDrop();
-      if (Drop()) {
-        gSoundPlayer.SfxCombo();
+  if (gOptions->gameProgress.playerType == PLAYER_NO_POWERUP) {
+    if (gControls.WasPressed(BUTTONB)) {
+      if (CanDrop()) {
+        gSoundPlayer.SfxGoodDrop();
+        if (Drop()) {
+          gSoundPlayer.SfxCombo();
+        }
+      } else {
+        // can't drop sound:
+        gSoundPlayer.SfxBadDrop();
       }
-    } else {
-      // can't drop sound:
-      gSoundPlayer.SfxBadDrop();
     }
-  }
 
-  Blink();
+    Blink();
+  }
   return ETrue;
 }
 
@@ -205,7 +218,7 @@ TBool GNoPowerup::RemoveState() {
         TBCD add;
         add.FromUint32(mRemoveScore);
         mGameState->mScore.Add(add);
-        mRemoveScore++;
+        mRemoveScore += 200;
         // remove the block - start explosion
         mGameBoard->ExplodeBlock(mRemoveRow, mRemoveCol);
         gControls.Rumble(0.1, 100);

@@ -13,7 +13,6 @@ GGameOverState::GGameOverState() : BGameEngine(gViewPort) {
   AddProcess(new GGameOverProcess());
   AddProcess(new GGameOverHighScoreAnimationProcess(this));
 
-//  gSoundPlayer.PlayMusic(GAMEOVER_XM);
 }
 
 GGameOverState::~GGameOverState() {

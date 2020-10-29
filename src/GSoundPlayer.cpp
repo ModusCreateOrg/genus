@@ -1,7 +1,3 @@
-//
-// Created by Jesus Garcia on 10/2/18.
-//
-
 #include "Game.h"
 #include "GSoundPlayer.h"
 #include "GResources.h"
@@ -37,138 +33,174 @@ static const TUint16 allSongs[] = {
   GLACIAL_MOUNTAINS_XM,
   GAMEOVER_XM,
   UNDERWATERFANTASY_XM,
-  GAMEOVER_XM,
   ENTERCREDITS_XM
 };
 
+static TUint16 FindSfxNumber(TUint16 aSfxFile) {
+
+  for (size_t i = 0; i < sizeof(effectsList); i++) {
+    if (aSfxFile == effectsList[i]) {
+      return (TUint16) i; // Should not go above UINT16_MAX
+    }
+  }
+  printf("WARNING :: Could not find SFX for ID %i\n", aSfxFile);
+
+
+  return UINT16_MAX;
+}
+
+
+GSoundPlayer::~GSoundPlayer() {
+  // Release songs memory
+  FreeMem(mSongSlots);
+}
 
 void GSoundPlayer::Init(TUint8 aNumberFxChannels) {
   mMaxSongs = sizeof(allSongs) / sizeof(TUint16);
   mMaxEffects = sizeof(effectsList) / sizeof(TUint16);
 
-  BSoundPlayer::Init(aNumberFxChannels, mMaxEffects);
+  soundEngine.InitAudioEngine(aNumberFxChannels, mMaxEffects);
+
+//  SDL_ClearError();
+  LoadEffects();
+//  SDL_ClearError();
+
+
 
   mSongSlots = (SongSlot *)AllocMem(sizeof(SongSlot) * mMaxSongs, MEMF_SLOW);
 
-  for (TUint8 i = 0; i < mMaxSongs; i++) {
-    auto *slot = (SongSlot *)AllocMem(sizeof(SongSlot), MEMF_SLOW);
-
-    slot->mResourceNumber = allSongs[i];
-    slot->mSlotNumber = SONG0_SLOT + i;
-
-    gResourceManager.LoadRaw(allSongs[i], slot->mSlotNumber);
-    slot->mRaw = gResourceManager.GetRaw(slot->mSlotNumber);
-
-    mSongSlots[i] = *slot;
-    FreeMem(slot);
-  }
-
-
+//  for (TUint8 i = 0; i < mMaxSongs; i++) {
+//    auto *slot = (SongSlot *)AllocMem(sizeof(SongSlot), MEMF_SLOW);
+//
+//    slot->mResourceNumber = allSongs[i];
+//    slot->mSlotNumber = SONG0_SLOT + i;
+//
+//    gResourceManager.LoadRaw(allSongs[i], slot->mSlotNumber);
+//    slot->mRaw = gResourceManager.GetRaw(slot->mSlotNumber);
+//
+//    mSongSlots[i] = *slot;
+//    FreeMem(slot);
+//  }
   PlayMusic(EMPTYSONG_XM);
-  SetMusicVolume(gOptions->music);
-  SetEffectsVolume(gOptions->sfx);
-  MuteMusic(gOptions->muted);
+
+
+  soundEngine.SetMusicVolume(gOptions->music);
+  soundEngine.SetEffectsVolume(gOptions->sfx);
+  soundEngine.MuteMusic(gOptions->muted);
 }
 
 TBool GSoundPlayer::PlayMusic(TInt16 aResourceId) {
-  TBool music = BSoundPlayer::PlayMusic(aResourceId);
+  //  aResourceId = EMPTYSONG_XM;
 //  printf("%s %i\n", __PRETTY_FUNCTION__, aResourceId);
-  // BSoundPlayer::PlayMusic un-mutes the music
-  // We have to re-mute it in case of mute == true
-  MuteMusic(gOptions->muted);
+
+  BRaw *songToLoad = FindRawSongFileById(aResourceId);
+
+  TBool music = soundEngine.PlayMusic(songToLoad, aResourceId);
+//   BSoundEngine::PlayMusic un-mutes the music
+// We have to re-mute it in case of mute == true
+
+  soundEngine.SetMusicVolume(gOptions->music);
+  soundEngine.SetEffectsVolume(gOptions->sfx);
+  soundEngine.MuteMusic(gOptions->muted);
 
   return music;
 }
 
-TBool GSoundPlayer::LoadSongSlot(TInt16 aResourceId) {
+
+BRaw *GSoundPlayer::FindRawSongFileById(TInt16 aResourceId) {
 
   for (TUint8 i = 0; i < mMaxSongs; i++) {
-    if (mSongSlots[i].mResourceNumber == aResourceId) {
-      return LoadSong(mSongSlots[i].mRaw);
+    if (allSongs[i] == aResourceId) {
+      if (gResourceManager.GetRaw(SONG0_SLOT)) {
+        gResourceManager.ReleaseRawSlot(SONG0_SLOT);
+      }
+      gResourceManager.LoadRaw(allSongs[i], SONG0_SLOT);
+      return gResourceManager.GetRaw(SONG0_SLOT);;
     }
   }
 
   printf("WARNING :: Could not find song %i\n", aResourceId);
 
-  return false;
+  return ENull;
 }
 
 
 TBool GSoundPlayer::LoadEffects() {
-  for (TUint8 i = 0; i < mMaxEffects; i++) {
-    LoadEffect(effectsList[i], i);
+  for (TUint8 index = 0; index < mMaxEffects; index++) {
+    soundEngine.LoadEffect(index, effectsList[index], SFX1_SLOT + index);
+//    return ETrue;
   }
-
-  SetMusicVolume(gOptions->music);
-  SetEffectsVolume(gOptions->sfx);
   return ETrue;
 }
 
 
-
-BRaw *GSoundPlayer::LoadEffectResource(TUint16 aResourceId, TInt16 aSlotNumber) {
-  gResourceManager.LoadRaw(aResourceId, SFX1_SLOT + aSlotNumber);
-  return gResourceManager.GetRaw(SFX1_SLOT + aSlotNumber);
+void  GSoundPlayer::MuteMusic(TBool aMuted) {
+  return soundEngine.MuteMusic(aMuted);
 }
 
+
+
+void GSoundPlayer::TriggerSfx(TUint16 aSfxNumber, TInt8 aChannel) {
+  soundEngine.PlaySfx(FindSfxNumber(aSfxNumber), aChannel);
+}
 
 
 void GSoundPlayer::SfxGoodDrop() {
-  PlaySfx(/*SFX_GOOD_DROP_BLOCK_WAV*/0);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_GOOD_DROP_BLOCK_WAV), 1);
 }
 
 void GSoundPlayer::SfxRotateRight() {
-  PlaySfx(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/4);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_ROTATE_BLOCK_RIGHT_WAV), 1);
 }
 
 void GSoundPlayer::SfxRotateLeft() {
-  PlaySfx(/*SFX_ROTATE_BLOCK_LEFT_WAV*/3);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_ROTATE_BLOCK_LEFT_WAV), 1);
 }
 
 void GSoundPlayer::SfxBadDrop() {
-  gSoundPlayer.PlaySfx(/*SFX_BAD_DROP_BLOCK_WAV*/1);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_BAD_DROP_BLOCK_WAV), 1);
 }
 
 void GSoundPlayer::SfxCombo() {
-  PlaySfx(/*SFX_SCORE_COMBO_WAV*/5);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_SCORE_COMBO_WAV), 1);
 }
 
 void GSoundPlayer::SfxMoveBlock() {
-  PlaySfx(/*SFX_GOOD_DROP_BLOCK_WAV*/2);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_MOVE_BLOCK_WAV), 1);
 }
 
 void GSoundPlayer::SfxExplodeBlock() {
-  PlaySfx(/*SFX_EXPLODE_BLOCK_WAV*/7);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_EXPLODE_BLOCK_WAV), 3);
 }
 
 void GSoundPlayer::SfxOptionSelect() {
-  PlaySfx(/*SFX_OPTION_SELECT_WAV*/6);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_OPTION_SELECT_WAV), 1);
 }
 
 void GSoundPlayer::SfxMenuNavUp() {
-  PlaySfx(/*SFX_ROTATE_BLOCK_LEFT_WAV*/3);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_ROTATE_BLOCK_LEFT_WAV), 2);
 }
 
 void GSoundPlayer::SfxMenuNavDown() {
-  PlaySfx(/*SFX_ROTATE_BLOCK_RIGHT_WAV*/4);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_ROTATE_BLOCK_RIGHT_WAV), 2);
 }
 
 void GSoundPlayer::SfxMenuAccept() {
-  gSoundPlayer.PlaySfx(/*SFX_BAD_DROP_BLOCK_WAV*/1);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_GOOD_DROP_BLOCK_WAV), 1);
 }
 
 void GSoundPlayer::SfxMenuCancel() {
-  gSoundPlayer.PlaySfx(/*SFX_GOOD_DROP_BLOCK_WAV*/0);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_GOOD_DROP_BLOCK_WAV), 1);
 }
 
 void GSoundPlayer::SfxNextLevel() {
-  gSoundPlayer.PlaySfx(/*SFX_NEXT_LEVEL*/8);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_NEXT_LEVEL_WAV), 3);
 }
 
 void GSoundPlayer::SfxNextStage() {
-  gSoundPlayer.PlaySfx(/*SFX_NEXT_LEVEL*/9);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_NEXT_LEVEL_WAV), 2);
 }
 
 void GSoundPlayer::SfxSaveGame() {
-  gSoundPlayer.PlaySfx(/*SFX_SAVE_GAME*/10);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_SAVE_GAME_WAV), 1);
 }

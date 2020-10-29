@@ -3,17 +3,6 @@
 #include "PrecalcSines.h"
 
 
-#ifdef __XTENSA__
-#include <math.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#endif
-
-//int8_t *xOffset;
-//
-//int8_t *yComp;
-
-
 GStage2UnderWaterOne::GStage2UnderWaterOne(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(UNDER_WATER_ONE_BMP, BKG_SLOT, IMAGE_ENTIRE);
   mGameEngine = aGameEngine;
@@ -22,10 +11,13 @@ GStage2UnderWaterOne::GStage2UnderWaterOne(GGameState *aGameEngine) {
   mYSinIndex = 0;
   mXSinIndex = 0;
 
-//  xOffset = (int8_t *)AllocMem(320, MEMF_SLOW);
-  mXComp   = (int8_t *)AllocMem(320, MEMF_SLOW);
-  mYOffset = (int8_t *)AllocMem(240, MEMF_SLOW);
-//  yComp   = (int8_t *)AllocMem(240, MEMF_SLOW);
+//  xOffset = (TInt8 *)AllocMem(320, MEMF_SLOW);
+//  yComp   = (TInt8 *)AllocMem(240, MEMF_SLOW);
+  mAnimSpeedX = .5;
+  mAnimSpeedY = .25;
+  mXTimer = mYTimer = 0;
+  mXComp   = (TInt8 *)AllocMem(320, MEMF_FAST);
+  mYOffset = (TInt8 *)AllocMem(240, MEMF_FAST);
 
 }
 
@@ -44,8 +36,8 @@ void GStage2UnderWaterOne::Animate() {
 //  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
 
   // This block will setup x and y offsets
-  int workingXSinIndex = mXSinIndex;
-  for (int x = 0; x < 320; x++) {
+  TInt16 workingXSinIndex = mXSinIndex;
+  for (TInt16 x = 0; x < 320; x++) {
 //    xOffset[x] = sin(mFrame * 0.15 + x * 0.06) * 4;
 //    mXComp[x] = sin(mFrame * 0.11 + x * 0.12) * 3.0f;
 
@@ -56,8 +48,8 @@ void GStage2UnderWaterOne::Animate() {
     }
   }
 
-  int workingYSinIndex = mYSinIndex;
-  for (int y = 0; y < 240; y++) {
+  TInt16 workingYSinIndex = mYSinIndex;
+  for (TInt16 y = 0; y < 240; y++) {
 //    mYOffset[y] = sin(mFrame * 0.1 + y * 0.05) * 2.0f;
 //    yComp[y] = sin(mFrame * 0.07 + y * 0.15) * 4;
 
@@ -68,27 +60,32 @@ void GStage2UnderWaterOne::Animate() {
     }
   }
 
-  mXSinIndex++;
+  mXTimer += mAnimSpeedX;
+  mYTimer += mAnimSpeedY;
+
+//  mXSinIndex++;
+  mXSinIndex = (TInt16)mXTimer;
   if (mXSinIndex > 319) {
-    mXSinIndex = 0;
+    mXTimer = mXSinIndex = 0;
   }
 
-  mYSinIndex++;
+//  mYSinIndex++;
+  mYSinIndex = (TInt16)mYTimer;
   if (mYSinIndex > 239) {
-    mYSinIndex = 0;
+    mYTimer = mYSinIndex = 0;
   }
 
 }
 
 void GStage2UnderWaterOne::Render() {
   TUint8 *src = mBackground->GetPixels(),
-          *dest = gDisplay.renderBitmap->GetPixels();
+         *dest = gDisplay.renderBitmap->GetPixels();
 
   int srcIndex = 8,
       destIndex = 0;
 
   for (TUint8 y = 0; y < 240; y++) {
-    for (int x = 0; x < 320; x++) {
+    for (TInt16 x = 0; x < 320; x++) {
       dest[destIndex] = src[srcIndex + mYOffset[y] + mXComp[x]];
 
       srcIndex++;

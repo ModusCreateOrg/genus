@@ -1,0 +1,10 @@
+Package: Genus
+Version:
+Description: Genus is awesome
+Section: games
+Priority: optional
+Maintainer: Modus Create Inc.
+Architecture: mipsel
+Homepage: https://moduscreate.com
+Depends:
+Source:

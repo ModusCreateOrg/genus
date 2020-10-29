@@ -36,7 +36,16 @@ GGameOverProcess::~GGameOverProcess() {
 
 TInt GGameOverProcess::CenterText8(const char *s, TInt aY, TInt aColor, TInt aBackground) {
   TInt x = TInt((320 - (strlen(s) * 8)) / 2);
-  gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont8, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground);
+  gDisplay.renderBitmap->DrawStringShadow(
+      ENull,
+      s,
+      mFont8,
+      x,
+      aY,
+      (TUint8)aColor,
+      (TUint8)COLOR_TEXT_SHADOW,
+      COLOR_TEXT_TRANSPARENT
+  );
   return 8;
 }
 
@@ -44,9 +53,9 @@ TInt GGameOverProcess::CenterText16(const char *s, TInt aY, TInt aColor, TInt aB
   TInt width = aBackground == -1 ? 12 : 16;
   TInt x     = TInt((320 - (strlen(s) * width)) / 2);
   if (aBackground != -1) {
-    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT);
   } else {
-    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground, -4);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, -4);
   }
   return 16;
 }
@@ -71,7 +80,7 @@ TBool GGameOverProcess::InitialsState() {
   y += CenterText16("CONGRATULATIONS!", y);
   y += CenterText16("New High Score", y) + 8;
   y += CenterText16("Enter your initials:", y) + 24;
-  y += CenterText16(mInitials, y, COLOR_TEXT_BG, COLOR_TEXT);
+  y += CenterText16(mInitials, y, COLOR_TEXT, COLOR_TEXT_SHADOW);
   gDisplay.renderBitmap->DrawFastHLine(ENull, INITIALS_X + mInitialsPos * 16, y + 4, 16, COLOR_TEXT);
   y += 40;
   y += CenterText8("Up/Down to change letters", y) + 2;
@@ -121,6 +130,11 @@ TBool GGameOverProcess::InitialsState() {
 }
 
 TBool GGameOverProcess::RunBefore() {
+
+  return ETrue;
+}
+
+TBool GGameOverProcess::RunAfter() {
   switch (mState) {
     case STATE_INITIALS:
       return InitialsState();
@@ -129,9 +143,5 @@ TBool GGameOverProcess::RunBefore() {
     default:
       Panic("GGameOverProcess: invalid mState: %d\n", mState);
   }
-  return ETrue;
-}
-
-TBool GGameOverProcess::RunAfter() {
   return ETrue;
 }

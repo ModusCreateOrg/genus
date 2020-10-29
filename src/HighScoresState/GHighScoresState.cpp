@@ -21,7 +21,16 @@ public:
 public:
   TInt CenterText8(const char *s, TInt aY, TInt aColor = COLOR_TEXT, TInt aBackground = -1) {
     TInt x = TInt((320 - (strlen(s) * 8)) / 2);
-    gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont8, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground);
+    gDisplay.renderBitmap->DrawStringShadow(
+        ENull,
+        s,
+        mFont8,
+        x,
+        aY,
+        aColor,
+        COLOR_TEXT_SHADOW,
+        (TInt16)aBackground
+    );
     return 8;
   }
 
@@ -29,9 +38,9 @@ public:
     TInt width = aBackground == -1 ? 12 : 16;
     TInt x     = TInt((320 - (strlen(s) * width)) / 2);
     if (aBackground != -1) {
-      gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground);
+      gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, (TInt16)aBackground);
     } else {
-      gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, aBackground, -4);
+      gDisplay.renderBitmap->DrawStringShadow(ENull, s, mFont16, x, aY, aColor, COLOR_TEXT_SHADOW, (TInt16)aBackground, -4);
     }
     return 16;
   }
