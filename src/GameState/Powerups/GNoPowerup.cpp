@@ -96,10 +96,18 @@ TBool GNoPowerup::MoveState() {
     return ETrue;
   }
 
-  if (gControls.WasPressed(BUTTONA)) {
+#ifdef __DINGUX__
+  TUint16 rotateLeftPress = BUTTONY | BUTTONL;
+  TUint16 dropPress = BUTTONB | BUTTONX;
+#else
+  TUint16 rotateLeftPress = BUTTONX | BUTTONL;
+  TUint16 dropPress = BUTTONB | BUTTONY;
+#endif
+
+  if (gControls.WasPressed(BUTTONA | BUTTONR)) {
     RotateRight();
-//  } else if (gControls.WasPressed(BUTTONB)) {
-//    RotateLeft();
+  } else if (gControls.WasPressed(rotateLeftPress)) {
+    RotateLeft();
   } else if (TimedControl(JOYLEFT)) {
     MoveLeft();
   } else if (TimedControl(JOYRIGHT)) {
@@ -110,7 +118,8 @@ TBool GNoPowerup::MoveState() {
     MoveDown();
   }
 
-  if (gControls.WasPressed(BUTTONB)) {
+
+  if (gControls.WasPressed(dropPress)) {
     if (CanDrop()) {
       if (Drop()) {
         // combined!

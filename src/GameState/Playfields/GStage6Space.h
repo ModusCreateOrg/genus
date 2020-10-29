@@ -1,7 +1,3 @@
-//
-// Created by Jesus Garcia on 11/5/18.
-//
-
 #ifndef GENUS_GLEVELSPACE_H
 #define GENUS_GLEVELSPACE_H
 

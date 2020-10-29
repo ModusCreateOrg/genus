@@ -1,20 +1,11 @@
 #include "GGame.h"
 
-#ifdef __XTENSA__
-#ifdef DIM_SCREEN
-#include "GDimScreenProcess.h"
-#endif
-#endif
-
+#include "Game.h"
 static TUint32 start;
 
 GGame::GGame() {
   // Load Game Options
   gOptions = new TOptions();
-
-#ifdef __XTENSA__
-  gDisplay.SetBrightness(MAX(MIN_BRIGHTNESS, MAX_BRIGHTNESS * gOptions->brightness));
-#endif
 
   gSoundPlayer.Init(TOTAL_SFX_CHANNELS);
 
@@ -27,6 +18,14 @@ GGame::GGame() {
   gResourceManager.CacheBitmapSlot(FONT_8x8_SLOT);
   gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
   gResourceManager.CacheBitmapSlot(FONT_16x16_SLOT);
+//
+//  gResourceManager.LoadBitmap(CHARSET_8X8_BMP, FONT_8x8_SLOT, IMAGE_8x8);
+//  gResourceManager.CacheBitmapSlot(FONT_8x8_SLOT);
+//  gFont8x8 = new BFont(gResourceManager.GetBitmap(FONT_8x8_SLOT), FONT_8x8);
+//  gResourceManager.LoadBitmap(CHARSET_16X16_BMP, FONT_16x16_SLOT, IMAGE_16x16);
+//  gResourceManager.CacheBitmapSlot(FONT_16x16_SLOT);
+//  gFont16x16 = new BFont(gResourceManager.GetBitmap(FONT_16x16_SLOT), FONT_16x16);
+
 
   gViewPort = new BViewPort();
   gViewPort->Offset(0, 0);
@@ -105,11 +104,6 @@ void GGame::Run() {
       gControls.dKeys = 0;
       mState = mNextState;
 
-#ifdef __XTENSA__
-#ifdef DIM_SCREEN
-      gGameEngine->AddProcess(new GDimScreenProcess());
-#endif
-#endif
     }
     gGameEngine->GameLoop();
     gDisplay.Update();

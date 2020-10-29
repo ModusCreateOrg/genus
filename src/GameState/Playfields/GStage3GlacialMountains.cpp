@@ -1,15 +1,5 @@
-//
-// Created by Jesus Garcia on 11/5/18.
-//
-
 #include "GStage3GlacialMountains.h"
 #include "Game.h"
-
-#ifdef __XTENSA__
-#include <math.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#endif
 
 
 GStage3GlacialMountains::GStage3GlacialMountains(GGameState *aGameEngine) {

@@ -1,13 +1,5 @@
-// Created by jaygarcia on 10/23/18.
 #include "Game.h"
 #include "GStage5Cyberpunk.h"
-
-#ifdef __XTENSA__
-#include <math.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#endif
-
 
 /*************************************************************************/
 
@@ -275,7 +267,7 @@ GStage5Cyberpunk::GStage5Cyberpunk(GGameState *aGameEngine) {
   gResourceManager.LoadBitmap(CYBERPUNK2_BMP, BKG3_SLOT, IMAGE_ENTIRE);
   bgOffset0 = 0;
   bgOffset1 = 0;
-  bgOffset2 = 0;
+  bgOffset2 = 35;
 
   mBackground0 = gResourceManager.GetBitmap(BKG_SLOT);
   mBackground1 = gResourceManager.GetBitmap(BKG2_SLOT);
@@ -319,20 +311,21 @@ GStage5Cyberpunk::~GStage5Cyberpunk()  {
 
 void GStage5Cyberpunk::Animate() {
 #ifndef STATIC_GAME_BACKGROUNDS
-  bgOffset0 += .01;
-  if ((int)bgOffset0 >= mBackground0->Width()) {
-    bgOffset0= 0;
-  }
-
-  bgOffset1 += .025;
-  if ((int)bgOffset1 >= mBackground1->Width()) {
-    bgOffset1 = 0;
-  }
-
-  bgOffset2 += .08;
-  if ((int)bgOffset2 >= mBackground2->Width()) {
-    bgOffset2 = 0;
-  }
+//  const TFloat multiplier = .25f;
+//  bgOffset0 += .01 * multiplier;
+//  if ((int)bgOffset0 >= mBackground0->Width()) {
+//    bgOffset0= 0;
+//  }
+//
+//  bgOffset1 += .025 * multiplier;
+//  if ((int)bgOffset1 >= mBackground1->Width()) {
+//    bgOffset1 = 0;
+//  }
+//
+//  bgOffset2 += .08 * multiplier;;
+//  if ((int)bgOffset2 >= mBackground2->Width()) {
+//    bgOffset2 = 0;
+//  }
 #endif
 
 }

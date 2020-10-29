@@ -39,7 +39,16 @@ public:
   TInt RenderString(const char *aString, TInt aY) {
     TInt width = TInt(strlen(aString) * 12);
     TInt x     = (SCREEN_WIDTH - width) / 2;
-    gDisplay.renderBitmap->DrawStringShadow(ENull, aString, mFont, x, aY, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -4);
+    gDisplay.renderBitmap->DrawStringShadow(
+        ENull,
+        aString,
+        mFont,
+        x,
+        aY,
+        (TInt16)COLOR_TEXT,
+        COLOR_TEXT_SHADOW,
+        (TInt16)COLOR_TEXT_TRANSPARENT,
+        (TInt)-4);
     return 18;
   }
 
@@ -56,10 +65,10 @@ public:
     RenderString((const char*)pagination, 12);
 
     // Left arrow
-    gDisplay.renderBitmap->DrawString(ENull, STR_LEFT_ARROW, mFont, ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mLeftArrowColor, -1);
+    gDisplay.renderBitmap->DrawString(ENull, STR_LEFT_ARROW, mFont, ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mLeftArrowColor, COLOR_TEXT_TRANSPARENT);
 
     // Right arrow
-    gDisplay.renderBitmap->DrawString(ENull, STR_RIGHT_ARROW, mFont, SCREEN_WIDTH - mFont->mWidth - ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mRightArrowColor, -1);
+    gDisplay.renderBitmap->DrawString(ENull, STR_RIGHT_ARROW, mFont, SCREEN_WIDTH - mFont->mWidth - ARROW_X, (SCREEN_HEIGHT - mFont->mHeight) / 2, mRightArrowColor, COLOR_TEXT_TRANSPARENT);
   }
 
   BFont *mFont;
@@ -105,7 +114,7 @@ protected:
   TInt RenderString(const char *aString, TInt aY) {
     TInt width = TInt(strlen(aString) * 12);
     TInt x     = (SCREEN_WIDTH - width) / 2;
-    gDisplay.renderBitmap->DrawStringShadow(ENull, aString, mFont, x, aY, COLOR_TEXT, COLOR_TEXT_SHADOW, -1, -4);
+    gDisplay.renderBitmap->DrawStringShadow(ENull, aString, mFont, x, aY, COLOR_TEXT, COLOR_TEXT_SHADOW, COLOR_TEXT_TRANSPARENT, -4);
     return 18;
   }
 
@@ -115,13 +124,9 @@ protected:
     ResetSprite();
 
     TInt y = TEXT_Y;
-#ifdef __XTENSA__
-    y += RenderString("Use the directional", y);
-    y += RenderString("pad to move the blocks", y);
-#else
     y += RenderString("Use the arrow keys", y);
     y += RenderString("to move the blocks", y);
-#endif
+
     y += RenderString("as they enter at the", y);
     y += RenderString("top of the game board.", y);
     return y;
@@ -131,7 +136,7 @@ protected:
     mSprite->flags |= SFLAG_RENDER;
 
     TInt y = TEXT_Y;
-#ifdef __XTENSA__
+#ifdef __DINGUX__
     y += RenderString("Pressing the A button", y);
 #else
     y += RenderString("Pressing the X key", y);
@@ -140,12 +145,12 @@ protected:
     y += RenderString("clockwise.", y) + 16;
     y += RenderString("Place the blocks on", y);
     y += RenderString("the board by pressing", y);
-#ifdef __XTENSA__
+#ifdef __DINGUX__
     y += RenderString("the B button.", y);
 #else
     y += RenderString("the Z key.", y);
 #endif
-//    y += RenderString("to create matches.", y);
+    y += RenderString("to create color matches.", y);
 
     mTimer--;
     if (mTimer < 0) {

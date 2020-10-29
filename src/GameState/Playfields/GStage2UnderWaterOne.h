@@ -16,11 +16,15 @@ public:
   BBitmap *mBackground;
 //    TInt8 *mYOffset;
 //    TInt8 *mXComp;
-  int mYSinIndex;
-  int mXSinIndex;
-  int8_t *mYOffset;
-  int8_t *mXComp;
+  TInt16 mYSinIndex;
+  TInt16 mXSinIndex;
+  TInt8 *mYOffset;
+  TInt8 *mXComp;
   TUint8 mTextColor;
+  TFloat mXTimer;
+  TFloat mYTimer;
+  TFloat mAnimSpeedX;
+  TFloat mAnimSpeedY;
 };
 
 #endif //GENUS_GGAMEUNDERWATER1_H

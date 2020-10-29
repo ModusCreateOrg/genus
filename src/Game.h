@@ -3,7 +3,7 @@
 
 // Used by GLevel super classes to enable/disable parallax scrolling
 #define STATIC_GAME_BACKGROUNDS (1)
-//#undef STATIC_GAME_BACKGROUNDS
+#undef STATIC_GAME_BACKGROUNDS
 
 #define FRAME_RATE_INFO 0
 #undef FRAME_RATE_INFO
@@ -15,10 +15,10 @@
 #define STR_LEFT_ARROW "\xf"
 #define STR_RIGHT_ARROW "\xe"
 
-#define TOTAL_SFX_CHANNELS 5
+#define TOTAL_SFX_CHANNELS 4
 
 // Enable level skipping via SELECT button
-//#define CHICKEN_MODE
+#define CHICKEN_MODE
 //#undef CHICKEN_MODE
 
 #include <stdio.h>
@@ -53,10 +53,5 @@ extern BViewPort   *gViewPort;
 extern BGameEngine *gGameEngine;
 extern TOptions    *gOptions;
 
-
-#ifdef __XTENSA__
-static const TInt MAX_BRIGHTNESS = 0x1fff;
-static const TInt MIN_BRIGHTNESS = 0x50;
-#endif
 
 #endif

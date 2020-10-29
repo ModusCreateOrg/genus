@@ -17,22 +17,32 @@ TInt GSaveWidget::Render(TInt aX, TInt aY) {
       STR_RIGHT_ARROW,
       f,
       aX - 16, aY,
-      gWidgetTheme.GetInt(WIDGET_TEXT_BG),
+      (TInt16)gWidgetTheme.GetInt(WIDGET_TEXT_BG),
       COLOR_TEXT_SHADOW,
-      -1
+      COLOR_TEXT_TRANSPARENT
     );
   }
 
   gDisplay.renderBitmap->DrawStringShadow(
-    ENull,
-    mText,
-    f,
-    aX, aY,
-    gWidgetTheme.GetInt(WIDGET_TITLE_FG),
-    COLOR_TEXT_SHADOW,
-    gWidgetTheme.GetInt(WIDGET_TITLE_BG),
-    -6
+      ENull,
+      mText,
+      f,
+      aX, aY,
+      gWidgetTheme.GetInt(WIDGET_TITLE_FG),
+      COLOR_TEXT_SHADOW,
+      COLOR_TEXT_TRANSPARENT,
+      -6
   );
+//  gDisplay.renderBitmap->DrawStringShadow(
+//    ENull,
+//    mText,
+//    f,
+//    aX, aY,
+//    (TInt16)gWidgetTheme.GetInt(WIDGET_TITLE_FG),
+//    COLOR_TEXT_SHADOW,
+//    (TInt16)gWidgetTheme.GetInt(WIDGET_TITLE_BG),
+//    -6
+//  );
 
   return f->mHeight - 4;
 }

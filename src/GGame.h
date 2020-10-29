@@ -31,5 +31,6 @@ protected:
 };
 
 extern GGame *gGame;
+extern BFont *gFont8x8, *gFont16x16;
 
 #endif //GENUS_GGAME_H
