@@ -56,11 +56,11 @@ md5=''
 
 if [[ ${VERBOSE} -eq 1 ]]; then
   make -j `nproc` ipk
-  md5=`md5sum build/ldk/modite-adventure.dge | awk '{print $1}'`
+  md5=`md5sum build/ldk/genus.dge | awk '{print $1}'`
   md5=${md5: -6}
 else
   make -j `nproc` ipk >/dev/null 2>&1
-  md5=`md5sum build/ldk/modite-adventure.dge | awk '{print $1}'`
+  md5=`md5sum build/ldk/genus.dge | awk '{print $1}'`
   md5=${md5: -6}
 fi
 
@@ -101,10 +101,10 @@ prompt
 passive
 lcd build/ldk
 cd /home/retrofw/games
-mkdir modite-adventure
-cd modite-adventure
+mkdir genus
+cd genus
 bin
-put modite-adventure.dge
+put genus.dge
 quit
 EOT
 
@@ -122,7 +122,7 @@ cd /home/retrofw/
 mkdir tmp
 cd tmp/
 bin
-put modite-adventure.ipk
+put genus.ipk
 quit
 EOT
 
@@ -132,7 +132,7 @@ EOT
   PRINT_GREEN "Next Steps:"
   echo " - Launch Explorer on device"
   echo " - Navigate to /home/retrofw/tmp"
-  echo " - Install 'modite-adventure.ipk'"
+  echo " - Install 'genus.ipk'"
   echo "Further invocations of this script should not require \"deploy-ipk\" argument."
 }
 
