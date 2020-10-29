@@ -1,37 +1,37 @@
 # ESP-IDF Makefile for game project
-PROJECT_NAME=Genus
+PROJECT_NAME = Genus
 
-GENUS_SRC_PATH=${PROJECT_PATH}/src
+GENUS_SRC_PATH = $(abspath ${PROJECT_PATH}/src)
+
+
 ifndef CREATIVE_ENGINE_PATH
 CREATIVE_ENGINE_PATH=$(abspath ${PROJECT_PATH}/../creative-engine)
 export CREATIVE_ENGINE_PATH
 endif
 
-GENUS_STATES=$(GENUS_SRC_PATH)/GameState
-GENUS_STATES+=$(GENUS_SRC_PATH)/HighScoreState
-GENUS_STATES+=$(GENUS_SRC_PATH)/MainOptionsState
-GENUS_STATES+=$(GENUS_SRC_PATH)/SplashState
-GENUS_STATES+=$(GENUS_SRC_PATH)/CreditsState
 
-GENUS_POWERUPS=$(GENUS_SRC_PATH)/GameState/Powerups
+EXTRA_COMPONENT_DIRS = \
+  ${CREATIVE_ENGINE_PATH} \
+  ${GENUS_SRC_PATH}
 
-EXTRA_COMPONENT_DIRS=${CREATIVE_ENGINE_PATH} ${PROJECT_PATH}/src $(GENUS_STATES) $(GENUS_POWERUPS)
+COMPONENT_ADD_INCLUDEDIRS = ${EXTRA_COMPONENT_DIRS}
 
+# Speed up compilation by removing components we don't use. 
+# It shaved about 20 seconds from fresh builds (6 core i7 8700k)
+#EXCLUDE_COMPONENTS := asio fatfs json libsodium secure_boot idf_test bt mqtt   \
+#	esp_http_server  esp_https_ota esp_https_server sdmmc protocomm \
+#	wear_leveling
+
+
+# Let's keep this ABOVE the COMPONENT_DIRS var modification.
 include $(IDF_PATH)/make/project.mk
 
-# Temporary until RCOMP is folded into the music/sfx workflow
-gen_sound_headers: gen_music_headers gen_sfx_headers FORCE
+# We're not supposed to write to this variable, but for now, let's keep this as/is.
+COMPONENT_DIRS := ${EXTRA_COMPONENT_DIRS}
 
-gen_music_headers:
-	echo "Generating music headers"
-	cd resources/music && ./gen_header.sh
-
-gen_sfx_headers:
-	echo "Generating sound effects headers"
-	cd resources/sound_effects && ./gen_header.sh
 
 release: FORCE
-	./scripts/build.sh && cp ./build/genus.tgz ~/Downloads/
+	./scripts/build.sh docker-build && cp ./build/Genus.tgz ~/Downloads/
 
 rcomp: FORCE
 	echo "Building rcomp"
@@ -43,7 +43,7 @@ resources: rcomp FORCE
 
 reset: FORCE
 	echo "Resetting high score table (and options)"
-	 rm -f cmake-build-debug/genus.app/Contents/MacOS/*.store
+	 rm -f cmake-build-debug/Genus.app/Contents/MacOS/*.store
 
 FORCE:
 

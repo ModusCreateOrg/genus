@@ -50,6 +50,7 @@ TBool GModusBombPowerup::StateMove() {
     if (mGameState->MainState() != STATE_REMOVE) {
       Drop();
       mState = STATE_REMOVE;
+      mGameState->MainState(STATE_WAIT);
       mPlayerSprite->StartAnimation(BombDropAnimation);
     } else {
       gSoundPlayer.SfxBadDrop();
@@ -101,14 +102,13 @@ void GModusBombPowerup::ExplodeBlock(TInt aRow, TInt aCol) {
   else {
     mGameBoard->ExplodeBlock(aRow, aCol);
   }
+  gControls.Rumble(0.1, 100);
 }
 
 TBool GModusBombPowerup::StateRemove() {
   if (mBombTimer--) {
     return ETrue;
   }
-
-  mGameState->MainStateWait();
 
   mBombTimer = 30 / 4;        // 1/8 second
   TInt row = mBombRow,

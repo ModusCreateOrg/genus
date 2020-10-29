@@ -4,17 +4,17 @@ language: cpp
 sudo: enabled
 git:
   depth: 1
-env:
-  global:
-    # GITHUB_OAUTH_TOKEN
-    - secure: "Tom3Fc8wFA1eWCaOdi7f9bAr+rcIyjZPt9Ksg6iCFZwHb8Vt54xIW0ZpPYL2rRGETuJrwZiRfRcx4V+g0Trpjx26tJlev+/R13kjVqLee9shdVBRVBRPAldm+KINlPNmwv9zd7YxADx8Ao6XzW4sa/xGySFhziNZnnaAOzHXLWGE6pjA0tqiNtyicp8yjZPyV1UMkqLZjju5tUdjl0SskMazaKHPOSWHMAzGYStGsctcuohT1cuDGrwe4tCvQ0Y69viMBmnj1UVg/oot2FEOsnpltT6Lofc1r+I7Dnz0QELzLIq53S69iCnlebAFJD+c1PZNGforUn3xi1asP6ajAU5zr/3Uuxz2Eiqc1YiPzwOKjqNzZQglMXC4mRdtzdndBn8pEutR1xp5XqfaoeoY+RlCHpH4kCCRjz/2AkBhwIJW0n8vkwPrHxz4xrKKB/EXBBLzxCwV04tOysfP/EG+K6OqRg2EgCd2PH3X1CApIIwtNYitOtU/7WK/SiZwiCzr3ScEWemC9T3bXU1ateF74zVchJPFBVLR+uFzKSYY+Ays8OPHCm3YPJNLByFnYWl5uF9idE3kSpjI+Ht8Fcu0RUjxpYGNdCB/37K7RtYHQdlL/FWgxwakxb7RmDwSlTtq6eXs1kZChvIoWlF+vyaloN1vsYU+WdLSO3Cu99xPYzw="
 install: ./.ci/travis/install_deps.sh
 before_script: ./.ci/travis/lint.sh
 script: ./scripts/build.sh
-before_deploy: ./.ci/create_release.sh
 deploy:
   provider: releases
-  api_key: $GITHUB_OAUTH_TOKEN
+  skip_cleanup: true
+  api_key:
+    secure: "n1/XFhPQ2t2OeY2xxffk6XoOkYEXgSjVKdDDGPG0Uk0S79LvCybo5y9qV0ueg/2A+ssav4Sks654QCGgfOp+sCZPMG2kOJQKvpIfNPY18/BRF7Qg72HdITDdnTqhkFcMLe3pUOP8pIPo/AiM0I6Md7Gm0PAf4El/5fFT3dl9ivaSen7GDRXZNtJprzEG4DNKaaxq70VSLCouJIkLcEcrhNqUTZlaPYiwTTe2GPsGlQWLI8k0ScKaBbS/geq55DuXqNUKQtU+mBPWXnqa/HQV4/GmQ8brKtrVfWeOFOy/JI2M4UqgmezjexH3WlOoN2UpTOK6Df5DLW2vafqUzEuLVe8kdZHDE+HN8FoZR21DgvyHXL0pQcx7hKRVUWT/YCTaoBg/E6k4GTv1SVXhapUIw/5EzVid35jbzHpzXyq+xMfsQszcTZR9oKfTjXxOugOoSOyBA8zQpNMX/T4dMnNitK1W0BZ3Xevv2/mcOsDIAOho0pGs5FZbYKSfWUC7u4PkvIB1haGvhG1BVxVZEoaquFHZqySURyuA8ClLW0UuIu35zvrDrXNIjaCJu42re5HcUevQ2qMpj/izAwGhnYEkJ5UJrQYcfjW7V8R4pfUE/UdAy1lZkSW3GF1bnGoUxMTj5nE4uDcFAVpEx4RjixQXG8w1fQLicxueKrcIlUnDO1w="
+  on:
+    tags: true
+    repo: ModusCreateOrg/genus
   file_glob: true
   file: build/*.tgz
   skip_cleanup: true

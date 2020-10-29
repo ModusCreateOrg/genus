@@ -2,8 +2,7 @@
 #include "Game.h"
 #include "THighScoreTable.h"
 
-// special characters
-static const char *STR_RIGHT_ARROW = "\xe";
+
 
 GResetWidget::GResetWidget() : BButtonWidget("RESET GAME", COLOR_TEXT, COLOR_TEXT_BG) {}
 

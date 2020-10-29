@@ -30,7 +30,7 @@ function ensure_homebrew_installed {
 
 function ensure_cmake {
     # Adapted from https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line
-    if [[ -d /opt/cmake ]]; then
+    if [[ -x /usr/local/bin/cmake ]]; then
         return
     fi
     local version
@@ -39,20 +39,35 @@ function ensure_cmake {
     local cmake
     version=3.12
     build=3
+    arch=$(arch)
+    uname=$(uname -s)
     tmpdir=$(mktemp -d)
-    cmake="cmake-$version.$build-Linux-x86_64"
+    cmake="cmake-$version.$build-$uname-$arch"
     cd "$tmpdir" || exit 1
-    curl -sSO "https://cmake.org/files/v$version/$cmake.sh"
-    $SUDO mkdir /opt/cmake
-    yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
-    $SUDO rm -f /usr/local/bin/cmake
-    $SUDO ln -s "/opt/cmake/$cmake/bin/cmake" /usr/local/bin/cmake
+    if curl -fsSO "https://cmake.org/files/v$version/$cmake.sh"; then
+        # Install binary package if we could retrieve it
+        $SUDO mkdir -p /opt/cmake
+        yes | $SUDO sh "$cmake.sh" --prefix=/opt/cmake || true # exits 141 on success for some reason
+        $SUDO rm -f /usr/local/bin/cmake
+        $SUDO ln -s "/opt/cmake/$cmake/bin/cmake" /usr/local/bin/cmake
+    else
+
+        # Install from source (on Raspberry Pi with Rasbian 9.6 (stretch) for example.
+        cmake="cmake-$version.$build"
+        curl -fsSO "https://cmake.org/files/v$version/$cmake.tar.gz"
+        tar xfz "$cmake.tar.gz"
+        cd "$cmake" || exit 1
+        ./configure
+        make
+        $SUDO make install
+    fi
+    cd - || exit 1
     rm -rf "$tmpdir"
 }
 
 function ensure_debian_devtools_installed {
     $SUDO apt-get -qq update
-    $SUDO apt-get -qq install --no-install-recommends build-essential git libsdl2-dev libsdl2-image-dev curl doxygen imagemagick
+    $SUDO apt-get -qq install --no-install-recommends build-essential git libsdl2-dev libsdl2-image-dev curl doxygen imagemagick ca-certificates openssl
     # Ubuntu 18.04 has an old cmake (3.9) so install a newer one from binaries from cmake
     ensure_cmake
 }
@@ -71,15 +86,12 @@ function ensure_creative_engine {
 
 function build {
     cd "$BASE_DIR" || exit 1
-    if [[ ! -d creative-engine ]]; then
+    if [[ ! -d $CREATIVE_ENGINE_DIR ]]; then
         # rm -f creative-engine
-        ln -sf ../creative-engine .
+        ln -sf $CREATIVE_ENGINE_DIR .
     fi
     mkdir -p "$BUILD_DIR"
     cd "$BUILD_DIR" || exit 1
-    # pwd
-    # ls -l
-    # ls -l ..
     cmake ..
     make -j 8
 }
@@ -100,6 +112,7 @@ function ensure_esp_idf {
         cd esp || exit 1
         git clone --recursive https://github.com/espressif/esp-idf.git
         cd esp-idf || exit 1
+        git reset --hard SUPPORTED_ESP_IDF_VERSION
         git submodule update --init --recursive
         export IDF_PATH="$BASE_DIR/esp/esp-idf"
         python -m pip install --user -r "$IDF_PATH/requirements.txt"
@@ -121,9 +134,9 @@ function build_xtensa {
 
     cd "$BASE_DIR" || exit 1
 
-    if [[ ! -d creative-engine ]]; then
+    if [[ ! -d $CREATIVE_ENGINE_DIR ]]; then
         rm -f creative-engine
-        ln -s ../creative-engine .
+        ln -s $CREATIVE_ENGINE_DIR .
     fi
     mkdir -p "$BUILD_DIR"
     make -j 10
@@ -136,16 +149,16 @@ function clean {
 }
 
 # TODO: Use otool -L and some foo to find the dependencies
-#		The sentinel is "/usr/local/opt"
-function copy_sdl2_libs_to_app {
+#        The sentinel is "/usr/local/opt"
+function patch_mac_build {
     if [[ "$OS" == "Darwin" ]]; then
-        export APP_DIR="$BASE_DIR/build/genus.app"
+        export APP_DIR="$BASE_DIR/build/Genus.app"
         export APP_CNT_DIR="$APP_DIR/Contents"
         export APP_RES_DIR="$APP_CNT_DIR/Resources"
         export APP_MACOSX_DIR="$APP_CNT_DIR/MacOS"
         if [[ -d "$APP_DIR" ]]; then
-        	rm -rf "$APP_MACOSX_DIR/libs"
-        	mkdir -p "$APP_MACOSX_DIR/libs"
+            rm -rf "$APP_MACOSX_DIR/libs"
+            mkdir -p "$APP_MACOSX_DIR/libs"
 
             cp /usr/local/opt/sdl2/lib/libSDL2.dylib "$APP_MACOSX_DIR/libs/"
             cp /usr/local/opt/sdl2_image/lib/libSDL2_image.dylib "$APP_MACOSX_DIR/libs/"
@@ -157,58 +170,68 @@ function copy_sdl2_libs_to_app {
 
             # FIX Genus
             install_name_tool -change \
-            	/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
-             	./libs/libSDL2.dylib \
-             	"$APP_MACOSX_DIR/genus"
+                /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
+                 ./libs/libSDL2.dylib \
+                 "$APP_MACOSX_DIR/Genus"
             install_name_tool -change \
-            	/usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib \
-            	./libs/libSDL2_image.dylib \
-            	"$APP_MACOSX_DIR/genus"
+                /usr/local/opt/sdl2_image/lib/libSDL2_image-2.0.0.dylib \
+                ./libs/libSDL2_image.dylib \
+                "$APP_MACOSX_DIR/Genus"
 
             # FIX SDL2_image
             install_name_tool -change \
-            	/usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
-            	./libs/libSDL2.dylib \
-            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+                /usr/local/opt/sdl2/lib/libSDL2-2.0.0.dylib \
+                ./libs/libSDL2.dylib \
+                "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+            
             install_name_tool -change \
-            	/usr/local/opt/libpng/lib/libpng16.16.dylib \
-            	./libs/libpng.dylib \
-            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
-           	install_name_tool -change \
-            	/usr/local/opt/jpeg/lib/libjpeg.9.dylib \
-            	./libs/libjpeg.dylib \
-            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+                /usr/local/opt/libpng/lib/libpng16.16.dylib \
+                ./libs/libpng.dylib \
+                "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+            
             install_name_tool -change \
-            	/usr/local/opt/libtiff/lib/libtiff.5.dylib \
-            	./libs/libtiff.dylib \
-            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+                /usr/local/opt/jpeg/lib/libjpeg.9.dylib \
+                ./libs/libjpeg.dylib \
+                "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+            
             install_name_tool -change \
-            	/usr/local/opt/webp/lib/libwebp.7.dylib \
-            	./libs/libwebp.dylib \
-            	"$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+                /usr/local/opt/libtiff/lib/libtiff.5.dylib \
+                ./libs/libtiff.dylib \
+                "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
+            
+            install_name_tool -change \
+                /usr/local/opt/webp/lib/libwebp.7.dylib \
+                ./libs/libwebp.dylib \
+                "$APP_MACOSX_DIR/libs/libSDL2_image.dylib"
 
             # FIX TIFF
             install_name_tool -change \
-            	/usr/local/opt/jpeg/lib/libjpeg.9.dylib \
-            	./libs/libjpeg.dylib \
-            	"$APP_MACOSX_DIR/libs/libtiff.dylib"
+                /usr/local/opt/jpeg/lib/libjpeg.9.dylib \
+                ./libs/libjpeg.dylib \
+                "$APP_MACOSX_DIR/libs/libtiff.dylib"
 
             # CREATE WRAPPER
-            mv "$APP_MACOSX_DIR/genus" "$APP_MACOSX_DIR/genus.bin"
-            tee "$APP_MACOSX_DIR/genus" <<-"EOF"
-				#!/usr/bin/env bash
-				MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
-				(cd $MY_DIR && ./genus.bin)
-				EOF
-            chmod 0755 "$BASE_DIR/build/genus.app/Contents/MacOS/genus"
-
+            mv "$APP_MACOSX_DIR/Genus" "$APP_MACOSX_DIR/Genus.bin"
+            tee "$APP_MACOSX_DIR/Genus" <<-"EOF"
+		#!/usr/bin/env bash
+		MY_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
+		(cd $MY_DIR && ./Genus.bin)
+		EOF
+            chmod 0755 "${APP_DIR}/Contents/MacOS/Genus"
+         
             # INSTALL APP.PLIST & ETC
             cp "$BASE_DIR/resources/info.plist" "$APP_CNT_DIR"
             mkdir -p "$APP_RES_DIR"
-            cp "$BASE_DIR/resources/GenusIcon.icns" "$APP_RES_DIR"
+            cp "$BASE_DIR/resources/desktop-icon/Genus.icns" "$APP_RES_DIR"
+
+            codesign --force --sign "Developer ID Application: Modus Create, Inc." "$BASE_DIR/build/Genus.app"
 
         fi
     fi
+}
+
+function patch_linux_build {
+    echo "Linux bundling not yet implemented."
 }
 
 function checkout_creative_engine_branch {

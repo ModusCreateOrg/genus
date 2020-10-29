@@ -8,9 +8,18 @@
 #define FRAME_RATE_INFO 0
 #undef FRAME_RATE_INFO
 
+#define DIM_SCREEN
+// #undef DIM_SCREEN
+
+// special characters
+#define STR_LEFT_ARROW "\xf"
+#define STR_RIGHT_ARROW "\xe"
+
+#define TOTAL_SFX_CHANNELS 5
+
 // Enable level skipping via SELECT button
-#define CHICKEN_MODE
-// #undef CHICKEN_MODE
+//#define CHICKEN_MODE
+//#undef CHICKEN_MODE
 
 #include <stdio.h>
 #include <unistd.h>
@@ -43,5 +52,11 @@
 extern BViewPort   *gViewPort;
 extern BGameEngine *gGameEngine;
 extern TOptions    *gOptions;
+
+
+#ifdef __XTENSA__
+static const TInt MAX_BRIGHTNESS = 0x1fff;
+static const TInt MIN_BRIGHTNESS = 0x50;
+#endif
 
 #endif

@@ -2,7 +2,7 @@
 #include "GGameBoard.h"
 
 GGameBoard::GGameBoard() {
-
+  mIsHidden = EFalse;
   Clear();
 }
 
@@ -34,6 +34,10 @@ void GGameBoard::Clear() {
 }
 
 void GGameBoard::Render(TInt aX, TInt aY) {
+  if (mIsHidden) {
+    return;
+  }
+
   // render the board
   TInt      y   = aY;
   for (TInt row = 0; row < BOARD_ROWS; row++) {
@@ -154,4 +158,17 @@ void GGameBoard::Dump() {
     }
     printf("\n");
   }
+}
+
+TBool GGameBoard::HasColorSwappableBlocks() {
+  for (TInt row = 0; row < BOARD_ROWS; row++) {
+    for (TInt col = 0; col < BOARD_COLS; col++) {
+      TUint8 v = mBoard[row][col];
+      if (v == IMG_TILE1 || v == IMG_TILE2) {
+        return ETrue;
+      }
+    }
+  }
+
+  return EFalse;
 }

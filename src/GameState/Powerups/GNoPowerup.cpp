@@ -23,14 +23,14 @@ void GNoPowerup::Wait() {
   mState = STATE_WAIT;
 }
 
-void GNoPowerup::Signal() {
+void GNoPowerup::Signal(TPowerUpStates aState) {
   if (mGameBoard->Combine()) {
     mGameState->StartBonusTimer();
     mState = STATE_TIMER;
   } else if (mGameState->mBonusTimer >= 0) {
     mState = STATE_TIMER;
   } else {
-    mState = STATE_MOVE;
+    mState = aState;
   }
 }
 
@@ -165,7 +165,9 @@ TBool GNoPowerup::TimerState() {
   if (gControls.WasPressed(BUTTONB)) {
     if (CanDrop()) {
       gSoundPlayer.SfxGoodDrop();
-      Drop();
+      if (Drop()) {
+        gSoundPlayer.SfxCombo();
+      }
     } else {
       // can't drop sound:
       gSoundPlayer.SfxBadDrop();
@@ -206,6 +208,7 @@ TBool GNoPowerup::RemoveState() {
         mRemoveScore++;
         // remove the block - start explosion
         mGameBoard->ExplodeBlock(mRemoveRow, mRemoveCol);
+        gControls.Rumble(0.1, 100);
         if (mGameState->mBlocksRemaining > 0) {
           mGameState->mBlocksRemaining--;
         }

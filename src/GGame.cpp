@@ -1,11 +1,12 @@
 #include "GGame.h"
 
-static TUint32 start;
-
 #ifdef __XTENSA__
-static const TInt MAX_BRIGHTNESS = 0x1fff;
-static const TInt MIN_BRIGHTNESS = 0x50;
+#ifdef DIM_SCREEN
+#include "GDimScreenProcess.h"
 #endif
+#endif
+
+static TUint32 start;
 
 GGame::GGame() {
   // Load Game Options
@@ -15,8 +16,7 @@ GGame::GGame() {
   gDisplay.SetBrightness(MAX(MIN_BRIGHTNESS, MAX_BRIGHTNESS * gOptions->brightness));
 #endif
 
-  // TODO: Jay - this needs to be in BApplication constructor (I think)
-  gSoundPlayer.Init(4, 8);
+  gSoundPlayer.Init(TOTAL_SFX_CHANNELS);
 
   // preload bitmaps
   for (TInt16 slot=0; slot<26; slot++) {  // 26 is the last BMP in Resources.h (plus one)
@@ -46,6 +46,10 @@ GGame::~GGame() {
 
 void GGame::SetState(TInt aNewState) {
   mNextState = aNewState;
+}
+
+TInt GGame::GetState() {
+  return mState;
 }
 
 void GGame::Run() {
@@ -96,9 +100,16 @@ void GGame::Run() {
         default:
           continue;
       }
+
       // reset dKeys so next state doesn't react to any keys already pressed
       gControls.dKeys = 0;
       mState = mNextState;
+
+#ifdef __XTENSA__
+#ifdef DIM_SCREEN
+      gGameEngine->AddProcess(new GDimScreenProcess());
+#endif
+#endif
     }
     gGameEngine->GameLoop();
     gDisplay.Update();

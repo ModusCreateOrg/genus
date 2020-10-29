@@ -17,16 +17,16 @@ BITMAP main_options1.bmp
 BITMAP charset_8x8.bmp
 BITMAP charset_16x16.bmp
 BITMAP common_sprites.bmp
-BITMAP level1_sprites.bmp
-BITMAP level2_sprites.bmp
-BITMAP level3_sprites.bmp
-BITMAP level4_sprites.bmp
-BITMAP level5_sprites.bmp
-BITMAP level6_sprites.bmp
+BITMAP stage1_sprites.bmp
+BITMAP stage2_sprites.bmp
+BITMAP stage3_sprites.bmp
+BITMAP stage4_sprites.bmp
+BITMAP stage5_sprites.bmp
+BITMAP stage6_sprites.bmp
 
 
 PATH ../resources/backgrounds/under_water
-BITMAP under_water.bmp
+BITMAP under_water_one.bmp
 
 PATH ../resources/backgrounds/countryside/
 #BITMAP countryside0.bmp
@@ -75,6 +75,7 @@ RAW Main_Menu.xm
 RAW Spaaace.xm
 RAW UnderWaterFantasy.xm
 RAW Under_Water.xm
+RAW EnterCredits.xm
 
 
 # .-=[ Sound Effects ]=-.
@@ -88,3 +89,6 @@ RAW SFX_move_block.wav
 RAW SFX_score_combo.wav
 RAW SFX_option_select.wav
 RAW SFX_explode_block.wav
+RAW SFX_next_level.wav
+RAW SFX_next_stage.wav
+RAW SFX_save_game.wav

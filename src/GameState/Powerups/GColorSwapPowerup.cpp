@@ -83,8 +83,6 @@ TBool GColorSwapPowerup::StateRemove() {
     return ETrue;
   }
 
-  mGameState->MainStateWait();
-
   mColorSwapTimer = 30 / 8;        // 1/8 second
 
   auto         *stack = (PointStack *) mPointStack;
@@ -93,11 +91,7 @@ TBool GColorSwapPowerup::StateRemove() {
       if (mGameBoard->mBoard[p->mRow][p->mCol] == mSwapColor) {
         gSoundPlayer.SfxGoodDrop();
 
-        if (mSwapColor == IMG_TILE3 || mSwapColor == IMG_TILE4) {
-          mGameBoard->mBoard[p->mRow][p->mCol] = TUint8(mSwapColor == IMG_TILE3 ? IMG_TILE4 : IMG_TILE3);
-        } else {
-          mGameBoard->mBoard[p->mRow][p->mCol] = TUint8(mSwapColor == IMG_TILE1 ? IMG_TILE2 : IMG_TILE1);
-        }
+        mGameBoard->mBoard[p->mRow][p->mCol] = TUint8(mSwapColor == IMG_TILE1 ? IMG_TILE2 : IMG_TILE1);
 
         stack->Push(new Point(p->mRow - 1, p->mCol));
         stack->Push(new Point(p->mRow + 1, p->mCol));
@@ -109,16 +103,21 @@ TBool GColorSwapPowerup::StateRemove() {
     }
     delete p;
   }
+  gControls.dKeys = 0;  // in case user pressed a key during removing blocks
   mGameState->Next(EFalse);
   return EFalse;
 }
 
 
 TBool GColorSwapPowerup::StateMove() {
+  TUint8 currentColor = mGameBoard->mBoard[mPlayerSprite->BoardRow()][mPlayerSprite->BoardCol()];
+
   if (gControls.WasPressed(BUTTONB)) {
-    if (mGameState->MainState() != STATE_REMOVE && mGameBoard->mBoard[mPlayerSprite->BoardRow()][mPlayerSprite->BoardCol()] != 255) {
+    // Placeable only on non-darkened blocks and during states other than removal of blocks
+    if (mGameState->MainState() != STATE_REMOVE && (currentColor == 0 || currentColor == 16)) {
       Drop();
       mState = STATE_REMOVE;
+      mGameState->MainState(STATE_WAIT);
     }
     else {
       // make bad drop sound

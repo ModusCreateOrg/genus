@@ -10,7 +10,7 @@ set -o functrace
 IFS=$'\n\t'
 
 # Enable for enhanced debugging
-#set -vx
+${DEBUG:-false} && set -vx
 
 # Credit to https://stackoverflow.com/a/17805088
 # and http://wiki.bash-hackers.org/scripting/debuggingtips
@@ -30,12 +30,7 @@ source "$DIR/common.sh"
 
 ######################### Main build ##################################
 
-# FIXME: temp to get stuff working
-#mkdir -p "$BUILD_DIR"
-#tar cvfz "$BUILD_DIR/genus.app.tgz" /bin/bash
-#exit 0
-
-
+export SUPPORTED_ESP_IDF_VERSION="ba1ff1692b433e76718a60c3b2cb75e66b383909"
 
 op=${1:-}
 SKIP_TOOLS_INSTALL=false
@@ -66,9 +61,9 @@ elif [ "$OS" == "Darwin" ]; then
     brew upgrade cmake || true
 elif [ "$(cut -c1-5 <<<"$OS")" == "Linux" ]; then
     # Do something under GNU/Linux platform
-    if ! command -v apt-get >/dev/null 2>&1; then
+    if command -v apt-get >/dev/null 2>&1; then
         ensure_debian_devtools_installed
-    elif ! command -v pacman >/dev/null 2>&1; then
+    elif command -v pacman >/dev/null 2>&1; then
         ensure_arch_devtools_installed
     else
         echo "Only debian/ubuntu and arch Linux are supported targets, sorry."
@@ -102,7 +97,13 @@ checkout_creative_engine_branch
 # Build the software and documentation
 build
 # build_xtensa #GEN-275
-copy_sdl2_libs_to_app
+if [ "$OS" == "Darwin" ]; then
+    patch_mac_build
+elif [ "$OS" == "Linux" ]; then
+    patch_linux_build
+fi
+
+
 # "$BASE_DIR/doxygen/build.sh" #GEN-275
 
 # Archive the artifacts

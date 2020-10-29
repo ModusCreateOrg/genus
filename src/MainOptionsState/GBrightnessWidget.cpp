@@ -5,11 +5,6 @@ static const TRange brightness_options = {
   0, 8, 1
 };
 
-#ifdef __XTENSA__
-static const TInt MAX_BRIGHTNESS = 0x1fff;
-static const TInt MIN_BRIGHTNESS = 0x50;
-#endif
-
 GBrightnessWidget::GBrightnessWidget() : GSoundSliderWidget("SCREEN", &brightness_options, COLOR_TEXT, COLOR_TEXT_BG) {
   mHeight = 24;
 }

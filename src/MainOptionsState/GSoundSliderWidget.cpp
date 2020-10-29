@@ -1,8 +1,7 @@
 #include "GSoundSliderWidget.h"
 #include "Game.h"
 
-// special characters
-static const char *STR_RIGHT_ARROW = "\xe";
+
 
 GSoundSliderWidget::GSoundSliderWidget(char *aTitle, const TRange *aRange, TInt aForeground, TInt aBackground)
     : BSliderWidget(aTitle, aRange, aForeground, aBackground) {
