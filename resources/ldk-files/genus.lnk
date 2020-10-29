@@ -1,0 +1,5 @@
+title=Genus
+description=Modus Create
+icon=/home/retrofw/games/modite-adventure/genus.png
+exec=/home/retrofw/games/modite-adventure/genus.dge
+clock=600
