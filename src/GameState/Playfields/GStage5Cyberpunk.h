@@ -27,9 +27,9 @@ public:
   BBitmap *mBackground1;
   BBitmap *mBackground2;
 
-  float bgOffset0;
-  float bgOffset1;
-  float bgOffset2;
+  TFloat bgOffset0;
+  TFloat bgOffset1;
+  TFloat bgOffset2;
 #endif
 
   TUint8 mTextColor;

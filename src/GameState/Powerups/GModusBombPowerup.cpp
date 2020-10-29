@@ -110,7 +110,7 @@ TBool GModusBombPowerup::StateRemove() {
     return ETrue;
   }
 
-  mBombTimer = 30 / 4;        // 1/8 second
+  mBombTimer = 30 / 3;        // 1/8 second
   TInt row = mBombRow,
        col = mBombCol;
 

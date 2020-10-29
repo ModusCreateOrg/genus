@@ -83,7 +83,7 @@ TBool GColorSwapPowerup::StateRemove() {
     return ETrue;
   }
 
-  mColorSwapTimer = 30 / 8;        // 1/8 second
+  mColorSwapTimer = 30 / 6;        // 1/8 second
 
   auto         *stack = (PointStack *) mPointStack;
   while (Point *p     = stack->Pop()) {

@@ -55,31 +55,36 @@ void GStage1Countryside::Animate() {
 //  mTextColor += 1;
 //  mTextColor %= 64;
 //  gDisplay.renderBitmap->SetColor(COLOR_TEXT, 0, 192 + mTextColor, 192 + mTextColor);
-
+  const TFloat multiplier = 1;
 
   // Base background
 #ifndef STATIC_GAME_BACKGROUNDS
-  bgOffset0 += .02;
-  if ((int) bgOffset0 >= mBackground0->Width()) {
-    bgOffset0 = 0;
-  }
+//  bgOffset0 += .02f * multiplier;
+//  if ((int) bgOffset0 >= mBackground0->Width()) {
+//    bgOffset0 = 0;
+//  }
 
-  bgOffset1 += .1;
-  if ((int) bgOffset1 >= mBackground1->Width()) {
-    bgOffset1 = 0;
-  }
+//  bgOffset1 += .1f * multiplier;
+//  if ((int) bgOffset1 >= mBackground1->Width()) {
+//    bgOffset1 = 0;
+//  }
+//
+//  bgOffset3 += .4f * multiplier;
+//  if ((int) bgOffset3 >= mBackground3->Width()) {
+//    bgOffset3 = 0;
+//  }
+//
+//  bgOffset4 += .7f * multiplier;
+//  if ((int) bgOffset4 >= mBackground4->Width()) {
+//    bgOffset4 = 0;
+//  }
+//grass
+//  bgOffset4 += 1;
+//  if ((int) bgOffset4 >= mBackground4->Width()) {
+//    bgOffset4 = 0;
+//  }
 
-  bgOffset3 += .6;
-  if ((int) bgOffset3 >= mBackground3->Width()) {
-    bgOffset3 = 0;
-  }
-
-  bgOffset4 += 1;
-  if ((int) bgOffset4 >= mBackground4->Width()) {
-    bgOffset4 = 0;
-  }
-
-  bgOffset5 += .06;
+  bgOffset5 += .1;
   if ((int) bgOffset5 >= mBackground5->Width()) {
     bgOffset5 = 0;
   }

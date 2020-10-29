@@ -150,7 +150,7 @@ protected:
 #else
     y += RenderString("the Z key.", y);
 #endif
-//    y += RenderString("to create matches.", y);
+    y += RenderString("to create color matches.", y);
 
     mTimer--;
     if (mTimer < 0) {

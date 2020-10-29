@@ -33,7 +33,6 @@ static const TUint16 allSongs[] = {
   GLACIAL_MOUNTAINS_XM,
   GAMEOVER_XM,
   UNDERWATERFANTASY_XM,
-  GAMEOVER_XM,
   ENTERCREDITS_XM
 };
 
@@ -171,7 +170,7 @@ void GSoundPlayer::SfxMoveBlock() {
 }
 
 void GSoundPlayer::SfxExplodeBlock() {
-  soundEngine.PlaySfx(FindSfxNumber(SFX_EXPLODE_BLOCK_WAV), 1);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_EXPLODE_BLOCK_WAV), 3);
 }
 
 void GSoundPlayer::SfxOptionSelect() {
