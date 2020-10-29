@@ -119,24 +119,26 @@ TBool GNoPowerup::MoveState() {
   }
 
 
-  if (gControls.WasPressed(dropPress)) {
-    if (CanDrop()) {
-      if (Drop()) {
-        // combined!
-        // start bonus timer, if not already started
-        gSoundPlayer.SfxCombo();
-        mGameState->StartBonusTimer();
-        mState = STATE_TIMER;
-        return ETrue;
+  if (gOptions->gameProgress.playerType == PLAYER_NO_POWERUP) {
+    if (gControls.WasPressed(dropPress)) {
+      if (CanDrop()) {
+        if (Drop()) {
+          // combined!
+          // start bonus timer, if not already started
+          gSoundPlayer.SfxCombo();
+          mGameState->StartBonusTimer();
+          mState = STATE_TIMER;
+          return ETrue;
+        } else {
+          gSoundPlayer.SfxGoodDrop();
+        }
       } else {
-        gSoundPlayer.SfxGoodDrop();
+        // can't drop sound:
+        gSoundPlayer.SfxBadDrop();
       }
-    } else {
-      // can't drop sound:
-      gSoundPlayer.SfxBadDrop();
     }
+    Blink();
   }
-  Blink();
   return ETrue;
 }
 
@@ -171,19 +173,21 @@ TBool GNoPowerup::TimerState() {
     MoveDown();
   }
 
-  if (gControls.WasPressed(BUTTONB)) {
-    if (CanDrop()) {
-      gSoundPlayer.SfxGoodDrop();
-      if (Drop()) {
-        gSoundPlayer.SfxCombo();
+  if (gOptions->gameProgress.playerType == PLAYER_NO_POWERUP) {
+    if (gControls.WasPressed(BUTTONB)) {
+      if (CanDrop()) {
+        gSoundPlayer.SfxGoodDrop();
+        if (Drop()) {
+          gSoundPlayer.SfxCombo();
+        }
+      } else {
+        // can't drop sound:
+        gSoundPlayer.SfxBadDrop();
       }
-    } else {
-      // can't drop sound:
-      gSoundPlayer.SfxBadDrop();
     }
-  }
 
-  Blink();
+    Blink();
+  }
   return ETrue;
 }
 
