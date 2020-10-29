@@ -218,7 +218,7 @@ TBool GNoPowerup::RemoveState() {
         TBCD add;
         add.FromUint32(mRemoveScore);
         mGameState->mScore.Add(add);
-        mRemoveScore++;
+        mRemoveScore += 200;
         // remove the block - start explosion
         mGameBoard->ExplodeBlock(mRemoveRow, mRemoveCol);
         gControls.Rumble(0.1, 100);
