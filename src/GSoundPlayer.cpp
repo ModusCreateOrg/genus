@@ -170,7 +170,7 @@ void GSoundPlayer::SfxMoveBlock() {
 }
 
 void GSoundPlayer::SfxExplodeBlock() {
-  soundEngine.PlaySfx(FindSfxNumber(SFX_EXPLODE_BLOCK_WAV), 1);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_EXPLODE_BLOCK_WAV), 3);
 }
 
 void GSoundPlayer::SfxOptionSelect() {
