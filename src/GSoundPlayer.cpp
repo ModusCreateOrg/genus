@@ -162,7 +162,7 @@ void GSoundPlayer::SfxBadDrop() {
 }
 
 void GSoundPlayer::SfxCombo() {
-  soundEngine.PlaySfx(FindSfxNumber(SFX_SCORE_COMBO_WAV), 1);
+  soundEngine.PlaySfx(FindSfxNumber(SFX_SCORE_COMBO_WAV), 3);
 }
 
 void GSoundPlayer::SfxMoveBlock() {

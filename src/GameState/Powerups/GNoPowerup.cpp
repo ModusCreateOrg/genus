@@ -159,10 +159,19 @@ TBool GNoPowerup::TimerState() {
   }
   mRepeatTimer--;
 
-  if (gControls.WasPressed(BUTTONA)) {
+#ifdef __DINGUX__
+  TUint16 rotateLeftPress = BUTTONY | BUTTONL;
+  TUint16 dropPress = BUTTONB | BUTTONX;
+#else
+  TUint16 rotateLeftPress = BUTTONX | BUTTONL;
+  TUint16 dropPress = BUTTONB | BUTTONY;
+#endif
+
+
+  if (gControls.WasPressed(BUTTONA | BUTTONR)) {
     RotateRight();
-//  } else if (gControls.WasPressed(BUTTONB)) {
-//    RotateRight();
+  } else if (gControls.WasPressed(rotateLeftPress)) {
+    RotateRight();
   } else if (TimedControl(JOYLEFT)) {
     MoveLeft();
   } else if (TimedControl(JOYRIGHT)) {
@@ -174,7 +183,7 @@ TBool GNoPowerup::TimerState() {
   }
 
   if (gOptions->gameProgress.playerType == PLAYER_NO_POWERUP) {
-    if (gControls.WasPressed(BUTTONB)) {
+    if (gControls.WasPressed(dropPress)) {
       if (CanDrop()) {
         gSoundPlayer.SfxGoodDrop();
         if (Drop()) {
@@ -197,7 +206,7 @@ TBool GNoPowerup::RemoveState() {
       return ETrue;
     }
   }
-  mRemoveTimer = 30 / 8;        // 1/8 second
+  mRemoveTimer = FRAMES_PER_SECOND / 8;        // 1/8 second
 
   while (mRemoveRow < BOARD_ROWS) {
     if (mRemoveCol >= BOARD_COLS) {

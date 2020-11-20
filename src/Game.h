@@ -19,7 +19,7 @@
 
 // Enable level skipping via SELECT button
 #define CHICKEN_MODE
-//#undef CHICKEN_MODE
+#undef CHICKEN_MODE
 
 #include <stdio.h>
 #include <unistd.h>
