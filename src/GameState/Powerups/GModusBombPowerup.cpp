@@ -46,7 +46,7 @@ TBool GModusBombPowerup::Drop() {
 }
 
 TBool GModusBombPowerup::StateMove() {
-  if (gControls.WasPressed(BUTTONB)) {
+  if (gControls.WasPressed(BUTTONB | BUTTONY)) {
     if (mGameState->MainState() != STATE_REMOVE) {
       Drop();
       mState = STATE_REMOVE;

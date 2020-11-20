@@ -115,7 +115,7 @@ TBool GColorSwapPowerup::StateRemove() {
 TBool GColorSwapPowerup::StateMove() {
   TUint8 currentColor = mGameBoard->mBoard[mPlayerSprite->BoardRow()][mPlayerSprite->BoardCol()];
 
-  if (gControls.WasPressed(BUTTONB)) {
+  if (gControls.WasPressed(BUTTONB | BUTTONX)) {
     // Placeable only on non-darkened blocks and during states other than removal of blocks
     if (mGameState->MainState() != STATE_REMOVE && (currentColor == 0 || currentColor == 16)) {
       Drop();
