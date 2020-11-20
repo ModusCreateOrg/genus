@@ -25,6 +25,7 @@ void GNoPowerup::Wait() {
 
 void GNoPowerup::Signal(TPowerUpStates aState) {
   if (mGameBoard->Combine()) {
+    gSoundPlayer.SfxCombo();
     mGameState->StartBonusTimer();
     mState = STATE_TIMER;
   } else if (mGameState->mBonusTimer >= 0) {
