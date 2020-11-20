@@ -13,7 +13,11 @@ class GGameBoard;
 #include "GPlayerSprite.h"
 
 static const TInt REPEAT_TIME  = 1,
-                  REPEAT_DELAY = REPEAT_TIME + 4;
+#ifdef __DINGUX__
+                  REPEAT_DELAY = REPEAT_TIME + 8;
+#else
+                   REPEAT_DELAY = REPEAT_TIME + 4;
+#endif
 
 // powerups and no-powerup have these 4 states
 enum TPowerUpStates {
