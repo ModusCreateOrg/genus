@@ -9,7 +9,7 @@ https://docs.espressif.com/projects/esp-idf/en/v3.2/
 
 
 ## How Genus works
-Genus is a cross-platform a puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday season. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS and Linux. 
+Genus is a cross-platform puzzle game created by [Modus Create](https://moduscreate.com) for the 2018 holiday season. Genus runs on the [ODROID GO](https://www.hardkernel.com/shop/odroid-go/), macOS, Linux, Windows, and web browsers.
 
 Building Genus has been tested on the `x86_64` architecture with macOS X High Sierra and Mojave, Ubuntu 16.04 and 18.04, and on the `armhf` architecture with Raspbian Stretch (9.6).
 
@@ -58,6 +58,55 @@ Let's clone the Genus and Creative Engine repos:
     ln -s creative-engine/ genus/creative-engine                  # Create Symbolic Link
    
 ## Install dependencies
+
+### Windows x64
+
+Use CMake 3.15 or later, Ninja, Python 3, LLVM-MinGW, and the x86-64 MinGW development packages for SDL2 and SDL2_image. The Windows and web targets require Creative Engine's `platform-support` branch in `creative-engine/`. For a fresh checkout, clone it from the Genus root.
+
+```powershell
+git clone --branch platform-support https://github.com/michaeltintiuc/creative-engine.git creative-engine
+```
+
+Set the three paths below to your extracted toolchain and SDK directories and run these commands in PowerShell from the Genus root.
+
+```powershell
+$llvmMingw = 'path/to/llvm-mingw'
+$sdl = 'path/to/SDL2/x86_64-w64-mingw32'
+$sdlImage = 'path/to/SDL2_image/x86_64-w64-mingw32'
+$configure = @(
+  '-S', '.', '-B', 'build/windows', '-G', 'Ninja',
+  '-DCMAKE_BUILD_TYPE=Release',
+  "-DCMAKE_C_COMPILER=$llvmMingw/bin/x86_64-w64-mingw32-clang.exe",
+  "-DCMAKE_CXX_COMPILER=$llvmMingw/bin/x86_64-w64-mingw32-clang++.exe",
+  "-DCMAKE_PREFIX_PATH=$sdl;$sdlImage"
+)
+cmake @configure
+.\scripts\run-windows.cmd
+```
+
+The build copies `SDL2.dll` next to `build/windows/Genus.exe`. To stage both files for distribution, run `cmake --install build/windows --prefix build/windows-package`.
+
+### Web
+
+Install Emscripten, CMake, Ninja, and Python 3. From the Genus root in a shell with the Emscripten SDK environment active, run:
+
+```powershell
+emcmake cmake -S . -B build/web -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build/web --target run-web
+```
+
+The preview serves `build/web/html` at http://127.0.0.1:8000/ and opens it in your browser. Click the game to focus the keyboard and enable audio. Browser saves and options use IndexedDB. To host the game elsewhere, serve `index.html`, `index.js`, and `index.wasm` together from the same directory.
+
+Windows and web embed the checked-in `src/Resources.zip`. If you change the assets, use Creative Engine's `rcomp` on a Unix host to rebuild the archive from the Genus root.
+
+```bash
+make resources
+(cd src && python3 -m zipfile -c Resources.zip Resources.h Resources.bin)
+```
+
+### Rider
+
+Open the Genus root as a CMake project. After configuring `build/windows` or `build/web` with the commands above, select **Build and Run (Windows x64)** or **Build and Run (Web)** in Rider. The shared configurations use the CMake executable recorded in the corresponding build directory.
 
 ### macOS
 - [ ] Install [XCode](https://developer.apple.com/xcode/) CLI tools

@@ -1,77 +1,50 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
-PROJECT(Genus)
+cmake_minimum_required(VERSION 3.12)
+project(Genus)
 
-ADD_COMPILE_DEFINITIONS(CE_SDL2_WINDOW_TITLE="Genus :: by Modus Create")
-
-
-SET(CMAKE_CXX_STANDARD 14)
-SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wno-implicit-exception-spec-mismatch")
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-implicit-exception-spec-mismatch")
-include(ProcessorCount)
-
-SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/cmake.files)
-
-
-ADD_COMPILE_DEFINITIONS(__MODUS_TARGET_SDL2_AUDIO__=true)
-ADD_COMPILE_DEFINITIONS(__MODUS_TARGET_DESKTOP_CONTROLS__=true)
-ADD_COMPILE_DEFINITIONS(__MODUS_TARGET_DESKTOP_DISPLAY__=true)
-
-# Include Creative Engine
-# Exports:
-# ${CREATIVE_ENGINE_INCLUDE_DIRS} - used in INCLUDE_DIRECTORIES(...)
-# ${CREATIVE_ENGINE_SOURCE_FILES} - used in ADD_EXECUTABLE(...)
-# ${CREATIVE_ENGINE_LINK_LIBRARIES} - used in TARGET_LINK_LIBRARIES(...)
-
-INCLUDE(${CMAKE_CURRENT_SOURCE_DIR}/creative-engine/CreativeEngine.cmake)
-
-SET(GENUS_INCLUDE_DIRS
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/src/GameState
-    ${CMAKE_SOURCE_DIR}/src/GameState/Playfields
-    ${CMAKE_SOURCE_DIR}/src/GameState/Powerups
-    ${CMAKE_SOURCE_DIR}/src/GameState/PauseModal
-    ${CMAKE_SOURCE_DIR}/src/GameOverState
-    ${CMAKE_SOURCE_DIR}/src/HighScoresState
-    ${CMAKE_SOURCE_DIR}/src/MainMenuState
-    ${CMAKE_SOURCE_DIR}/src/MainOptionsState
-    ${CMAKE_SOURCE_DIR}/src/SplashState
-    ${CMAKE_SOURCE_DIR}/src/RulesState
-    ${CMAKE_BINARY_DIR}/usr/local/include
+set(GENUS_INCLUDE_DIRS
+        ${PROJECT_SOURCE_DIR}/src
+        ${PROJECT_SOURCE_DIR}/src/GameState
+        ${PROJECT_SOURCE_DIR}/src/GameState/Playfields
+        ${PROJECT_SOURCE_DIR}/src/GameState/Powerups
+        ${PROJECT_SOURCE_DIR}/src/GameState/PauseModal
+        ${PROJECT_SOURCE_DIR}/src/GameOverState
+        ${PROJECT_SOURCE_DIR}/src/HighScoresState
+        ${PROJECT_SOURCE_DIR}/src/MainMenuState
+        ${PROJECT_SOURCE_DIR}/src/MainOptionsState
+        ${PROJECT_SOURCE_DIR}/src/SplashState
+        ${PROJECT_SOURCE_DIR}/src/RulesState
+        ${PROJECT_BINARY_DIR}/usr/local/include
 )
 
-INCLUDE_DIRECTORIES(
-    ${GENUS_INCLUDE_DIRS}
-    ${CREATIVE_ENGINE_INCLUDE_DIRS}
-)
+file(GLOB_RECURSE GENUS_SRC CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/src/*.cpp")
+add_executable(Genus ${GENUS_SRC})
+set_target_properties(Genus PROPERTIES CXX_STANDARD 14 CXX_STANDARD_REQUIRED YES)
+target_include_directories(Genus PRIVATE ${GENUS_INCLUDE_DIRS})
+target_compile_definitions(Genus PRIVATE CE_SDL2_WINDOW_TITLE="Genus :: by Modus Create")
 
-# gather Genus sources
-FILE(GLOB_RECURSE GENUS_SRC RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp")
+include("${PROJECT_SOURCE_DIR}/creative-engine/CreativeEngine.cmake")
+creative_engine_attach(Genus RESOURCE_ARCHIVE "${PROJECT_SOURCE_DIR}/src/Resources.zip")
 
-ADD_EXECUTABLE(
-    ${PROJECT_NAME}
-    Resources.bin
-    ${CREATIVE_ENGINE_SOURCE_FILES}
-    ${GENUS_SRC}
-)
+if (EMSCRIPTEN)
+    include(cmake/GenusWeb.cmake)
+elseif (WIN32)
+    install(TARGETS Genus RUNTIME DESTINATION ".")
+    install(FILES "$<TARGET_FILE:SDL2::SDL2>" DESTINATION ".")
+else ()
+    compile_rcomp_and_resources()
+    # The legacy compiler writes into src, while the engine's assembler reads from the build directory.
+    add_custom_command(OUTPUT Resources.bin APPEND
+            COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${PROJECT_SOURCE_DIR}/src/Resources.bin" "${PROJECT_BINARY_DIR}/Resources.bin"
+    )
+    set_source_files_properties("${CREATIVE_ENGINE_PATH}/src/BResourceManager.cpp"
+            PROPERTIES OBJECT_DEPENDS "${PROJECT_BINARY_DIR}/Resources.bin"
+    )
+    target_sources(Genus PRIVATE "${PROJECT_BINARY_DIR}/Resources.bin")
 
-ProcessorCount(N)
-if (NOT N EQUAL 0)
-    set(${PROJECT_NAME}_FLAGS -j${N})
-    set(${PROJECT_NAME}_BUILD_FLAGS -j${N})
-    set(${PROJECT_NAME}_args ${${PROJECT_NAME}_args} PARALLEL_LEVEL ${N})
+    if (APPLE)
+        set_target_properties(Genus PROPERTIES MACOSX_BUNDLE TRUE
+                XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Developer ID Application: Modus Create, Inc.")
+        install(TARGETS Genus DESTINATION ".")
+    endif ()
 endif ()
-
-BUILD_COMMAND(
-    $(MAKE) --silent
-)
-
-
-# make genus.app
-if (APPLE)
-    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE
-        XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Developer ID Application: Modus Create, Inc.")
-    INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ".")
-endif (APPLE)
-
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${CREATIVE_ENGINE_LINK_LIBRARIES})
-

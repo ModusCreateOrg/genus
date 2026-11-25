@@ -1,6 +1,11 @@
 #include "GGame.h"
 
 #include "Game.h"
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 static TUint32 start;
 
 GGame::GGame() {
@@ -52,77 +57,86 @@ TInt GGame::GetState() {
 }
 
 void GGame::Run() {
-  TBool muted = gOptions->muted;
-
-  TBool done = EFalse;
-  while (!done) {
-    Random(); // randomize
-
-    if (mNextState != mState) {
-      switch (mNextState) {
-        case GAME_STATE_SPLASH:
-          delete gGameEngine;
-          gGameEngine = new GSplashState();
-          break;
-        case GAME_STATE_MAIN_MENU:
-          delete gGameEngine;
-          gGameEngine = new GMainMenuState();
-          break;
-        case GAME_STATE_GAME:
-          delete gGameEngine;
-          gGameEngine = new GGameState();
-          break;
-        case GAME_STATE_GAMEOVER:
-          delete gGameEngine;
-          gGameEngine = new GGameOverState();
-          break;
-        case GAME_STATE_HIGH_SCORES:
-          delete gGameEngine;
-          gGameEngine = new GHighScoresState();
-          break;
-        case GAME_STATE_MAIN_OPTIONS:
-          delete gGameEngine;
-          gGameEngine = new GMainOptionsState();
-          break;
-        case GAME_STATE_MAIN_OPTIONS_RESET:
-          delete gGameEngine;
-          gGameEngine = new GResetOptionsState();
-          break;
-        case GAME_STATE_CREDITS:
-          delete gGameEngine;
-          gGameEngine = new GCreditsState();
-          break;
-        case GAME_STATE_RULES:
-          delete gGameEngine;
-          gGameEngine = new GRulesState();
-          break;
-        default:
-          continue;
-      }
-
-      // reset dKeys so next state doesn't react to any keys already pressed
-      gControls.dKeys = 0;
-      mState = mNextState;
-
+#ifdef __EMSCRIPTEN__
+  emscripten_set_main_loop_arg([](void *context) {
+    auto *game = static_cast<GGame *>(context);
+    if (!game->RunFrame()) {
+      emscripten_cancel_main_loop();
+      soundEngine.Reset();
+      delete game;
+      gGame = nullptr;
     }
-    gGameEngine->GameLoop();
-    gDisplay.Update();
-    TUint32 now = Milliseconds();
-    start = now;
+  }, this, FRAMES_PER_SECOND, true);
+#else
+  while (RunFrame()) {
+  }
+#endif
+}
+
+TBool GGame::RunFrame() {
+  Random(); // randomize
+
+  if (mNextState != mState) {
+    switch (mNextState) {
+      case GAME_STATE_SPLASH:
+        delete gGameEngine;
+        gGameEngine = new GSplashState();
+        break;
+      case GAME_STATE_MAIN_MENU:
+        delete gGameEngine;
+        gGameEngine = new GMainMenuState();
+        break;
+      case GAME_STATE_GAME:
+        delete gGameEngine;
+        gGameEngine = new GGameState();
+        break;
+      case GAME_STATE_GAMEOVER:
+        delete gGameEngine;
+        gGameEngine = new GGameOverState();
+        break;
+      case GAME_STATE_HIGH_SCORES:
+        delete gGameEngine;
+        gGameEngine = new GHighScoresState();
+        break;
+      case GAME_STATE_MAIN_OPTIONS:
+        delete gGameEngine;
+        gGameEngine = new GMainOptionsState();
+        break;
+      case GAME_STATE_MAIN_OPTIONS_RESET:
+        delete gGameEngine;
+        gGameEngine = new GResetOptionsState();
+        break;
+      case GAME_STATE_CREDITS:
+        delete gGameEngine;
+        gGameEngine = new GCreditsState();
+        break;
+      case GAME_STATE_RULES:
+        delete gGameEngine;
+        gGameEngine = new GRulesState();
+        break;
+      default:
+        return ETrue;
+    }
+
+    // reset dKeys so next state doesn't react to any keys already pressed
+    gControls.dKeys = 0;
+    mState = mNextState;
+
+  }
+  gGameEngine->GameLoop();
+  gDisplay.Update();
+  TUint32 now = Milliseconds();
+  start = now;
 
 #ifdef FRAME_RATE_INFO
-    TUint32 elapsed = now - start;
-    printf("elapsed %4d\r", elapsed);
+  TUint32 elapsed = now - start;
+  printf("elapsed %4d\r", elapsed);
 #endif
 
-    if (gControls.WasPressed(BUTTONQ)) {
-      done = true;
-    }
-    if (gControls.WasPressed(BUTTON2)) {
-      muted = !muted;
-      gOptions->muted = muted;
-      gOptions->Save();
-      gSoundPlayer.MuteMusic(muted);
-    }
+  if (gControls.WasPressed(BUTTON2)) {
+    gOptions->muted = !gOptions->muted;
+    gOptions->Save();
+    gSoundPlayer.MuteMusic(gOptions->muted);
   }
+  return !gControls.WasPressed(BUTTONQ);
 }

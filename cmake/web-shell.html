@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Genus</title>
+    <style>
+        body { margin: 0; background: #111; color: #fff; font: 1rem system-ui; }
+        main { display: grid; place-items: center; min-height: 100vh; }
+        main > * { grid-area: 1 / 1; }
+        canvas {
+          width: min(100vw, 133.333vh, 960px);
+          aspect-ratio: 4 / 3;
+          image-rendering: pixelated;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <canvas id="canvas" width="640" height="480" tabindex="0" aria-label="Genus"></canvas>
+    <p id="status" role="status">Loading Genus...</p>
+</main>
+<script>
+    const canvas = document.getElementById("canvas");
+    const statusMessage = document.getElementById("status");
+    var Module = {
+      canvas,
+      setStatus(message) {
+        statusMessage.textContent = message;
+        statusMessage.hidden = !message;
+      },
+      onRuntimeInitialized() {
+        statusMessage.hidden = true;
+      },
+      onAbort() {
+        Module.setStatus("Genus could not start. Reload the page to try again.");
+      }
+    };
+    canvas.addEventListener("pointerdown", () => canvas.focus());
+</script>
+{{{ SCRIPT }}}
+</body>
+</html>
+

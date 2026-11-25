@@ -28,6 +28,9 @@ public:
 protected:
   TInt mState;
   TInt mNextState;
+
+private:
+  TBool RunFrame();
 };
 
 extern GGame *gGame;

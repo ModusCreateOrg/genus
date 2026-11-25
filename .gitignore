@@ -16,6 +16,10 @@ Thumbs.db
 *.sublime-workspace
 *.komodoproject
 .idea
+# Share Rider run configurations.
+!/.run/
+/.run/*
+!/.run/*.run.xml
 .vscode/&
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -42,7 +46,7 @@ Thumbs.db
 CMakeFiles
 CMakeCache.txt
 cmake_install.cmake
-cmake-build-debug
+cmake-build-*/
 creative-engine
 clion-log.txt
 build
@@ -53,3 +57,4 @@ sdkconfig
 sdkconfig.old
 *.store
 *.tmp
+!/src/Resources.zip
